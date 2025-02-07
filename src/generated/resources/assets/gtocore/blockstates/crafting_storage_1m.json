@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "gtocore:block/crafting/crafting_storage_1m"
+    },
+    "formed=true": {
+      "model": "gtocore:block/crafting/crafting_storage_1m_formed"
+    }
+  }
+}
