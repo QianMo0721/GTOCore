@@ -1,17 +1,17 @@
 # GregTech Odyssey Core Mod
 # **Resource Licensing and Usage Guidelines / 资源许可与使用准则**
 
-**All open-source code resources of this project are released under the GNU Lesser Public License (LGPL-3.0), but all rights are reserved for closed source, highly unique code.** You may freely access, modify, and distribute code resources, provided you strictly comply with the license terms.
+**All open-source code resources of this project are released under the GNU Lesser Public License (LGPL-3.0), while certain closed-source and highly unique code remains reserved.** You are welcome to access, modify, and distribute the open-source code as long as you comply with the license terms.
 
-**However, all proprietary resources—including but not limited to custom textures, original recipes, quests, and any other non-code assets—are strictly protected.** Any form of secondary development, such as renaming, copying, or using these resources under the pretext of “temporary use, later modification,” is strictly prohibited without explicit and comprehensive approval from the development team. **Unauthorized use, modification, or redistribution of these proprietary resources is not permitted under any circumstances.**
+**For proprietary resources—including but not limited to custom textures, original recipes, quests, and other non-code assets—we sincerely hope everyone can respect the team's creative work.** If you wish to use, modify, or develop based on these resources, please contact the development team or submit an issue in advance to discuss your needs. We are very willing to share and collaborate, and will do our best to support reasonable requests. **Please do not use, modify, or redistribute proprietary resources without prior explicit permission.**
 
-**We emphasize that respecting these rules is essential for protecting the creative work and intellectual property of the team.** Please contact the development team for any requests regarding proprietary resources. **Thank you for your understanding and cooperation.**
+**We believe that mutual respect and communication are the foundation for a healthy community and the protection of the team's intellectual property.** If you have any requests regarding proprietary resources, please feel free to reach out to us. **Thank you for your understanding and cooperation.**
 
-**本项目所有开源部分的代码资源均遵循 GNU 较宽松公共许可证（LGPL-3.0）发布，但对闭源的，非常独特的代码保留所有权利。** 您可以在严格遵守许可条款的前提下，自由访问、修改和分发代码资源。
+**本项目所有开源部分的代码资源均遵循 GNU 较宽松公共许可证（LGPL-3.0）发布，部分闭源且极具独特性的代码则保留所有权利。** 欢迎大家在遵守许可条款的前提下，自由访问、修改和分发开源代码资源。
 
-**但所有专有资源——包括但不限于自创材质、原创配方、任务及其他一切非代码类资产——均受到严格保护。** 未经制作组明确且全面的同意，任何形式的二次开发（如改名、复制、以“先用着，后面改”为由盗用等）均被严禁。**任何未授权的使用、修改或分发专有资源的行为，均不被允许。**
+**对于专有资源——包括但不限于自创材质、原创配方、任务及其他非代码类，或代码类内的专有，非常独特的资产——我们真诚希望大家能够理解并尊重团队的创作成果。** 如您有使用、修改或基于这些资源进行开发的需求，请务必提前联系开发组或通过 issue 提出，我们非常乐意与大家分享和合作，并会尽力支持合理的请求。**请勿在未获得明确许可前使用、修改或分发专有资源。**
 
-**我们郑重强调，遵守上述规定是对团队创作成果和知识产权的基本尊重。** 如需使用专有资源，请务必事先联系制作组并获得明确许可。**感谢您的理解与配合。**
+**我们相信，良好的沟通与相互尊重是社区健康发展的基础，也是对团队知识产权的保护。** 如需使用专有资源，欢迎提前与我们联系。**感谢您的理解与支持。**
 
 # **What happened? / 关于近期仓库调整的说明**
 
