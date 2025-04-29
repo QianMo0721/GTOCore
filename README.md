@@ -1,13 +1,13 @@
 # GregTech Odyssey Core Mod
 # **Resource Licensing and Usage Guidelines / 资源许可与使用准则**
 
-**All open-source code in this project is released under the GNU Lesser General Public License (LGPL-3.0).** You may freely access, modify, and distribute code resources, provided you strictly comply with the license terms.
+**All open-source code resources of this project are released under the GNU Lesser Public License (LGPL-3.0), but all rights are reserved for closed source, highly unique code.** You may freely access, modify, and distribute code resources, provided you strictly comply with the license terms.
 
 **However, all proprietary resources—including but not limited to custom textures, original recipes, quests, and any other non-code assets—are strictly protected.** Any form of secondary development, such as renaming, copying, or using these resources under the pretext of “temporary use, later modification,” is strictly prohibited without explicit and comprehensive approval from the development team. **Unauthorized use, modification, or redistribution of these proprietary resources is not permitted under any circumstances.**
 
 **We emphasize that respecting these rules is essential for protecting the creative work and intellectual property of the team.** Please contact the development team for any requests regarding proprietary resources. **Thank you for your understanding and cooperation.**
 
-**本项目所有开源代码资源均遵循 GNU 较宽松公共许可证（LGPL-3.0）发布。** 您可以在严格遵守许可条款的前提下，自由访问、修改和分发代码资源。
+**本项目所有开源部分的代码资源均遵循 GNU 较宽松公共许可证（LGPL-3.0）发布，但对闭源的，非常独特的代码保留所有权利。** 您可以在严格遵守许可条款的前提下，自由访问、修改和分发代码资源。
 
 **但所有专有资源——包括但不限于自创材质、原创配方、任务及其他一切非代码类资产——均受到严格保护。** 未经制作组明确且全面的同意，任何形式的二次开发（如改名、复制、以“先用着，后面改”为由盗用等）均被严禁。**任何未授权的使用、修改或分发专有资源的行为，均不被允许。**
 
