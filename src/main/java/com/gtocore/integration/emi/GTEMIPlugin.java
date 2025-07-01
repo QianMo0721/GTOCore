@@ -3,9 +3,6 @@ package com.gtocore.integration.emi;
 import com.gtocore.integration.chisel.ChiselRecipe;
 import com.gtocore.integration.emi.oreprocessing.OreProcessingEmiCategory;
 
-import com.gtolib.api.meteorites.RecipeRegistry;
-import com.gtolib.api.meteorites.RecipeRegistry$MeteoriteType;
-
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
@@ -18,7 +15,6 @@ import com.gregtechceu.gtceu.integration.emi.orevein.GTBedrockFluidEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.orevein.GTOreVeinEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.recipe.GTRecipeEMICategory;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.p3pp3rf1y.sophisticatedbackpacks.compat.recipeviewers.emi.BackpackEmiPlugin;
 
@@ -27,7 +23,8 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.menu.me.items.PatternEncodingTermMenu;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.arsmeteorites.arsmeteorites.ArsMeteorites;
+import com.arsmeteorites.arsmeteorites.emi.MeteoritesEmiPlugin;
 import com.lowdragmc.lowdraglib.LDLib;
 import com.lowdragmc.lowdraglib.emi.EMIPlugin;
 import com.lowdragmc.lowdraglib.gui.modular.ModularUIContainer;
@@ -37,7 +34,6 @@ import de.mari_023.ae2wtlib.wet.WETMenu;
 import dev.emi.emi.VanillaPlugin;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.*;
 import dev.emi.emi.registry.EmiPluginContainer;
 import io.github.prismwork.emitrades.EMITradesPlugin;
@@ -58,9 +54,8 @@ public final class GTEMIPlugin implements EmiPlugin {
         list.add(new EmiPluginContainer(new BotaniaEmiPlugin(), BotaniaAPI.MODID));
         list.add(new EmiPluginContainer(new EMIPlugin(), LDLib.MOD_ID));
         list.add(new EmiPluginContainer(new GTEMIPlugin(), GTCEu.MOD_ID));
+        list.add(new EmiPluginContainer(new MeteoritesEmiPlugin(), ArsMeteorites.MOD_ID));
     }
-
-    public static final EmiRecipeCategory METEORITES_CATEGORY = new EmiRecipeCategory(new ResourceLocation("gtocore", "meteorites"), EmiStack.of(BlockRegistry.RITUAL_BLOCK.asItem()));
 
     public static EmiIngredient genericStackToEmiIngredient(GenericStack stack) {
         AEKey key = stack.what();
@@ -104,8 +99,5 @@ public final class GTEMIPlugin implements EmiPlugin {
         PotionFluid potionFluid = GTFluids.POTION.get();
         registry.setDefaultComparison(potionFluid.getSource(), potionComparison);
         registry.setDefaultComparison(potionFluid.getFlowing(), potionComparison);
-
-        registry.addCategory(METEORITES_CATEGORY);
-        RecipeRegistry.getAllTypes().forEach(type -> registry.addRecipe(new MeteoritesEmiRecipe((RecipeRegistry$MeteoriteType) type)));
     }
 }

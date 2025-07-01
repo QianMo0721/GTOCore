@@ -92,15 +92,5 @@ final class ItemLang {
 
         addCNEN("gtocore.behaviour.grass_harvest.description", GOLD + "极大" + RESET + "地提升小麦种子掉落概率", GOLD + "Greatly" + RESET + " increase the probability of wheat seed dropping");
         addCNEN("gtocore.behaviour.grass_harvest.description2", "右键以收割", "Right click to harvest");
-
-        addCNEN("item.gtocore.ritual_conjure_meteorites", "陨星", "Meteorites");
-        addCNEN("gtocore.ritual_desc.ritual_conjure_meteorites", "从世界夹层中召唤一个巨大的陨石。\n请先消耗物品选择陨石然后再消耗物品扩大陨石半径。\n根据方块生成数量消耗魔源。", "Summons a massive meteorite from the world's inner workings.\nPlease consume items to select meteorites first and then consume items to expand the radius of meteorites.\nMana source is consumed according to the number of blocks generated.");
-        addCNEN("tooltip.meteorites.source_gem", "可用于提升陨石半径", "Can be used to increase the radius of meteorites");
-        addCNEN("tooltip.meteorites.input", "可用于选择陨石", "Can be used to select meteorites");
-        addCNEN("tooltip.meteorites.probability", "权重：%s", "Weight:%s");
-        addCNEN("tooltip.meteorites.explode", "小心爆炸", "Beware of explosions");
-        addCNEN("tooltip.meteorites.direction", "可用于调整陨石中心位置", "Can be used to adjust the center position of the meteorite");
-        addCNEN("emi.category.gtocore.meteorites", "召唤陨石", "Conjure Meteorites");
-        addCNEN("emi.meteorites.source_cost", "%s 魔源每块", "%s Source Each Block");
     }
 }

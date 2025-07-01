@@ -211,8 +211,8 @@ public final class GTOOres {
                     weights.add(entry2.getIntValue());
                     localizationKeys.add(I18n.get(material.getUnlocalizedName()));
                 }
-                String materialNamesStr = materialNames.stream().collect(Collectors.joining(", ", "{ ", " }"));
-                String weightsStr = weights.stream().map(Object::toString).collect(Collectors.joining(", ", "{ ", " }"));
+                String materialNamesStr = materialNames.stream().collect(Collectors.joining(", ", "new Material[] { ", " }"));
+                String weightsStr = weights.stream().map(Object::toString).collect(Collectors.joining(", ", "new int[] { ", " }"));
                 String localizationKeysStr = localizationKeys.stream().collect(Collectors.joining(", ", "{ ", " }"));
                 report_arrays.append("\n材料名称数组: \n").append(materialNamesStr);
                 report_arrays.append("\n权重数组: \n").append(weightsStr);

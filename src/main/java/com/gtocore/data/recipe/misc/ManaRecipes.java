@@ -24,7 +24,6 @@ import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import vazkii.botania.common.block.BotaniaBlocks;
@@ -598,11 +597,6 @@ public final class ManaRecipes {
                     " A ", "BAB", "BBB",
                     'A', new MaterialEntry(TagPrefix.block, GTOMaterials.Shimmerrock), 'B', new MaterialEntry(TagPrefix.rock, GTMaterials.Stone));
         }
-
-        VanillaRecipeHelper.addShapelessRecipe(provider, id("ritual_conjure_meteorites"), RegistriesUtils.getItemStack("gtocore:ritual_conjure_meteorites"),
-                RegistriesUtils.getItemStack("ars_nouveau:red_archwood_log"), RegistriesUtils.getItemStack("ars_nouveau:ritual_scrying"), RegistriesUtils.getItemStack("ars_nouveau:ritual_warping"),
-                RegistriesUtils.getItemStack("ars_nouveau:ritual_wilden_summon"), Blocks.LODESTONE, RegistriesUtils.getItemStack("ars_nouveau:wilden_tribute"),
-                RegistriesUtils.getItemStack("ars_nouveau:manipulation_essence"), RegistriesUtils.getItemStack("ars_nouveau:conjuration_essence"), RegistriesUtils.getItemStack("ars_nouveau:source_gem_block"));
 
         MANA_INFUSER_RECIPES.builder("conjuration_essence")
                 .notConsumable(GTOBlocks.ESSENCE_BLOCK.asStack())

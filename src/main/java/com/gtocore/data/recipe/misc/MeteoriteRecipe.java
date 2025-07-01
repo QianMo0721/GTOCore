@@ -1,8 +1,17 @@
 package com.gtocore.data.recipe.misc;
 
+import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.data.GTOItems;
+import com.gtocore.common.data.GTOMaterials;
 
-import com.gtolib.api.meteorites.MeteoriteRegistryHelper;
+import com.gtolib.api.data.chemical.GTOChemicalHelper;
+import com.gtolib.api.recipe.MeteoriteRegistryHelper;
+import com.gtolib.utils.RegistriesUtils;
+
+import com.gregtechceu.gtceu.api.data.chemical.material.Material;
+import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.common.data.GTItems;
+import com.gregtechceu.gtceu.common.data.GTMaterials;
 
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -10,10 +19,140 @@ import net.minecraft.world.level.block.Blocks;
 
 import appeng.core.definitions.AEItems;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import earth.terrarium.adastra.common.registry.ModBlocks;
 
 public final class MeteoriteRecipe {
 
     public static void init() {
+        {
+            // 主世界
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOChemicalHelper.getItem(TagPrefix.ingot, GTMaterials.Steel),
+                    1,
+                    GTOItems.COLORFUL_MYSTICAL_FLOWER.asItem(),
+                    new Block[] { Blocks.STONE, Blocks.DEEPSLATE },
+                    new int[] { 200, 50 },
+                    TagPrefix.ore,
+                    new Material[] { GTMaterials.TricalciumPhosphate, GTMaterials.GarnetYellow, GTMaterials.Coal, GTOMaterials.GnomeCrystal, GTMaterials.Mica, GTMaterials.Cobaltite, GTMaterials.GreenSapphire, GTMaterials.YellowLimonite, GTMaterials.Bentonite, GTMaterials.GarnetRed, GTMaterials.RockSalt, GTMaterials.Pyrochlore, GTMaterials.Talc, GTMaterials.Realgar, GTMaterials.Lepidolite, GTMaterials.Ruby, GTMaterials.BasalticMineralSand, GTMaterials.Malachite, GTMaterials.Salt, GTMaterials.Chalcopyrite, GTMaterials.Goethite, GTMaterials.Gold, GTMaterials.Redstone, GTMaterials.Pyrolusite, GTMaterials.GlauconiteSand, GTMaterials.Nickel, GTMaterials.Iron, GTMaterials.Silver, GTMaterials.Spodumene, GTMaterials.Graphite, GTMaterials.Kyanite, GTMaterials.Opal, GTMaterials.Lapis, GTMaterials.Magnetite, GTMaterials.Spessartine, GTMaterials.Amethyst, GTMaterials.Cinnabar, GTOMaterials.PerditioCrystal, GTMaterials.Galena, GTMaterials.Soapstone, GTMaterials.Pentlandite, GTMaterials.Sapphire, GTMaterials.Grossular, GTMaterials.Asbestos, GTMaterials.GraniticMineralSand, GTOMaterials.UndineCrystal, GTMaterials.Pollucite, GTMaterials.FullersEarth, GTMaterials.Almandine, GTMaterials.Oilsands, GTOMaterials.SylphCrystal, GTMaterials.CassiteriteSand, GTMaterials.Cassiterite, GTMaterials.VanadiumMagnetite, GTMaterials.Copper, GTMaterials.Pyrite, GTMaterials.Calcite, GTMaterials.Hematite, GTMaterials.Pyrope, GTMaterials.Tin, GTMaterials.Zeolite, GTMaterials.Diatomite, GTMaterials.Gypsum, GTMaterials.Olivine, GTMaterials.Apatite, GTMaterials.Diamond, GTMaterials.GarnetSand, GTMaterials.Sodalite, GTMaterials.Tantalite, GTOMaterials.SalamanderCrystal, GTMaterials.Garnierite, GTMaterials.Lead, GTMaterials.Lazurite },
+                    new int[] { 333, 750, 2090, 474, 166, 250, 214, 2400, 187, 1125, 428, 166, 250, 500, 142, 400, 600, 1200, 285, 6136, 6000, 200, 600, 375, 312, 250, 1454, 333, 142, 544, 250, 375, 750, 725, 375, 750, 200, 1896, 500, 375, 250, 214, 562, 800, 400, 474, 83, 400, 642, 600, 474, 1200, 3666, 400, 1454, 1454, 375, 2400, 428, 5333, 1000, 400, 200, 125, 500, 272, 800, 750, 187, 474, 375, 166, 1125 });
+
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOChemicalHelper.getItem(TagPrefix.ingot, GTOMaterials.Manasteel),
+                    5,
+                    GTOItems.COLORFUL_MYSTICAL_FLOWER.asItem(),
+                    new Block[] { Blocks.STONE, Blocks.DEEPSLATE },
+                    new int[] { 200, 50 },
+                    TagPrefix.ore,
+                    new Material[] { GTOMaterials.PerditioCrystal, GTMaterials.GarnetYellow, GTMaterials.Coal, GTOMaterials.GnomeCrystal, GTMaterials.Mica, GTMaterials.Pentlandite, GTMaterials.Cobaltite, GTMaterials.Grossular, GTOMaterials.SylphCrystal, GTMaterials.Bentonite, GTMaterials.Pollucite, GTMaterials.GarnetRed, GTOMaterials.UndineCrystal, GTMaterials.Oilsands, GTMaterials.RockSalt, GTMaterials.Pyrochlore, GTMaterials.Realgar, GTMaterials.Lepidolite, GTMaterials.Talc, GTMaterials.Chalcopyrite, GTMaterials.Salt, GTMaterials.Cassiterite, GTMaterials.Calcite, GTMaterials.Spodumene, GTMaterials.Sodalite, GTMaterials.Zeolite, GTMaterials.Pyrolusite, GTMaterials.Nickel, GTMaterials.Lazurite, GTMaterials.Diamond, GTMaterials.GlauconiteSand, GTMaterials.Silver, GTMaterials.Soapstone, GTMaterials.TricalciumPhosphate, GTMaterials.Olivine, GTMaterials.Graphite, GTMaterials.Lapis, GTMaterials.Opal, GTMaterials.Kyanite, GTMaterials.Apatite, GTMaterials.Tantalite, GTMaterials.Garnierite, GTMaterials.Magnetite, GTOMaterials.SalamanderCrystal, GTMaterials.Spessartine, GTMaterials.Amethyst, GTMaterials.Lead, GTMaterials.Galena },
+                    new int[] { 1896, 750, 90, 474, 166, 250, 250, 562, 474, 187, 83, 1125, 474, 600, 428, 166, 500, 142, 250, 2500, 285, 1000, 375, 142, 750, 1000, 375, 250, 1125, 272, 312, 333, 375, 333, 125, 544, 750, 375, 250, 500, 187, 375, 125, 474, 375, 750, 166, 500 });
+
+            // 远古世界
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOItems.ULV_ROBOT_ARM.asItem(),
+                    2,
+                    GTOItems.PRECISION_STEAM_MECHANISM.asItem(),
+                    new Block[] { Blocks.DEEPSLATE, Blocks.CLAY },
+                    new int[] { 200, 50 },
+                    TagPrefix.ore,
+                    new Material[] { GTMaterials.Tantalite, GTMaterials.Garnierite, GTMaterials.Alunite, GTMaterials.Sapphire, GTMaterials.Pentlandite, GTMaterials.Cobaltite, GTMaterials.Electrotine, GTMaterials.Barite, GTMaterials.Molybdenite, GTMaterials.GreenSapphire, GTMaterials.Grossular, GTMaterials.NetherQuartz, GTMaterials.Almandine, GTMaterials.CertusQuartz, GTMaterials.Beryllium, GTMaterials.RockSalt, GTMaterials.Lepidolite, GTMaterials.Saltpeter, GTMaterials.Pyrite, GTMaterials.Bornite, GTMaterials.Sulfur, GTMaterials.Wulfenite, GTMaterials.Salt, GTMaterials.Chalcopyrite, GTMaterials.Sphalerite, GTMaterials.Copper, GTMaterials.Emerald, GTMaterials.Quartzite, GTMaterials.Calcite, GTMaterials.Tetrahedrite, GTMaterials.BlueTopaz, GTMaterials.Pyrope, GTMaterials.Molybdenum, GTMaterials.Pyrolusite, GTMaterials.Diatomite, GTMaterials.Nickel, GTMaterials.Iron, GTMaterials.Spodumene, GTMaterials.Chalcocite, GTMaterials.Stibnite, GTMaterials.Lapis, GTMaterials.Powellite, GTMaterials.Sodalite, GTMaterials.Spessartine, GTMaterials.Lazurite, GTMaterials.Topaz },
+                    new int[] { 187, 375, 125, 214, 125, 250, 250, 166, 35, 214, 562, 1200, 642, 333, 964, 428, 142, 375, 2120, 218, 1000, 53, 285, 3636, 333, 3453, 1284, 900, 375, 3999, 656, 428, 17, 375, 250, 250, 1454, 142, 437, 999, 750, 17, 750, 375, 1125, 437 });
+
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOItems.ULV_FLUID_REGULATOR.asItem(),
+                    10,
+                    GTOItems.PRECISION_STEAM_MECHANISM.asItem(),
+                    new Block[] { Blocks.DEEPSLATE, Blocks.CLAY },
+                    new int[] { 200, 50 },
+                    TagPrefix.oreDeepslate,
+                    new Material[] { GTMaterials.Tantalite, GTMaterials.Garnierite, GTMaterials.Alunite, GTMaterials.Pentlandite, GTMaterials.Barite, GTMaterials.Molybdenite, GTMaterials.Cobaltite, GTMaterials.Electrotine, GTMaterials.Grossular, GTMaterials.Beryllium, GTMaterials.CertusQuartz, GTMaterials.RockSalt, GTMaterials.Lepidolite, GTMaterials.Saltpeter, GTMaterials.Wulfenite, GTMaterials.Salt, GTMaterials.Quartzite, GTMaterials.Calcite, GTMaterials.Emerald, GTMaterials.Molybdenum, GTMaterials.Pyrolusite, GTMaterials.Diatomite, GTMaterials.Nickel, GTMaterials.Spodumene, GTMaterials.Lapis, GTMaterials.Powellite, GTMaterials.Sodalite, GTMaterials.Spessartine, GTMaterials.Lazurite },
+                    new int[] { 187, 375, 125, 125, 166, 35, 250, 250, 562, 964, 333, 428, 142, 375, 53, 285, 500, 375, 1284, 17, 375, 250, 250, 142, 750, 17, 750, 375, 1125 });
+
+            // 地狱
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE,
+                    5,
+                    Items.WITHER_SKELETON_SKULL,
+                    new Block[] { Blocks.NETHERRACK, Blocks.BASALT },
+                    new int[] { 200, 50 },
+                    TagPrefix.oreNetherrack,
+                    new Material[] { GTMaterials.Tantalite, GTMaterials.Alunite, GTMaterials.Barite, GTMaterials.Molybdenite, GTMaterials.YellowLimonite, GTMaterials.Electrotine, GTMaterials.NetherQuartz, GTMaterials.Grossular, GTMaterials.CertusQuartz, GTMaterials.Beryllium, GTMaterials.Pyrite, GTMaterials.Saltpeter, GTMaterials.Ruby, GTMaterials.Sphalerite, GTMaterials.Sulfur, GTMaterials.Wulfenite, GTMaterials.Bornite, GTMaterials.Hematite, GTMaterials.Copper, GTMaterials.Goethite, GTMaterials.Quartzite, GTMaterials.Tetrahedrite, GTMaterials.Emerald, GTMaterials.Gold, GTMaterials.BlueTopaz, GTMaterials.Molybdenum, GTMaterials.Redstone, GTMaterials.Pyrolusite, GTMaterials.Diatomite, GTMaterials.Chalcocite, GTMaterials.Stibnite, GTMaterials.Powellite, GTMaterials.Spessartine, GTMaterials.Cinnabar, GTMaterials.Topaz },
+                    new int[] { 187, 125, 166, 35, 750, 250, 1200, 562, 333, 964, 666, 375, 400, 333, 1000, 53, 218, 750, 1999, 1125, 900, 3999, 1284, 375, 656, 17, 600, 375, 250, 437, 999, 17, 375, 200, 437 });
+
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    Items.NETHERITE_INGOT,
+                    50,
+                    Items.WITHER_SKELETON_SKULL,
+                    new Block[] { Blocks.NETHERRACK, Blocks.BASALT },
+                    new int[] { 200, 50 },
+                    TagPrefix.oreNetherrack,
+                    new Material[] { GTMaterials.Tantalite, GTMaterials.Molybdenum, GTMaterials.Alunite, GTMaterials.Barite, GTMaterials.Molybdenite, GTMaterials.Diatomite, GTMaterials.Pyrolusite, GTMaterials.YellowLimonite, GTMaterials.Electrotine, GTMaterials.Grossular, GTMaterials.CertusQuartz, GTMaterials.Beryllium, GTMaterials.Saltpeter, GTMaterials.Wulfenite, GTMaterials.Powellite, GTMaterials.Gold, GTMaterials.Spessartine, GTMaterials.Goethite, GTMaterials.Emerald, GTMaterials.Quartzite, GTMaterials.Hematite },
+                    new int[] { 187, 17, 125, 166, 35, 250, 375, 750, 250, 562, 333, 964, 375, 53, 17, 375, 375, 1125, 1284, 500, 750 });
+
+            // 月球
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTItems.ROBOT_ARM_EV.asItem(),
+                    20,
+                    GTItems.FIELD_GENERATOR_EV.asItem(),
+                    new Block[] { ModBlocks.MOON_STONE.get(), ModBlocks.MOON_SAND.get(), ModBlocks.MOON_CHEESE_ORE.get() },
+                    new int[] { 200, 50, 20 },
+                    GTOTagPrefix.MOON_STONE,
+                    new Material[] { GTMaterials.Gold, GTMaterials.Ilmenite, GTMaterials.Soapstone, GTMaterials.Tin, GTMaterials.Pentlandite, GTMaterials.Pitchblende, GTMaterials.Uraninite, GTMaterials.Bauxite, GTMaterials.Neodymium, GTMaterials.Diatomite, GTMaterials.Asbestos, GTMaterials.GlauconiteSand, GTMaterials.Aluminium, GTMaterials.CassiteriteSand, GTMaterials.Talc, GTMaterials.Bastnasite, GTMaterials.Cassiterite, GTMaterials.Monazite, GTMaterials.GarnetSand, GTMaterials.Magnetite, GTMaterials.VanadiumMagnetite },
+                    new int[] { 200, 300, 375, 5333, 125, 561, 93, 600, 150, 400, 800, 250, 300, 1200, 250, 450, 2666, 150, 800, 600, 400 });
+
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTItems.FLUID_REGULATOR_EV.asItem(),
+                    100,
+                    GTItems.FIELD_GENERATOR_EV.asItem(),
+                    new Block[] { ModBlocks.MOON_STONE.get(), ModBlocks.MOON_SAND.get(), ModBlocks.MOON_CHEESE_ORE.get() },
+                    new int[] { 200, 50, 20 },
+                    GTOTagPrefix.MOON_STONE,
+                    new Material[] { GTMaterials.Ilmenite, GTMaterials.Soapstone, GTMaterials.Pentlandite, GTMaterials.Pitchblende, GTMaterials.Uraninite, GTMaterials.Bauxite, GTMaterials.Neodymium, GTMaterials.GlauconiteSand, GTMaterials.Aluminium, GTMaterials.Bastnasite, GTMaterials.Talc, GTMaterials.Monazite },
+                    new int[] { 300, 375, 125, 561, 93, 600, 150, 250, 300, 450, 250, 150 });
+
+            // 火星
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOChemicalHelper.getItem(TagPrefix.ingot, GTMaterials.TungstenSteel),
+                    30,
+                    GTItems.NANO_PROCESSOR_ASSEMBLY_EV.asItem(),
+                    new Block[] { ModBlocks.MARS_STONE.get(), ModBlocks.MARS_SAND.get(), ModBlocks.MARS_ICE_SHARD_ORE.get() },
+                    new int[] { 200, 50, 20 },
+                    GTOTagPrefix.MARS_STONE,
+                    new Material[] { GTMaterials.TricalciumPhosphate, GTMaterials.GarnetYellow, GTMaterials.Alunite, GTMaterials.Mica, GTMaterials.Electrotine, GTMaterials.Palladium, GTMaterials.FullersEarth, GTMaterials.GraniticMineralSand, GTMaterials.YellowLimonite, GTMaterials.Pollucite, GTMaterials.GarnetRed, GTMaterials.Pyrite, GTMaterials.Pyrochlore, GTMaterials.Saltpeter, GTMaterials.Platinum, GTMaterials.BasalticMineralSand, GTMaterials.Malachite, GTMaterials.Bornite, GTMaterials.Goethite, GTMaterials.Chalcopyrite, GTMaterials.Copper, GTMaterials.VanadiumMagnetite, GTMaterials.Hematite, GTMaterials.Gold, GTMaterials.Tetrahedrite, GTMaterials.Tungstate, GTMaterials.Diatomite, GTMaterials.Cooperite, GTMaterials.Iron, GTMaterials.Lithium, GTMaterials.Stibnite, GTMaterials.Gypsum, GTMaterials.Opal, GTMaterials.Kyanite, GTMaterials.Apatite, GTMaterials.Scheelite, GTMaterials.Magnetite, GTMaterials.Amethyst },
+                    new int[] { 333, 750, 125, 166, 250, 25, 400, 400, 2400, 83, 1125, 1454, 166, 375, 50, 600, 1200, 75, 6000, 3636, 3453, 400, 2400, 200, 3999, 466, 250, 50, 1454, 233, 999, 200, 375, 250, 500, 699, 600, 750 });
+
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOChemicalHelper.getItem(TagPrefix.ingot, GTMaterials.RTMAlloy),
+                    150,
+                    GTItems.NANO_PROCESSOR_ASSEMBLY_EV.asItem(),
+                    new Block[] { ModBlocks.MARS_STONE.get(), ModBlocks.MARS_SAND.get(), ModBlocks.MARS_ICE_SHARD_ORE.get() },
+                    new int[] { 200, 50, 20 },
+                    GTOTagPrefix.MARS_STONE,
+                    new Material[] { GTMaterials.TricalciumPhosphate, GTMaterials.GarnetYellow, GTMaterials.Tungstate, GTMaterials.Alunite, GTMaterials.Mica, GTMaterials.Lithium, GTMaterials.Palladium, GTMaterials.Electrotine, GTMaterials.Diatomite, GTMaterials.Pollucite, GTMaterials.GarnetRed, GTMaterials.Cooperite, GTMaterials.Pyrochlore, GTMaterials.Platinum, GTMaterials.Saltpeter, GTMaterials.Opal, GTMaterials.Kyanite, GTMaterials.Apatite, GTMaterials.Bornite, GTMaterials.Scheelite, GTMaterials.Amethyst },
+                    new int[] { 333, 750, 466, 125, 166, 233, 25, 250, 250, 83, 1125, 50, 166, 50, 375, 375, 250, 500, 75, 699, 750 });
+
+            // 金星
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    GTOChemicalHelper.getItem(TagPrefix.ingot, GTOMaterials.Desh),
+                    30,
+                    GTOChemicalHelper.getItem(TagPrefix.plateDense, GTOMaterials.Desh),
+                    new Block[] { ModBlocks.MARS_STONE.get(), ModBlocks.MARS_SAND.get(), ModBlocks.MARS_ICE_SHARD_ORE.get() },
+                    new int[] { 200, 50, 20 },
+                    GTOTagPrefix.MARS_STONE,
+                    new Material[] { GTMaterials.TricalciumPhosphate, GTMaterials.GarnetYellow, GTMaterials.Alunite, GTMaterials.Mica, GTMaterials.Electrotine, GTMaterials.Palladium, GTMaterials.FullersEarth, GTMaterials.GraniticMineralSand, GTMaterials.YellowLimonite, GTMaterials.Pollucite, GTMaterials.GarnetRed, GTMaterials.Pyrite, GTMaterials.Pyrochlore, GTMaterials.Saltpeter, GTMaterials.Platinum, GTMaterials.BasalticMineralSand, GTMaterials.Malachite, GTMaterials.Bornite, GTMaterials.Goethite, GTMaterials.Chalcopyrite, GTMaterials.Copper, GTMaterials.VanadiumMagnetite, GTMaterials.Hematite, GTMaterials.Gold, GTMaterials.Tetrahedrite, GTMaterials.Tungstate, GTMaterials.Diatomite, GTMaterials.Cooperite, GTMaterials.Iron, GTMaterials.Lithium, GTMaterials.Stibnite, GTMaterials.Gypsum, GTMaterials.Opal, GTMaterials.Kyanite, GTMaterials.Apatite, GTMaterials.Scheelite, GTMaterials.Magnetite, GTMaterials.Amethyst },
+                    new int[] { 333, 750, 125, 166, 250, 25, 400, 400, 2400, 83, 1125, 1454, 166, 375, 50, 600, 1200, 75, 6000, 3636, 3453, 400, 2400, 200, 3999, 466, 250, 50, 1454, 233, 999, 200, 375, 250, 500, 699, 600, 750 });
+
+            MeteoriteRegistryHelper.registerMeteoriteType(
+                    RegistriesUtils.getItem("ad_astra:tier_1_rover"),
+                    150,
+                    GTOChemicalHelper.getItem(TagPrefix.plateDense, GTOMaterials.Desh),
+                    new Block[] { ModBlocks.MARS_STONE.get(), ModBlocks.MARS_SAND.get(), ModBlocks.MARS_ICE_SHARD_ORE.get() },
+                    new int[] { 200, 50, 20 },
+                    GTOTagPrefix.MARS_STONE,
+                    new Material[] { GTMaterials.TricalciumPhosphate, GTMaterials.GarnetYellow, GTMaterials.Tungstate, GTMaterials.Alunite, GTMaterials.Mica, GTMaterials.Lithium, GTMaterials.Palladium, GTMaterials.Electrotine, GTMaterials.Diatomite, GTMaterials.Pollucite, GTMaterials.GarnetRed, GTMaterials.Cooperite, GTMaterials.Pyrochlore, GTMaterials.Platinum, GTMaterials.Saltpeter, GTMaterials.Opal, GTMaterials.Kyanite, GTMaterials.Apatite, GTMaterials.Bornite, GTMaterials.Scheelite, GTMaterials.Amethyst },
+                    new int[] { 333, 750, 466, 125, 166, 233, 25, 250, 250, 83, 1125, 50, 166, 50, 375, 375, 250, 500, 75, 699, 750 });
+
+        }
+
         MeteoriteRegistryHelper.registerMeteoriteType(
                 Items.AIR, 1, 0, ItemsRegistry.SOURCE_GEM.get().asItem(),
                 new Block[] {
