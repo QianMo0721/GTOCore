@@ -1,6 +1,6 @@
 {
     "ldlib": {
-        "connection": "gtocore:block/improved_superconductor_coil_active",
+        "connection": "gtocore:block/improved_superconductor_coil_active_ctm",
         "emissive": true
     },
     "shimmer": {

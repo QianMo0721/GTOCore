@@ -1,6 +1,15 @@
 dependencies {
     compileOnly libs.jetbrains.annotations
 
+    jarJar("dev:ManaPeeper:1.4+1.20.1-forge")
+
+    implementation("thedarkcolour:kotlinforforge:4.11.0")
+
+    modImplementation(jarJar("dev:gtolib:1.0"))
+
+    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.2-beta.4"))
+    implementation("com.github.bawnorton.mixinsquared:mixinsquared-neoforge:0.3.2-beta.4")
+
     api(annotationProcessor("io.github.llamalad7:mixinextras-common:$project.mixinextras_version"))
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 
@@ -8,10 +17,8 @@ dependencies {
 
     modImplementation("com.tterrag.registrate:Registrate:$project.registrate_version")
 
-    modImplementation("dev.latvian.mods:rhino-forge:2001.2.2-build.17") { transitive false }
-    modImplementation("dev.latvian.mods:kubejs-forge:$project.kubejs_version") { transitive false }
-
     modImplementation("appeng:appliedenergistics2-forge:${project.ae2_version}") { transitive false }
+    modImplementation("org.appliedenergistics:guideme:20.1.7")
 
     modImplementation("dev.architectury:architectury-forge:${project.architectury_version}")
 
@@ -32,52 +39,92 @@ dependencies {
 
     modImplementation("top.theillusivec4.curios:curios-forge:${project.curiosVersion}+${project.minecraft_version}")
 
-    modImplementation("vazkii.botania:Botania:${project.minecraft_version}-446-FORGE")
+    modImplementation("vazkii.botania:Botania:${project.minecraft_version}-448-FORGE")
 
-    modRuntimeOnly("vazkii.patchouli:Patchouli:${project.minecraft_version}-84-FORGE")
+    modImplementation("vazkii.patchouli:Patchouli:${project.minecraft_version}-84.1-FORGE")
+
+    modImplementation("curse.maven:extrabotany-reburn-1271869:6707165")
+    modImplementation("curse.maven:event-wrapper-1256971:6705170")
 
     modRuntimeOnly("dev.shadowsoffire:ApothicAttributes:${project.minecraft_version}-1.3.7")
     modImplementation("dev.shadowsoffire:Placebo:${project.minecraft_version}-8.6.2")
-    modImplementation("dev.shadowsoffire:Apotheosis:${project.minecraft_version}-7.4.6")
+    modImplementation("dev.shadowsoffire:Apotheosis:${project.minecraft_version}-7.4.7")
 
-    modImplementation("curse.maven:jade-324717:6106101")
+    modCompileOnly("com.hollingsworth.ars_nouveau:ars_nouveau-${project.minecraft_version}:4.12.6.256")
+    modRuntimeOnly("curse.maven:ars-nouveau-401955:5894609")
 
     modImplementation("curse.maven:glodium-957920:5006780")
-    modImplementation("curse.maven:ex-pattern-provider-892005:6092800")
+    modImplementation("curse.maven:ex-pattern-provider-892005:6505265")
 
+    modImplementation("curse.maven:functional-storage-556861:5650296")
+    modImplementation("curse.maven:titanium-287342:5468426")
+
+    modImplementation("curse.maven:modern-ae2-additions-1028068:6689575")
     modImplementation("curse.maven:ae2wtlib-459929:5217955")
 
     modImplementation("curse.maven:deeperdarker-659011:5906086")
 
-    modImplementation("curse.maven:modernfix-790626:6025611")
+    modImplementation("curse.maven:modernfix-790626:6609555")
 
-    modImplementation("curse.maven:gtmthings-1104310:6133862")
-
-    modImplementation("curse.maven:Re-Avaritia-623969:6130139")
+    modImplementation("curse.maven:re-avaritia-623969:6418092")
 
     modImplementation("curse.maven:EnderIO-64578:5780352")
 
-    modCompileOnly("dev.ftb.mods:ftb-quests-forge:2001.4.9") { transitive false }
+    modImplementation("curse.maven:farmers-delight-398521:6154802")
 
-    modCompileOnly("dev.ftb.mods:ftb-xmod-compat-forge:2.1.2") { transitive false }
+    modImplementation("curse.maven:farmers-respite-551453:5543547")
 
-    modCompileOnly("dev.ftb.mods:ftb-ultimine-forge:2001.1.5") { transitive false }
+    // modImplementation("curse.maven:spark-361579:4738952")
+
+    modCompileOnly("curse.maven:libx-412525:5207625")
+
+    modCompileOnly("curse.maven:mythicbotany-400058:5101899")
+
+    modCompileOnly("curse.maven:ftb-quests-forge-289412:6259628")
+
+    modCompileOnly("curse.maven:ftb-xmod-compat-889915:6402486")
+
+    modCompileOnly("curse.maven:ftb-ultimine-forge-386134:5363345")
+
+    modCompileOnly("curse.maven:ftb-essentials-410811:4896152")
+
+    modCompileOnly("software.bernie.geckolib:geckolib-forge-${minecraft_version}:4.7.1.2")
+
+    modCompileOnly("corgitaco.corgilib:Corgilib-Forge:$minecraft_version-4.0.3.3")
 
     modCompileOnly("curse.maven:Shimmer-forge-627824:5685940")
 
     modCompileOnly("curse.maven:just-enough-resources-jer-240630:5057220")
 
+    modCompileOnly("curse.maven:chisel-reborn-551763:6266130")
+
+    modCompileOnly("curse.maven:biomes-o-plenty-220318:6028852")
+
+    modCompileOnly("curse.maven:oh-the-biomes-weve-gone-1070751:6337823")
+
+    modCompileOnly("curse.maven:emi-trades-villager-trading-emi-plugin-735523:4901194")
+
+    modCompileOnly("curse.maven:open-parties-and-claims-636608:6242869")
+
+    modCompileOnly("curse.maven:sophisticated-backpacks-422301:6539219")
+    modCompileOnly("curse.maven:sophisticated-core-618298:6545102")
+
+    modCompileOnly("curse.maven:xaeros-world-map-317780:6212637")
+    modCompileOnly("curse.maven:xaeros-minimap-263420:6306155")
+
     modRuntimeOnly("curse.maven:cloth-config-348521:5729105")
 
     modRuntimeOnly("curse.maven:FerriteCore-429235:4810975")
 
-    modRuntimeOnly("curse.maven:embeddium-908741:5681725")
+    modImplementation("curse.maven:embeddium-908741:5681725")
 
     // modRuntimeOnly("curse.maven:modern-ui-352491:5977000")
 
-    // modImplementation("com.gregtechceu.gtceu:gtceu-$project.minecraft_version:$project.gtceu_version") { transitive = false }
+    jarJar(modImplementation("dev:gtceu-$project.minecraft_version:$project.gtceu_version"))
 
-    modImplementation("dev:gtceu-$project.minecraft_version:$project.gtceu_version")
+    modImplementation("dev:gtmthings-1.4.8")
+
+    modImplementation("dev:Jade-1.20.1-Forge-11.13.1")
 
     modRuntimeOnly("dev:jecharacters:1.20.1-forge-4.5.11-dev-shadow")
 }

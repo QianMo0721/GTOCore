@@ -5,8 +5,11 @@ classes/
 .idea/
 .settings/
 .vscode/
+.kotlin/
 bin/
 run/
+src/generated/
+libs/*-sources.jar
 *.launch
 *.iml
 *.ipr
