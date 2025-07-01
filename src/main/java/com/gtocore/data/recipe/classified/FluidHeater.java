@@ -44,8 +44,8 @@ final class FluidHeater {
         FLUID_HEATER_RECIPES.recipeBuilder("bedrock_gas")
                 .inputFluids(GTOMaterials.CleanBedrockSolution.getFluid(1000))
                 .outputFluids(GTOMaterials.BedrockGas.getFluid(1000))
-                .EUt(31457280)
-                .duration(100)
+                .EUt(7864320)
+                .duration(200)
                 .save();
 
         FLUID_HEATER_RECIPES.recipeBuilder("heater_germanium_tetrachloride_solution")

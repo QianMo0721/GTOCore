@@ -668,7 +668,7 @@ public final class MultiBlockD {
             .workableCasingRenderer(GTOCore.id("block/casings/dimension_connection_casing"), GTOCore.id("block/multiblock/door_of_create"))
             .register();
 
-    public static final MultiblockMachineDefinition BEDROCK_DRILLING_RIG = multiblock("bedrock_drilling_rig", "基岩钻机", ElectricMultiblockMachine::new)
+    public static final MultiblockMachineDefinition BEDROCK_DRILLING_RIG = multiblock("bedrock_drilling_rig", "基岩钻机", BedrockDrillingRigMachine::new)
             .noneRotation()
             .recipeTypes(GTORecipeTypes.BEDROCK_DRILLING_RIG_RECIPES)
             .tooltips(ComponentBuilder.create().addStoryLine("""
@@ -714,18 +714,6 @@ public final class MultiBlockD {
                     .where('g', blocks(GTOBlocks.MACHINE_CASING_GRINDING_HEAD.get()))
                     .where(' ', any())
                     .build())
-            .beforeWorking((machine, recipe) -> {
-                Level level = machine.self().getLevel();
-                boolean value = false;
-                if (level != null) {
-                    if (Math.random() < 0.1) {
-                        level.setBlockAndUpdate(machine.self().getPos().offset(0, -9, 0), Blocks.AIR.defaultBlockState());
-                    }
-                    value = level.getBlockState(machine.self().getPos().offset(0, -9, 0)).getBlock() == Blocks.BEDROCK;
-                }
-                if (!value) machine.getRecipeLogic().markLastRecipeDirty();
-                return value;
-            })
             .workableCasingRenderer(GTOCore.id("block/casings/echo_casing"), GTCEu.id("block/multiblock/cleanroom"))
             .register();
 

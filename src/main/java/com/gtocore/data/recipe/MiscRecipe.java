@@ -618,5 +618,12 @@ public final class MiscRecipe {
                 .inputFluids(SolderingAlloy, L / 2)
                 .outputItems(COVER_ITEM_DETECTOR_ADVANCED)
                 .EUt(16).duration(100).save();
+
+        FLUID_SOLIDFICATION_RECIPES.builder("light_concrete_cobblestone")
+                .outputItems("gtceu:light_concrete_cobblestone")
+                .inputFluids(GTMaterials.Concrete, 144)
+                .EUt(7)
+                .duration(100)
+                .save();
     }
 }
