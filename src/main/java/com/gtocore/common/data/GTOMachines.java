@@ -15,8 +15,8 @@ import com.gtocore.common.machine.noenergy.BoilWaterMachine;
 import com.gtocore.common.machine.noenergy.HeaterMachine;
 import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
 import com.gtocore.common.machine.steam.SteamVacuumPumpMachine;
-
 import com.gtocore.data.lang.LangHandler;
+
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
 import com.gtolib.api.annotation.NewDataAttributes;
@@ -417,7 +417,6 @@ public final class GTOMachines {
                             its content will be replaced by the same line according to your priority.
                             The more items in a row, the higher its priority.""")))
             .register();
-
 
     public static final MachineDefinition[] NEUTRON_ACCELERATOR = registerTieredMachines("neutron_accelerator", tier -> VNF[tier] + "中子加速器",
             NeutronAcceleratorPartMachine::new,

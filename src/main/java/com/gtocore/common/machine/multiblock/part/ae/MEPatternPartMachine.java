@@ -58,7 +58,7 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
 
     static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MEPatternPartMachine.class, MEBusPartMachine.MANAGED_FIELD_HOLDER);
     public final int maxPatternCount;
-    public final InternalInventory internalPatternInventory = new InternalInventory() {
+    final InternalInventory internalPatternInventory = new InternalInventory() {
 
         @Override
         public int size() {
@@ -128,10 +128,6 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
     @Override
     public void onLoad() {
         super.onLoad();
-        initializeBuild();
-    }
-
-    public void initializeBuild() {
         if (getLevel() instanceof ServerLevel serverLevel) {
             serverLevel.getServer().tell(new TickTask(1, () -> {
                 var slots = patternInventory.getSlots();
@@ -195,7 +191,7 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
         }
     }
 
-    public void onPatternChange(int index) {
+    void onPatternChange(int index) {
         if (isRemote()) return;
         T internalInv = getInternalInventory()[index];
         var newPattern = patternInventory.getStackInSlot(index);

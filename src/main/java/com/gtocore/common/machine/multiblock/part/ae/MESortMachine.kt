@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.TickTask
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.tags.TagKey
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -33,11 +34,10 @@ import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder
 import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
-import com.gtolib.api.gui.ktflexible.field
 import com.gtolib.api.gui.ktflexible.root
 import com.gtolib.api.gui.ktflexible.text
 import com.gtolib.api.gui.ktflexible.vBox
-import com.gtolib.api.gui.ktflexible.vBoxThreeColumn
+import com.gtolib.api.gui.ktflexible.vBoxWithThreeColumn
 import com.gtolib.mixin.ae2.GridAccessor
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture
@@ -72,18 +72,9 @@ class MESortMachine :
     companion object {
         @RegisterLanguage(cn = "ME样板内容动态修改机", en = "ME Pattern Content Dynamic Editor Machine")
         val usingTooltips: String = "gtocore.gui.me_sort.using_tooltips"
+
         @RegisterLanguage(cn = "根据配置的同标签物品的个数确定优先级", en = "Determine priority based on the number of items with the same tag")
         val usingTooltips1: String = "gtocore.gui.me_sort.using_tooltips_1"
-        @RegisterLanguage(cn = "上移", en = "Move Up")
-        val moveUp : String = "gtocore.gui.me_sort.move_up"
-        @RegisterLanguage(cn = "下移", en = "Move Down")
-        val moveDown : String = "gtocore.gui.me_sort.move_down"
-        @RegisterLanguage(cn = "删除", en = "Delete")
-        val delete : String = "gtocore.gui.me_sort.delete"
-        @RegisterLanguage(cn = "应用", en = "Apply")
-        val apply : String = "gtocore.gui.me_sort.apply"
-        @RegisterLanguage(cn = "添加", en = "Add")
-        val add : String = "gtocore.gui.me_sort.add"
         const val PAGE_WIDTH = 276
         const val PAGE_HEIGHT = 166
         val MANAGED_FIELD_HOLDER: ManagedFieldHolder =
@@ -130,7 +121,7 @@ class MESortMachine :
         var widgets: MutableList<MyPhantomSlotWidget> = mutableListOf()
     }
     // //////////////////////////////
-    // ****** 刷新其他机器缓存 初始化 ******//
+    // ****** 刷新其他机器缓存 ******//
     // //////////////////////////////
 
     fun freshOtherMachineCache() {
@@ -157,28 +148,25 @@ class MESortMachine :
             }
         }
     }
-    var isInitialize = false
 
-    init {
-        subscribeServerTick {
-            if (!isRemote && !isInitialize && offsetTimer % 20 == 0L && gridNodeHolder.mainNode.isActive) {
-                level?.server?.tell(
-                    TickTask(initializationGap) {
-                        meSortMachineLogic.fullyRefresh()
-                        freshOtherMachineCache()
-                    },
-                )
-                isInitialize = true
-            }
+    override fun onLoad() {
+        super.onLoad()
+        if (isRemote) return
+        meSortMachineLogic.fullyRefresh()
+        freshOtherMachineCache()
+        if (level is ServerLevel) {
+            level?.server?.tell(
+                TickTask(200) {
+                    meSortMachineLogic.fullyRefresh()
+                    freshOtherMachineCache()
+                },
+            )
         }
     }
 
     // //////////////////////////////
     // ****** 数据结构 ******//
     // //////////////////////////////
-    @Persisted
-    @DescSynced
-    var initializationGap: Int = 40
 
     @Persisted
     @DescSynced
@@ -238,7 +226,7 @@ class MESortMachine :
         var slots: Int = 0
             set(value) {
                 widgets.clear()
-                (0 until value).forEach { _ ->
+                for (i in 0 until value) {
                     widgets.add(
                         MyPhantomSlotWidget(ItemStackHandler(1), 0, 0, 0) { stack ->
                             stack?.run {
@@ -326,7 +314,7 @@ class MESortMachine :
             itemToSort.clear()
             tagLineList.lists.forEach { line ->
                 val sortStacks = ObjectArrayList<AEItemKey>()
-                val validStacks = line.getSortStacks()
+                val validStacks = line.getSortStacks().filterNotNull()
                 sortStacks.addAll(validStacks)
 
                 validStacks.forEach { aek ->
@@ -366,16 +354,15 @@ class MESortMachine :
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(Items.IRON_INGOT)
         override fun getTitle(): Component? = Component.literal(sortType.name)
         override fun createMainPage(widget: FancyMachineUIWidget?) = root(PAGE_WIDTH, PAGE_HEIGHT) {
-            vScroll(PAGE_WIDTH, PAGE_HEIGHT, {spacing=4}) {
+            vScroll(PAGE_WIDTH, PAGE_HEIGHT, spacing = 4) {
                 when (sortType) {
                     TAG -> {
-                        hBox(height = 50, { spacing = 2 }) {
-                            button(width = this@vScroll.availableWidth - 2 - 50 - 2 - 50, transKet = add, onClick = {
+                        hBox(height = 50, spacing = 2) {
+                            button(width = this@vScroll.availableWidth - 2 - 50, text = { "添加" }, onClick = {
                                 tagLineList.lists.add(TagLine(13))
                                 fancyMachineUIWidget.openSetupUI(this@SubPage)
                             })
-                            field(getter = { initializationGap.toString() }, setter = { initializationGap = it.toInt() })
-                            button(width = 50, transKet = apply, onClick = {
+                            button(width = 50, text = { "立刻应用" }, onClick = {
                                 meSortMachineLogic.fullyRefresh()
                                 freshOtherMachineCache()
                             })
@@ -383,28 +370,28 @@ class MESortMachine :
                         text(width = availableWidth, text = { Component.translatable(usingTooltips) }) { }
                         text(width = availableWidth, text = { Component.translatable(usingTooltips1) })
                         tagLineList.lists.forEach { line ->
-                            vBoxThreeColumn(
+                            vBoxWithThreeColumn(
                                 availableWidth,
                                 spacing = 2,
                                 between = 7,
                                 drawInBackgroundInit =
                                 { g, _, _, _, vBox -> DrawerHelper.drawSolidRect(g, vBox.positionX + 2, vBox.positionY, 2, vBox.sizeHeight, 0xFF66CCFF.toInt()) },
                             ) {
-                                hBox(16, { spacing = 2 }) {
-                                    button(width = (this@vBoxThreeColumn.availableWidth - 4) / 3, transKet = moveUp, onClick = {
+                                hBox(16, spacing = 2) {
+                                    button(width = (this@vBoxWithThreeColumn.availableWidth - 4) / 3, text = { "上移" }, onClick = {
                                         moveItem(tagLineList.lists, line, -1)
                                         fancyMachineUIWidget.openSetupUI(this@SubPage)
                                     })
-                                    button(width = (this@vBoxThreeColumn.availableWidth - 4) / 3, transKet = delete, onClick = {
+                                    button(width = (this@vBoxWithThreeColumn.availableWidth - 4) / 3, text = { "删除" }, onClick = {
                                         tagLineList.lists.remove(line)
                                         fancyMachineUIWidget.openSetupUI(this@SubPage)
                                     })
-                                    button(width = (this@vBoxThreeColumn.availableWidth - 4) / 3, transKet = moveDown, onClick = {
+                                    button(width = (this@vBoxWithThreeColumn.availableWidth - 4) / 3, text = { "下移" }, onClick = {
                                         moveItem(tagLineList.lists, line, 1)
                                         fancyMachineUIWidget.openSetupUI(this@SubPage)
                                     })
                                 }
-                                vBox(availableWidth, { spacing = 2 }) {
+                                vBox(availableWidth, spacing = 2) {
                                     line.allowTags.forEach { tag ->
                                         text(width = availableWidth, text = Supplier { Component.literal(tag.location.path) }, init = {})
                                     }
