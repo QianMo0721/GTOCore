@@ -675,11 +675,6 @@ final class Vanilla {
                 "CDC",
                 "ABA",
                 'B', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.Steel), 'D', GTItems.FLUID_REGULATOR_LV.asStack(), 'C', new MaterialEntry(TagPrefix.pipeNonupleFluid, GTMaterials.Copper), 'A', new MaterialEntry(GTOTagPrefix.CURVED_PLATE, GTMaterials.Electrum));
-        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("structure_detect"), GTOItems.STRUCTURE_DETECT.asStack(),
-                " A ",
-                "ABA",
-                " A ",
-                'B', GTItems.TERMINAL.asStack(), 'A', RegistriesUtils.getItemStack("botania:detector_light_relay"));
         VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("tree_growth_simulator"), MultiBlockG.TREE_GROWTH_SIMULATOR.asStack(),
                 "ABA",
                 "CDC",
@@ -900,5 +895,15 @@ final class Vanilla {
                 "ABA",
                 "ACA",
                 'A', new MaterialEntry(TagPrefix.plate, GTOMaterials.Herbs), 'B', ManaMachine.ALCHEMY_CAULDRON.asStack(), 'C', GCYMMachines.LARGE_BREWER.asStack());
+        VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("compressed_chest"), RegistriesUtils.getItemStack("avaritia:compressed_chest"),
+                "ABA",
+                "BCB",
+                "ABA",
+                'A', RegistriesUtils.getItemStack("gtceu:wood_crate"), 'B', new ItemStack(Items.CHEST.asItem()), 'C', new ItemStack(AEBlocks.SMOOTH_SKY_STONE_CHEST.block().asItem()));
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("structure_detect"), GTOItems.STRUCTURE_DETECT.asStack(),
+                " A ",
+                "ABA",
+                " A ",
+                'A', new ItemStack(Items.REDSTONE_TORCH.asItem()), 'B', RegistriesUtils.getItemStack("gtmthings:advanced_terminal"));
     }
 }
