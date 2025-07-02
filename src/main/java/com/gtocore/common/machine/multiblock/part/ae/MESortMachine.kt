@@ -72,18 +72,24 @@ class MESortMachine :
     companion object {
         @RegisterLanguage(cn = "ME样板内容动态修改机", en = "ME Pattern Content Dynamic Editor Machine")
         val usingTooltips: String = "gtocore.gui.me_sort.using_tooltips"
+
         @RegisterLanguage(cn = "根据配置的同标签物品的个数确定优先级", en = "Determine priority based on the number of items with the same tag")
         val usingTooltips1: String = "gtocore.gui.me_sort.using_tooltips_1"
+
         @RegisterLanguage(cn = "上移", en = "Move Up")
-        val moveUp : String = "gtocore.gui.me_sort.move_up"
+        val moveUp: String = "gtocore.gui.me_sort.move_up"
+
         @RegisterLanguage(cn = "下移", en = "Move Down")
-        val moveDown : String = "gtocore.gui.me_sort.move_down"
+        val moveDown: String = "gtocore.gui.me_sort.move_down"
+
         @RegisterLanguage(cn = "删除", en = "Delete")
-        val delete : String = "gtocore.gui.me_sort.delete"
+        val delete: String = "gtocore.gui.me_sort.delete"
+
         @RegisterLanguage(cn = "应用", en = "Apply")
-        val apply : String = "gtocore.gui.me_sort.apply"
+        val apply: String = "gtocore.gui.me_sort.apply"
+
         @RegisterLanguage(cn = "添加", en = "Add")
-        val add : String = "gtocore.gui.me_sort.add"
+        val add: String = "gtocore.gui.me_sort.add"
         const val PAGE_WIDTH = 276
         const val PAGE_HEIGHT = 166
         val MANAGED_FIELD_HOLDER: ManagedFieldHolder =
@@ -366,7 +372,7 @@ class MESortMachine :
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(Items.IRON_INGOT)
         override fun getTitle(): Component? = Component.literal(sortType.name)
         override fun createMainPage(widget: FancyMachineUIWidget?) = root(PAGE_WIDTH, PAGE_HEIGHT) {
-            vScroll(PAGE_WIDTH, PAGE_HEIGHT, {spacing=4}) {
+            vScroll(PAGE_WIDTH, PAGE_HEIGHT, { spacing = 4 }) {
                 when (sortType) {
                     TAG -> {
                         hBox(height = 50, { spacing = 2 }) {
