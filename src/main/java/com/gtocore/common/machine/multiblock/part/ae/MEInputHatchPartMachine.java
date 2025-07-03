@@ -9,6 +9,7 @@ import com.gtolib.api.machine.trait.NotifiableNotConsumableItemHandler;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.fancyconfigurator.CircuitFancyConfigurator;
 import com.gregtechceu.gtceu.api.machine.feature.IDataStickInteractable;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNodeListener;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
@@ -31,6 +33,7 @@ import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import com.lowdragmc.lowdraglib.utils.Position;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -40,6 +43,9 @@ public class MEInputHatchPartMachine extends MEHatchPartMachine implements IData
 
     static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
             MEInputHatchPartMachine.class, MEHatchPartMachine.MANAGED_FIELD_HOLDER);
+
+    @Nullable
+    private TickableSubscription autoIOSubs;
 
     @Persisted
     final ExportOnlyAEFluidList aeFluidHandler;
@@ -71,12 +77,17 @@ public class MEInputHatchPartMachine extends MEHatchPartMachine implements IData
         return MANAGED_FIELD_HOLDER;
     }
 
+    @Override
+    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
+        super.onMainNodeStateChanged(reason);
+        this.updateTankSubscription();
+    }
+
     /////////////////////////////////
     // ********** Sync ME *********//
     /////////////////////////////////
 
-    @Override
-    void autoIO() {
+    private void autoIO() {
         if (!this.isWorkingEnabled()) return;
         if (!this.shouldSyncME()) return;
 
@@ -111,6 +122,15 @@ public class MEInputHatchPartMachine extends MEHatchPartMachine implements IData
                     aeTank.addStack(new GenericStack(reqFluid.what(), extracted));
                 }
             }
+        }
+    }
+
+    void updateTankSubscription() {
+        if (isWorkingEnabled() && isOnline) {
+            autoIOSubs = subscribeServerTick(autoIOSubs, this::autoIO);
+        } else if (autoIOSubs != null) {
+            autoIOSubs.unsubscribe();
+            autoIOSubs = null;
         }
     }
 

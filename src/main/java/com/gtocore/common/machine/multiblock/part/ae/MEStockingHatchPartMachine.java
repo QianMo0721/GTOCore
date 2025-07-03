@@ -31,7 +31,6 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -48,11 +47,9 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
     private static final int CONFIG_SIZE = 16;
     @Persisted
     private boolean autoPull;
-    private Predicate<GenericStack> autoPullTest;
 
     public MEStockingHatchPartMachine(IMachineBlockEntity holder) {
         super(holder);
-        this.autoPullTest = $ -> false;
     }
 
     @Override
@@ -80,33 +77,29 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
     /////////////////////////////////
     // ********** Sync ME *********//
     /////////////////////////////////
-    @Override
-    public void autoIO() {
-        super.autoIO();
-        if (autoPull && getOffsetTimer() % 100 == 0) {
-            refreshList();
-            syncME();
-        }
-    }
 
     @Override
     void syncME() {
-        IGrid grid = this.getMainNode().getGrid();
-        if (grid == null) {
-            return;
-        }
-        MEStorage networkInv = grid.getStorageService().getInventory();
-        for (ExportOnlyAEFluidSlot slot : aeFluidHandler.getInventory()) {
-            var config = slot.getConfig();
-            if (config != null) {
-                var key = config.what();
-                long extracted = networkInv.extract(key, Long.MAX_VALUE, Actionable.SIMULATE, actionSource);
-                if (extracted > 0) {
-                    slot.setStock(new GenericStack(key, extracted));
-                    continue;
-                }
+        if (autoPull) {
+            refreshList();
+        } else {
+            IGrid grid = this.getMainNode().getGrid();
+            if (grid == null) {
+                return;
             }
-            slot.setStock(null);
+            MEStorage networkInv = grid.getStorageService().getInventory();
+            for (ExportOnlyAEFluidSlot slot : aeFluidHandler.getInventory()) {
+                var config = slot.getConfig();
+                if (config != null) {
+                    var key = config.what();
+                    long extracted = networkInv.extract(key, Long.MAX_VALUE, Actionable.SIMULATE, actionSource);
+                    if (extracted > 0) {
+                        slot.setStock(new GenericStack(key, extracted));
+                        continue;
+                    }
+                }
+                slot.setStock(null);
+            }
         }
     }
 
@@ -158,45 +151,42 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
             aeFluidHandler.clearInventory(0);
             return;
         }
-
         MEStorage networkStorage = grid.getStorageService().getInventory();
         var counter = IKeyCounter.of(networkStorage.getAvailableStacks()).gtocore$getVariantCounter();
         if (counter == null) return;
 
-        PriorityQueue<Object2LongMap.Entry<AEKey>> topFluids = new PriorityQueue<>(Comparator.comparingLong(Object2LongMap.Entry<AEKey>::getLongValue));
+        var queue = new PriorityQueue<>(CONFIG_SIZE, Comparator.comparingLong(GenericStack::amount));
 
         for (var entry : counter) {
             long amount = entry.getLongValue();
-            if (!topFluids.isEmpty() && amount < topFluids.peek().getLongValue()) continue;
-
-            AEKey what = entry.getKey();
-
             if (amount <= 0) continue;
-            if (!(what instanceof AEFluidKey fluidKey)) continue;
+            var what = entry.getKey();
+            if (!(what instanceof AEFluidKey)) continue;
+            boolean free = queue.size() < CONFIG_SIZE;
+            if (!free && queue.peek().amount() >= amount) continue;
             if (!test(what)) continue;
-
-            long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
-            if (request == 0) continue;
-
-            if (autoPullTest != null && !autoPullTest.test(new GenericStack(fluidKey, amount))) continue;
-
-            if (topFluids.size() < CONFIG_SIZE) {
-                topFluids.offer(entry);
-            } else if (amount > topFluids.peek().getLongValue()) {
-                topFluids.poll();
-                topFluids.offer(entry);
+            var stack = new GenericStack(what, amount);
+            if (testConfiguredInOtherPart(stack)) continue;
+            if (free) {
+                queue.offer(stack);
+            } else {
+                queue.poll();
+                queue.offer(stack);
             }
         }
 
         int index;
-        int fluidAmount = topFluids.size();
+        int size = queue.size();
         for (index = 0; index < CONFIG_SIZE; index++) {
-            if (topFluids.isEmpty()) break;
-            Object2LongMap.Entry<AEKey> entry = topFluids.poll();
-            AEKey what = entry.getKey();
-            long amount = entry.getLongValue();
+            if (queue.isEmpty()) break;
+            var stack = queue.poll();
+
+            var what = stack.what();
+            long amount = stack.amount();
+
             long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
-            var slot = this.aeFluidHandler.getInventory()[fluidAmount - index - 1];
+
+            var slot = this.aeFluidHandler.getInventory()[size - index - 1];
             slot.setConfig(new GenericStack(what, 1));
             slot.setStock(new GenericStack(what, request));
         }
@@ -263,7 +253,5 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
         return this.autoPull;
     }
 
-    public void setAutoPullTest(final Predicate<GenericStack> autoPullTest) {
-        this.autoPullTest = autoPullTest;
-    }
+    public void setAutoPullTest(final Predicate<GenericStack> autoPullTest) {}
 }

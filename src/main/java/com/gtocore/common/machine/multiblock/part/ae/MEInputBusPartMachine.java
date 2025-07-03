@@ -9,6 +9,7 @@ import com.gtolib.api.machine.trait.NotifiableNotConsumableItemHandler;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.fancyconfigurator.CircuitFancyConfigurator;
 import com.gregtechceu.gtceu.api.machine.feature.IDataStickInteractable;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNodeListener;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
@@ -42,6 +44,8 @@ public class MEInputBusPartMachine extends MEBusPartMachine implements IDataStic
             MEInputBusPartMachine.class, MEBusPartMachine.MANAGED_FIELD_HOLDER);
 
     final static int CONFIG_SIZE = 16;
+
+    private TickableSubscription autoIOSubs;
 
     @Persisted
     final ExportOnlyAEItemList aeItemHandler;
@@ -73,12 +77,17 @@ public class MEInputBusPartMachine extends MEBusPartMachine implements IDataStic
         return MANAGED_FIELD_HOLDER;
     }
 
+    @Override
+    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
+        super.onMainNodeStateChanged(reason);
+        this.updateInventorySubscription();
+    }
+
     /////////////////////////////////
     // ********** Sync ME *********//
     /////////////////////////////////
 
-    @Override
-    void autoIO() {
+    private void autoIO() {
         if (!this.isWorkingEnabled()) return;
         if (!this.shouldSyncME()) return;
 
@@ -113,6 +122,15 @@ public class MEInputBusPartMachine extends MEBusPartMachine implements IDataStic
                     aeSlot.addStack(new GenericStack(reqItem.what(), extracted));
                 }
             }
+        }
+    }
+
+    void updateInventorySubscription() {
+        if (isWorkingEnabled() && isOnline) {
+            autoIOSubs = subscribeServerTick(autoIOSubs, this::autoIO);
+        } else if (autoIOSubs != null) {
+            autoIOSubs.unsubscribe();
+            autoIOSubs = null;
         }
     }
 

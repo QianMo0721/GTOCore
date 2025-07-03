@@ -262,11 +262,6 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
     }
 
     @Override
-    boolean shouldSubscribe() {
-        return false;
-    }
-
-    @Override
     public ManagedFieldHolder getFieldHolder() {
         return MANAGED_FIELD_HOLDER;
     }
