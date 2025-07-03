@@ -11,7 +11,6 @@ import com.gtocore.common.machine.multiblock.electric.processing.ProcessingArray
 import com.gtocore.common.machine.multiblock.electric.space.SatelliteControlCenterMachine;
 import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporterMachine;
 import com.gtocore.common.machine.multiblock.noenergy.AlgaeFarmMachine;
-import com.gtocore.common.machine.multiblock.noenergy.DroneControlCenterMachine;
 import com.gtocore.common.machine.multiblock.noenergy.LargeCokeOvenMachine;
 import com.gtocore.common.machine.multiblock.storage.MEStorageMachine;
 import com.gtocore.common.machine.multiblock.storage.WirelessDimensionRepeaterMachine;
