@@ -9,6 +9,7 @@ import com.gtocore.common.item.tools.GrassHarvesterBehaviour;
 import com.gtocore.config.GTOConfig;
 import com.gtocore.data.lang.LangHandler;
 
+import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;
@@ -232,6 +233,7 @@ public final class GTOItems {
     public static final ItemEntry<Item> ULV_ELECTRIC_PISTON = registerLang("ulv_electric_piston", "ULV Electric Piston", "ULV电力活塞");
 
     public static final ItemEntry<ComponentItem> LV_POWER_AMPLIFIERS = item("lv_power_amplifiers", "LV功率增幅器", ComponentItem::create)
+            .model((ctx, prov) -> prov.generated(ctx, GTOCore.id("item/power_amplifiers/lv_power_amplifiers")))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(1D / PowerAmplifierCover.getMultiplier(1))));
                 lines.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(PowerAmplifierCover.getMultiplier(1))));
@@ -239,6 +241,7 @@ public final class GTOItems {
             .register();
 
     public static final ItemEntry<ComponentItem> MV_POWER_AMPLIFIERS = item("mv_power_amplifiers", "MV功率增幅器", ComponentItem::create)
+            .model((ctx, prov) -> prov.generated(ctx, GTOCore.id("item/power_amplifiers/mv_power_amplifiers")))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(1D / PowerAmplifierCover.getMultiplier(2))));
                 lines.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(PowerAmplifierCover.getMultiplier(2))));
@@ -246,6 +249,7 @@ public final class GTOItems {
             .register();
 
     public static final ItemEntry<ComponentItem> HV_POWER_AMPLIFIERS = item("hv_power_amplifiers", "HV功率增幅器", ComponentItem::create)
+            .model((ctx, prov) -> prov.generated(ctx, GTOCore.id("item/power_amplifiers/hv_power_amplifiers")))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(1D / PowerAmplifierCover.getMultiplier(3))));
                 lines.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(PowerAmplifierCover.getMultiplier(3))));
@@ -253,6 +257,7 @@ public final class GTOItems {
             .register();
 
     public static final ItemEntry<ComponentItem> EV_POWER_AMPLIFIERS = item("ev_power_amplifiers", "EV功率增幅器", ComponentItem::create)
+            .model((ctx, prov) -> prov.generated(ctx, GTOCore.id("item/power_amplifiers/ev_power_amplifiers")))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(1D / PowerAmplifierCover.getMultiplier(4))));
                 lines.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(PowerAmplifierCover.getMultiplier(4))));
@@ -260,6 +265,7 @@ public final class GTOItems {
             .register();
 
     public static final ItemEntry<ComponentItem> IV_POWER_AMPLIFIERS = item("iv_power_amplifiers", "IV功率增幅器", ComponentItem::create)
+            .model((ctx, prov) -> prov.generated(ctx, GTOCore.id("item/power_amplifiers/iv_power_amplifiers")))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(1D / PowerAmplifierCover.getMultiplier(5))));
                 lines.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(PowerAmplifierCover.getMultiplier(5))));
@@ -267,6 +273,7 @@ public final class GTOItems {
             .register();
 
     public static final ItemEntry<ComponentItem> LUV_POWER_AMPLIFIERS = item("luv_power_amplifiers", "LuV功率增幅器", ComponentItem::create)
+            .model((ctx, prov) -> prov.generated(ctx, GTOCore.id("item/power_amplifiers/luv_power_amplifiers")))
             .onRegister(attach(new TooltipBehavior(lines -> {
                 lines.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(1D / PowerAmplifierCover.getMultiplier(6))));
                 lines.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(PowerAmplifierCover.getMultiplier(6))));
