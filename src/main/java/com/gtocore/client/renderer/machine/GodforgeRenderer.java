@@ -1,6 +1,5 @@
 package com.gtocore.client.renderer.machine;
 
-import com.gtocore.client.ClientUtil;
 import com.gtocore.client.renderer.RenderBufferHelper;
 import com.gtocore.client.renderer.StructurePattern;
 import com.gtocore.client.renderer.StructureVBO;
@@ -9,6 +8,7 @@ import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.machine.multiblock.noenergy.GodForgeMachine;
 
 import com.gtolib.GTOCore;
+import com.gtolib.utils.ClientUtil;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;

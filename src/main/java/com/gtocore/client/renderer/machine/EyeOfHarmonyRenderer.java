@@ -1,9 +1,9 @@
 package com.gtocore.client.renderer.machine;
 
-import com.gtocore.client.ClientUtil;
 import com.gtocore.common.machine.multiblock.noenergy.HarmonyMachine;
 
 import com.gtolib.GTOCore;
+import com.gtolib.utils.ClientUtil;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;

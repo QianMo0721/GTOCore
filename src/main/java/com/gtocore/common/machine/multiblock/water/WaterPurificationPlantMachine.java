@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.water;
 
-import com.gtocore.client.ClientUtil;
 import com.gtocore.common.data.GTOMaterials;
 
 import com.gtolib.api.capability.IIWirelessInteractor;
@@ -9,6 +8,7 @@ import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
+import com.gtolib.utils.ClientUtil;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;

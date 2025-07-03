@@ -1,7 +1,6 @@
 package com.gtocore.client.renderer.item;
 
-import com.gtocore.client.ClientUtil;
-
+import com.gtolib.utils.ClientUtil;
 import com.gtolib.utils.RLUtils;
 
 import com.gregtechceu.gtceu.GTCEu;

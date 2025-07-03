@@ -13,13 +13,11 @@ import com.gtocore.common.saved.*;
 import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
-import com.gtolib.ae2.storage.CellSavaedData;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.machine.feature.IVacuumMachine;
 import com.gtolib.api.player.IEnhancedPlayer;
-import com.gtolib.api.recipe.AsyncRecipeOutputTask;
 import com.gtolib.utils.MathUtil;
 import com.gtolib.utils.ServerUtils;
 import com.gtolib.utils.SphereExplosion;
@@ -79,8 +77,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
-import com.hepdd.gtmthings.api.misc.WirelessEnergyContainer;
-import com.hepdd.gtmthings.data.WirelessEnergySavaedData;
 import earth.terrarium.adastra.common.entities.mob.GlacianRam;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -334,30 +330,11 @@ public final class ForgeCommonEvent {
 
     @SubscribeEvent
     public static void onLevelLoad(LevelEvent.Load event) {
-        if (event.getLevel() instanceof ServerLevel level && !ServerCache.initialized) {
+        if (event.getLevel() instanceof ServerLevel level) {
             ServerLevel serverLevel = level.getServer().getLevel(Level.OVERWORLD);
             if (serverLevel == null) return;
-            WirelessEnergyContainer.server = serverLevel.getServer();
-            ServerCache.initialized = true;
-            CellSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(CellSavaedData::new, CellSavaedData::new, "storage_cell_data");
             DysonSphereSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(DysonSphereSavaedData::new, DysonSphereSavaedData::new, "dyson_sphere_data");
-            WirelessEnergySavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(ExtendWirelessEnergySavaedData::new, ExtendWirelessEnergySavaedData::new, "wireless_energy_data");
-            CommonSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(CommonSavaedData::new, CommonSavaedData::new, "common_data");
             RecipeRunLimitSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(RecipeRunLimitSavaedData::new, RecipeRunLimitSavaedData::new, " recipe_run_limit_data");
-            WirelessManaSavaedData.INSTANCE = level.getDataStorage().computeIfAbsent(WirelessManaSavaedData::new, WirelessManaSavaedData::new, "wireless_mana_data");
-            if (GTOConfig.INSTANCE.selfRestraint && !ServerUtils.getPersistentData().getBoolean("srm")) {
-                ServerUtils.getPersistentData().putBoolean("srm", true);
-                CommonSavaedData.INSTANCE.setDirty();
-            }
-            int difficulty = ServerUtils.getPersistentData().getInt("difficulty");
-            if (difficulty == 0) {
-                ServerUtils.getPersistentData().putInt("difficulty", GTOCore.difficulty);
-                CommonSavaedData.INSTANCE.setDirty();
-            } else if (difficulty != GTOCore.difficulty) {
-                String error = "Current difficulty: " + GTOCore.difficulty + " | World difficulty: " + difficulty;
-                GTOCore.difficulty = difficulty;
-                GTOCore.LOGGER.error(error);
-            }
         }
     }
 
@@ -370,8 +347,6 @@ public final class ForgeCommonEvent {
 
     @SubscribeEvent
     public static void onServerStoppingEvent(ServerStoppingEvent event) {
-        AsyncRecipeOutputTask.releaseExecutorService();
-        ServerCache.initialized = false;
         ServerCache.observe = false;
     }
 

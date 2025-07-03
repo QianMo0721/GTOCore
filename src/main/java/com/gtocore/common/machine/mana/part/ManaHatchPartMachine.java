@@ -1,8 +1,7 @@
 package com.gtocore.common.machine.mana.part;
 
-import com.gtocore.common.machine.mana.multiblock.ManaDistributorMachine;
-
 import com.gtolib.api.GTOValues;
+import com.gtolib.api.machine.ManaDistributorMachine;
 import com.gtolib.api.machine.mana.feature.IManaMachine;
 import com.gtolib.api.machine.mana.trait.NotifiableManaContainer;
 import com.gtolib.utils.MathUtil;

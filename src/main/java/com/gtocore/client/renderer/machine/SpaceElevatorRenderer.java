@@ -1,12 +1,12 @@
 package com.gtocore.client.renderer.machine;
 
-import com.gtocore.client.ClientUtil;
 import com.gtocore.client.renderer.GTORenderTypes;
 import com.gtocore.client.renderer.RenderBufferHelper;
 import com.gtocore.common.machine.multiblock.electric.space.SpaceElevatorMachine;
 import com.gtocore.common.machine.multiblock.electric.space.SuperSpaceElevatorMachine;
 
 import com.gtolib.GTOCore;
+import com.gtolib.utils.ClientUtil;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;

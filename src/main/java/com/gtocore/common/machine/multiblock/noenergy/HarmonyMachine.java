@@ -1,7 +1,5 @@
 package com.gtocore.common.machine.multiblock.noenergy;
 
-import com.gtocore.common.wireless.ExtendWirelessEnergyContainer;
-
 import com.gtolib.api.capability.IExtendWirelessEnergyContainerHolder;
 import com.gtolib.api.machine.multiblock.NoEnergyMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
@@ -99,7 +97,7 @@ public final class HarmonyMachine extends NoEnergyMultiblockMachine implements I
         if (getUUID() != null && tier <= recipe.data.getInt("tier") && hydrogen >= 1024000000 && helium >= 1024000000 && oc > 0) {
             hydrogen -= 1024000000;
             helium -= 1024000000;
-            ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+            var container = getWirelessEnergyContainer();
             long energy = getStartupEnergy() * Math.max(1, (recipe.data.getInt("tier") - 1) << 2);
             if (container != null && container.unrestrictedRemoveEnergy(energy) == energy) {
                 if (tier == recipe.data.getInt("tier")) {
@@ -130,7 +128,7 @@ public final class HarmonyMachine extends NoEnergyMultiblockMachine implements I
         textList.add(Component.translatable("tooltip.avaritia.tier", tier));
         textList.add(Component.translatable("behaviour.lighter.uses", 16 + (tier << 2) - count));
         if (getUUID() != null) {
-            ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+            var container = getWirelessEnergyContainer();
             textList.add(Component.translatable("gtmthings.machine.wireless_energy_monitor.tooltip.0", TeamUtil.GetName(getLevel(), getUUID())));
             if (container != null) textList.add(Component.translatable("gtmthings.machine.wireless_energy_monitor.tooltip.1", FormattingUtil.formatNumbers(container.getStorage())));
         }

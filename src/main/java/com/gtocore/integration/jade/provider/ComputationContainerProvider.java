@@ -1,9 +1,9 @@
 package com.gtocore.integration.jade.provider;
 
 import com.gtocore.common.machine.multiblock.part.WirelessNetworkComputationHatchMachine;
-import com.gtocore.common.wireless.WirelessComputationContainer;
 
 import com.gtolib.GTOCore;
+import com.gtolib.api.wireless.WirelessComputationContainer;
 
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.integration.jade.provider.CapabilityBlockProvider;

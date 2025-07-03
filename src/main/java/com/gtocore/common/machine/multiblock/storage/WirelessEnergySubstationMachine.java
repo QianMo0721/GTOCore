@@ -1,7 +1,6 @@
 package com.gtocore.common.machine.multiblock.storage;
 
 import com.gtocore.common.block.WirelessEnergyUnitBlock;
-import com.gtocore.common.wireless.ExtendWirelessEnergyContainer;
 
 import com.gtolib.api.GTOValues;
 import com.gtolib.api.capability.IExtendWirelessEnergyContainerHolder;
@@ -48,7 +47,7 @@ public final class WirelessEnergySubstationMachine extends NoRecipeLogicMultiblo
         if (isRemote()) return;
         Level level = getLevel();
         if (level == null) return;
-        ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+        var container = getWirelessEnergyContainer();
         if (container == null) return;
         int tier = getCasingTier(GTOValues.GLASS_TIER);
         FunctionContainer<ArrayList<WirelessEnergyUnitBlock>, ?> functionContainer = getMultiblockState().getMatchContext().get("wirelessEnergyUnit");
@@ -75,7 +74,7 @@ public final class WirelessEnergySubstationMachine extends NoRecipeLogicMultiblo
         if (isRemote()) return;
         Level level = getLevel();
         if (level == null) return;
-        ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+        var container = getWirelessEnergyContainer();
         if (container == null) return;
         container.setCapacity(BigInteger.ZERO);
         container.setLoss(0);
@@ -117,7 +116,7 @@ public final class WirelessEnergySubstationMachine extends NoRecipeLogicMultiblo
     public void customText(@NotNull List<Component> textList) {
         super.customText(textList);
         if (this.getUUID() == null) return;
-        ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+        var container = getWirelessEnergyContainer();
         if (container == null) return;
         textList.add(Component.translatable("gtmthings.machine.wireless_energy_monitor.tooltip.0", TeamUtil.GetName(getLevel(), this.getUUID())).withStyle(ChatFormatting.AQUA));
         textList.add(Component.translatable("gtmthings.machine.wireless_energy_monitor.tooltip.1", FormattingUtil.formatNumbers(container.getStorage()) + " / " + FormattingUtil.formatNumbers(container.getCapacity())).withStyle(ChatFormatting.GRAY));

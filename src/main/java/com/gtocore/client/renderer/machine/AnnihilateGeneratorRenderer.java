@@ -1,8 +1,7 @@
 package com.gtocore.client.renderer.machine;
 
-import com.gtocore.client.ClientUtil;
-
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
+import com.gtolib.utils.ClientUtil;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;

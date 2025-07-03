@@ -1,7 +1,7 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtolib.ae2.storage.BigCellDataStorage;
-import com.gtolib.ae2.storage.CellSavaedData;
+import com.gtolib.ae2.storage.CellDataStorage;
 import com.gtolib.mixin.NetworkStorageAccessor;
 
 import com.gregtechceu.gtceu.api.machine.ConditionalSubscriptionHandler;
@@ -137,7 +137,7 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
     public BigCellDataStorage getCellStorage() {
         if (dataStorage != null) return dataStorage;
         if (uuid == null || isRemote()) return BigCellDataStorage.EMPTY;
-        dataStorage = CellSavaedData.INSTANCE.getOrCreateBigCell(uuid);
+        dataStorage = BigCellDataStorage.get(uuid);
         return dataStorage;
     }
 
@@ -190,7 +190,7 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
         if (map == null) return;
         if (map.isEmpty()) {
             if (uuid != null) {
-                CellSavaedData.INSTANCE.removeBigCell(uuid);
+                BigCellDataStorage.remove(uuid);
                 dataStorage = null;
             }
             return;
@@ -212,7 +212,7 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
         storage.setAmounts(amounts);
         storage.setKeys(keys);
         storage.setBytes(totalAmount);
-        CellSavaedData.INSTANCE.setDirty();
+        CellDataStorage.setDirty();
     }
 
     @Override
