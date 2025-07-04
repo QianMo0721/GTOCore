@@ -342,7 +342,7 @@ public final class MiscRecipe {
                 .save();
 
         CHEMICAL_RECIPES.builder("polyethylene_from_oxygen")
-                .circuitMeta(1)
+                .circuitMeta(4)
                 .inputFluids(Oxygen.getFluid(1000))
                 .inputFluids(Ethylene.getFluid(L))
                 .outputFluids(Polyethylene.getFluid(144))

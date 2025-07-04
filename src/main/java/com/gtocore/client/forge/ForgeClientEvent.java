@@ -5,9 +5,9 @@ import com.gtocore.common.item.StructureDetectBehavior;
 import com.gtocore.common.item.StructureWriteBehavior;
 import com.gtocore.common.network.ClientMessage;
 import com.gtocore.config.GTOConfig;
-import com.gtocore.data.lang.LangHandler;
 
 import com.gtolib.GTOCore;
+import com.gtolib.IItem;
 import com.gtolib.api.item.MultiStepItemHelper;
 import com.gtolib.api.player.IEnhancedPlayer;
 import com.gtolib.utils.ItemUtils;
@@ -69,7 +69,13 @@ public final class ForgeClientEvent {
             event.getToolTip().add(Component.translatable("gtocore.tooltip.item.craft_step", MultiStepItemHelper.getStep(stack) + " / " + maxStep));
         }
         Item item = stack.getItem();
-        LangHandler.CNENS lang = Tooltips.TOOL_TIPS_MAP.get(item);
+        var arr = ((IItem) item).gtolib$getToolTips();
+        if (arr != null) {
+            for (int i = arr.length - 1; i >= 0; i--) {
+                event.getToolTip().add(1, arr[i].get());
+            }
+        }
+        var lang = Tooltips.TOOL_TIPS_MAP.get(item);
         if (lang != null) {
             for (int i = 0; i < lang.length(); i++) {
                 event.getToolTip().add(Component.translatable("gtocore.tooltip.item." + ItemUtils.getIdLocation(item).getPath() + "." + i));

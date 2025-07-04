@@ -7,14 +7,13 @@ import com.gtocore.common.item.*;
 import com.gtocore.common.item.armor.SpaceArmorComponentItem;
 import com.gtocore.common.item.tools.GrassHarvesterBehaviour;
 import com.gtocore.config.GTOConfig;
-import com.gtocore.data.lang.LangHandler;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
-import com.gtolib.api.item.ToolTipsItem;
+import com.gtolib.api.lang.CNEN;
 import com.gtolib.utils.StringUtils;
 
 import com.gregtechceu.gtceu.GTCEu;
@@ -86,7 +85,7 @@ public final class GTOItems {
     public static final ItemEntry<StorageComponentItem> CELL_COMPONENT_64M = registerStorageComponentItem(64);
     public static final ItemEntry<StorageComponentItem> CELL_COMPONENT_256M = registerStorageComponentItem(256);
 
-    private static final ComponentSupplier ORDER_TOOLTIPS = NewDataAttributes.MIRACULOUS_TOOLS.create(LangHandler.CNEN.create("AE2 Order", "AE2 订单"), b -> b.addCommentLines("""
+    private static final ComponentSupplier ORDER_TOOLTIPS = NewDataAttributes.MIRACULOUS_TOOLS.create(CNEN.create("AE2 Order", "AE2 订单"), b -> b.addCommentLines("""
             右键可以放入一个虚拟物品，例如多方块主机
             不需要再在铁砧使用告示牌命名
             可以作为AE自动合成的大型机器产物
@@ -291,27 +290,33 @@ public final class GTOItems {
             }), new CoverPlaceBehavior(GTOCovers.STEAM_PUMP)))
             .register();
 
+    public static final ItemEntry<ComponentItem> WIRELESS_CHARGER_COVER = item("wireless_charger_cover", "无线充能覆盖板", ComponentItem::create)
+            .toolTips(ComponentBuilder.create()
+                    .addLines("贴在存储方块上可使内部的物品自动充能", "Attach to a storage block to automatically charge its contents")
+                    .addLines("需要链接无线充能器使用", "Requires a wireless charger to use")
+                    .build().getArray())
+            .onRegister(attach(new CoverPlaceBehavior(GTOCovers.WIRELESS_CHARGER_COVER)))
+            .register();
+
     public static final ItemEntry<ComponentItem> WIRELESS_ENERGY_RECEIVE_COVER_MAX = registerTieredCover(1);
 
     public static final ItemEntry<ComponentItem> WIRELESS_ENERGY_RECEIVE_COVER_MAX_4A = registerTieredCover(4);
 
-    private static final ComponentSupplier TIME_TWISTER_TOOLTIPS = ComponentBuilder.create()
-            .addLines(NewDataAttributes.MIRACULOUS_TOOLS.create(LangHandler.CNEN.create("时间扭曲者", "Time Twister")), a -> a)
-            .addLines(NewDataAttributes.EMPTY_WITH_BAR.create(LangHandler.CNEN.create("对普通方块实体的加速：", "Acceleration for normal block entities")), StyleBuilder::setGold)
-            .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(LangHandler.CNEN.create("普通点击：消耗8192 EU能量，使方块实体额外执行200个游戏刻(tick)", "Consume 8192 EU energy, make the block entity execute 200 ticks extra")), StyleBuilder::setAqua)
-            .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(LangHandler.CNEN.create("Shift点击：消耗819200 EU能量，持续100刻内加速目标方块", "Consume 819200 EU energy, accelerate the target block for 100 ticks")), StyleBuilder::setAqua)
-            .addLines(NewDataAttributes.EMPTY_WITH_BAR.create(LangHandler.CNEN.create("对GT机器的加速：", "Acceleration for GT machines")), StyleBuilder::setGold)
-            .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(LangHandler.CNEN.create("普通点击：消耗相应EU能量，使当前正在工作的机器进度立即增加50%", "Consume corresponding EU energy, make the current working machine progress increase by 50% immediately")), StyleBuilder::setAqua)
-            .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(LangHandler.CNEN.create("Shift点击：消耗819200 EU能量，持续100刻内加速GT机器", "Consume 819200 EU energy, accelerate GT machines for 100 ticks")), StyleBuilder::setAqua)
-            .addLines(NewDataAttributes.EMPTY_WITH_BAR.create(LangHandler.CNEN.create("能量消耗：", "Energy consumption")), StyleBuilder::setGold)
-            .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(LangHandler.CNEN.create("使用无线能量系统作为能量来源", "Use wireless energy system as energy source")), StyleBuilder::setAqua)
-            .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(LangHandler.CNEN.create("不同操作消耗不同数量的EU", "Different operations consume different numbers of EU")), StyleBuilder::setAqua)
-            .build();
-    private static final List<Component> TIME_TWISTER_TOOLTIPS_DATA_GEN_INITIALIZATION = TIME_TWISTER_TOOLTIPS.get();
     public static final ItemEntry<ComponentItem> TIME_TWISTER = item("time_twister", "时间扭曲者", ComponentItem::create)
+            .toolTips(ComponentBuilder.create()
+                    .addLines(NewDataAttributes.MIRACULOUS_TOOLS.create(CNEN.create("时间扭曲者", "Time Twister")), a -> a)
+                    .addLines(NewDataAttributes.EMPTY_WITH_BAR.create(CNEN.create("对普通方块实体的加速：", "Acceleration for normal block entities")), StyleBuilder::setGold)
+                    .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(CNEN.create("普通点击：消耗8192 EU能量，使方块实体额外执行200个游戏刻(tick)", "Consume 8192 EU energy, make the block entity execute 200 ticks extra")), StyleBuilder::setAqua)
+                    .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(CNEN.create("Shift点击：消耗819200 EU能量，持续100刻内加速目标方块", "Consume 819200 EU energy, accelerate the target block for 100 ticks")), StyleBuilder::setAqua)
+                    .addLines(NewDataAttributes.EMPTY_WITH_BAR.create(CNEN.create("对GT机器的加速：", "Acceleration for GT machines")), StyleBuilder::setGold)
+                    .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(CNEN.create("普通点击：消耗相应EU能量，使当前正在工作的机器进度立即增加50%", "Consume corresponding EU energy, make the current working machine progress increase by 50% immediately")), StyleBuilder::setAqua)
+                    .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(CNEN.create("Shift点击：消耗819200 EU能量，持续100刻内加速GT机器", "Consume 819200 EU energy, accelerate GT machines for 100 ticks")), StyleBuilder::setAqua)
+                    .addLines(NewDataAttributes.EMPTY_WITH_BAR.create(CNEN.create("能量消耗：", "Energy consumption")), StyleBuilder::setGold)
+                    .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(CNEN.create("使用无线能量系统作为能量来源", "Use wireless energy system as energy source")), StyleBuilder::setAqua)
+                    .addLines(NewDataAttributes.EMPTY_WITH_TAB.create(CNEN.create("不同操作消耗不同数量的EU", "Different operations consume different numbers of EU")), StyleBuilder::setAqua)
+                    .build().getArray())
             .properties(p -> p.stacksTo(1))
             .onRegister(attach(TimeTwisterBehavior.INSTANCE))
-            .onRegister(attach(new TooltipBehavior(s -> s.addAll(TIME_TWISTER_TOOLTIPS.get()))))
             .register();
 
     public static final ItemEntry<ComponentItem> STRUCTURE_DETECT = item("structure_detect", "结构检测工具", ComponentItem::create)
@@ -382,36 +387,36 @@ public final class GTOItems {
     public static final ItemEntry<KineticRotorItem> STEEL_ROTOR = registerRotor("steel_kinetic_rotor", "钢", 16000, 10, 30, 1);
     public static final ItemEntry<KineticRotorItem> CARBON_ROTOR = registerRotor("carbon_kinetic_rotor", "碳", 24000, 2, 40, 2);
 
-    public static final ItemEntry<ToolTipsItem> BIOWARE_PROCESSOR = registerCircuit("bioware_processor", "生物活性处理器", CustomTags.ZPM_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "ZPM")));
-    public static final ItemEntry<ToolTipsItem> BIOWARE_ASSEMBLY = registerCircuit("bioware_assembly", "生物活性处理器集群", CustomTags.UV_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "UV")));
-    public static final ItemEntry<ToolTipsItem> BIOWARE_COMPUTER = registerCircuit("bioware_computer", "生物活性处理器超级计算机", CustomTags.UHV_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "UHV")));
-    public static final ItemEntry<ToolTipsItem> BIOWARE_MAINFRAME = registerCircuit("bioware_mainframe", "生物活性处理器主机", CustomTags.UEV_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
+    public static final ItemEntry<Item> BIOWARE_PROCESSOR = registerCircuit("bioware_processor", "生物活性处理器", CustomTags.ZPM_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "ZPM")));
+    public static final ItemEntry<Item> BIOWARE_ASSEMBLY = registerCircuit("bioware_assembly", "生物活性处理器集群", CustomTags.UV_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "UV")));
+    public static final ItemEntry<Item> BIOWARE_COMPUTER = registerCircuit("bioware_computer", "生物活性处理器超级计算机", CustomTags.UHV_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "UHV")));
+    public static final ItemEntry<Item> BIOWARE_MAINFRAME = registerCircuit("bioware_mainframe", "生物活性处理器主机", CustomTags.UEV_CIRCUITS, () -> StringUtils.dark_green(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
 
-    public static final ItemEntry<ToolTipsItem> OPTICAL_PROCESSOR = registerCircuit("optical_processor", "光学处理器", CustomTags.UV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UV")));
-    public static final ItemEntry<ToolTipsItem> OPTICAL_ASSEMBLY = registerCircuit("optical_assembly", "光学处理器集群", CustomTags.UHV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UHV")));
-    public static final ItemEntry<ToolTipsItem> OPTICAL_COMPUTER = registerCircuit("optical_computer", "光学处理器超级计算机", CustomTags.UEV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
-    public static final ItemEntry<ToolTipsItem> OPTICAL_MAINFRAME = registerCircuit("optical_mainframe", "光学处理器主机", CustomTags.UIV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
+    public static final ItemEntry<Item> OPTICAL_PROCESSOR = registerCircuit("optical_processor", "光学处理器", CustomTags.UV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UV")));
+    public static final ItemEntry<Item> OPTICAL_ASSEMBLY = registerCircuit("optical_assembly", "光学处理器集群", CustomTags.UHV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UHV")));
+    public static final ItemEntry<Item> OPTICAL_COMPUTER = registerCircuit("optical_computer", "光学处理器超级计算机", CustomTags.UEV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
+    public static final ItemEntry<Item> OPTICAL_MAINFRAME = registerCircuit("optical_mainframe", "光学处理器主机", CustomTags.UIV_CIRCUITS, () -> StringUtils.golden(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
 
-    public static final ItemEntry<ToolTipsItem> EXOTIC_PROCESSOR = registerCircuit("exotic_processor", "奇异处理器", CustomTags.UHV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UHV")));
-    public static final ItemEntry<ToolTipsItem> EXOTIC_ASSEMBLY = registerCircuit("exotic_assembly", "奇异处理器集群", CustomTags.UEV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
-    public static final ItemEntry<ToolTipsItem> EXOTIC_COMPUTER = registerCircuit("exotic_computer", "奇异处理器超级计算机", CustomTags.UIV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
-    public static final ItemEntry<ToolTipsItem> EXOTIC_MAINFRAME = registerCircuit("exotic_mainframe", "奇异处理器主机", CustomTags.UXV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UXV")));
+    public static final ItemEntry<Item> EXOTIC_PROCESSOR = registerCircuit("exotic_processor", "奇异处理器", CustomTags.UHV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UHV")));
+    public static final ItemEntry<Item> EXOTIC_ASSEMBLY = registerCircuit("exotic_assembly", "奇异处理器集群", CustomTags.UEV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
+    public static final ItemEntry<Item> EXOTIC_COMPUTER = registerCircuit("exotic_computer", "奇异处理器超级计算机", CustomTags.UIV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
+    public static final ItemEntry<Item> EXOTIC_MAINFRAME = registerCircuit("exotic_mainframe", "奇异处理器主机", CustomTags.UXV_CIRCUITS, () -> StringUtils.purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UXV")));
 
-    public static final ItemEntry<ToolTipsItem> COSMIC_PROCESSOR = registerCircuit("cosmic_processor", "寰宇处理器", CustomTags.UEV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
-    public static final ItemEntry<ToolTipsItem> COSMIC_ASSEMBLY = registerCircuit("cosmic_assembly", "寰宇处理器集群", CustomTags.UIV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
-    public static final ItemEntry<ToolTipsItem> COSMIC_COMPUTER = registerCircuit("cosmic_computer", "寰宇处理器超级计算机", CustomTags.UXV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UXV")));
-    public static final ItemEntry<ToolTipsItem> COSMIC_MAINFRAME = registerCircuit("cosmic_mainframe", "寰宇处理器主机", CustomTags.OpV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "OpV")));
+    public static final ItemEntry<Item> COSMIC_PROCESSOR = registerCircuit("cosmic_processor", "寰宇处理器", CustomTags.UEV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UEV")));
+    public static final ItemEntry<Item> COSMIC_ASSEMBLY = registerCircuit("cosmic_assembly", "寰宇处理器集群", CustomTags.UIV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
+    public static final ItemEntry<Item> COSMIC_COMPUTER = registerCircuit("cosmic_computer", "寰宇处理器超级计算机", CustomTags.UXV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "UXV")));
+    public static final ItemEntry<Item> COSMIC_MAINFRAME = registerCircuit("cosmic_mainframe", "寰宇处理器主机", CustomTags.OpV_CIRCUITS, () -> StringUtils.dark_purplish_red(I18n.get("gtocore.tooltip.item.tier_circuit", "OpV")));
 
-    public static final ItemEntry<ToolTipsItem> SUPRACAUSAL_PROCESSOR = registerCircuit("supracausal_processor", "超因果处理器", CustomTags.UIV_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
-    public static final ItemEntry<ToolTipsItem> SUPRACAUSAL_ASSEMBLY = registerCircuit("supracausal_assembly", "超因果处理器集群", CustomTags.UXV_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "UXV")));
-    public static final ItemEntry<ToolTipsItem> SUPRACAUSAL_COMPUTER = registerCircuit("supracausal_computer", "超因果处理器超级计算机", CustomTags.OpV_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "OpV")));
-    public static final ItemEntry<ToolTipsItem> SUPRACAUSAL_MAINFRAME = registerCircuit("supracausal_mainframe", "超因果处理器主机", CustomTags.MAX_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "MAX")));
+    public static final ItemEntry<Item> SUPRACAUSAL_PROCESSOR = registerCircuit("supracausal_processor", "超因果处理器", CustomTags.UIV_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "UIV")));
+    public static final ItemEntry<Item> SUPRACAUSAL_ASSEMBLY = registerCircuit("supracausal_assembly", "超因果处理器集群", CustomTags.UXV_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "UXV")));
+    public static final ItemEntry<Item> SUPRACAUSAL_COMPUTER = registerCircuit("supracausal_computer", "超因果处理器超级计算机", CustomTags.OpV_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "OpV")));
+    public static final ItemEntry<Item> SUPRACAUSAL_MAINFRAME = registerCircuit("supracausal_mainframe", "超因果处理器主机", CustomTags.MAX_CIRCUITS, () -> StringUtils.full_color(I18n.get("gtocore.tooltip.item.tier_circuit", "MAX")));
 
-    public static final ItemEntry<ToolTipsItem>[] SUPRACHRONAL_CIRCUIT = registerCircuits("suprachronal_circuit", "超时空电路", GTValues.tiersBetween(GTValues.ULV, GTValues.MAX), tier -> Component.literal(StringUtils.white_blue(I18n.get("gtocore.tooltip.item.tier_circuit", GTValues.VN[tier]))));
+    public static final ItemEntry<Item>[] SUPRACHRONAL_CIRCUIT = registerCircuits("suprachronal_circuit", "超时空电路", GTValues.tiersBetween(GTValues.ULV, GTValues.MAX), tier -> Component.literal(StringUtils.white_blue(I18n.get("gtocore.tooltip.item.tier_circuit", GTValues.VN[tier]))));
 
-    public static final ItemEntry<ToolTipsItem>[] MAGNETO_RESONATIC_CIRCUIT = registerCircuits("magneto_resonatic_circuit", "磁共振电路", GTValues.tiersBetween(GTValues.ULV, GTValues.UIV), tier -> Component.translatable("gtocore.tooltip.item.tier_circuit", GTValues.VN[tier]).withStyle(ChatFormatting.LIGHT_PURPLE));
+    public static final ItemEntry<Item>[] MAGNETO_RESONATIC_CIRCUIT = registerCircuits("magneto_resonatic_circuit", "磁共振电路", GTValues.tiersBetween(GTValues.ULV, GTValues.UIV), tier -> Component.translatable("gtocore.tooltip.item.tier_circuit", GTValues.VN[tier]).withStyle(ChatFormatting.LIGHT_PURPLE));
 
-    public static final ItemEntry<ToolTipsItem>[] UNIVERSAL_CIRCUIT = registerCircuits("universal_circuit", "通用电路", GTValues.tiersBetween(GTValues.ULV, GTValues.MAX), tier -> Component.translatable("gtocore.tooltip.item.tier_circuit", GTValues.VN[tier]).withStyle(ChatFormatting.AQUA));
+    public static final ItemEntry<Item>[] UNIVERSAL_CIRCUIT = registerCircuits("universal_circuit", "通用电路", GTValues.tiersBetween(GTValues.ULV, GTValues.MAX), tier -> Component.translatable("gtocore.tooltip.item.tier_circuit", GTValues.VN[tier]).withStyle(ChatFormatting.AQUA));
 
     public static final ItemEntry<ComponentItem>[] MYSTERIOUS_BOOST_DRINK = registerMysteriousBoostDrink();
 
@@ -686,8 +691,8 @@ public final class GTOItems {
     public static final ItemEntry<Item> HYPERCUBE = register("hypercube", "超立方体");
     public static final ItemEntry<Item> ANNIHILATION_CONSTRAINER = register("annihilation_constrainer", "湮灭约束器");
     public static final ItemEntry<Item> SOLAR_LIGHT_SPLITTER = register("solar_light_splitter", "阳光分离器");
-    public static final ItemEntry<ToolTipsItem> CREATE_ULTIMATE_BATTERY = registerTooltip("create_ultimate_battery", "创造电池", () -> Component.literal(I18n.get("tooltip.avaritia.tier", StringUtils.white_blue(I18n.get("gtocore.tooltip.unknown")))).withStyle(ChatFormatting.GREEN));
-    public static final ItemEntry<ToolTipsItem> SUPRACHRONAL_MAINFRAME_COMPLEX = registerTooltip("suprachronal_mainframe_complex", "创造主机", () -> Component.literal(I18n.get("tooltip.avaritia.tier", StringUtils.white_blue(I18n.get("gtocore.tooltip.unknown")))).withStyle(ChatFormatting.GREEN));
+    public static final ItemEntry<Item> CREATE_ULTIMATE_BATTERY = registerTooltip("create_ultimate_battery", "创造电池", () -> Component.literal(I18n.get("tooltip.avaritia.tier", StringUtils.white_blue(I18n.get("gtocore.tooltip.unknown")))).withStyle(ChatFormatting.GREEN));
+    public static final ItemEntry<Item> SUPRACHRONAL_MAINFRAME_COMPLEX = registerTooltip("suprachronal_mainframe_complex", "创造主机", () -> Component.literal(I18n.get("tooltip.avaritia.tier", StringUtils.white_blue(I18n.get("gtocore.tooltip.unknown")))).withStyle(ChatFormatting.GREEN));
     public static final ItemEntry<Item> ZERO_POINT_MODULE_FRAGMENTS = register("zero_point_module_fragments", "零点模块碎片");
     public static final ItemEntry<Item> TCETIESEAWEEDEXTRACT = register("tcetieseaweedextract", "鲸鱼座T星E藻类提取物");
     public static final ItemEntry<Item> TCETIEDANDELIONS = register("tcetiedandelions", "鲸鱼座T星E藻类");

@@ -1,8 +1,7 @@
 package com.gtocore.common.data;
 
-import com.gtocore.data.lang.LangHandler;
-
 import com.gtolib.GTOCore;
+import com.gtolib.api.lang.CNEN;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidDefinition;
@@ -28,7 +27,7 @@ import static com.gtolib.api.data.GTODimensions.*;
 @SuppressWarnings("unused")
 public final class GTOBedrockFluids {
 
-    public static final Map<String, LangHandler.CNEN> LANG = GTCEu.isDataGen() ? new HashMap<>() : null;
+    public static final Map<String, CNEN> LANG = GTCEu.isDataGen() ? new HashMap<>() : null;
 
     public static final Map<ResourceKey<Level>, List<FluidStack>> ALL_BEDROCK_FLUID = new Object2ObjectOpenHashMap<>();
 
@@ -367,7 +366,7 @@ public final class GTOBedrockFluids {
     private static BedrockFluidDefinition create(ResourceLocation id, String cn, Consumer<BedrockFluidDefinition.Builder> consumer) {
         if (LANG != null) {
             String name = id.getPath();
-            LangHandler.CNEN lang = new LangHandler.CNEN(cn, FormattingUtil.toEnglishName(name));
+            CNEN lang = new CNEN(cn, FormattingUtil.toEnglishName(name));
             if (LANG.containsKey(name)) {
                 GTOCore.LOGGER.error("Repetitive Key: {}", id);
             }

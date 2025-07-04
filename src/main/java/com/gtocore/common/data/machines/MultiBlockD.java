@@ -23,12 +23,12 @@ import com.gtocore.common.machine.multiblock.noenergy.GodForgeMachine;
 import com.gtocore.common.machine.multiblock.noenergy.HarmonyMachine;
 import com.gtocore.common.machine.multiblock.noenergy.HeatExchangerMachine;
 import com.gtocore.common.machine.multiblock.noenergy.NeutronActivatorMachine;
-import com.gtocore.data.lang.LangHandler;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
+import com.gtolib.api.lang.CNEN;
 import com.gtolib.api.machine.multiblock.CrossRecipeMultiblockMachine;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
@@ -1230,7 +1230,7 @@ public final class MultiBlockD {
             .tooltipsText("无论反应堆是否具有消耗冷却液的条件都能执行配方", "Recipes can be executed regardless of whether the reactor consumes cooling liquid")
             .tooltipsText("反应堆停止工作后温度将每秒降低1K", "The temperature of the reactor will decrease by 1K every second after it stops working")
             .specialParallelizableTooltips()
-            .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(LangHandler.CNEN.create("等于燃料组件数量", "Number of Fuel Components")).get().toArray(new Component[0]))
+            .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(CNEN.create("等于燃料组件数量", "Number of Fuel Components")).get().toArray(new Component[0]))
             .alwaysTryModifyRecipe(true)
             .block(GTOBlocks.FISSION_REACTOR_CASING)
             .pattern(definition -> FactoryBlockPattern.start()

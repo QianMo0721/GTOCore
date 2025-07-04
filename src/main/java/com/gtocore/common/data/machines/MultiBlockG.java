@@ -15,7 +15,6 @@ import com.gtocore.common.machine.multiblock.noenergy.LargeCokeOvenMachine;
 import com.gtocore.common.machine.multiblock.storage.MEStorageMachine;
 import com.gtocore.common.machine.multiblock.storage.WirelessDimensionRepeaterMachine;
 import com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine;
-import com.gtocore.data.lang.LangHandler;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
@@ -23,6 +22,7 @@ import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
 import com.gtolib.api.data.GTODimensions;
+import com.gtolib.api.lang.CNEN;
 import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.NumberUtils;
@@ -818,7 +818,7 @@ public final class MultiBlockG {
                             """
                                     At least %s Bytes capacity installed
                                     At least 64 Infinite Storage Components installed""".formatted(NumberUtils.formatLongToKorM(MEStorageMachine.infinite)))))
-            .tooltips(NewDataAttributes.CAPACITY.create(LangHandler.CNEN.create("768 个ME存储核心", "768 ME Storage Cores")))
+            .tooltips(NewDataAttributes.CAPACITY.create(CNEN.create("768 个ME存储核心", "768 ME Storage Cores")))
             .recipeTypes(DUMMY_RECIPES)
             .block(GTBlocks.COMPUTER_CASING)
             .pattern(definition -> FactoryBlockPattern.start(RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.RIGHT)
