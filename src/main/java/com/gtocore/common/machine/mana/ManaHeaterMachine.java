@@ -28,9 +28,16 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     private static final FluidStack SALAMANDER = GTOMaterials.Salamander.getFluid(FluidStorageKeys.GAS, 10);
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ManaHeaterMachine.class, SimpleManaMachine.MANAGED_FIELD_HOLDER);
+
     @Persisted
     @DescSynced
     private int temperature = 293;
+
+    /// an indicator used to determine if the salamander input is present
+    /// **used by client renderer**
+    @Persisted
+    @DescSynced
+    private boolean salamanderInput = false;
     private TickableSubscription tickSubs;
 
     public ManaHeaterMachine(IMachineBlockEntity holder) {
@@ -102,10 +109,13 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     public boolean onWorking() {
         if (super.onWorking()) {
             if (getOffsetTimer() % 10 == 0 && getMaxTemperature() > temperature + 10) {
-                raiseTemperature(inputFluid(SALAMANDER) ? 10 : 2);
+                var hasSalamander = inputFluid(SALAMANDER);
+                this.salamanderInput = hasSalamander;
+                raiseTemperature(hasSalamander ? 10 : 2);
             }
             return true;
         }
+        this.salamanderInput = false;
         return false;
     }
 
@@ -131,5 +141,9 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     public int getTemperature() {
         return this.temperature;
+    }
+
+    public boolean hasSalamanderInput() {
+        return salamanderInput;
     }
 }
