@@ -2,7 +2,6 @@ package com.gtocore.common;
 
 import com.gtocore.common.data.*;
 import com.gtocore.common.forge.ForgeCommonEvent;
-import com.gtocore.common.forge.OrganForge;
 import com.gtocore.config.GTOConfig;
 import com.gtocore.config.SparkRange;
 import com.gtocore.data.Data;
@@ -62,7 +61,6 @@ public class CommonProxy {
         eventBus.addGenericListener(DimensionMarker.class, CommonProxy::registerDimensionMarkers);
         eventBus.addGenericListener(GTRecipeCategory.class, CommonProxy::registerRecipeCategory);
         MinecraftForge.EVENT_BUS.register(ForgeCommonEvent.class);
-        MinecraftForge.EVENT_BUS.register(OrganForge.class);
     }
 
     private static void init() {

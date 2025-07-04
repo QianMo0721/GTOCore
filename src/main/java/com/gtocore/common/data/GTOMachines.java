@@ -15,13 +15,14 @@ import com.gtocore.common.machine.noenergy.BoilWaterMachine;
 import com.gtocore.common.machine.noenergy.HeaterMachine;
 import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
 import com.gtocore.common.machine.steam.SteamVacuumPumpMachine;
-import com.gtocore.data.lang.LangHandler;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
 import com.gtolib.api.annotation.NewDataAttributes;
+import com.gtolib.api.lang.CNEN;
 import com.gtolib.api.machine.SimpleNoEnergyMachine;
 import com.gtolib.api.machine.feature.multiblock.IParallelMachine;
+import com.gtolib.api.machine.part.DroneHatchPartMachine;
 import com.gtolib.api.machine.part.ItemHatchPartMachine;
 
 import com.gregtechceu.gtceu.GTCEu;
@@ -405,7 +406,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition ME_SORT_MACHINE = machine("me_sort_machine", "ME样板内容动态修改机", MESortMachine::new)
             .overlayTieredHullRenderer("neutron_sensor")
-            .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new LangHandler.CNEN("ME样板内容动态修改机", "ME Pattern Content Dynamic Modifier"), p -> p.addCommentLines(
+            .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME样板内容动态修改机", "ME Pattern Content Dynamic Modifier"), p -> p.addCommentLines(
                     """
                             是的，你现在可以不修改样板，就一键替换其中的内容了。
                             只需要将此机器连入ME网络，然后样板在被调用时，

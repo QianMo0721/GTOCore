@@ -51,11 +51,6 @@ public class MEOutputHatchPartMachine extends MEHatchPartMachine {
     }
 
     @Override
-    boolean shouldSubscribe() {
-        return false;
-    }
-
-    @Override
     public Widget createUIWidget() {
         WidgetGroup group = new WidgetGroup(0, 0, 170, 65);
         group.addWidget(new LabelWidget(5, 0, () -> this.isOnline ? "gtceu.gui.me_network.online" : "gtceu.gui.me_network.offline"));

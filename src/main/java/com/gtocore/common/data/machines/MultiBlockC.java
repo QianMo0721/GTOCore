@@ -17,11 +17,11 @@ import com.gtocore.common.machine.multiblock.noenergy.ThermalPowerPumpMachine;
 import com.gtocore.common.machine.multiblock.steam.BaseSteamMultiblockMachine;
 import com.gtocore.common.machine.multiblock.steam.LargeSteamMultiblockMachine;
 import com.gtocore.common.machine.multiblock.steam.SteamMultiblockMachine;
-import com.gtocore.data.lang.LangHandler;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
+import com.gtolib.api.lang.CNEN;
 import com.gtolib.api.machine.feature.multiblock.ICoilMachine;
 import com.gtolib.api.machine.feature.multiblock.ITierCasingMachine;
 import com.gtolib.api.machine.multiblock.*;
@@ -71,7 +71,7 @@ public final class MultiBlockC {
             .tooltipsText("添加煤块增加21600时间单位，煤增加1200，煤粉增加500。", "Adding coal blocks adds 21,600 time units, coal adds 1,200, and coal dust adds 500 while raising heat.")
             .tooltipsText("热量超过850会爆炸，传感器定期会更新热量状态。", "Heat exceeding 850 will cause an explosion; sensors periodically update heat status.")
             .tooltipsText("只能运行MV级及以下配方", "Can only operate MV-Tier recipes and below.")
-            .tooltips(NewDataAttributes.RUNTIME_REQUIREMENT.create(LangHandler.CNEN.create("配方中每种产物都需要一层蒸馏塔节",
+            .tooltips(NewDataAttributes.RUNTIME_REQUIREMENT.create(CNEN.create("配方中每种产物都需要一层蒸馏塔节",
                     "Each product in the recipe requires a layer of distillation tower.")))
             .recipeTypes(GTRecipeTypes.DISTILLATION_RECIPES)
             .alwaysTryModifyRecipe(true)

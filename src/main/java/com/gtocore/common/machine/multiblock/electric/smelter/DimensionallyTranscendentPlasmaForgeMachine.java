@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.electric.smelter;
 
+import com.gtocore.common.block.CoilType;
 import com.gtocore.common.data.GTORecipeTypes;
 
 import com.gtolib.api.machine.multiblock.CoilMultiblockMachine;
@@ -25,7 +26,7 @@ public final class DimensionallyTranscendentPlasmaForgeMachine extends CoilMulti
     @Override
     protected boolean beforeWorking(@Nullable Recipe recipe) {
         if (recipe == null) return false;
-        if (gto$getTemperature() == 273) {
+        if (getCoilType() == CoilType.URUIUM) {
             if (getRecipeType() != GTORecipeTypes.STELLAR_FORGE_RECIPES) {
                 return false;
             } else if (recipe.data.getInt("ebf_temp") > 32000) {

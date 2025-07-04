@@ -7,7 +7,6 @@ final class MachineLang {
     public static void init() {
         addCNEN("gtocore.machine.programmablec_hatch.tooltip", "通过虚拟物品提供器来设置电路槽物品", "Set the circuit slot items through a virtual item provider");
         addCNEN("gtocore.machine.energy_loss", "能量损失：%s", "Energy loss: %s");
-        addCNEN("gtocore.machine.batch_processing", "批处理模式", "Batch Processing");
         addCNEN("gtocore.machine.highlight_module", "高亮显示模块位置", "Highlight module position.");
         addCNEN("gtocore.machine.structure_check", "更新结构检查", "Update structure check.");
         addCNEN("gtocore.machine.overclock_configurator", "调整机器超频的最小时间", "Adjust the minimum time for machine overclocking.");

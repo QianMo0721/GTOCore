@@ -1,9 +1,8 @@
 package com.gtocore.common.item.tools;
 
-import com.gtocore.data.lang.LangHandler;
-
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;
+import com.gtolib.api.lang.CNEN;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.item.component.IInteractionItem;
@@ -30,7 +29,7 @@ import java.util.Map;
 
 public final class GrassHarvesterBehaviour extends TooltipBehavior implements IInteractionItem {
 
-    private static final ComponentSupplier TOOLTIPS = NewDataAttributes.MIRACULOUS_TOOLS.create(LangHandler.CNEN.create("割草镰刀", "Grass Harvester"), b -> b.addCommentLines("""
+    private static final ComponentSupplier TOOLTIPS = NewDataAttributes.MIRACULOUS_TOOLS.create(CNEN.create("割草镰刀", "Grass Harvester"), b -> b.addCommentLines("""
             §6极大§r地提升小麦种子掉落概率
             右键草以收割小麦种子和稀有作物
             前期大量获取种子去种地的好帮手""",

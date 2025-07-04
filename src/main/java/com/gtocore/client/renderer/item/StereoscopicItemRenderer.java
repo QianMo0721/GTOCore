@@ -1,6 +1,6 @@
 package com.gtocore.client.renderer.item;
 
-import com.gtocore.client.ClientUtil;
+import com.gtolib.utils.ClientUtil;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;

@@ -30,7 +30,6 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -46,11 +45,9 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
     static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MEStockingBusPartMachine.class, MEInputBusPartMachine.MANAGED_FIELD_HOLDER);
     @Persisted
     private boolean autoPull;
-    private Predicate<GenericStack> autoPullTest;
 
     public MEStockingBusPartMachine(IMachineBlockEntity holder) {
         super(holder);
-        this.autoPullTest = $ -> false;
     }
 
     @Override
@@ -78,33 +75,29 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
     /////////////////////////////////
     // ********** Sync ME *********//
     /////////////////////////////////
-    @Override
-    public void autoIO() {
-        super.autoIO();
-        if (autoPull && getOffsetTimer() % 100 == 0) {
-            refreshList();
-            syncME();
-        }
-    }
 
     @Override
     void syncME() {
-        IGrid grid = this.getMainNode().getGrid();
-        if (grid == null) {
-            return;
-        }
-        MEStorage networkInv = grid.getStorageService().getInventory();
-        for (ExportOnlyAEItemSlot slot : this.aeItemHandler.getInventory()) {
-            var config = slot.getConfig();
-            if (config != null) {
-                var key = config.what();
-                long extracted = networkInv.extract(key, Long.MAX_VALUE, Actionable.SIMULATE, actionSource);
-                if (extracted > 0) {
-                    slot.setStock(new GenericStack(key, extracted));
-                    continue;
-                }
+        if (autoPull) {
+            refreshList();
+        } else {
+            IGrid grid = this.getMainNode().getGrid();
+            if (grid == null) {
+                return;
             }
-            slot.setStock(null);
+            MEStorage networkInv = grid.getStorageService().getInventory();
+            for (ExportOnlyAEItemSlot slot : this.aeItemHandler.getInventory()) {
+                var config = slot.getConfig();
+                if (config != null) {
+                    var key = config.what();
+                    long extracted = networkInv.extract(key, Long.MAX_VALUE, Actionable.SIMULATE, actionSource);
+                    if (extracted > 0) {
+                        slot.setStock(new GenericStack(key, extracted));
+                        continue;
+                    }
+                }
+                slot.setStock(null);
+            }
         }
     }
 
@@ -176,42 +169,38 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
         var counter = IKeyCounter.of(networkStorage.getAvailableStacks()).gtocore$getVariantCounter();
         if (counter == null) return;
 
-        PriorityQueue<Object2LongMap.Entry<AEKey>> topItems = new PriorityQueue<>(Comparator.comparingLong(Object2LongMap.Entry<AEKey>::getLongValue));
+        var queue = new PriorityQueue<>(CONFIG_SIZE, Comparator.comparingLong(GenericStack::amount));
 
         for (var entry : counter) {
             long amount = entry.getLongValue();
-            if (!topItems.isEmpty() && amount < topItems.peek().getLongValue()) continue;
-            AEKey what = entry.getKey();
-
             if (amount <= 0) continue;
-            if (!(what instanceof AEItemKey itemKey)) continue;
+            var what = entry.getKey();
+            if (!(what instanceof AEItemKey)) continue;
+            boolean free = queue.size() < CONFIG_SIZE;
+            if (!free && queue.peek().amount() >= amount) continue;
             if (!test(what)) continue;
-
-            long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
-            if (request == 0) continue;
-
-            if (autoPullTest != null && !autoPullTest.test(new GenericStack(itemKey, amount))) continue;
-
-            if (topItems.size() < CONFIG_SIZE) {
-                topItems.offer(entry);
-            } else if (amount > topItems.peek().getLongValue()) {
-                topItems.poll();
-                topItems.offer(entry);
+            var stack = new GenericStack(what, amount);
+            if (testConfiguredInOtherPart(stack)) continue;
+            if (free) {
+                queue.offer(stack);
+            } else {
+                queue.poll();
+                queue.offer(stack);
             }
         }
 
         int index;
-        int itemAmount = topItems.size();
+        int size = queue.size();
         for (index = 0; index < CONFIG_SIZE; index++) {
-            if (topItems.isEmpty()) break;
-            Object2LongMap.Entry<AEKey> entry = topItems.poll();
+            if (queue.isEmpty()) break;
+            var stack = queue.poll();
 
-            AEKey what = entry.getKey();
-            long amount = entry.getLongValue();
+            var what = stack.what();
+            long amount = stack.amount();
 
             long request = networkStorage.extract(what, amount, Actionable.SIMULATE, actionSource);
 
-            var slot = this.aeItemHandler.getInventory()[itemAmount - index - 1];
+            var slot = this.aeItemHandler.getInventory()[size - index - 1];
             slot.setConfig(new GenericStack(what, 1));
             slot.setStock(new GenericStack(what, request));
         }
@@ -275,7 +264,5 @@ public class MEStockingBusPartMachine extends MEInputBusPartMachine implements I
         return this.autoPull;
     }
 
-    public void setAutoPullTest(final Predicate<GenericStack> autoPullTest) {
-        this.autoPullTest = autoPullTest;
-    }
+    public void setAutoPullTest(final Predicate<GenericStack> autoPullTest) {}
 }

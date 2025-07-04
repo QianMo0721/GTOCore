@@ -49,7 +49,6 @@ public final class IsaMillMachine extends ElectricMultiblockMachine {
             int damage = item.getDamageValue() + recipe.parallels;
             if (damage < item.getMaxDamage()) {
                 item.setDamageValue(damage);
-                storage.setStackInSlot(0, item);
             } else {
                 storage.setStackInSlot(0, ItemStack.EMPTY);
             }

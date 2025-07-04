@@ -3,7 +3,6 @@ package com.gtocore.data;
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOLoots;
 import com.gtocore.common.data.GTORecipeTypes;
-import com.gtocore.config.GTOConfig;
 import com.gtocore.data.recipe.*;
 import com.gtocore.data.recipe.classified.$ClassifiedRecipe;
 import com.gtocore.data.recipe.generated.*;
@@ -172,13 +171,11 @@ public final class Data {
                 }
                 EMI_RECIPE_WIDGETS = null;
                 EMI_RECIPES = recipes.build();
-                if (!GTOConfig.INSTANCE.recipeCheck) {
-                    for (GTRecipeType type : GTRegistries.RECIPE_TYPES) {
-                        if (type == GTORecipeTypes.FURNACE_RECIPES) {
-                            type.getCategoryMap().putIfAbsent(GTRecipeTypes.FURNACE_RECIPES.getCategory(), Collections.emptySet());
-                        } else {
-                            type.getCategoryMap().replaceAll((k, v) -> Collections.emptySet());
-                        }
+                for (GTRecipeType type : GTRegistries.RECIPE_TYPES) {
+                    if (type == GTORecipeTypes.FURNACE_RECIPES) {
+                        type.getCategoryMap().putIfAbsent(GTRecipeTypes.FURNACE_RECIPES.getCategory(), Collections.emptySet());
+                    } else {
+                        type.getCategoryMap().replaceAll((k, v) -> Collections.emptySet());
                     }
                 }
                 GTOCore.LOGGER.info("Pre initialization EMI GTRecipe took {}ms", System.currentTimeMillis() - time);

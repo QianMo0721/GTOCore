@@ -2,6 +2,8 @@ package com.gtocore.client;
 
 import com.gtocore.common.network.ClientMessage;
 
+import com.gtolib.utils.ClientUtil;
+
 import net.minecraft.client.KeyMapping;
 
 import com.mojang.blaze3d.platform.InputConstants;

@@ -9,6 +9,7 @@ import com.gtocore.common.machine.mana.multiblock.*;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
+import com.gtolib.api.machine.ManaDistributorMachine;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.RLUtils;

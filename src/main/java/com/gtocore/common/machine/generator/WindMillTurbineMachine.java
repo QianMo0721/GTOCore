@@ -6,6 +6,7 @@ import com.gtocore.common.machine.multiblock.part.BallHatchPartMachine;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.dynamic.DynamicInitialValue;
 import com.gtolib.api.data.GTODimensions;
+import com.gtolib.api.machine.feature.IMetaMachine;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -52,7 +53,7 @@ import static com.gtolib.api.annotation.dynamic.DynamicInitialValueTypes.KEY_AMP
 @Scanned
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public final class WindMillTurbineMachine extends TieredEnergyMachine implements IMachineModifyDrops, IFancyUIMachine {
+public final class WindMillTurbineMachine extends TieredEnergyMachine implements IMachineModifyDrops, IFancyUIMachine, IMetaMachine {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(WindMillTurbineMachine.class, TieredEnergyMachine.MANAGED_FIELD_HOLDER);
     @Persisted
@@ -97,16 +98,20 @@ public final class WindMillTurbineMachine extends TieredEnergyMachine implements
     @Override
     public void onUnload() {
         super.onUnload();
-        if (energySubs != null) {
-            energySubs.unsubscribe();
-            energySubs = null;
-        }
+        unsubscribe();
     }
 
     @OnlyIn(Dist.CLIENT)
     public void clientTick() {
         super.clientTick();
         bladeAngle += spinSpeed;
+    }
+
+    private void unsubscribe() {
+        if (energySubs != null) {
+            energySubs.unsubscribe();
+            energySubs = null;
+        }
     }
 
     private static int getMaxWind(int tier) {
@@ -119,10 +124,12 @@ public final class WindMillTurbineMachine extends TieredEnergyMachine implements
             if (level == null) return;
             actualPower = 0;
             ItemStack stack = inventory.storage.getStackInSlot(0);
-            if (stack.isEmpty()) return;
             if (!GTODimensions.isOverworld(level.dimension().location())) {
                 Planet planet = PlanetApi.API.getPlanet(level);
-                if (planet == null || !planet.oxygen()) return;
+                if (planet == null || !planet.oxygen()) {
+                    unsubscribe();
+                    return;
+                }
             }
             BlockPos pos = getPos();
             float multiplier = level.isThundering() ? 2 : level.isRaining() ? 1.5F : 1;
@@ -164,19 +171,20 @@ public final class WindMillTurbineMachine extends TieredEnergyMachine implements
                 }
                 if (obstructed) {
                     stack.setDamageValue(damage + (int) (40 * spinSpeed));
-                    inventory.storage.setStackInSlot(0, stack);
                     spinSpeed = 0;
                 } else if (wind > rotorItem.getMinWind()) {
                     stack.setDamageValue(damage + (int) Math.pow(Math.ceil(wind / rotorItem.getMaxWind()), 16));
-                    inventory.storage.setStackInSlot(0, stack);
                     spinSpeed = Math.min(0.05F * wind, spinSpeed + 0.04F);
                     actualPower = (int) (GTValues.V[tier] * spinSpeed * 20 * getMaxInputOutputAmperage() / getMaxWind(tier));
                     energyContainer.addEnergy(20L * actualPower);
                 }
             } else {
+                if (hasRotor) {
+                    gtocore$setSync();
+                    inventory.storage.setStackInSlot(0, ItemStack.EMPTY);
+                }
                 spinSpeed = 0;
                 hasRotor = false;
-                inventory.storage.setStackInSlot(0, ItemStack.EMPTY);
             }
         }
     }

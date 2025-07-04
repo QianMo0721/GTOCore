@@ -1,7 +1,5 @@
 package com.gtocore.common.machine.multiblock.storage;
 
-import com.gtocore.common.wireless.ExtendWirelessEnergyContainer;
-
 import com.gtolib.api.GTOValues;
 import com.gtolib.api.capability.IExtendWirelessEnergyContainerHolder;
 import com.gtolib.api.machine.feature.multiblock.ITierCasingMachine;
@@ -46,7 +44,7 @@ public final class WirelessDimensionRepeaterMachine extends NoRecipeLogicMultibl
         if (isRemote()) return;
         Level level = getLevel();
         if (level == null) return;
-        ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+        var container = getWirelessEnergyContainer();
         if (container == null) return;
         container.getDimension().put(level.dimension().location(), getCasingTier(GTOValues.INTEGRAL_FRAMEWORK_TIER));
     }
@@ -55,7 +53,7 @@ public final class WirelessDimensionRepeaterMachine extends NoRecipeLogicMultibl
         if (isRemote()) return;
         Level level = getLevel();
         if (level == null) return;
-        ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+        var container = getWirelessEnergyContainer();
         if (container == null) return;
         container.getDimension().put(level.dimension().location(), 0);
     }

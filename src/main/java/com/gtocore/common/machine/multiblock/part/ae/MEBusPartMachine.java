@@ -5,7 +5,6 @@ import com.gtolib.api.machine.feature.IMEPartMachine;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
@@ -16,7 +15,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.security.IActionSource;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
@@ -38,7 +36,6 @@ public abstract class MEBusPartMachine extends TieredIOPartMachine implements IM
     boolean isOnline;
     final IActionSource actionSource;
 
-    private TickableSubscription autoIOSubs;
     @Persisted
     protected boolean isDistinct = false;
 
@@ -52,16 +49,12 @@ public abstract class MEBusPartMachine extends TieredIOPartMachine implements IM
         return new GridNodeHolder(this);
     }
 
-    void autoIO() {}
-
     @Override
-
     public IItemHandlerModifiable getItemHandlerCap(Direction side, boolean useCoverCapability) {
         return null;
     }
 
     @Override
-
     public IFluidHandlerModifiable getFluidHandlerCap(Direction side, boolean useCoverCapability) {
         return null;
     }
@@ -77,25 +70,6 @@ public abstract class MEBusPartMachine extends TieredIOPartMachine implements IM
     @Override
     public IManagedGridNode getMainNode() {
         return nodeHolder.getMainNode();
-    }
-
-    @Override
-    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
-        IMEPartMachine.super.onMainNodeStateChanged(reason);
-        this.updateInventorySubscription();
-    }
-
-    void updateInventorySubscription() {
-        if (shouldSubscribe()) {
-            autoIOSubs = subscribeServerTick(autoIOSubs, this::autoIO);
-        } else if (autoIOSubs != null) {
-            autoIOSubs.unsubscribe();
-            autoIOSubs = null;
-        }
-    }
-
-    boolean shouldSubscribe() {
-        return isWorkingEnabled() && isOnline;
     }
 
     @Override
@@ -118,14 +92,6 @@ public abstract class MEBusPartMachine extends TieredIOPartMachine implements IM
     public void setDistinct(boolean isDistinct) {
         this.isDistinct = isDistinct;
         getHandlerList().setDistinctAndNotify(isDistinct);
-    }
-
-    public TickableSubscription getAutoIOSubs() {
-        return this.autoIOSubs;
-    }
-
-    public GridNodeHolder getNodeHolder() {
-        return this.nodeHolder;
     }
 
     public void setOnline(final boolean isOnline) {

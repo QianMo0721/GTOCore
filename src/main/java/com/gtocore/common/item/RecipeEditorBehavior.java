@@ -6,6 +6,9 @@ import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.machine.DummyMachine;
+import com.gtolib.api.recipe.CombinedRecipeType;
+import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.utils.FluidUtils;
@@ -48,6 +51,7 @@ import com.gregtechceu.gtceu.integration.ae2.gui.widget.AETextInputButtonWidget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -96,78 +100,86 @@ public final class RecipeEditorBehavior implements IItemUIFactory, IFancyUIProvi
     public InteractionResult onItemUseFirst(ItemStack itemStack, UseOnContext context) {
         if (Objects.requireNonNull(context.getPlayer()).isShiftKeyDown()) {
             if (GTOConfig.INSTANCE.recipeCheck) {
-                for (GTRecipeType recipeType : GTRegistries.RECIPE_TYPES) {
+                var recipeMap = new Object2ObjectOpenHashMap<GTRecipeType, Set<Recipe>>();
+                for (var recipe : RecipeBuilder.RECIPE_MAP.values()) {
+                    var recipeType = recipe.recipeType;
                     if (recipeType == GTRecipeTypes.BREWING_RECIPES) continue;
                     if (recipeType == GTRecipeTypes.SCANNER_RECIPES) continue;
                     if (recipeType == GTORecipeTypes.LARGE_GAS_COLLECTOR_RECIPES) continue;
-                    Map<String, Set<String>> stringSetMap = new Object2ObjectOpenHashMap<>();
-                    for (Set<GTRecipe> recipes : recipeType.getCategoryMap().values()) {
-                        for (GTRecipe recipe : recipes) {
-                            String id = recipe.id.toString();
-                            Set<String> input = new ObjectOpenHashSet<>();
-                            if (recipe.inputs.containsKey(ItemRecipeCapability.CAP)) {
-                                for (Content content : recipe.inputs.get(ItemRecipeCapability.CAP)) {
-                                    Ingredient ingredient = ItemRecipeCapability.CAP.of(content.getContent());
-                                    Ingredient inner = ingredient;
-                                    if (ingredient instanceof FastSizedIngredient sizedIngredient) {
-                                        inner = sizedIngredient.getInner();
-                                    }
-                                    a:
-                                    for (Ingredient.Value value : inner.values) {
-                                        if (value instanceof Ingredient.ItemValue itemValue) {
-                                            Collection<ItemStack> stacks = itemValue.getItems();
-                                            if (stacks.isEmpty()) {
-                                                GTOCore.LOGGER.error("配方 {} 存在空物品输入", id);
-                                                continue;
-                                            }
-                                            for (ItemStack stack : stacks) {
-                                                if (stack.isEmpty()) continue;
-                                                if (stack.is(GTItems.PROGRAMMED_CIRCUIT.get())) {
-                                                    input.add("c" + IntCircuitBehaviour.getCircuitConfiguration(stack));
-                                                } else {
-                                                    String s = ItemUtils.getId(stack);
-                                                    if (stack.getTag() != null) {
-                                                        s = s + stack.getTag();
-                                                    }
-                                                    input.add(s);
-                                                }
-                                                break a;
-                                            }
-                                        } else if (value instanceof Ingredient.TagValue tagValue) {
-                                            TagKey<Item> tag = ((TagValueAccessor) tagValue).getTag();
-                                            input.add(tag.location().toString());
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            if (recipe.inputs.containsKey(FluidRecipeCapability.CAP)) {
-                                for (Content content : recipe.inputs.get(FluidRecipeCapability.CAP)) {
-                                    FluidStack[] stacks = FluidRecipeCapability.CAP.of(content.getContent()).getStacks();
-                                    if (stacks.length == 0) {
-                                        GTOCore.LOGGER.error("配方 {} 存在空流体输入", id);
-                                        continue;
-                                    }
-                                    String s = FluidUtils.getId(stacks[0].getFluid());
-                                    if (stacks[0].getTag() != null) {
-                                        s = s + stacks[0].getTag();
-                                    }
-                                    input.add(s);
-                                }
-                            }
-                            if (input.isEmpty()) continue;
-                            stringSetMap.put(id, input);
+                    recipeMap.computeIfAbsent(recipeType, k -> new ObjectOpenHashSet<>()).add(recipe);
+                }
+                for (var recipeType : GTRegistries.RECIPE_TYPES) {
+                    if (recipeType instanceof CombinedRecipeType combinedRecipeType) {
+                        var set = recipeMap.computeIfAbsent(combinedRecipeType, k -> new ObjectOpenHashSet<>());
+                        for (var type : combinedRecipeType.getTypes()) {
+                            set.addAll(recipeMap.get(type));
                         }
                     }
-                    Set<Set<String>> cache = new ObjectOpenHashSet<>();
+                }
+                Set<BiCache> cache = new ObjectOpenHashSet<>();
+                for (Set<Recipe> recipes : recipeMap.values()) {
+                    var stringSetMap = new Object2ObjectOpenHashMap<ResourceLocation, Set<String>>(recipeMap.size());
+                    for (GTRecipe recipe : recipes) {
+                        var id = recipe.id;
+                        var input = new ObjectOpenHashSet<String>();
+                        if (recipe.inputs.containsKey(ItemRecipeCapability.CAP)) {
+                            for (Content content : recipe.inputs.get(ItemRecipeCapability.CAP)) {
+                                Ingredient ingredient = ItemRecipeCapability.CAP.of(content.getContent());
+                                Ingredient inner = ingredient;
+                                if (ingredient instanceof FastSizedIngredient sizedIngredient) {
+                                    inner = sizedIngredient.getInner();
+                                }
+                                a:
+                                for (Ingredient.Value value : inner.values) {
+                                    if (value instanceof Ingredient.ItemValue itemValue) {
+                                        Collection<ItemStack> stacks = itemValue.getItems();
+                                        if (stacks.isEmpty()) {
+                                            GTOCore.LOGGER.error("配方 {} 存在空物品输入", id);
+                                            continue;
+                                        }
+                                        for (ItemStack stack : stacks) {
+                                            if (stack.isEmpty()) continue;
+                                            if (stack.is(GTItems.PROGRAMMED_CIRCUIT.get())) {
+                                                input.add("c" + IntCircuitBehaviour.getCircuitConfiguration(stack));
+                                            } else {
+                                                String s = ItemUtils.getId(stack);
+                                                if (stack.getTag() != null) {
+                                                    s = s + stack.getTag();
+                                                }
+                                                input.add(s);
+                                            }
+                                            break a;
+                                        }
+                                    } else if (value instanceof Ingredient.TagValue tagValue) {
+                                        TagKey<Item> tag = ((TagValueAccessor) tagValue).getTag();
+                                        input.add(tag.location().toString());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (recipe.inputs.containsKey(FluidRecipeCapability.CAP)) {
+                            for (Content content : recipe.inputs.get(FluidRecipeCapability.CAP)) {
+                                FluidStack[] stacks = FluidRecipeCapability.CAP.of(content.getContent()).getStacks();
+                                if (stacks.length == 0) {
+                                    GTOCore.LOGGER.error("配方 {} 存在空流体输入", id);
+                                    continue;
+                                }
+                                String s = FluidUtils.getId(stacks[0].getFluid());
+                                if (stacks[0].getTag() != null) {
+                                    s = s + stacks[0].getTag();
+                                }
+                                input.add(s);
+                            }
+                        }
+                        if (input.isEmpty()) continue;
+                        stringSetMap.put(id, input);
+                    }
                     stringSetMap.forEach((id, set) -> {
-                        Map<String, Set<String>> map = new Object2ObjectOpenHashMap<>();
-                        map.putAll(stringSetMap);
+                        var map = new Object2ObjectOpenHashMap<>(stringSetMap);
                         map.remove(id);
                         map.forEach((k, v) -> {
-                            Set<String> object = new ObjectOpenHashSet<>();
-                            object.add(id);
-                            object.add(k);
+                            var object = new BiCache(id, k);
                             if (cache.contains(object)) return;
                             if (set.containsAll(v)) {
                                 cache.add(object);
@@ -489,6 +501,23 @@ public final class RecipeEditorBehavior implements IItemUIFactory, IFancyUIProvi
         public ItemStack slotClickPhantom(Slot slot, int mouseButton, ClickType clickTypeIn, ItemStack stackHeld) {
             if (isRemote()) return slot.getItem();
             return super.slotClickPhantom(slot, mouseButton, clickTypeIn, stackHeld);
+        }
+    }
+
+    private record BiCache(Object a, Object b) {
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof BiCache cache) {
+                if (a.equals(cache.a) && b.equals(cache.b)) return true;
+                return a.equals(cache.b) && b.equals(cache.a);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return a.hashCode() + b.hashCode();
         }
     }
 }

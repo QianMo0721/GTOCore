@@ -4284,5 +4284,16 @@ final class Assembler {
                 .EUt(524288)
                 .duration(400)
                 .save();
+
+        ASSEMBLER_RECIPES.builder("wireless_charger_cover")
+                .inputItems("gtmthings:mv_wireless_energy_receive_cover")
+                .inputItems(GTMachines.CHARGER_4[GTValues.MV].asStack())
+                .inputItems(GTItems.EMITTER_MV.asStack())
+                .inputItems(CustomTags.MV_CIRCUITS, 2)
+                .outputItems(GTOItems.WIRELESS_CHARGER_COVER.asItem())
+                .inputFluids(GTMaterials.SolderingAlloy, 288)
+                .EUt(120)
+                .duration(200)
+                .save();
     }
 }

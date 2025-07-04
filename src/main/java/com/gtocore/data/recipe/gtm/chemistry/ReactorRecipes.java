@@ -220,13 +220,14 @@ final class ReactorRecipes {
                 .duration(1920).EUt(VA[LV]).save();
 
         CHEMICAL_RECIPES.recipeBuilder("acetic_acid_from_ethylene")
-                .circuitMeta(2)
+                .circuitMeta(4)
                 .inputFluids(Oxygen.getFluid(2000))
                 .inputFluids(Ethylene.getFluid(1000))
                 .outputFluids(AceticAcid.getFluid(1000))
                 .duration(100).EUt(VA[LV]).save();
 
         CHEMICAL_RECIPES.recipeBuilder("acetic_acid_from_methanol")
+                .circuitMeta(4)
                 .inputFluids(CarbonMonoxide.getFluid(1000))
                 .inputFluids(Methanol.getFluid(1000))
                 .outputFluids(AceticAcid.getFluid(1000))

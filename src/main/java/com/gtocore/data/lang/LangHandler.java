@@ -6,6 +6,7 @@ import com.gtocore.common.data.GTOBedrockFluids;
 import com.gtolib.api.annotation.component_builder.TranslationKeyProvider;
 import com.gtolib.api.annotation.dynamic.DynamicInitialData;
 import com.gtolib.api.data.Dimension;
+import com.gtolib.api.lang.CNEN;
 import com.gtolib.api.lang.SimplifiedChineseLanguageProvider;
 import com.gtolib.api.lang.TraditionalChineseLanguageProvider;
 import com.gtolib.api.recipe.IdleReason;
@@ -255,44 +256,22 @@ public final class LangHandler {
         BlockLang.init();
         ItemLang.init();
         LANGS.forEach((k, v) -> {
-            if (v.en == null) return;
-            provider.add(k, v.en);
+            if (v.en() == null) return;
+            provider.add(k, v.en());
         });
     }
 
     public static void cnInitialize(SimplifiedChineseLanguageProvider provider) {
         LANGS.forEach((k, v) -> {
-            if (v.cn == null) return;
-            provider.add(k, v.cn);
+            if (v.cn() == null) return;
+            provider.add(k, v.cn());
         });
     }
 
     public static void twInitialize(TraditionalChineseLanguageProvider provider) {
         LANGS.forEach((k, v) -> {
-            if (v.cn == null) return;
-            provider.add(k, ChineseConverter.convert(v.cn));
+            if (v.en() == null) return;
+            provider.add(k, ChineseConverter.convert(v.cn()));
         });
-    }
-
-    public record CNEN(String cn, String en) {
-
-        public static CNEN create(String cn, String en) {
-            return new CNEN(cn, en);
-        }
-    }
-
-    public record CNENS(String[] cns, String[] ens) {
-
-        @Override
-        public boolean equals(Object o) {
-            if (o instanceof CNENS cnens) {
-                return Arrays.equals(cnens.ens, ens) && Arrays.equals(cnens.cns, cns);
-            }
-            return false;
-        }
-
-        public int length() {
-            return ens.length;
-        }
     }
 }

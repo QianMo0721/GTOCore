@@ -124,7 +124,7 @@ public final class PrimitiveBlastFurnaceHatch extends MultiblockPartMachine {
     }
 
     private void autoIO() {
-        if (getOffsetTimer() % 5 == 0) {
+        if (getOffsetTimer() % 20 == 0) {
             outputInventory.exportToNearby(getFrontFacing());
             updateAutoIOSubscription();
         }

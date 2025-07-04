@@ -1,7 +1,6 @@
 package com.gtocore.common.machine.multiblock.generator;
 
 import com.gtocore.common.data.GTORecipeTypes;
-import com.gtocore.common.wireless.ExtendWirelessEnergyContainer;
 
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.dynamic.DynamicInitialValue;
@@ -159,7 +158,7 @@ public final class GeneratorArrayMachine extends StorageMultiblockMachine implem
         if (!super.onWorking()) return false;
         if (isw) {
             if (eut > 0) {
-                ExtendWirelessEnergyContainer container = getWirelessEnergyContainer();
+                var container = getWirelessEnergyContainer();
                 if (container != null) {
                     int loss = container.getLoss();
                     container.setLoss(loss + f_loss * 10);

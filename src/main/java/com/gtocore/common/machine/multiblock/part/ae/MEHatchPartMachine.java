@@ -5,7 +5,6 @@ import com.gtolib.api.machine.feature.IMEPartMachine;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
@@ -15,7 +14,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import appeng.api.networking.IGridNodeListener;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.security.IActionSource;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
@@ -38,8 +36,6 @@ public abstract class MEHatchPartMachine extends TieredIOPartMachine implements 
     @DescSynced
     boolean isOnline;
     final IActionSource actionSource;
-    @Nullable
-    private TickableSubscription autoIOSubs;
 
     MEHatchPartMachine(IMachineBlockEntity holder, IO io) {
         super(holder, GTValues.UHV, io);
@@ -50,8 +46,6 @@ public abstract class MEHatchPartMachine extends TieredIOPartMachine implements 
     private GridNodeHolder createNodeHolder() {
         return new GridNodeHolder(this);
     }
-
-    void autoIO() {}
 
     @Override
     @Nullable
@@ -76,25 +70,6 @@ public abstract class MEHatchPartMachine extends TieredIOPartMachine implements 
     @Override
     public IManagedGridNode getMainNode() {
         return nodeHolder.getMainNode();
-    }
-
-    @Override
-    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
-        IMEPartMachine.super.onMainNodeStateChanged(reason);
-        this.updateTankSubscription();
-    }
-
-    void updateTankSubscription() {
-        if (shouldSubscribe()) {
-            autoIOSubs = subscribeServerTick(autoIOSubs, this::autoIO);
-        } else if (autoIOSubs != null) {
-            autoIOSubs.unsubscribe();
-            autoIOSubs = null;
-        }
-    }
-
-    boolean shouldSubscribe() {
-        return isWorkingEnabled() && isOnline;
     }
 
     @Override

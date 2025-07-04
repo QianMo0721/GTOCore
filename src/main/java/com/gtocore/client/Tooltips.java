@@ -2,7 +2,9 @@ package com.gtocore.client;
 
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOItems;
-import com.gtocore.data.lang.LangHandler;
+
+import com.gtolib.api.lang.CNEN;
+import com.gtolib.api.lang.CNENS;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
@@ -18,20 +20,20 @@ import java.util.Map;
 
 public final class Tooltips {
 
-    public static final Map<String, LangHandler.CNEN> LANG = GTCEu.isDataGen() ? new HashMap<>() : null;
+    public static final Map<String, CNEN> LANG = GTCEu.isDataGen() ? new HashMap<>() : null;
 
     public static final ImmutableMap<Item, String[]> TOOL_TIPS_KEY_MAP;
-    public static final ImmutableMap<Item, LangHandler.CNENS> TOOL_TIPS_MAP;
+    public static final ImmutableMap<Item, CNENS> TOOL_TIPS_MAP;
 
     static {
         ImmutableMap.Builder<Item, String[]> toolTipsKey = ImmutableMap.builder();
         toolTipsKey.put(GTBlocks.CASING_TEMPERED_GLASS.asItem(), new String[] { "tooltip.avaritia.tier", String.valueOf(2) });
         TOOL_TIPS_KEY_MAP = toolTipsKey.build();
 
-        ImmutableMap.Builder<Item, LangHandler.CNENS> toolTipsBuilder = ImmutableMap.builder();
-        toolTipsBuilder.put(GTItems.VACUUM_TUBE.get(), new LangHandler.CNENS(new String[] { "手持粗真空管潜行右击真空等级大于0的真空提供机器获取" }, new String[] { "Right-click the handheld rough vacuum tube to obtain vacuum supply from a machine with vacuum level greater than 0" }));
-        toolTipsBuilder.put(GTOBlocks.URUIUM_COIL_BLOCK.asItem(), new LangHandler.CNENS(new String[] { "可为超维度等离子锻炉提供32000K炉温", "恒星锻炉模式仅可使用该线圈" }, new String[] { "Can provide 32000K furnace temperature for the hyper-dimensional plasma furnace", "Only this coil can be used in stellar furnace mode" }));
-        toolTipsBuilder.put(GTOBlocks.QUANTUM_GLASS.asItem(), new LangHandler.CNENS(new String[] { "致密但透明", "§b玻璃&优雅" }, new String[] { "Dense but Transparent", "§bGlass & Elegance" }));
+        ImmutableMap.Builder<Item, CNENS> toolTipsBuilder = ImmutableMap.builder();
+        toolTipsBuilder.put(GTItems.VACUUM_TUBE.get(), new CNENS(new String[] { "手持粗真空管潜行右击真空等级大于0的真空提供机器获取" }, new String[] { "Right-click the handheld rough vacuum tube to obtain vacuum supply from a machine with vacuum level greater than 0" }));
+        toolTipsBuilder.put(GTOBlocks.URUIUM_COIL_BLOCK.asItem(), new CNENS(new String[] { "可为超维度等离子锻炉提供32000K炉温", "恒星锻炉模式仅可使用该线圈" }, new String[] { "Can provide 32000K furnace temperature for the hyper-dimensional plasma furnace", "Only this coil can be used in stellar furnace mode" }));
+        toolTipsBuilder.put(GTOBlocks.QUANTUM_GLASS.asItem(), new CNENS(new String[] { "致密但透明", "§b玻璃&优雅" }, new String[] { "Dense but Transparent", "§bGlass & Elegance" }));
 
         TOOL_TIPS_MAP = toolTipsBuilder.build();
 
@@ -83,6 +85,6 @@ public final class Tooltips {
     }
 
     private static void add(ItemLike itemLike, String cn, String en) {
-        LANG.put(itemLike.asItem().getDefaultInstance().getDescriptionId() + ".tooltip", new LangHandler.CNEN(cn, en));
+        LANG.put(itemLike.asItem().getDefaultInstance().getDescriptionId() + ".tooltip", new CNEN(cn, en));
     }
 }
