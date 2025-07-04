@@ -9,7 +9,7 @@ import com.gtocore.common.machine.electric.VacuumPumpMachine;
 import com.gtocore.common.machine.generator.LightningRodMachine;
 import com.gtocore.common.machine.generator.WindMillTurbineMachine;
 import com.gtocore.common.machine.multiblock.part.*;
-import com.gtocore.common.machine.multiblock.part.ae.MESortMachine;
+import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine;
 import com.gtocore.common.machine.multiblock.part.maintenance.*;
 import com.gtocore.common.machine.noenergy.BoilWaterMachine;
 import com.gtocore.common.machine.noenergy.HeaterMachine;
@@ -404,7 +404,22 @@ public final class GTOMachines {
     public static final MachineDefinition[] LASER_OUTPUT_HATCH_16777216 = registerLaserHatch(IO.OUT, 16777216,
             PartAbility.OUTPUT_LASER);
 
-    public static final MachineDefinition ME_SORT_MACHINE = machine("me_sort_machine", "ME样板内容动态修改机", MESortMachine::new)
+    public static final MachineDefinition ME_SORT_MACHINE = machine("me_sort_machine", "ME样板内容动态修改机1", MESortMachine::new)
+            .overlayTieredHullRenderer("neutron_sensor")
+            .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME样板内容动态修改机", "ME Pattern Content Dynamic Modifier"), p -> p.addCommentLines(
+                    """
+                            是的，你现在可以不修改样板，就一键替换其中的内容了。
+                            只需要将此机器连入ME网络，然后样板在被调用时，
+                            其内容就会按照你配置的优先级被同一行匹配替换。
+                            同一行的某个物品的物品数越多，其优先级越高。""",
+                    """
+                            Yes, you can now replace the content of the pattern without modifying it.
+                            Just connect this machine to the ME network, and when the pattern is called,
+                            its content will be replaced by the same line according to your priority.
+                            The more items in a row, the higher its priority.""")))
+            .register();
+
+    public static final MachineDefinition ME_PATTERN_CONTENT_SORT_MACHINE = machine("me_pattern_content_sort_machine", "ME样板内容动态修改机2", MEPatternContentSortMachine::new)
             .overlayTieredHullRenderer("neutron_sensor")
             .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME样板内容动态修改机", "ME Pattern Content Dynamic Modifier"), p -> p.addCommentLines(
                     """

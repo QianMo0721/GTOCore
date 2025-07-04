@@ -30,8 +30,8 @@ import static com.gregtechceu.gtceu.common.data.GTItems.attach;
 import static com.gtolib.utils.register.ItemRegisterUtils.item;
 
 public class OrganItems {
-    static void init() {
-    }
+
+    static void init() {}
 
     public static final ItemEntry<TierOrganItem>[] ORGAN_TIER_SPINE = Utils.registerTierOrganItem(OrganType.SPINE);
     public static final ItemEntry<TierOrganItem>[] ORGAN_TIER_LIVER = Utils.registerTierOrganItem(OrganType.LIVER);
