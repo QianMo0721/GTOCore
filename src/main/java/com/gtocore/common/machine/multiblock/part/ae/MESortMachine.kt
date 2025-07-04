@@ -30,7 +30,7 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine
 import com.gregtechceu.gtceu.integration.ae2.machine.feature.IGridConnectedMachine
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder
-import com.gtocore.api.flexible.progressBar
+import com.gtocore.api.ktflexible.progressBar
 import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
@@ -63,7 +63,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 
 import java.util.*
@@ -159,16 +158,18 @@ IMetaMachine{
     data class UpdatePackage(var current: Int, var total: Int)
     private fun createRefreshFlow(runnable: List<Runnable>) = flow {
         val total = runnable.size
-        val block = 1
-        val timeGap = 1000L // ms
+        val block = 10
+        val timeGap = 100L // ms
         runnable.chunked(block).forEachIndexed { index, runnableList ->
             val currentIndex = index * block
-            emit(UpdatePackage(currentIndex + 1, total))
             runnableList.forEach { it.run() }
             if (index < runnable.chunked(block).size - 1) {
                 delay(timeGap)
+                emit(UpdatePackage(currentIndex + 1, total))
             }else{
                 isRefreshing=false
+                emit(UpdatePackage(currentIndex + 1, total))
+                emit(UpdatePackage(total, total))
             }
         }
     }.onEach {
@@ -209,7 +210,7 @@ IMetaMachine{
         coroutine = CoroutineScope(Dispatchers.Default)
         coroutine.launch {
             isRefreshing=true
-                createRefreshFlow(runnable).collect { it -> }
+            createRefreshFlow(runnable).collect { it -> }
         }
     }
     var isInitialize = false
@@ -232,9 +233,9 @@ IMetaMachine{
     // ****** 数据结构 ******//
     // //////////////////////////////
     @Persisted
-    var current: Int=0
+    var current: Int=1
     @Persisted
-    var total: Int=0
+    var total: Int=1
     @DescSynced
     @RequireRerender
     var isRefreshing: Boolean = false
@@ -403,13 +404,13 @@ IMetaMachine{
     // //////////////////////////////
     // ****** UI ******//
     // //////////////////////////////
-    val fancyMachineUIWidget = MyFancyMachineUIWidget(this, PAGE_WIDTH, PAGE_HEIGHT)
-    val tagSubPage = SubPage(TAG)
+    var fancyMachineUIWidget:MyFancyMachineUIWidget?=null
+    var tagSubPage: SubPage? = null
 
     override fun attachSideTabs(sideTabs: TabsWidget?) {
         sideTabs?.apply {
             mainTab = this@MESortMachine
-            attachSubTab(tagSubPage)
+            attachSubTab(SubPage(TAG).also { tagSubPage = it })
         }
     }
 
@@ -425,7 +426,7 @@ IMetaMachine{
     }
 
     override fun createUIWidget(): WidgetGroup = vBox(width = PAGE_WIDTH) {}
-    override fun createUI(entityPlayer: Player?): ModularUI? = ModularUI(PAGE_WIDTH, PAGE_HEIGHT, this, entityPlayer).widget(fancyMachineUIWidget)
+    override fun createUI(entityPlayer: Player?): ModularUI? = ModularUI(PAGE_WIDTH, PAGE_HEIGHT, this, entityPlayer).widget(MyFancyMachineUIWidget(this, PAGE_WIDTH, PAGE_HEIGHT).also { fancyMachineUIWidget=it })
     override fun isRemote(): Boolean = super<IFancyUIMachine>.isRemote
     inner class SubPage(val sortType: SortType) : IFancyUIProvider {
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(Items.IRON_INGOT)
@@ -434,11 +435,11 @@ IMetaMachine{
             vScroll(PAGE_WIDTH, PAGE_HEIGHT, { spacing = 4 }) {
                 when (sortType) {
                     TAG -> {
-                        progressBar({current},{total}, width = availableWidth)
+                        progressBar({ current }, { total }, width = availableWidth, height = 12)
                         hBox(height = 50, { spacing = 2 }) {
                             button(width = this@vScroll.availableWidth - 2 - 50 - 2 - 50, transKet = add, onClick = {
                                 tagLineList.lists.add(TagLine(13))
-                                fancyMachineUIWidget.openSetupUI(this@SubPage)
+                                fancyMachineUIWidget?.openSetupUI(this@SubPage)
                             })
                             field(getter = { initializationGap.toString() }, setter = { initializationGap = it.toInt() })
                             button(width = 50, transKet = apply, onClick = {
@@ -459,15 +460,15 @@ IMetaMachine{
                                 hBox(16, { spacing = 2 }) {
                                     button(width = (this@vBoxThreeColumn.availableWidth - 4) / 3, transKet = moveUp, onClick = {
                                         moveItem(tagLineList.lists, line, -1)
-                                        fancyMachineUIWidget.openSetupUI(this@SubPage)
+                                        fancyMachineUIWidget?.openSetupUI(this@SubPage)
                                     })
                                     button(width = (this@vBoxThreeColumn.availableWidth - 4) / 3, transKet = delete, onClick = {
                                         tagLineList.lists.remove(line)
-                                        fancyMachineUIWidget.openSetupUI(this@SubPage)
+                                        fancyMachineUIWidget?.openSetupUI(this@SubPage)
                                     })
                                     button(width = (this@vBoxThreeColumn.availableWidth - 4) / 3, transKet = moveDown, onClick = {
                                         moveItem(tagLineList.lists, line, 1)
-                                        fancyMachineUIWidget.openSetupUI(this@SubPage)
+                                        fancyMachineUIWidget?.openSetupUI(this@SubPage)
                                     })
                                 }
                                 vBox(availableWidth, { spacing = 2 }) {
