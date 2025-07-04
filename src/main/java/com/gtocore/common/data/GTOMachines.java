@@ -2,6 +2,7 @@ package com.gtocore.common.data;
 
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.client.renderer.machine.BallHatchRenderer;
+import com.gtocore.client.renderer.machine.HeaterRenderer;
 import com.gtocore.client.renderer.machine.WindMillTurbineRenderer;
 import com.gtocore.common.data.machines.*;
 import com.gtocore.common.machine.electric.ElectricHeaterMachine;
@@ -183,7 +184,7 @@ public final class GTOMachines {
             .recipeType(GTRecipeTypes.DUMMY_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
-            .workableTieredHullRenderer(GTCEu.id("block/generators/boiler/coal"))
+            .renderer(() -> new HeaterRenderer(ULV))
             .register();
 
     public static final MachineDefinition BOILER = machine("boiler", "锅炉", BoilWaterMachine::new)
@@ -210,7 +211,7 @@ public final class GTOMachines {
             .noRecipeModifier()
             .nonYAxisRotation()
             .tooltipsText("Start heating after power on.", "通电后开始加热")
-            .workableTieredHullRenderer(GTCEu.id("block/generators/boiler/coal"))
+            .renderer(() -> new HeaterRenderer(LV))
             .register();
 
     //////////////////////////////////////

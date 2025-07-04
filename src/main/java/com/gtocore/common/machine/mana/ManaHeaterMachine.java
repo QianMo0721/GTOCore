@@ -15,6 +15,7 @@ import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 
+import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -28,6 +29,7 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     private static final FluidStack SALAMANDER = GTOMaterials.Salamander.getFluid(FluidStorageKeys.GAS, 10);
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ManaHeaterMachine.class, SimpleManaMachine.MANAGED_FIELD_HOLDER);
     @Persisted
+    @DescSynced
     private int temperature = 293;
     private TickableSubscription tickSubs;
 
@@ -76,6 +78,14 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
                 tickUpdate();
                 getRecipeLogic().updateTickSubscription();
             });
+        }
+    }
+
+    @Override
+    public void clientTick() {
+        super.clientTick();
+        if (self().getOffsetTimer() % 10 == 0) {
+            this.scheduleRenderUpdate();
         }
     }
 
