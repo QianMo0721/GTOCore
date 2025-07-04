@@ -138,7 +138,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
     }
 
     private void autoIO() {
-        if (getOffsetTimer() % 5 == 0) {
+        if (getOffsetTimer() % 40 == 0) {
             if (isWorkingEnabled()) {
                 inventory.importFromNearby(getFrontFacing());
             }
