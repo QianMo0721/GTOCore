@@ -30,6 +30,7 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine
 import com.gregtechceu.gtceu.integration.ae2.machine.feature.IGridConnectedMachine
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder
+import com.gtocore.api.flexible.progressBar
 import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
@@ -38,6 +39,7 @@ import com.gtolib.api.gui.ktflexible.root
 import com.gtolib.api.gui.ktflexible.text
 import com.gtolib.api.gui.ktflexible.vBox
 import com.gtolib.api.gui.ktflexible.vBoxThreeColumn
+import com.gtolib.api.machine.feature.IMetaMachine
 import com.gtolib.mixin.ae2.GridAccessor
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture
@@ -48,23 +50,34 @@ import com.lowdragmc.lowdraglib.syncdata.IContentChangeAware
 import com.lowdragmc.lowdraglib.syncdata.ITagSerializable
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.launch
 
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Predicate
 import java.util.function.Supplier
+import kotlin.collections.mutableListOf
 
 @Scanned
 class MESortMachine :
     MetaMachine,
     IGridConnectedMachine,
-    IFancyUIMachine {
+    IFancyUIMachine,
+IMetaMachine{
     constructor(holder: IMachineBlockEntity) : super(holder) {
     }
 
@@ -97,6 +110,7 @@ class MESortMachine :
     }
 
     override fun getFieldHolder() = MANAGED_FIELD_HOLDER
+    var coroutine = CoroutineScope(Dispatchers.Default)
 
     // //////////////////////////////
     // ****** AE ******//
@@ -138,11 +152,38 @@ class MESortMachine :
     // //////////////////////////////
     // ****** 刷新其他机器缓存 初始化 ******//
     // //////////////////////////////
+    override fun onUnload() {
+        super.onUnload()
+        coroutine.cancel()
+    }
+    data class UpdatePackage(var current: Int, var total: Int)
+    private fun createRefreshFlow(runnable: List<Runnable>) = flow {
+        val total = runnable.size
+        val block = 1
+        val timeGap = 1000L // ms
+        runnable.chunked(block).forEachIndexed { index, runnableList ->
+            val currentIndex = index * block
+            emit(UpdatePackage(currentIndex + 1, total))
+            runnableList.forEach { it.run() }
+            if (index < runnable.chunked(block).size - 1) {
+                delay(timeGap)
+            }else{
+                isRefreshing=false
+            }
+        }
+    }.onEach {
+        updatePackage -> println("Refreshing machines Processing ${updatePackage.current}/${updatePackage.total}");
+        current=updatePackage.current;
+        total=updatePackage.total;
+    }
 
     fun freshOtherMachineCache() {
+        val runnable = mutableListOf<Runnable>()
         gridNodeHolder.mainNode.grid?.let { grid ->
             val machinesPattern = grid.getActiveMachines(PatternProviderBlockEntity::class.java)
-            machinesPattern.forEach { it.logic.updatePatterns() }
+            machinesPattern.forEach {
+                runnable.add { it.logic.updatePatterns() }
+            }
             if (grid is Grid && grid is GridAccessor) {
                 val machinesPart = mutableListOf<MEPatternPartMachine<*>>()
                 grid.machines.forEach { _, node ->
@@ -154,13 +195,21 @@ class MESortMachine :
                     }
                 }
                 machinesPart.forEach { s ->
-                    (0 until s.maxPatternCount).forEach {
-                        if (!s.internalPatternInventory.getStackInSlot(it).isEmpty) {
-                            s.onPatternChange(it)
+                    runnable.add {
+                        (0 until s.maxPatternCount).forEach {
+                            if (!s.internalPatternInventory.getStackInSlot(it).isEmpty) {
+                                s.onPatternChange(it)
+                            }
                         }
                     }
                 }
             }
+        }
+        coroutine.cancel()
+        coroutine = CoroutineScope(Dispatchers.Default)
+        coroutine.launch {
+            isRefreshing=true
+                createRefreshFlow(runnable).collect { it -> }
         }
     }
     var isInitialize = false
@@ -182,6 +231,15 @@ class MESortMachine :
     // //////////////////////////////
     // ****** 数据结构 ******//
     // //////////////////////////////
+    @Persisted
+    var current: Int=0
+    @Persisted
+    var total: Int=0
+    @DescSynced
+    @RequireRerender
+    var isRefreshing: Boolean = false
+
+
     @Persisted
     @DescSynced
     var initializationGap: Int = 40
@@ -346,11 +404,12 @@ class MESortMachine :
     // ****** UI ******//
     // //////////////////////////////
     val fancyMachineUIWidget = MyFancyMachineUIWidget(this, PAGE_WIDTH, PAGE_HEIGHT)
+    val tagSubPage = SubPage(TAG)
 
     override fun attachSideTabs(sideTabs: TabsWidget?) {
         sideTabs?.apply {
             mainTab = this@MESortMachine
-            attachSubTab(SubPage(TAG))
+            attachSubTab(tagSubPage)
         }
     }
 
@@ -375,6 +434,7 @@ class MESortMachine :
             vScroll(PAGE_WIDTH, PAGE_HEIGHT, { spacing = 4 }) {
                 when (sortType) {
                     TAG -> {
+                        progressBar({current},{total}, width = availableWidth)
                         hBox(height = 50, { spacing = 2 }) {
                             button(width = this@vScroll.availableWidth - 2 - 50 - 2 - 50, transKet = add, onClick = {
                                 tagLineList.lists.add(TagLine(13))
