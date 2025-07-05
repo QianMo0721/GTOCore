@@ -41,7 +41,7 @@ public class ManaEnergyMultiblockMachine extends ManaMultiblockMachine implement
     }
 
     @Override
-    public @NotNull IEnergyContainer gtocore$getEnergyContainer() {
+    public @NotNull IEnergyContainer gtolib$getEnergyContainer() {
         return container;
     }
 }

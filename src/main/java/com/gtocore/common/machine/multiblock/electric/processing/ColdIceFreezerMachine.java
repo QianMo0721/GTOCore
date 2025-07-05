@@ -23,7 +23,7 @@ public final class ColdIceFreezerMachine extends CustomParallelMultiblockMachine
         if (inputFluid(ICE.getRawFluid(), (1L << Math.max(0, getTier() - 2)) * 10L)) {
             return true;
         }
-        getEnhancedRecipeLogic().gTOCore$setIdleReason(Component.translatable("gtceu.recipe_logic.insufficient_in").append(": ").append(ICE.getDisplayName()));
+        getEnhancedRecipeLogic().gtolib$setIdleReason(Component.translatable("gtceu.recipe_logic.insufficient_in").append(": ").append(ICE.getDisplayName()));
         return false;
     }
 

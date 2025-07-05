@@ -8,10 +8,10 @@ import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 
-import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
+import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +62,7 @@ public final class HeaterMachine extends SimpleNoEnergyMachine implements IHeate
                 Level level = getLevel();
                 if (level == null) return;
                 tickUpdate();
-                gtocore$setSync();
+                gtolib$setSync();
                 setEnabled(level.getBlockState(getPos().relative(getFrontFacing())).isAir());
             });
         }

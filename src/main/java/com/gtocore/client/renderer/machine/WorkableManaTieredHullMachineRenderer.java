@@ -54,7 +54,8 @@ public class WorkableManaTieredHullMachineRenderer extends ManaTieredHullMachine
             overlayModel.registerTextureAtlas(register);
         }
     }
-    ///  predicate for the model to use based on the machine definition and meta machine
+
+    /// predicate for the model to use based on the machine definition and meta machine
     protected WorkableOverlayModel modelToUse(MachineDefinition definition, @Nullable MetaMachine machine) {
         return overlayModel;
     }

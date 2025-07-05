@@ -34,7 +34,7 @@ public final class PowerAmplifierCover extends CoverBehavior {
 
     @Override
     public boolean canAttach() {
-        return super.canAttach() && getMachine() instanceof IPowerAmplifierMachine powerAmplifierMachine && powerAmplifierMachine.gtocore$noPowerAmplifier();
+        return super.canAttach() && getMachine() instanceof IPowerAmplifierMachine powerAmplifierMachine && powerAmplifierMachine.gtolib$noPowerAmplifier();
     }
 
     @Override
@@ -54,8 +54,8 @@ public final class PowerAmplifierCover extends CoverBehavior {
         super.onRemoved();
         MetaMachine machine = getMachine();
         if (machine instanceof IPowerAmplifierMachine amplifierMachine) {
-            amplifierMachine.gtocore$setHasPowerAmplifier(false);
-            amplifierMachine.gtocore$setPowerAmplifier(1);
+            amplifierMachine.gtolib$setHasPowerAmplifier(false);
+            amplifierMachine.gtolib$setPowerAmplifier(1);
         }
         this.machine = null;
     }
@@ -64,9 +64,9 @@ public final class PowerAmplifierCover extends CoverBehavior {
         if (coverHolder.getLevel() instanceof ServerLevel level) {
             level.getServer().tell(new TickTask(1, () -> {
                 MetaMachine machine = getMachine();
-                if (machine instanceof IPowerAmplifierMachine amplifierMachine && amplifierMachine.gtocore$noPowerAmplifier()) {
-                    amplifierMachine.gtocore$setHasPowerAmplifier(true);
-                    amplifierMachine.gtocore$setPowerAmplifier(multiplier);
+                if (machine instanceof IPowerAmplifierMachine amplifierMachine && amplifierMachine.gtolib$noPowerAmplifier()) {
+                    amplifierMachine.gtolib$setHasPowerAmplifier(true);
+                    amplifierMachine.gtolib$setPowerAmplifier(multiplier);
                 }
             }));
         }

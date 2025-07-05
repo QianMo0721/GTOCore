@@ -67,7 +67,7 @@ public class SuperMolecularAssemblerMachine extends ElectricMultiblockMachine {
         if (map.isEmpty()) return null;
         long totalEu = map.values().longStream().sum();
         double d = (double) totalEu / maxEUt;
-        int limit = gTOCore$getOCLimit();
+        int limit = gtolib$getOCLimit();
         RecipeBuilder builder = RecipeBuilder.ofRaw().EUt(Math.max(1, d >= limit ? maxEUt : (long) (maxEUt * d / limit))).duration((int) Math.max(d, limit));
         for (var entry : map.object2LongEntrySet()) {
             var item = entry.getKey();

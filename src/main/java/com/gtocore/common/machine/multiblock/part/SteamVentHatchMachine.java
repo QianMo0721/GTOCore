@@ -69,7 +69,7 @@ public class SteamVentHatchMachine extends MultiblockPartMachine implements IExh
     public GTRecipe modifyRecipe(GTRecipe recipe) {
         if (needsVenting && isVentingBlocked()) {
             for (var controller : getControllers()) {
-                ((IEnhancedRecipeLogic) ((IRecipeLogicMachine) controller).getRecipeLogic()).gTOCore$setIdleReason(Component.translatable("gtceu.recipe_logic.condition_fails").append(": ").append(Component.translatable("recipe.condition.steam_vent.tooltip")));
+                ((IEnhancedRecipeLogic) ((IRecipeLogicMachine) controller).getRecipeLogic()).gtolib$setIdleReason(Component.translatable("gtceu.recipe_logic.condition_fails").append(": ").append(Component.translatable("recipe.condition.steam_vent.tooltip")));
             }
             return null;
         }

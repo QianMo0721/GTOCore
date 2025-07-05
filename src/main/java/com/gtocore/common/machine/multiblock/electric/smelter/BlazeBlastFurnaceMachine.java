@@ -23,7 +23,7 @@ public final class BlazeBlastFurnaceMachine extends CoilCustomParallelMultiblock
         if (inputFluid(BLAZE.getRawFluid(), (1L << Math.max(0, getTier() - 2)) * 10L)) {
             return true;
         }
-        getEnhancedRecipeLogic().gTOCore$setIdleReason(Component.translatable("gtceu.recipe_logic.insufficient_in").append(": ").append(BLAZE.getDisplayName()));
+        getEnhancedRecipeLogic().gtolib$setIdleReason(Component.translatable("gtceu.recipe_logic.insufficient_in").append(": ").append(BLAZE.getDisplayName()));
         return false;
     }
 

@@ -66,12 +66,12 @@ public class ManaMultiblockMachine extends NoEnergyMultiblockMachine implements 
     }
 
     @Override
-    public void gTOCore$setOCLimit(int number) {
+    public void gtolib$setOCLimit(int number) {
         ocLimit = number;
     }
 
     @Override
-    public int gTOCore$getOCLimit() {
+    public int gtolib$getOCLimit() {
         return ocLimit;
     }
 

@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae
 
+import com.gtocore.api.ktflexible.progressBar
 import com.gtocore.common.machine.multiblock.part.ae.MESortMachine.SortType.DEFAULT
 import com.gtocore.common.machine.multiblock.part.ae.MESortMachine.SortType.TAG
 
@@ -30,7 +31,6 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine
 import com.gregtechceu.gtceu.integration.ae2.machine.feature.IGridConnectedMachine
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder
-import com.gtocore.api.ktflexible.progressBar
 import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
@@ -76,7 +76,7 @@ class MESortMachine :
     MetaMachine,
     IGridConnectedMachine,
     IFancyUIMachine,
-IMetaMachine{
+    IMetaMachine {
     constructor(holder: IMachineBlockEntity) : super(holder) {
     }
 
@@ -148,6 +148,7 @@ IMetaMachine{
         IContentChangeAware {
         var widgets: MutableList<MyPhantomSlotWidget> = mutableListOf()
     }
+
     // //////////////////////////////
     // ****** 刷新其他机器缓存 初始化 ******//
     // //////////////////////////////
@@ -166,16 +167,16 @@ IMetaMachine{
             if (index < runnable.chunked(block).size - 1) {
                 delay(timeGap)
                 emit(UpdatePackage(currentIndex + 1, total))
-            }else{
-                isRefreshing=false
+            } else {
+                isRefreshing = false
                 emit(UpdatePackage(currentIndex + 1, total))
                 emit(UpdatePackage(total, total))
             }
         }
-    }.onEach {
-        updatePackage -> println("Refreshing machines Processing ${updatePackage.current}/${updatePackage.total}");
-        current=updatePackage.current;
-        total=updatePackage.total;
+    }.onEach { updatePackage ->
+        println("Refreshing machines Processing ${updatePackage.current}/${updatePackage.total}")
+        current = updatePackage.current
+        total = updatePackage.total
     }
 
     fun freshOtherMachineCache() {
@@ -209,7 +210,7 @@ IMetaMachine{
         coroutine.cancel()
         coroutine = CoroutineScope(Dispatchers.Default)
         coroutine.launch {
-            isRefreshing=true
+            isRefreshing = true
             createRefreshFlow(runnable).collect { it -> }
         }
     }
@@ -233,13 +234,14 @@ IMetaMachine{
     // ****** 数据结构 ******//
     // //////////////////////////////
     @Persisted
-    var current: Int=1
+    var current: Int = 1
+
     @Persisted
-    var total: Int=1
+    var total: Int = 1
+
     @DescSynced
     @RequireRerender
     var isRefreshing: Boolean = false
-
 
     @Persisted
     @DescSynced
@@ -404,7 +406,7 @@ IMetaMachine{
     // //////////////////////////////
     // ****** UI ******//
     // //////////////////////////////
-    var fancyMachineUIWidget:MyFancyMachineUIWidget?=null
+    var fancyMachineUIWidget: MyFancyMachineUIWidget? = null
     var tagSubPage: SubPage? = null
 
     override fun attachSideTabs(sideTabs: TabsWidget?) {
@@ -426,7 +428,7 @@ IMetaMachine{
     }
 
     override fun createUIWidget(): WidgetGroup = vBox(width = PAGE_WIDTH) {}
-    override fun createUI(entityPlayer: Player?): ModularUI? = ModularUI(PAGE_WIDTH, PAGE_HEIGHT, this, entityPlayer).widget(MyFancyMachineUIWidget(this, PAGE_WIDTH, PAGE_HEIGHT).also { fancyMachineUIWidget=it })
+    override fun createUI(entityPlayer: Player?): ModularUI? = ModularUI(PAGE_WIDTH, PAGE_HEIGHT, this, entityPlayer).widget(MyFancyMachineUIWidget(this, PAGE_WIDTH, PAGE_HEIGHT).also { fancyMachineUIWidget = it })
     override fun isRemote(): Boolean = super<IFancyUIMachine>.isRemote
     inner class SubPage(val sortType: SortType) : IFancyUIProvider {
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(Items.IRON_INGOT)

@@ -350,7 +350,7 @@ public final class EncapsulatorExecutionModuleMachine extends StorageMultiblockM
                     }
                     long maxEUt = getOverclockVoltage();
                     double d = (double) totalEU / maxEUt;
-                    int limit = gTOCore$getOCLimit();
+                    int limit = gtolib$getOCLimit();
                     recipeBuilder.EUt(d >= limit ? maxEUt : Math.max(1, (long) (maxEUt * d / limit))).duration((int) Math.max(Math.max(1, d), limit));
                     for (var it2 = outputItemStackMap.object2IntEntrySet().iterator(); it2.hasNext();) {
                         var entry = it2.next();

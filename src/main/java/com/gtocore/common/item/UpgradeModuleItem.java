@@ -54,26 +54,26 @@ public final class UpgradeModuleItem extends Item {
             var tag = item.getTag();
             if (tag != null) {
                 var machine = MetaMachine.getMachine(context.getLevel(), context.getClickedPos());
-                if (machine instanceof IUpgradeMachine upgradeMachine && upgradeMachine.gtocore$canUpgraded()) {
+                if (machine instanceof IUpgradeMachine upgradeMachine && upgradeMachine.gtolib$canUpgraded()) {
                     if (tag.contains("speed")) {
-                        double speed = upgradeMachine.gtocore$getSpeed();
+                        double speed = upgradeMachine.gtolib$getSpeed();
                         if (speed < 1) {
                             speed = Math.max(speed, randomMultiple(10)) * tag.getDouble("speed");
                         } else {
                             speed = tag.getDouble("speed");
                         }
-                        upgradeMachine.gtocore$setSpeed(Math.max(0.5, speed));
+                        upgradeMachine.gtolib$setSpeed(Math.max(0.5, speed));
                         player.setItemInHand(context.getHand(), item.copyWithCount(item.getCount() - 1));
                         return InteractionResult.CONSUME;
                     }
                     if (tag.contains("energy")) {
-                        double energy = upgradeMachine.gtocore$getEnergy();
+                        double energy = upgradeMachine.gtolib$getEnergy();
                         if (energy < 1) {
                             energy = Math.max(energy, randomMultiple(10)) * tag.getDouble("energy");
                         } else {
                             energy = tag.getDouble("energy");
                         }
-                        upgradeMachine.gtocore$setEnergy(Math.max(0.5, energy));
+                        upgradeMachine.gtolib$setEnergy(Math.max(0.5, energy));
                         player.setItemInHand(context.getHand(), item.copyWithCount(item.getCount() - 1));
                         return InteractionResult.CONSUME;
                     }

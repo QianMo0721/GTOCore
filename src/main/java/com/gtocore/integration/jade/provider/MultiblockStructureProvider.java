@@ -44,7 +44,7 @@ public final class MultiblockStructureProvider implements IBlockComponentProvide
         if (blockAccessor.getBlockEntity() instanceof MetaMachineBlockEntity blockEntity) {
             if (blockEntity.getMetaMachine() instanceof ICheckPatternMachine controller) {
                 compoundTag.putBoolean("hasError", !controller.isFormed());
-                compoundTag.putBoolean("checking", controller.gtocore$Checking());
+                compoundTag.putBoolean("checking", controller.gtolib$Checking());
             }
         }
     }

@@ -1,14 +1,17 @@
 package com.gtocore.client.renderer.machine;
 
+import com.gtolib.GTOCore;
+
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.client.renderer.machine.WorkableTieredHullMachineRenderer;
-import com.gtolib.GTOCore;
+
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,6 +36,4 @@ public class HeaterRenderer extends WorkableTieredHullMachineRenderer implements
         renderHeater(quads, definition, machine, frontFacing, side, rand, modelFacing, modelState);
         super.renderMachine(quads, definition, machine, frontFacing, side, rand, modelFacing, modelState);
     }
-
-
 }

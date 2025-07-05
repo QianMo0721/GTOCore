@@ -219,7 +219,7 @@ public final class NeutronVortexMachine extends NeutronActivatorMachine implemen
     }
 
     @Override
-    public @NotNull IEnergyContainer gtocore$getEnergyContainer() {
+    public @NotNull IEnergyContainer gtolib$getEnergyContainer() {
         return electricTrait.getEnergyContainer();
     }
 }
