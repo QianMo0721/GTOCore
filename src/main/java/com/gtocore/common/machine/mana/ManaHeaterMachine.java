@@ -15,6 +15,7 @@ import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 
+import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -27,8 +28,16 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     private static final FluidStack SALAMANDER = GTOMaterials.Salamander.getFluid(FluidStorageKeys.GAS, 10);
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ManaHeaterMachine.class, SimpleManaMachine.MANAGED_FIELD_HOLDER);
+
     @Persisted
+    @DescSynced
     private int temperature = 293;
+
+    /// an indicator used to determine if the salamander input is present
+    /// **used by client renderer**
+    @Persisted
+    @DescSynced
+    private boolean salamanderInput = false;
     private TickableSubscription tickSubs;
 
     public ManaHeaterMachine(IMachineBlockEntity holder) {
@@ -80,6 +89,14 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     }
 
     @Override
+    public void clientTick() {
+        super.clientTick();
+        if (self().getOffsetTimer() % 10 == 0) {
+            this.scheduleRenderUpdate();
+        }
+    }
+
+    @Override
     public void onUnload() {
         super.onUnload();
         if (tickSubs != null) {
@@ -92,10 +109,13 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     public boolean onWorking() {
         if (super.onWorking()) {
             if (getOffsetTimer() % 10 == 0 && getMaxTemperature() > temperature + 10) {
-                raiseTemperature(inputFluid(SALAMANDER) ? 10 : 2);
+                var hasSalamander = inputFluid(SALAMANDER);
+                this.salamanderInput = hasSalamander;
+                raiseTemperature(hasSalamander ? 10 : 2);
             }
             return true;
         }
+        this.salamanderInput = false;
         return false;
     }
 
@@ -121,5 +141,9 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     public int getTemperature() {
         return this.temperature;
+    }
+
+    public boolean hasSalamanderInput() {
+        return salamanderInput;
     }
 }
