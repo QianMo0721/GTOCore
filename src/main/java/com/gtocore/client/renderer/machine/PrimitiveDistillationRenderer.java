@@ -93,7 +93,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
         );
 
         var waterState = distillation.getWaterState();
-        var waterLevel = Mth.clamp(distillation.getWaterLevel() / 100f, 0f, 1f);
+        var waterLevel = Mth.clamp((float) distillation.getWaterLevel() / (float) PrimitiveDistillationTowerMachine.getMaxWaterUsage(), 0f, 1f);
         var waterLayer = waterState.overlay;
         quads.add(
                 shiftQuad(IHeaterRenderer.bakeQuad(

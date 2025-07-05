@@ -109,8 +109,17 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
         super(holder);
         tickSubs = new ConditionalSubscriptionHandler(this, this::tickUpdate, this::shouldTick);
     }
+
     private boolean shouldTick() {
         return isFormed || heat > 298 || time > 0;
+    }
+
+    @Override
+    public void clientTick() {
+        super.clientTick();
+        if (gtocore$getTickTime() % 10 == 0) {
+            scheduleRenderUpdate();
+        }
     }
 
     /**
@@ -404,6 +413,10 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
 
     public static int getMaxHeat() {
         return EXPLOSION;
+    }
+
+    public static int getMaxWaterUsage() {
+        return MAX_WATER_USAGE;
     }
 
     public int getHeat() {
