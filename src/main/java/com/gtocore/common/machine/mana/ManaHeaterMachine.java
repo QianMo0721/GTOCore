@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +32,14 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     @Persisted
     @DescSynced
+    @RequireRerender
     private int temperature = 293;
 
     /// an indicator used to determine if the salamander input is present
     /// **used by client renderer**
     @Persisted
     @DescSynced
+    @RequireRerender
     private boolean salamanderInput = false;
     private TickableSubscription tickSubs;
 
@@ -85,14 +88,6 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
                 tickUpdate();
                 getRecipeLogic().updateTickSubscription();
             });
-        }
-    }
-
-    @Override
-    public void clientTick() {
-        super.clientTick();
-        if (self().getOffsetTimer() % 10 == 0) {
-            this.scheduleRenderUpdate();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.noenergy;
 
+import com.gtocore.client.renderer.machine.PrimitiveDistillationRenderer;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.common.machine.multiblock.part.SensorPartMachine;
 
@@ -49,6 +50,7 @@ import net.minecraftforge.fluids.capability.templates.VoidFluidHandler;
 import com.lowdragmc.lowdraglib.gui.widget.*;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.NotNull;
@@ -85,7 +87,15 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     private static final ItemStack COAL_BLOCK = Items.COAL_BLOCK.getDefaultInstance();
     private static final ItemStack COAL_DUST = ChemicalHelper.get(TagPrefix.dust, GTMaterials.Coal);
     @Persisted
+    @DescSynced
+    @RequireRerender
     private int heat = 298;
+    @DescSynced
+    @RequireRerender
+    private PrimitiveDistillationRenderer.WaterState waterState = PrimitiveDistillationRenderer.WaterState.NO_WATER;
+    @DescSynced
+    @RequireRerender
+    private int waterLevel = 0; // Used for rendering water level in the machine
     @Persisted
     private int tier;
     @Persisted
@@ -97,7 +107,19 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
 
     public PrimitiveDistillationTowerMachine(IMachineBlockEntity holder) {
         super(holder);
-        tickSubs = new ConditionalSubscriptionHandler(this, this::tickUpdate, () -> isFormed || heat > 298 || time > 0);
+        tickSubs = new ConditionalSubscriptionHandler(this, this::tickUpdate, this::shouldTick);
+    }
+
+    private boolean shouldTick() {
+        return isFormed || heat > 298 || time > 0;
+    }
+
+    @Override
+    public void clientTick() {
+        super.clientTick();
+        if (gtolib$getTickTime() % 10 == 0) {
+            scheduleRenderUpdate();
+        }
     }
 
     /**
@@ -126,6 +148,9 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     /**
      * 执行设备的定时更新操作。
      * 该方法负责处理以下逻辑：
+     * <p>
+     * *New* 更新水的状态以便渲染。
+     * </p>
      * 1. 更新设备的工作状态。
      * 2. 处理设备的热量和水消耗。
      * 3. 检查燃料并进行补充。
@@ -133,6 +158,8 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      * 5. 调用后处理操作。
      */
     private void tickUpdate() {
+        var water = (int) Math.min(MAX_WATER_USAGE, getFluidAmount(Fluids.WATER)[0]);
+        updateWaterState(water);
         long offsetTimer = getOffsetTimer();
         if (time > 0) {
             activateMachine();
@@ -165,13 +192,36 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      */
     private void handleHeatAndWater() {
         if (time % 20 == 0) {
+            var water = (int) Math.min(MAX_WATER_USAGE, getFluidAmount(Fluids.WATER)[0]);
             if (heat > HEAT_THRESHOLD) {
-                int water = (int) Math.min(MAX_WATER_USAGE, getFluidAmount(Fluids.WATER)[0]);
+                handleCooling(water > 0);
                 adjustHeatWithWater(water);
             }
             heat += tier;
             if (getRecipeLogic().isWorking()) heat--;
         }
+    }
+
+    /**
+     * 更新水的状态。用于在客户端渲染时选取不同水位模型。
+     *
+     * @param water 当前水量
+     */
+    private void updateWaterState(int water) {
+        if (water > 0) {
+            if (water < 100) {
+                waterState = PrimitiveDistillationRenderer.WaterState.HAS_LITTLE_WATER;
+            } else {
+                waterState = PrimitiveDistillationRenderer.WaterState.HAS_ENOUGH_WATER;
+            }
+        } else {
+            waterState = PrimitiveDistillationRenderer.WaterState.NO_WATER;
+        }
+        waterLevel = water;
+    }
+
+    private void handleCooling(boolean isCooling) {
+        waterState = isCooling ? PrimitiveDistillationRenderer.WaterState.IS_COOLING : waterState;
     }
 
     /**
@@ -355,6 +405,26 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     @Override
     public boolean jade() {
         return false;
+    }
+
+    public PrimitiveDistillationRenderer.WaterState getWaterState() {
+        return waterState;
+    }
+
+    public static int getMaxHeat() {
+        return EXPLOSION;
+    }
+
+    public static int getMaxWaterUsage() {
+        return MAX_WATER_USAGE;
+    }
+
+    public int getHeat() {
+        return heat;
+    }
+
+    public int getWaterLevel() {
+        return waterLevel;
     }
 
     private static final class DistillationTowerLogic extends RecipeLogic {
