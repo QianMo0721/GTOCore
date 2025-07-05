@@ -5,7 +5,7 @@ import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.data.GTOMaterials;
 
 import com.gtolib.api.data.chemical.GTOChemicalHelper;
-import com.gtolib.api.recipe.MeteoriteRegistryHelper;
+import com.gtolib.api.recipe.builder.MeteoriteRegistryHelper;
 import com.gtolib.utils.RegistriesUtils;
 
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;

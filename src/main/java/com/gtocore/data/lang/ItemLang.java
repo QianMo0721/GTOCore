@@ -90,6 +90,14 @@ final class ItemLang {
 
         addCNEN("item.gtocore.order.config", "订单配置", "Order Config");
 
+        addCNEN("item.gtocore.data_item.type.title", "§n%s结构数据：", "§n%s Construction Data:");
+        addCNEN("gtocore.tooltip.item.scanning_data", "§n扫描数据：", "§nScan Data:");
+        addCNEN("gtocore.tooltip.item.scanned_things", "- %d× %s", "- %d× %s");
+        addCNEN("gtocore.tooltip.item.scanning_serial", "- §a扫描编号：%s", "- §aScan number: %s");
+        addCNEN("gtocore.tooltip.item.analyze_data", "§n研究数据：", "§nResearch data:");
+        addCNEN("gtocore.tooltip.item.analyze_things", "- %d", "- %d");
+        addCNEN("gtocore.tooltip.item.analyze_serial", "- §a研究编号：%s", "- §aResearch number: %s");
+
         addCNEN("gtocore.behaviour.grass_harvest.description", GOLD + "极大" + RESET + "地提升小麦种子掉落概率", GOLD + "Greatly" + RESET + " increase the probability of wheat seed dropping");
         addCNEN("gtocore.behaviour.grass_harvest.description2", "右键以收割", "Right click to harvest");
     }
