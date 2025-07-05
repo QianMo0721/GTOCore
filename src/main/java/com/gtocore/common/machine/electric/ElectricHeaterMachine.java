@@ -22,6 +22,7 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import net.minecraft.core.Direction;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -36,6 +37,7 @@ public final class ElectricHeaterMachine extends WorkableTieredMachine implement
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ElectricHeaterMachine.class, WorkableTieredMachine.MANAGED_FIELD_HOLDER);
     @Persisted
     @DescSynced
+    @RequireRerender
     private int temperature;
     private TickableSubscription tickSubs;
 
@@ -107,14 +109,6 @@ public final class ElectricHeaterMachine extends WorkableTieredMachine implement
                 tickUpdate();
                 getRecipeLogic().updateTickSubscription();
             });
-        }
-    }
-
-    @Override
-    public void clientTick() {
-        super.clientTick();
-        if (self().getOffsetTimer() % 10 == 0) {
-            this.scheduleRenderUpdate();
         }
     }
 
