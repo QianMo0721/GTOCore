@@ -56,9 +56,9 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
     public @Nullable GTRecipe createCustomRecipe(IRecipeCapabilityHolder h) {
         if (h instanceof IExtendedRecipeCapabilityHolder holder) {
             RecipeData data = new RecipeData();
-            Recipe recipe = collect(data, holder.gtocore$getDistinct());
+            Recipe recipe = collect(data, holder.gtolib$getDistinct());
             if (recipe != null) return recipe;
-            return collect(data, holder.gtocore$getIndistinct());
+            return collect(data, holder.gtolib$getIndistinct());
         }
         return null;
     }

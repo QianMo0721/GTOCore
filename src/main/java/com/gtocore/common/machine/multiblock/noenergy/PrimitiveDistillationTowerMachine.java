@@ -398,7 +398,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
 
     @Override
     @NotNull
-    public IEnergyContainer gtocore$getEnergyContainer() {
+    public IEnergyContainer gtolib$getEnergyContainer() {
         return CONTAINER;
     }
 

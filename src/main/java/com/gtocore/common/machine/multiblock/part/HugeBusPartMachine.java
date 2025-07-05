@@ -69,6 +69,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
     public HugeBusPartMachine(IMachineBlockEntity holder) {
         super(holder, GTValues.IV, IO.IN);
         this.inventory = new HugeNotifiableItemStackHandler(this);
+        setWorkingEnabled(false);
     }
 
     @Override

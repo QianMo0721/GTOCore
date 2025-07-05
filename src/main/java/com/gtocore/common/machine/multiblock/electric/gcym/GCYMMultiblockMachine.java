@@ -18,7 +18,7 @@ public class GCYMMultiblockMachine extends TierCasingMultiblockMachine {
     }
 
     @Override
-    public boolean gtocore$canUpgraded() {
+    public boolean gtolib$canUpgraded() {
         return true;
     }
 }

@@ -55,17 +55,17 @@ public class SimpleWorkManaMachine extends SimpleManaMachine implements IManaEne
     }
 
     @Override
-    public void gTOCore$setOCLimit(int number) {
+    public void gtolib$setOCLimit(int number) {
         ocLimit = number;
     }
 
     @Override
-    public int gTOCore$getOCLimit() {
+    public int gtolib$getOCLimit() {
         return ocLimit;
     }
 
     @Override
-    public @NotNull IEnergyContainer gtocore$getEnergyContainer() {
+    public @NotNull IEnergyContainer gtolib$getEnergyContainer() {
         return container;
     }
 }

@@ -152,7 +152,7 @@ public class MEStockingHatchPartMachine extends MEInputHatchPartMachine implemen
             return;
         }
         MEStorage networkStorage = grid.getStorageService().getInventory();
-        var counter = IKeyCounter.of(networkStorage.getAvailableStacks()).gtocore$getVariantCounter();
+        var counter = IKeyCounter.of(networkStorage.getAvailableStacks()).gtolib$getVariantCounter();
         if (counter == null) return;
 
         var queue = new PriorityQueue<>(CONFIG_SIZE, Comparator.comparingLong(GenericStack::amount));

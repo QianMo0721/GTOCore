@@ -657,7 +657,7 @@ public final class GTOItems {
     public static final ItemEntry<Item> PHOTOCOATED_HASSIUM_WAFER = register("photocoated_hassium_wafer", "光聚合物涂覆的掺\ud872\udf76晶圆");
     public static final ItemEntry<Item> TIME_DILATION_CONTAINMENT_UNIT = register("time_dilation_containment_unit", "时间膨胀密闭单元");
     public static final ItemEntry<Item> NEUTRONIUM_SPHERE = register("neutronium_sphere", "中子素球体");
-    public static final ItemEntry<Item> CHARGED_TRIPLET_NEUTRONIUM_SPHERE = register("charged_triplet_neutronium_sphere", "带电三连中子素球体");
+    public static final ItemEntry<Item> CHARGED_TRIPLET_NEUTRONIUM_SPHERE = registerCustomModel("charged_triplet_neutronium_sphere", "带电三连中子素球体");
     public static final ItemEntry<Item> TRIPLET_NEUTRONIUM_SPHERE = register("triplet_neutronium_sphere", "三连中子素球体");
     public static final ItemEntry<Item> CONTAINED_HIGH_DENSITY_PROTONIC_MATTER = register("contained_high_density_protonic_matter", "遏制高密度质子物质");
     public static final ItemEntry<Item> EXTREMELY_DURABLE_PLASMA_CELL = register("extremely_durable_plasma_cell", "高耐久等离子体容器");

@@ -353,14 +353,14 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
             if (recipe != null) {
                 for (var controller : machine.getControllers()) {
                     if (controller instanceof IExtendedRecipeCapabilityHolder holder && holder.getRecipeLogic() instanceof IEnhancedRecipeLogic enhancedRecipeLogic) {
-                        enhancedRecipeLogic.gtocore$getRecipeCache().put(recipe, rhl.rhl);
+                        enhancedRecipeLogic.gtolib$getRecipeCache().put(recipe, rhl.rhl);
                     }
                 }
                 for (var proxy : machine.proxyMachines) {
                     var rhl = (InternalSlotRecipeHandler.AbstractRHL) proxy.getProxySlotRecipeHandler().getProxySlotHandlers().get(index);
                     for (var controller : proxy.getControllers()) {
                         if (controller instanceof IExtendedRecipeCapabilityHolder holder && holder.getRecipeLogic() instanceof IEnhancedRecipeLogic enhancedRecipeLogic) {
-                            enhancedRecipeLogic.gtocore$getRecipeCache().put(recipe, rhl.rhl);
+                            enhancedRecipeLogic.gtolib$getRecipeCache().put(recipe, rhl.rhl);
                         }
                     }
                 }
