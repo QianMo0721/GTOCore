@@ -13,6 +13,7 @@ import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
+import com.gtolib.api.item.ExDataItemBehavior;
 import com.gtolib.api.lang.CNEN;
 import com.gtolib.utils.StringUtils;
 
@@ -381,6 +382,10 @@ public final class GTOItems {
             .onRegister(attachRenderer(() -> HaloItemRenderer.COSMIC_HALO))
             .onRegister(attach(new DataItemBehavior(true)))
             .register();// OPV鸿蒙之眼后解锁,MAX初期开使用
+
+    public static final ItemEntry<ComponentItem> DATA_CRYSTAL = GTOConfig.INSTANCE.dev ? item("data_crystal", "数据晶片", ComponentItem::create)
+            .onRegister(attach(new ExDataItemBehavior()))
+            .register() : null;
 
     public static final ItemEntry<KineticRotorItem> WOOD_ROTOR = registerRotor("wood_kinetic_rotor", "木", 2400, 4, 10, 0);
     public static final ItemEntry<KineticRotorItem> IRON_ROTOR = registerRotor("iron_kinetic_rotor", "铁", 14000, 10, 20, 1);
