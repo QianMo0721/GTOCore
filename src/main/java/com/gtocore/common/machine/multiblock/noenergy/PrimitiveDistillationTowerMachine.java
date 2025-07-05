@@ -36,7 +36,6 @@ import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 
-import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -51,6 +50,7 @@ import net.minecraftforge.fluids.capability.templates.VoidFluidHandler;
 import com.lowdragmc.lowdraglib.gui.widget.*;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.NotNull;
@@ -149,7 +149,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      * 执行设备的定时更新操作。
      * 该方法负责处理以下逻辑：
      * <p>
-     *     *New* 更新水的状态以便渲染。
+     * *New* 更新水的状态以便渲染。
      * </p>
      * 1. 更新设备的工作状态。
      * 2. 处理设备的热量和水消耗。
@@ -534,5 +534,4 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     private List<IFluidHandler> getFluidOutputs() {
         return this.fluidOutputs;
     }
-
 }

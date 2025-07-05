@@ -1,10 +1,13 @@
 package com.gtocore.client.renderer.machine;
 
+import com.gtocore.common.machine.mana.ManaHeaterMachine;
+
+import com.gtolib.GTOCore;
+
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.client.model.WorkableOverlayModel;
-import com.gtocore.common.machine.mana.ManaHeaterMachine;
-import com.gtolib.GTOCore;
+
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelState;
@@ -13,12 +16,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ManaHeaterRenderer extends WorkableManaTieredHullMachineRenderer implements IHeaterRenderer {
+
     private static final ResourceLocation MODEL = GTOCore.id("block/machines/heater/mana");
     private static final ResourceLocation MODEL_ALT = GTOCore.id("block/machines/heater/mana_alt");
     private final WorkableOverlayModel altModel;
@@ -27,7 +32,6 @@ public class ManaHeaterRenderer extends WorkableManaTieredHullMachineRenderer im
         super(tier, MODEL);
         this.altModel = new WorkableOverlayModel(MODEL_ALT);
     }
-
 
     @Override
     public void renderMachine(List<BakedQuad> quads,

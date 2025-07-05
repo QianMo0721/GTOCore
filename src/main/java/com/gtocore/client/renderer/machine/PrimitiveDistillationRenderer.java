@@ -1,28 +1,33 @@
 package com.gtocore.client.renderer.machine;
 
+import com.gtocore.common.machine.multiblock.noenergy.PrimitiveDistillationTowerMachine;
+
+import com.gtolib.GTOCore;
+
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.client.renderer.machine.WorkableCasingMachineRenderer;
-import com.gtocore.common.machine.multiblock.noenergy.PrimitiveDistillationTowerMachine;
-import com.gtolib.GTOCore;
-import com.lowdragmc.lowdraglib.client.bakedpipeline.Quad;
-import com.lowdragmc.lowdraglib.client.model.ModelFactory;
+
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+
+import com.lowdragmc.lowdraglib.client.bakedpipeline.Quad;
+import com.lowdragmc.lowdraglib.client.model.ModelFactory;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
 
 public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer implements IHeaterRenderer {
+
     private static final ResourceLocation CASING = GTCEu.id("block/casings/steam/steel/side");
-    private static final ResourceLocation WORKABLE_MODEL =  GTOCore.id("block/multiblock/primitive_distillation_tower");
+    private static final ResourceLocation WORKABLE_MODEL = GTOCore.id("block/multiblock/primitive_distillation_tower");
 
     private static final ResourceLocation TANK_OVERLAY = GTOCore.id("block/multiblock/primitive_distillation_tower/tank");
     private static final ResourceLocation WATER_OVERLAY = GTOCore.id("block/multiblock/primitive_distillation_tower/water");
@@ -52,7 +57,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
         var maxTemp = PrimitiveDistillationTowerMachine.getMaxHeat();
         float tempRatio = Math.min(1.0f, (float) temp / maxTemp);
 
-        var direction = RelativeDirection.FRONT.getRelative(machine.getFrontFacing(),machine.getUpwardsFacing(), false);
+        var direction = RelativeDirection.FRONT.getRelative(machine.getFrontFacing(), machine.getUpwardsFacing(), false);
         direction = ModelFactory.modelFacing(frontFacing, direction);
 
         quads.add(
@@ -64,9 +69,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                         modelState,
                         false,
                         -1,
-                        false
-                ))
-        );
+                        false)));
         quads.add(
                 shiftQuad(IHeaterRenderer.bakeQuad(
                         layer1,
@@ -76,9 +79,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                         modelState,
                         true,
                         -1,
-                        false
-                ))
-        );
+                        false)));
         quads.add(
                 shiftQuad(IHeaterRenderer.bakeQuad(
                         layer2,
@@ -88,9 +89,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                         modelState,
                         false,
                         -1,
-                        false
-                ))
-        );
+                        false)));
 
         var waterState = distillation.getWaterState();
         var waterLevel = Mth.clamp((float) distillation.getWaterLevel() / (float) PrimitiveDistillationTowerMachine.getMaxWaterUsage(), 0f, 1f);
@@ -104,9 +103,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                         modelState,
                         false,
                         -1,
-                        false
-                ))
-        );
+                        false)));
         if (waterLayer != null) {
             quads.add(
                     shiftQuad(IHeaterRenderer.bakeQuad(
@@ -117,9 +114,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                             modelState,
                             true,
                             -1,
-                            false
-                    ))
-            );
+                            false)));
         }
         quads.add(
                 shiftQuad(IHeaterRenderer.bakeQuad(
@@ -130,10 +125,9 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                         modelState,
                         false,
                         -1,
-                        false
-                ))
-        );
+                        false)));
     }
+
     private BakedQuad shiftQuad(BakedQuad quad) {
         Quad shiftedQuad = Quad.from(quad);
         for (int i = 0; i < 4; i++) {
@@ -144,11 +138,14 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
     }
 
     public enum WaterState {
+
         NO_WATER(null),
         HAS_LITTLE_WATER(WATER_OVERLAY),
         HAS_ENOUGH_WATER(WATER_OVERLAY),
         IS_COOLING(STEAM_OVERLAY);
+
         private final @Nullable ResourceLocation overlay;
+
         WaterState(@Nullable ResourceLocation overlay) {
             this.overlay = overlay;
         }
