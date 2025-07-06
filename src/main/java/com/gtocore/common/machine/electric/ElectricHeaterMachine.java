@@ -5,9 +5,9 @@ import com.gtocore.common.data.GTORecipeTypes;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.machine.feature.IHeaterMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
+import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.machine.trait.NotifiableSafeEnergyContainer;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -71,7 +71,7 @@ public final class ElectricHeaterMachine extends WorkableTieredMachine implement
     @Nullable
     private Recipe getRecipe() {
         if (temperature >= getMaxTemperature()) return null;
-        Recipe recipe = RecipeBuilder.ofRaw().duration(20).EUt(30).buildRawRecipe();
+        Recipe recipe = IEnhancedRecipeLogic.of(getRecipeLogic()).gtolib$getRecipeBuilder().duration(20).EUt(30).buildRawRecipe();
         if (RecipeRunner.matchTickRecipe(this, recipe)) {
             return recipe;
         }

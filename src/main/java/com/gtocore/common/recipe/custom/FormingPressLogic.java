@@ -1,6 +1,7 @@
 package com.gtocore.common.recipe.custom;
 
 import com.gtolib.api.machine.feature.multiblock.IExtendedRecipeCapabilityHolder;
+import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeBuilder;
 
@@ -25,8 +26,14 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
 
     private static class RecipeData {
 
+        private final RecipeBuilder recipeBuilder;
+
         private ItemStack mold = ItemStack.EMPTY;
         private ItemStack item = ItemStack.EMPTY;
+
+        private RecipeData(RecipeBuilder recipeBuilder) {
+            this.recipeBuilder = recipeBuilder;
+        }
 
         private boolean found() {
             return !mold.isEmpty() && !item.isEmpty();
@@ -43,8 +50,7 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
                     return null;
                 }
             }
-            return RecipeBuilder.ofRaw()
-                    .notConsumable(mold)
+            return recipeBuilder.notConsumable(mold)
                     .inputItems(item.copyWithCount(1))
                     .outputItems(output)
                     .duration(40).EUt(4)
@@ -55,7 +61,7 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
     @Override
     public @Nullable GTRecipe createCustomRecipe(IRecipeCapabilityHolder h) {
         if (h instanceof IExtendedRecipeCapabilityHolder holder) {
-            RecipeData data = new RecipeData();
+            RecipeData data = new RecipeData(IEnhancedRecipeLogic.of(holder.getRecipeLogic()).gtolib$getRecipeBuilder());
             Recipe recipe = collect(data, holder.gtolib$getDistinct());
             if (recipe != null) return recipe;
             return collect(data, holder.gtolib$getIndistinct());

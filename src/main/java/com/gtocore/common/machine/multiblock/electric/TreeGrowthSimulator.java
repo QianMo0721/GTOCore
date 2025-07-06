@@ -1,5 +1,7 @@
 package com.gtocore.common.machine.multiblock.electric;
 
+import com.gtocore.data.IdleReason;
+
 import com.gtolib.api.machine.multiblock.StorageMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
@@ -46,9 +48,13 @@ public final class TreeGrowthSimulator extends StorageMultiblockMachine {
             boolean isElectric = item.isElectric();
             if (isElectric) {
                 IElectricItem electricStack = GTCapabilityHelper.getElectricItem(stack);
-                if (electricStack == null) return null;
+                if (electricStack == null) {
+                    setIdleReason(IdleReason.FELLING_TOOL);
+                    return null;
+                }
                 int eu = 256 * (1 << tier);
                 if (electricStack.getCharge() < eu) {
+                    setIdleReason(IdleReason.CHARGE);
                     return null;
                 } else {
                     electricStack.discharge(eu * (1L << tier), electricStack.getTier(), true, false, false);
@@ -58,6 +64,7 @@ public final class TreeGrowthSimulator extends StorageMultiblockMachine {
                 int damag = item.definition$getDamage(stack);
                 if (damag >= item.definition$getMaxDamage(stack)) {
                     machineStorage.setStackInSlot(0, ItemStack.EMPTY);
+                    setIdleReason(IdleReason.FELLING_TOOL);
                     return null;
                 }
                 item.definition$setDamage(stack, damag + 1);
@@ -74,6 +81,7 @@ public final class TreeGrowthSimulator extends StorageMultiblockMachine {
             }
             return RecipeModifierFunction.overclocking(this, recipe);
         }
+        setIdleReason(IdleReason.FELLING_TOOL);
         return null;
     }
 

@@ -221,7 +221,7 @@ public final class SlaughterhouseMachine extends StorageMultiblockMachine {
                     if (isFixed) break;
                 }
             }
-            RecipeBuilder builder = RecipeBuilder.ofRaw().duration(isSpawn ? 20 : Math.max(20, 20 * (1 << getTier()) - attackDamage)).EUt(getOverclockVoltage());
+            RecipeBuilder builder = getRecipeBuilder().duration(isSpawn ? 20 : Math.max(20, 20 * (1 << getTier()) - attackDamage)).EUt(getOverclockVoltage());
             itemStacks.forEach(builder::outputItems);
             Recipe recipe = builder.buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;

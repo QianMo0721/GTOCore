@@ -6,7 +6,6 @@ import com.gtocore.common.data.GTORecipeTypes;
 import com.gtolib.api.machine.feature.IHeaterMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
@@ -50,7 +49,7 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     @Nullable
     private Recipe getRecipe() {
         if (temperature >= getMaxTemperature()) return null;
-        Recipe recipe = RecipeBuilder.ofRaw().duration(20).MANAt(16).buildRawRecipe();
+        Recipe recipe = getRecipeBuilder().duration(20).MANAt(16).buildRawRecipe();
         if (RecipeRunner.matchTickRecipe(this, recipe)) {
             return recipe;
         }

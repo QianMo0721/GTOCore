@@ -45,7 +45,7 @@ public final class ChiselMachine extends CustomParallelMultiblockMachine {
             if (list.isEmpty()) return null;
             Item output = list.get(Math.min(list.size(), c.get()) - 1);
             if (output == null) return null;
-            RecipeBuilder builder = RecipeBuilder.ofRaw().duration(20).EUt(30);
+            RecipeBuilder builder = getRecipeBuilder().duration(20).EUt(30);
             builder.inputItems(item.get());
             builder.outputItems(output);
             Recipe recipe = builder.buildRawRecipe();

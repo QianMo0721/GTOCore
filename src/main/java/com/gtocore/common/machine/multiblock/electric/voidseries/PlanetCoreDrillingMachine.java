@@ -30,7 +30,7 @@ public final class PlanetCoreDrillingMachine extends ElectricMultiblockMachine {
 
     @Nullable
     private Recipe getRecipe() {
-        RecipeBuilder builder = RecipeBuilder.ofRaw().duration(20).EUt(GTValues.VA[GTValues.MAX]);
+        RecipeBuilder builder = getRecipeBuilder().duration(20).EUt(GTValues.VA[GTValues.MAX]);
         for (Material material : getMaterials()) {
             builder.outputItems(TagPrefix.ore, material, 65536);
         }

@@ -5,7 +5,6 @@ import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.machine.trait.EnergyContainerTrait;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.ServerUtils;
 import com.gtolib.utils.register.BlockRegisterUtils;
@@ -123,7 +122,7 @@ public final class VoidTransporterMachine extends ElectricMultiblockMachine {
     @Nullable
     private Recipe getRecipe() {
         if (eu < getOverclockVoltage() && energyContainer.getEnergyStored() < 409600) {
-            Recipe recipe = RecipeBuilder.ofRaw().EUt(getOverclockVoltage()).duration(200).buildRawRecipe();
+            Recipe recipe = getRecipeBuilder().EUt(getOverclockVoltage()).duration(200).buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
         }
         return null;
