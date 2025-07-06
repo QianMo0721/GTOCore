@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.multiblock.electric.space;
 
 import com.gtocore.common.data.GTOItems;
+import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.gui.GTOGuiTextures;
@@ -174,6 +175,8 @@ public class SpaceElevatorMachine extends TierCasingMultiblockMachine implements
         if (getTier() > GTValues.ZPM) {
             Recipe recipe = RecipeBuilder.ofRaw().duration(400).CWUt(128 * (getTier() - GTValues.ZPM)).EUt(GTValues.VA[getTier()]).buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
+        } else {
+            setIdleReason(IdleReason.VOLTAGE_TIER_NOT_SATISFIES);
         }
         return null;
     }
