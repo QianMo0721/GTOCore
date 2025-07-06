@@ -2,8 +2,8 @@ package com.gtocore.common.machine.trait;
 
 import com.gtocore.common.machine.multiblock.electric.voidseries.AdvancedInfiniteDrillMachine;
 
+import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidVeinSavedData;
@@ -21,7 +21,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class AdvancedInfiniteDrillLogic extends RecipeLogic {
+public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEnhancedRecipeLogic {
 
     private static final int MAX_PROGRESS = 20;
     private final Object2IntOpenHashMap<Fluid> veinFluids = new Object2IntOpenHashMap<>();
@@ -64,7 +64,7 @@ public final class AdvancedInfiniteDrillLogic extends RecipeLogic {
     @Nullable
     private Recipe getFluidDrillRecipe() {
         if (!veinFluids.isEmpty()) {
-            var recipe = RecipeBuilder.ofRaw().duration(MAX_PROGRESS).EUt(20000).outputFluids(veinFluids.object2IntEntrySet().stream().map(entry -> new FluidStack(entry.getKey(), entry.getIntValue())).toArray(FluidStack[]::new)).buildRawRecipe();
+            var recipe = gtolib$getRecipeBuilder().duration(MAX_PROGRESS).EUt(20000).outputFluids(veinFluids.object2IntEntrySet().stream().map(entry -> new FluidStack(entry.getKey(), entry.getIntValue())).toArray(FluidStack[]::new)).buildRawRecipe();
             recipe.modifier(new ContentModifier(getParallel(), efficiency(getMachine().getRate() * 500)), true);
             if (RecipeRunner.matchRecipe(machine, recipe) && RecipeRunner.matchTickRecipe(machine, recipe)) {
                 return recipe;

@@ -2,7 +2,6 @@ package com.gtocore.common.machine.multiblock.water;
 
 import com.gtocore.common.machine.multiblock.part.IndicatorHatchPartMachine;
 
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
@@ -126,7 +125,7 @@ public final class ResidualDecontaminantDegasserPurificationUnitMachine extends 
         failed = false;
         inputCount = Math.min(parallel(), getFluidAmount(WaterPurificationPlantMachine.GradePurifiedWater6)[0]);
         if (inputCount > 0) {
-            recipe = RecipeBuilder.ofRaw().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater6, inputCount).buildRawRecipe();
+            recipe = getRecipeBuilder().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater6, inputCount).buildRawRecipe();
             if (RecipeRunner.matchRecipe(this, recipe)) {
                 indicatorHatchPartMachine.setRedstoneSignalOutput((int) (Math.random() * 15));
                 if (indicatorHatchPartMachine.getRedstoneSignalOutput() == 13 || indicatorHatchPartMachine.getRedstoneSignalOutput() == 15) {

@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.multiblock.electric;
 
 import com.gtocore.common.machine.multiblock.part.BallHatchPartMachine;
+import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
@@ -54,6 +55,7 @@ public final class IsaMillMachine extends ElectricMultiblockMachine {
             }
             return super.beforeWorking(recipe);
         }
+        setIdleReason(IdleReason.GRIND_BALL);
         return false;
     }
 }

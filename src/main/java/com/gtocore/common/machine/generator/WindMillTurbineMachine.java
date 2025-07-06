@@ -180,7 +180,7 @@ public final class WindMillTurbineMachine extends TieredEnergyMachine implements
                 }
             } else {
                 if (hasRotor) {
-                    gtocore$setSync();
+                    gtolib$setSync();
                     inventory.storage.setStackInSlot(0, ItemStack.EMPTY);
                 }
                 spinSpeed = 0;

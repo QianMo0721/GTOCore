@@ -64,7 +64,7 @@ public final class HeaterMachine extends SimpleNoEnergyMachine implements IHeate
                 Level level = getLevel();
                 if (level == null) return;
                 tickUpdate();
-                gtocore$setSync();
+                gtolib$setSync();
                 setEnabled(level.getBlockState(getPos().relative(getFrontFacing())).isAir());
             });
         }

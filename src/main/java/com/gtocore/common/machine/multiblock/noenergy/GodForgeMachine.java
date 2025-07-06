@@ -10,7 +10,6 @@ import com.gtolib.api.machine.multiblock.NoEnergyMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.machine.trait.TierCasingTrait;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.utils.MultiBlockFileReader;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -189,8 +188,7 @@ public final class GodForgeMachine extends NoEnergyMultiblockMachine implements 
     }
 
     private Recipe getRecipe() {
-        // return GTORecipeBuilder.ofRaw().duration(20).buildRawRecipe();
-        return RecipeBuilder.ofRaw().inputFluids(Fluids.WATER, 100).duration(20).buildRawRecipe();
+        return getRecipeBuilder().inputFluids(Fluids.WATER, 100).duration(20).buildRawRecipe();
     }
 
     @Override

@@ -343,14 +343,14 @@ public final class EncapsulatorExecutionModuleMachine extends StorageMultiblockM
                 }
                 case "build" -> {
                     if (finalRecipe != null || packageRecipe.isEmpty()) return;
-                    var recipeBuilder = RecipeBuilder.ofRaw();
+                    var recipeBuilder = getRecipeBuilder();
                     long totalEU = 0;
                     for (var recipe : packageRecipe) {
                         totalEU += recipe.recipe.getInputEUt() * recipe.recipe.duration * recipe.parallel;
                     }
                     long maxEUt = getOverclockVoltage();
                     double d = (double) totalEU / maxEUt;
-                    int limit = gTOCore$getOCLimit();
+                    int limit = gtolib$getOCLimit();
                     recipeBuilder.EUt(d >= limit ? maxEUt : Math.max(1, (long) (maxEUt * d / limit))).duration((int) Math.max(Math.max(1, d), limit));
                     for (var it2 = outputItemStackMap.object2IntEntrySet().iterator(); it2.hasNext();) {
                         var entry = it2.next();

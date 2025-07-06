@@ -4,7 +4,6 @@ import com.gtocore.common.machine.multiblock.part.IndicatorHatchPartMachine;
 
 import com.gtolib.api.data.chemical.GTOChemicalHelper;
 import com.gtolib.api.machine.part.ItemHatchPartMachine;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -149,7 +148,7 @@ public final class HighEnergyLaserPurificationUnitMachine extends WaterPurificat
         time = -1;
         inputCount = Math.min(parallel(), getFluidAmount(WaterPurificationPlantMachine.GradePurifiedWater5)[0]);
         if (inputCount > 0) {
-            recipe = RecipeBuilder.ofRaw().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater5, inputCount).buildRawRecipe();
+            recipe = getRecipeBuilder().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater5, inputCount).buildRawRecipe();
             if (RecipeRunner.matchRecipe(this, recipe)) {
                 calculateVoltage(inputCount);
             }

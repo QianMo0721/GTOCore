@@ -7,7 +7,6 @@ import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -76,7 +75,7 @@ public final class DysonSphereReceivingStationMcahine extends ElectricMultiblock
         }
         int integer = GTODimensions.getPlanetDistances(getDimension().location());
         if (integer == 0) return null;
-        Recipe recipe = RecipeBuilder.ofRaw().duration(20)
+        Recipe recipe = getRecipeBuilder().duration(20)
                 .CWUt(Math.max(1, pair.leftInt() * integer / 2))
                 .EUt(-GTValues.V[GTValues.MAX] * pair.leftInt() * (50 - Math.max(0, pair.rightInt() - 60)) / 50)
                 .inputFluids(new FluidStack(GTOFluids.GELID_CRYOTHEUM.get(), Math.max(1, (int) Math.sqrt(pair.leftInt()))))

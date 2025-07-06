@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import com.hepdd.gtmthings.api.misc.WirelessEnergyContainer;
+import com.hepdd.gtmthings.utils.BigIntegerUtils;
 import com.hepdd.gtmthings.utils.TeamUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.jetbrains.annotations.NotNull;
@@ -156,5 +157,23 @@ public final class WirelessEnergySubstationMachine extends NoRecipeLogicMultiblo
 
     public WirelessEnergyContainer getWirelessEnergyContainerCache() {
         return this.WirelessEnergyContainerCache;
+    }
+
+    public long getInputPerSec() {
+        var container = getWirelessEnergyContainer();
+        if (container == null) {
+            return 0;
+        }
+        var input = BigIntegerUtils.getLongValue(container.getEnergyStat().getAvgEnergy().toBigInteger());
+        return input > 0 ? input : 0;
+    }
+
+    public long getOutputPerSec() {
+        var container = getWirelessEnergyContainer();
+        if (container == null) {
+            return 0;
+        }
+        var output = BigIntegerUtils.getLongValue(container.getEnergyStat().getAvgEnergy().toBigInteger().negate());
+        return output > 0 ? output : 0;
     }
 }

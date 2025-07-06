@@ -55,7 +55,7 @@ public final class DiscItem extends Item {
             if (!i.isEmpty()) {
                 Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(i, tag.getString("n")));
                 if (item != null) {
-                    list.add(Component.translatable("item.gtocore.disc.data", ((IItem) item).gtocore$getReadOnlyStack().getDisplayName()));
+                    list.add(Component.translatable("item.gtocore.disc.data", ((IItem) item).gtolib$getReadOnlyStack().getDisplayName()));
                 }
             } else {
                 String f = tag.getString("f");

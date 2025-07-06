@@ -108,7 +108,7 @@ public final class ClarifierPurificationUnitMachine extends WaterPurificationUni
         long inputCount = Math.min(parallel(), getFluidAmount(Fluids.WATER)[0]);
         if (inputCount > 0) {
             long outputCount = inputCount * 9 / 10;
-            RecipeBuilder builder = RecipeBuilder.ofRaw();
+            RecipeBuilder builder = getRecipeBuilder();
             builder.duration(WaterPurificationPlantMachine.DURATION).inputFluids(Fluids.WATER, inputCount);
             if (GTValues.RNG.nextInt(100) <= getChance(outputCount / 10)) {
                 builder.outputFluids(WaterPurificationPlantMachine.GradePurifiedWater1, outputCount);
