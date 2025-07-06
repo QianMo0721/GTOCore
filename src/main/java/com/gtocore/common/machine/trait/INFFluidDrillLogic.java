@@ -3,9 +3,9 @@ package com.gtocore.common.machine.trait;
 import com.gtocore.common.machine.multiblock.electric.voidseries.INFFluidDrillMachine;
 
 import com.gtolib.api.machine.multiblock.DrillingControlCenterMachine;
+import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.machine.trait.IFluidDrillLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.jetbrains.annotations.Nullable;
 
-public final class INFFluidDrillLogic extends RecipeLogic implements IFluidDrillLogic {
+public final class INFFluidDrillLogic extends RecipeLogic implements IFluidDrillLogic, IEnhancedRecipeLogic {
 
     public static final int MAX_PROGRESS = 20;
     private DrillingControlCenterMachine cache;
@@ -65,7 +65,7 @@ public final class INFFluidDrillLogic extends RecipeLogic implements IFluidDrill
     private Recipe getFluidDrillRecipe() {
         if (getMachine().getLevel() instanceof ServerLevel serverLevel && veinFluid != null) {
             var data = BedrockFluidVeinSavedData.getOrCreate(serverLevel);
-            var recipe = RecipeBuilder.ofRaw().outputFluids(new FluidStack(veinFluid, getFluidToProduce(data.getFluidVeinWorldEntry(getChunkX(), getChunkZ())))).duration(MAX_PROGRESS).EUt((long) (GTValues.VA[getMachine().getEnergyTier()] * Math.pow(parallel, 1.2))).buildRawRecipe();
+            var recipe = gtolib$getRecipeBuilder().outputFluids(new FluidStack(veinFluid, getFluidToProduce(data.getFluidVeinWorldEntry(getChunkX(), getChunkZ())))).duration(MAX_PROGRESS).EUt((long) (GTValues.VA[getMachine().getEnergyTier()] * Math.pow(parallel, 1.2))).buildRawRecipe();
             if (RecipeRunner.matchRecipe(machine, recipe) && RecipeRunner.matchTickRecipe(machine, recipe)) {
                 return recipe;
             }

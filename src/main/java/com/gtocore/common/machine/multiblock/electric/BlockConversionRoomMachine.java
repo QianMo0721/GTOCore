@@ -7,7 +7,6 @@ import com.gtocore.common.machine.multiblock.part.BlockBusPartMachine;
 import com.gtolib.api.machine.multiblock.StorageMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
@@ -142,7 +141,7 @@ public final class BlockConversionRoomMachine extends StorageMultiblockMachine {
 
     @Nullable
     private Recipe getRecipe() {
-        Recipe recipe = RecipeBuilder.ofRaw().duration(400).EUt(getOverclockVoltage()).buildRawRecipe();
+        Recipe recipe = getRecipeBuilder().duration(400).EUt(getOverclockVoltage()).buildRawRecipe();
         if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
         return null;
     }

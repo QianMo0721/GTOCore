@@ -3,7 +3,6 @@ package com.gtocore.common.machine.multiblock.water;
 import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.data.GTOMaterials;
 
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -152,7 +151,7 @@ public final class AbsoluteBaryonicPerfectionPurificationUnitMachine extends Wat
         successful = false;
         inputCount = Math.min(parallel(), getFluidAmount(WaterPurificationPlantMachine.GradePurifiedWater7)[0]);
         if (inputCount > 0) {
-            recipe = RecipeBuilder.ofRaw().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater7, inputCount).buildRawRecipe();
+            recipe = getRecipeBuilder().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater7, inputCount).buildRawRecipe();
             if (RecipeRunner.matchRecipe(this, recipe)) {
                 int a = GTValues.RNG.nextInt(6);
                 int b;

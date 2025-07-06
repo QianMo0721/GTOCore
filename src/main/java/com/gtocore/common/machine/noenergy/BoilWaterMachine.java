@@ -4,7 +4,6 @@ import com.gtolib.api.machine.SimpleNoEnergyMachine;
 import com.gtolib.api.machine.feature.IReceiveHeatMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -53,7 +52,7 @@ public final class BoilWaterMachine extends SimpleNoEnergyMachine implements IRe
     @Nullable
     private Recipe getRecipe() {
         if (temperature < 360) return null;
-        Recipe recipe = RecipeBuilder.ofRaw().duration(20).inputFluids(new FluidStack(Fluids.WATER, 6)).outputFluids(GTMaterials.Steam.getFluid(960 * temperature / 600)).buildRawRecipe();
+        Recipe recipe = getRecipeBuilder().duration(20).inputFluids(new FluidStack(Fluids.WATER, 6)).outputFluids(GTMaterials.Steam.getFluid(960 * temperature / 600)).buildRawRecipe();
         if (RecipeRunner.matchRecipe(this, recipe)) {
             return recipe;
         } else if (temperature > 400) {

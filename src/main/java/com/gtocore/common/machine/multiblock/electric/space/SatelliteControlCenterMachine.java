@@ -10,7 +10,6 @@ import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.RegistriesUtils;
 
@@ -112,7 +111,7 @@ public final class SatelliteControlCenterMachine extends ElectricMultiblockMachi
             launch = false;
             Item item = Wrapper.ROCKET.get(Wrapper.LIST[index].getTier());
             if (item == null) return null;
-            Recipe recipe = RecipeBuilder.ofRaw().duration(6000).inputItems(GTOItems.PLANET_SCAN_SATELLITE.asStack()).outputItems(item).inputFluids(Wrapper.FUEL.get(Wrapper.LIST[index].getTier())).inputItems(item).inputItems(GTOItems.PLANET_DATA_CHIP.asStack()).outputItems(GTOItems.PLANET_DATA_CHIP.get().getPlanetDataChip(getOwnerUUID(), Wrapper.LIST[index].getLocation())).EUt(getOverclockVoltage()).buildRawRecipe();
+            Recipe recipe = getRecipeBuilder().duration(6000).inputItems(GTOItems.PLANET_SCAN_SATELLITE.asStack()).outputItems(item).inputFluids(Wrapper.FUEL.get(Wrapper.LIST[index].getTier())).inputItems(item).inputItems(GTOItems.PLANET_DATA_CHIP.asStack()).outputItems(GTOItems.PLANET_DATA_CHIP.get().getPlanetDataChip(getOwnerUUID(), Wrapper.LIST[index].getLocation())).EUt(getOverclockVoltage()).buildRawRecipe();
             if (RecipeRunner.matchRecipe(this, recipe) && RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
         }
         return null;

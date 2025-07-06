@@ -343,7 +343,7 @@ public final class EncapsulatorExecutionModuleMachine extends StorageMultiblockM
                 }
                 case "build" -> {
                     if (finalRecipe != null || packageRecipe.isEmpty()) return;
-                    var recipeBuilder = RecipeBuilder.ofRaw();
+                    var recipeBuilder = getRecipeBuilder();
                     long totalEU = 0;
                     for (var recipe : packageRecipe) {
                         totalEU += recipe.recipe.getInputEUt() * recipe.recipe.duration * recipe.parallel;

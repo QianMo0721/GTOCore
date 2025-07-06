@@ -41,7 +41,7 @@ public final class AlgaeFarmMachine extends NoEnergyMultiblockMachine {
     }
 
     private Recipe getRecipe(ItemStack stack) {
-        RecipeBuilder builder = RecipeBuilder.ofRaw().inputFluids(new FluidStack(Fluids.WATER, 100 * GTValues.RNG.nextInt(50) + 5000)).duration(200);
+        RecipeBuilder builder = getRecipeBuilder().inputFluids(new FluidStack(Fluids.WATER, 100 * GTValues.RNG.nextInt(50) + 5000)).duration(200);
         builder.outputItems(stack);
         Recipe recipe = builder.buildRawRecipe();
         if (RecipeRunner.matchRecipe(this, recipe)) {

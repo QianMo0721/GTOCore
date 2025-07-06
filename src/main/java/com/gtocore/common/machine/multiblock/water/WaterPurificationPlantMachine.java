@@ -6,7 +6,6 @@ import com.gtolib.api.capability.IIWirelessInteractor;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.ClientUtil;
 
@@ -209,7 +208,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
             }
         }
         if (eut > 0) {
-            Recipe recipe = RecipeBuilder.ofRaw().duration(DURATION).EUt(eut).buildRawRecipe();
+            Recipe recipe = getRecipeBuilder().duration(DURATION).EUt(eut).buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) {
                 return recipe;
             }
