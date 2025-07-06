@@ -383,9 +383,21 @@ public final class GTOItems {
             .onRegister(attach(new DataItemBehavior(true)))
             .register();// OPV鸿蒙之眼后解锁,MAX初期开使用
 
-    public static final ItemEntry<ComponentItem> DATA_CRYSTAL = GTOConfig.INSTANCE.dev ? item("data_crystal", "数据晶片", ComponentItem::create)
+    public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK1 = item("data_crystal_mk1", "数据晶片 mk1", ComponentItem::create)
             .onRegister(attach(new ExDataItemBehavior()))
-            .register() : null;
+            .register();
+    public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK2 = item("data_crystal_mk2", "数据晶片 mk2", ComponentItem::create)
+            .onRegister(attach(new ExDataItemBehavior()))
+            .register();
+    public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK3 = item("data_crystal_mk3", "数据晶片 mk3", ComponentItem::create)
+            .onRegister(attach(new ExDataItemBehavior()))
+            .register();
+    public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK4 = item("data_crystal_mk4", "数据晶片 mk4", ComponentItem::create)
+            .onRegister(attach(new ExDataItemBehavior()))
+            .register();
+    public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK5 = item("data_crystal_mk5", "数据晶片 mk5", ComponentItem::create)
+            .onRegister(attach(new ExDataItemBehavior()))
+            .register();
 
     public static final ItemEntry<KineticRotorItem> WOOD_ROTOR = registerRotor("wood_kinetic_rotor", "木", 2400, 4, 10, 0);
     public static final ItemEntry<KineticRotorItem> IRON_ROTOR = registerRotor("iron_kinetic_rotor", "铁", 14000, 10, 20, 1);
