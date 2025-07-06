@@ -158,12 +158,14 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      * 5. 调用后处理操作。
      */
     private void tickUpdate() {
-        var water = (int) Math.min(MAX_WATER_USAGE, getFluidAmount(Fluids.WATER)[0]);
-        updateWaterState(water);
         long offsetTimer = getOffsetTimer();
+        if (offsetTimer % 20 == 0) {
+            var water = (int) Math.min(MAX_WATER_USAGE, getFluidAmount(Fluids.WATER)[0]);
+            updateWaterState(water);
+            handleHeatAndWater(water);
+        }
         if (time > 0) {
             activateMachine();
-            handleHeatAndWater();
             time--;
         } else {
             deactivateMachine();
@@ -190,9 +192,8 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      * 如果设备的热量高于设定的阈值，则消耗一定量的水来调节热量。
      * 每次调用此方法，设备的热量会根据设备的级别增加。如果设备正在工作，热量会减少。
      */
-    private void handleHeatAndWater() {
-        if (time % 20 == 0) {
-            var water = (int) Math.min(MAX_WATER_USAGE, getFluidAmount(Fluids.WATER)[0]);
+    private void handleHeatAndWater(int water) {
+        if (time > 0) {
             if (heat > HEAT_THRESHOLD) {
                 handleCooling(water > 0);
                 adjustHeatWithWater(water);
