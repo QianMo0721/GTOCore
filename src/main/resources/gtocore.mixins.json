@@ -9,6 +9,7 @@
         "adastra.PlanetsScreenMixin"
     ],
     "mixins": [
+        "gtm.AssemblyLineMachineMixin",
         "mae2.EUP2PTunnelPartMixin",
         "mc.BlockBehaviourMixin",
         "mc.mob.AbstractSkeletonMixin",
