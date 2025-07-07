@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.cover.CoverDefinition;
 import com.gregtechceu.gtceu.client.renderer.cover.*;
 import com.gregtechceu.gtceu.common.cover.ConveyorCover;
+import com.gregtechceu.gtceu.common.cover.FluidRegulatorCover;
 import com.gregtechceu.gtceu.common.cover.PumpCover;
 import com.gregtechceu.gtceu.common.cover.RobotArmCover;
 import com.gregtechceu.gtceu.common.data.GTCovers;
@@ -30,10 +31,14 @@ public final class GTOCovers {
     static final CoverDefinition STEAM_PUMP = GTCovers.register("steam_pump", SteamPumpCover::new, PumpCoverRenderer.INSTANCE);
 
     static final CoverDefinition ELECTRIC_PUMP_ULV = GTCovers.register(
-            "pump.ulv", ULVPumpCover::new, PumpCoverRenderer.INSTANCE);
+            "pump.ulv",
+            (def, coverable, side) -> new PumpCover(def, coverable, side, GTValues.ULV),
+            PumpCoverRenderer.INSTANCE);
 
     static final CoverDefinition FLUID_REGULATOR_ULV = GTCovers.register(
-            "fluid_regulator.ulv", FluidRegulatorCover::new, PumpCoverRenderer.INSTANCE);
+            "fluid_regulator.ulv",
+            (def, coverable, side) -> new FluidRegulatorCover(def, coverable, side, GTValues.ULV),
+            FluidRegulatorCoverRenderer.INSTANCE);
 
     static final CoverDefinition CONVEYOR_MODULE_ULV = GTCovers.register(
             "conveyor.ulv",

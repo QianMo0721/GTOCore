@@ -18,15 +18,12 @@ import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.machine.feature.IVacuumMachine;
 import com.gtolib.api.player.IEnhancedPlayer;
-import com.gtolib.utils.MathUtil;
 import com.gtolib.utils.ServerUtils;
 import com.gtolib.utils.SphereExplosion;
 import com.gtolib.utils.register.BlockRegisterUtils;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.item.MetaMachineItem;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.WorkableTieredMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
@@ -35,10 +32,8 @@ import com.gregtechceu.gtceu.common.data.GTItems;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.LongTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -56,11 +51,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -74,57 +64,15 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import earth.terrarium.adastra.common.entities.mob.GlacianRam;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
 
 @Scanned
 public final class ForgeCommonEvent {
-
-    public static final Object2IntOpenHashMap<MachineDefinition> SUPER_TANKS = new Object2IntOpenHashMap<>();
-
-    @SubscribeEvent
-    public static void registerItemStackCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
-        ItemStack itemStack = event.getObject();
-        if (itemStack.getItem() instanceof MetaMachineItem machineItem) {
-            int maxAmount = SUPER_TANKS.getInt(machineItem.getDefinition());
-            if (maxAmount > 0) {
-                event.addCapability(GTCEu.id("fluid"), new ICapabilityProvider() {
-
-                    @Override
-                    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-                        if (capability == ForgeCapabilities.FLUID_HANDLER_ITEM) {
-                            var tag = itemStack.getOrCreateTag();
-                            var stored = FluidStack.loadFluidStackFromNBT(tag.getCompound("stored"));
-                            int amount;
-                            FluidStack stack;
-                            if (stored.isEmpty()) {
-                                tag.put("stored", FluidStack.EMPTY.writeToNBT(new CompoundTag()));
-                                tag.put("storedAmount", LongTag.valueOf(0));
-                                tag.put("maxAmount", LongTag.valueOf(maxAmount));
-                                stack = FluidStack.EMPTY;
-                                amount = 0;
-                            } else {
-                                amount = MathUtil.saturatedCast(tag.getLong("storedAmount"));
-                                stack = new FluidStack(stored, 1000);
-                                stack.setAmount(amount);
-                            }
-                            return ForgeCapabilities.FLUID_HANDLER_ITEM.orEmpty(capability, LazyOptional.of(() -> new FluidHandlerItem(stack, maxAmount, tag, amount, itemStack)));
-                        }
-                        return LazyOptional.empty();
-                    }
-                });
-            }
-        }
-    }
 
     @SubscribeEvent
     public static void onDropsEvent(LivingDropsEvent e) {
@@ -371,78 +319,5 @@ public final class ForgeCommonEvent {
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event) {
         GTOCommands.init(event.getDispatcher());
-    }
-
-    private record FluidHandlerItem(FluidStack stack, int maxAmount, CompoundTag tag, int amount, ItemStack itemStack) implements IFluidHandlerItem {
-
-        @Override
-        public int getTanks() {
-            return 1;
-        }
-
-        @Override
-        public @NotNull FluidStack getFluidInTank(int tank) {
-            return stack;
-        }
-
-        @Override
-        public int getTankCapacity(int tank) {
-            return maxAmount;
-        }
-
-        @Override
-        public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
-            return true;
-        }
-
-        @Override
-        public int fill(FluidStack resource, FluidAction action) {
-            FluidStack fluidStack = resource.copy();
-            fluidStack.setAmount(Math.min(resource.getAmount(), maxAmount - amount));
-            if (stack.isEmpty()) {
-                if (action.execute()) {
-                    tag.put("stored", fluidStack.writeToNBT(new CompoundTag()));
-                    tag.putLong("storedAmount", fluidStack.getAmount());
-                }
-                return fluidStack.getAmount();
-            } else if (fluidStack.getFluid() == stack.getFluid()) {
-                if (action.execute()) {
-                    tag.putLong("storedAmount", fluidStack.getAmount() + amount);
-                }
-                return fluidStack.getAmount();
-            }
-            return 0;
-        }
-
-        @Override
-        public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-            if (resource.getFluid() == stack.getFluid()) {
-                int a = Math.min(amount, resource.getAmount());
-                if (action.execute()) {
-                    tag.getCompound("stored").putInt("Amount", amount - a);
-                    tag.putLong("storedAmount", amount - a);
-                }
-                return new FluidStack(resource.getFluid(), a);
-            }
-            return FluidStack.EMPTY;
-        }
-
-        @Override
-        public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-            if (!stack.isEmpty()) {
-                maxDrain = Math.min(amount, maxDrain);
-                if (action.execute()) {
-                    tag.getCompound("stored").putInt("Amount", amount - maxDrain);
-                    tag.putLong("storedAmount", amount - maxDrain);
-                }
-                return new FluidStack(stack.getFluid(), maxDrain);
-            }
-            return FluidStack.EMPTY;
-        }
-
-        @Override
-        public @NotNull ItemStack getContainer() {
-            return itemStack;
-        }
     }
 }
