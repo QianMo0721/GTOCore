@@ -10,7 +10,7 @@ import com.gtocore.common.machine.electric.VacuumPumpMachine;
 import com.gtocore.common.machine.generator.LightningRodMachine;
 import com.gtocore.common.machine.generator.WindMillTurbineMachine;
 import com.gtocore.common.machine.multiblock.part.*;
-import com.gtocore.common.machine.multiblock.part.ae.MESortMachine;
+import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine;
 import com.gtocore.common.machine.multiblock.part.maintenance.*;
 import com.gtocore.common.machine.noenergy.BoilWaterMachine;
 import com.gtocore.common.machine.noenergy.HeaterMachine;
@@ -414,7 +414,7 @@ public final class GTOMachines {
     public static final MachineDefinition[] LASER_OUTPUT_HATCH_16777216 = registerLaserHatch(IO.OUT, 16777216,
             PartAbility.OUTPUT_LASER);
 
-    public static final MachineDefinition ME_SORT_MACHINE = machine("me_sort_machine", "ME样板内容动态修改机", MESortMachine::new)
+    public static final MachineDefinition ME_PATTERN_CONTENT_SORT_MACHINE = machine("me_pattern_content_sort_machine", "ME样板内容动态修改机", MEPatternContentSortMachine::new)
             .overlayTieredHullRenderer("neutron_sensor")
             .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME样板内容动态修改机", "ME Pattern Content Dynamic Modifier"), p -> p.addCommentLines(
                     """

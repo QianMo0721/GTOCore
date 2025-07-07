@@ -13,7 +13,6 @@ import com.gtolib.GTOCore;
 import com.gtolib.api.data.Dimension;
 import com.gtolib.api.player.IEnhancedPlayer;
 import com.gtolib.api.registries.ScanningClass;
-import com.gtolib.utils.MathUtil;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTCEuAPI;
@@ -22,7 +21,6 @@ import com.gregtechceu.gtceu.api.data.DimensionMarker;
 import com.gregtechceu.gtceu.api.data.chemical.material.event.MaterialEvent;
 import com.gregtechceu.gtceu.api.data.chemical.material.event.MaterialRegistryEvent;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
-import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.FusionReactorMachine;
 import com.gregtechceu.gtceu.common.unification.material.MaterialRegistryManager;
 
@@ -84,16 +82,6 @@ public class CommonProxy {
         AdAstraEvents.AcidRainTickEvent.register(IEnhancedPlayer::spaceTick);
         AdAstraEvents.TemperatureTickEvent.register(IEnhancedPlayer::spaceTick);
         AdAstraEvents.EntityGravityEvent.register(IEnhancedPlayer::gravity);
-
-        for (var d : GTMachines.SUPER_TANK) {
-            if (d == null) continue;
-            ForgeCommonEvent.SUPER_TANKS.put(d, MathUtil.saturatedCast(4_000_000 * (long) Math.pow(2, d.getTier() - 1)));
-        }
-
-        for (var d : GTMachines.QUANTUM_TANK) {
-            if (d == null) continue;
-            ForgeCommonEvent.SUPER_TANKS.put(d, MathUtil.saturatedCast(4_000_000 * (long) Math.pow(2, d.getTier() - 1)));
-        }
 
         if (GTCEu.isProd()) {
             AreaShape.register();
