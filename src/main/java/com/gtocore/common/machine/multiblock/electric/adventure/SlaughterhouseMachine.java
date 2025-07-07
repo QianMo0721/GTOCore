@@ -1,5 +1,7 @@
 package com.gtocore.common.machine.multiblock.electric.adventure;
 
+import com.gtocore.data.IdleReason;
+
 import com.gtolib.api.item.ItemStackSet;
 import com.gtolib.api.machine.multiblock.StorageMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
@@ -151,9 +153,16 @@ public final class SlaughterhouseMachine extends StorageMultiblockMachine {
 
     @Nullable
     private Recipe getRecipe() {
-        if (getLevel() instanceof ServerLevel serverLevel && getTier() > 1) {
+        if (getLevel() instanceof ServerLevel serverLevel) {
+            if (getTier() < 2) {
+                setIdleReason(IdleReason.VOLTAGE_TIER_NOT_SATISFIES);
+                return null;
+            }
             int c = checkingCircuit(false);
-            if (c == 0) return null;
+            if (c == 0) {
+                setIdleReason(IdleReason.SET_CIRCUIT);
+                return null;
+            }
             ItemStackSet itemStacks = new ItemStackSet();
             BlockPos blockPos = MachineUtils.getOffsetPos(3, 1, getFrontFacing(), getPos());
             ItemStack itemStack = getStorageStack();
@@ -212,7 +221,7 @@ public final class SlaughterhouseMachine extends StorageMultiblockMachine {
                     if (isFixed) break;
                 }
             }
-            RecipeBuilder builder = RecipeBuilder.ofRaw().duration(isSpawn ? 20 : Math.max(20, 20 * (1 << getTier()) - attackDamage)).EUt(getOverclockVoltage());
+            RecipeBuilder builder = getRecipeBuilder().duration(isSpawn ? 20 : Math.max(20, 20 * (1 << getTier()) - attackDamage)).EUt(getOverclockVoltage());
             itemStacks.forEach(builder::outputItems);
             Recipe recipe = builder.buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;

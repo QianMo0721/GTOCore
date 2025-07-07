@@ -43,7 +43,7 @@ public class FishingGroundMachine extends ElectricMultiblockMachine {
         Recipe recipe = null;
         int mode = checkingCircuit(false);
         if (mode > 0) {
-            RecipeBuilder builder = RecipeBuilder.ofRaw().duration(20).EUt(480);
+            RecipeBuilder builder = getRecipeBuilder().duration(20).EUt(480);
             if (getLevel() instanceof ServerLevel level) {
                 LootTable lootTable = level.getServer().getLootData().getLootTable(switch (mode) {
                     case 2 -> BuiltInLootTables.FISHING_FISH;

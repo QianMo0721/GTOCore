@@ -2,6 +2,7 @@ package com.gtocore.common.data;
 
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.client.renderer.machine.BallHatchRenderer;
+import com.gtocore.client.renderer.machine.HeaterRenderer;
 import com.gtocore.client.renderer.machine.WindMillTurbineRenderer;
 import com.gtocore.common.data.machines.*;
 import com.gtocore.common.machine.electric.ElectricHeaterMachine;
@@ -183,7 +184,15 @@ public final class GTOMachines {
             .recipeType(GTRecipeTypes.DUMMY_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
-            .workableTieredHullRenderer(GTCEu.id("block/generators/boiler/coal"))
+            .tooltipsText("Warning: Do not let the machine overheat, or it will explode.",
+                    "警告：不要让机器过热，否则会爆炸。")
+            .tooltipsText("Warning: Do not touch the machine when it is working, or you will be burned.",
+                    "警告：机器工作时不要触摸，否则会被烧伤。")
+            .tooltipsText("Emits redstone signal according to the temperature.",
+                    "根据温度发出红石信号。")
+            .tooltipsText("Stop heating after front side is blocked.",
+                    "前方被阻挡后停止加热。")
+            .renderer(() -> new HeaterRenderer(ULV))
             .register();
 
     public static final MachineDefinition BOILER = machine("boiler", "锅炉", BoilWaterMachine::new)
@@ -209,8 +218,9 @@ public final class GTOMachines {
             .recipeType(GTORecipeTypes.MANA_HEATER_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
-            .tooltipsText("Start heating after power on.", "通电后开始加热")
-            .workableTieredHullRenderer(GTCEu.id("block/generators/boiler/coal"))
+            .tooltipsText("Start heating after power on. This machine will not explode.",
+                    "通电后开始加热。不会爆炸。")
+            .renderer(() -> new HeaterRenderer(LV))
             .register();
 
     //////////////////////////////////////

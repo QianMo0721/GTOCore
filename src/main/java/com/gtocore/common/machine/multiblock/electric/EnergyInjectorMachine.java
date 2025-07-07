@@ -48,7 +48,7 @@ public final class EnergyInjectorMachine extends ElectricMultiblockMachine {
         if (busPartMachine == null) return null;
         long eu = 0;
         Set<Integer> index = new IntOpenHashSet();
-        RecipeBuilder builder = RecipeBuilder.ofRaw();
+        RecipeBuilder builder = getRecipeBuilder();
         NotifiableItemStackHandler inv = busPartMachine.getInventory();
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack stack = inv.getStackInSlot(i);

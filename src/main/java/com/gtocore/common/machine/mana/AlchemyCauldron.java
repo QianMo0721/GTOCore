@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.mana;
 
 import com.gtolib.api.machine.feature.IReceiveHeatMachine;
+import com.gtolib.api.recipe.IdleReason;
 import com.gtolib.api.recipe.Recipe;
 
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
@@ -37,7 +38,10 @@ public class AlchemyCauldron extends SimpleManaMachine implements IReceiveHeatMa
     @Override
     public Recipe doModifyRecipe(@NotNull Recipe recipe) {
         int temperature = recipe.data.getInt("temperature");
-        if (temperature > 0 && temperature > this.temperature) return null;
+        if (temperature > 0 && temperature > this.temperature) {
+            setIdleReason(IdleReason.INSUFFICIENT_TEMPERATURE);
+            return null;
+        }
         boolean param = false;
         for (int i = 0; i < 3; i++) {
             String key = "param" + (i + 1);

@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AbstractSkeletonMixin extends Monster {
 
     @Unique
-    private float gTOCore$intensify;
+    private float gtolib$intensify;
 
     protected AbstractSkeletonMixin(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
@@ -29,18 +29,18 @@ public class AbstractSkeletonMixin extends Monster {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        gTOCore$intensify = (GTOCore.isSimple() || level().getDifficulty().getId() == 0) ? 1 : 1 + getRandom().nextInt(level().getDifficulty().getId());
+        gtolib$intensify = (GTOCore.isSimple() || level().getDifficulty().getId() == 0) ? 1 : 1 + getRandom().nextInt(level().getDifficulty().getId());
     }
 
     @ModifyArg(method = "performRangedAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;shoot(DDDFF)V"), index = 3)
     private float modifyVelocity(float velocity) {
-        return velocity * gTOCore$intensify;
+        return velocity * gtolib$intensify;
     }
 
     @Inject(method = "getArrow", at = @At("RETURN"))
     private void getArrow(ItemStack arrowStack, float velocity, CallbackInfoReturnable<AbstractArrow> cir) {
         AbstractArrow abstractarrow = cir.getReturnValue();
-        abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + gTOCore$intensify - 1);
-        abstractarrow.setKnockback((int) (abstractarrow.getKnockback() * gTOCore$intensify));
+        abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + gtolib$intensify - 1);
+        abstractarrow.setKnockback((int) (abstractarrow.getKnockback() * gtolib$intensify));
     }
 }

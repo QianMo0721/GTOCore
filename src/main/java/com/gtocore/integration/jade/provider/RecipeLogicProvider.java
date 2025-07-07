@@ -48,8 +48,8 @@ public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLog
 
     @Override
     protected void write(CompoundTag data, RecipeLogic capability) {
-        if (capability.isIdle() && capability instanceof IEnhancedRecipeLogic recipeLogic && recipeLogic.gTOCore$getIdleReason() != null) {
-            data.putString("reason", Component.Serializer.toJson(recipeLogic.gTOCore$getIdleReason()));
+        if (capability.isIdle() && capability instanceof IEnhancedRecipeLogic recipeLogic && recipeLogic.gtolib$getIdleReason() != null) {
+            data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
         }
         data.putBoolean("Working", capability.isWorking());
         var recipeInfo = new CompoundTag();

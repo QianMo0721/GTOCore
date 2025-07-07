@@ -1,6 +1,7 @@
 package com.gtocore.common.data.machines;
 
 import com.gtocore.api.machine.part.GTOPartAbility;
+import com.gtocore.client.renderer.machine.ManaHeaterRenderer;
 import com.gtocore.client.renderer.machine.OverlayManaTieredMachineRenderer;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.common.machine.generator.MagicEnergyMachine;
@@ -154,6 +155,6 @@ public final class ManaMachine {
             .noRecipeModifier()
             .nonYAxisRotation()
             .tooltipsText("Input mana to heat, if fire element is input, the heating speed will be 5 times faster.", "输入魔力加热，如果输入火元素，则加热速度翻5倍")
-            .workableManaTieredHullRenderer(2, GTCEu.id("block/generators/boiler/coal"))
+            .renderer(() -> new ManaHeaterRenderer(MV))
             .register();
 }

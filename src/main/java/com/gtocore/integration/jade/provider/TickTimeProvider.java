@@ -29,7 +29,7 @@ public class TickTimeProvider extends CapabilityBlockProvider<IMetaMachine> {
     @Override
     protected IMetaMachine getCapability(Level level, BlockPos pos, @Nullable Direction side) {
         if (MetaMachine.getMachine(level, pos) instanceof IMetaMachine machine) {
-            machine.gtocore$observe();
+            machine.gtolib$observe();
             return machine;
         }
         return null;
@@ -37,7 +37,7 @@ public class TickTimeProvider extends CapabilityBlockProvider<IMetaMachine> {
 
     @Override
     protected void write(CompoundTag data, IMetaMachine capability) {
-        if (capability != null) data.putInt("tick_time", capability.gtocore$getTickTime());
+        if (capability != null) data.putInt("tick_time", capability.gtolib$getTickTime());
     }
 
     @Override

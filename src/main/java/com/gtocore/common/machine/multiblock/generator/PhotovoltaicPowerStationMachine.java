@@ -7,7 +7,6 @@ import com.gtolib.api.machine.multiblock.StorageMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.misc.ManaContainerList;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.GTOUtils;
 import com.gtolib.utils.MachineUtils;
@@ -75,7 +74,7 @@ public final class PhotovoltaicPowerStationMachine extends StorageMultiblockMach
                 eut = (int) (basic * (GTODimensions.isVoid(level.dimension().location()) ? 14 : GTOUtils.getSunIntensity(level.getDayTime()) * 15 / 100 * (level.isRaining() ? (level.isThundering() ? 0.3f : 0.7f) : 1)));
             }
             if (eut == 0) return null;
-            var builder = RecipeBuilder.ofRaw().duration(20);
+            var builder = getRecipeBuilder().duration(20);
             if (getStorageStack().getCount() == 64) {
                 builder.MANAt(-eut);
             } else {

@@ -3,7 +3,6 @@ package com.gtocore.common.machine.multiblock.electric.adventure;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.MachineUtils;
 
@@ -45,7 +44,7 @@ public final class BossSummonerMachine extends ElectricMultiblockMachine {
 
     @Nullable
     private Recipe getRecipe() {
-        Recipe recipe = RecipeBuilder.ofRaw().duration(Math.max(5, 400 / (getTier() + 1))).EUt(getOverclockVoltage()).buildRawRecipe();
+        Recipe recipe = getRecipeBuilder().duration(Math.max(5, 400 / (getTier() + 1))).EUt(getOverclockVoltage()).buildRawRecipe();
         if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
         return null;
     }

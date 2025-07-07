@@ -35,7 +35,7 @@ public final class OzonationPurificationUnitMachine extends WaterPurificationUni
             long inputCount = Math.min(parallel(), Math.min(a[0], ozoneCount * 10000));
             if (inputCount > 0) {
                 long outputCount = inputCount * 9 / 10;
-                RecipeBuilder builder = RecipeBuilder.ofRaw();
+                RecipeBuilder builder = getRecipeBuilder();
                 builder.duration(WaterPurificationPlantMachine.DURATION).inputFluids(Ozone, inputCount / 10000).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater1, inputCount);
                 if (Math.random() * 100 <= getChance(outputCount / 10, ozoneCount)) {
                     builder.outputFluids(WaterPurificationPlantMachine.GradePurifiedWater2, outputCount);

@@ -11,7 +11,9 @@ import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
+import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +22,8 @@ public final class HeaterMachine extends SimpleNoEnergyMachine implements IHeate
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(HeaterMachine.class, SimpleNoEnergyMachine.MANAGED_FIELD_HOLDER);
     @Persisted
+    @DescSynced
+    @RequireRerender
     private int temperature = 293;
     private TickableSubscription tickSubs;
 
@@ -60,6 +64,7 @@ public final class HeaterMachine extends SimpleNoEnergyMachine implements IHeate
                 Level level = getLevel();
                 if (level == null) return;
                 tickUpdate();
+                gtolib$setSync();
                 setEnabled(level.getBlockState(getPos().relative(getFrontFacing())).isAir());
             });
         }

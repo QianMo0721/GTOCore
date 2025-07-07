@@ -8,7 +8,6 @@ import com.gtolib.api.machine.feature.multiblock.IHighlightMachine;
 import com.gtolib.api.machine.multiblock.TierCasingMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.MachineUtils;
 
@@ -164,7 +163,7 @@ public final class ProcessingEncapsulatorMachine extends TierCasingMultiblockMac
     @Nullable
     private Recipe getRecipe() {
         if (getTier() > GTValues.UIV) {
-            Recipe recipe = RecipeBuilder.ofRaw().duration(400).EUt(GTValues.VA[getTier()]).buildRawRecipe();
+            Recipe recipe = getRecipeBuilder().duration(400).EUt(GTValues.VA[getTier()]).buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
         }
         return null;

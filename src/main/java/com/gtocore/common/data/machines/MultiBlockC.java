@@ -2,6 +2,7 @@ package com.gtocore.common.data.machines;
 
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.api.pattern.GTOPredicates;
+import com.gtocore.client.renderer.machine.PrimitiveDistillationRenderer;
 import com.gtocore.common.data.*;
 import com.gtocore.common.machine.multiblock.electric.EnergyInjectorMachine;
 import com.gtocore.common.machine.multiblock.electric.bioengineering.BiochemicalReactionRoomMachine;
@@ -92,7 +93,7 @@ public final class MultiBlockC {
                     .where(' ', air())
                     .build())
             .partSorter(Comparator.comparingInt(p -> p.self().getPos().getY()))
-            .workableCasingRenderer(GTCEu.id("block/casings/steam/steel/side"), GTOCore.id("block/multiblock/primitive_distillation_tower"))
+            .renderer(PrimitiveDistillationRenderer::new)
             .register();
 
     public static final MultiblockMachineDefinition STEAM_CRACKER = multiblock("steam_cracker", "蒸汽裂化机", p -> new BaseSteamMultiblockMachine(p, 1, 32, 1))

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "gtocore:item/universal_circuit/circuit",
-    "layer1": "gtocore:item/universal_circuit/iv"
+    "layer0": "gtocore:item/circuit/circuit_iv",
+    "layer1": "gtocore:item/circuit/iv"
   }
 }

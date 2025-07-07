@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.multiblock.electric.space;
 
 import com.gtocore.common.data.GTOItems;
+import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.gui.GTOGuiTextures;
@@ -9,7 +10,6 @@ import com.gtolib.api.machine.multiblock.TierCasingMultiblockMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.misc.PlanetManagement;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.MathUtil;
@@ -172,8 +172,10 @@ public class SpaceElevatorMachine extends TierCasingMultiblockMachine implements
     @Nullable
     private Recipe getRecipe() {
         if (getTier() > GTValues.ZPM) {
-            Recipe recipe = RecipeBuilder.ofRaw().duration(400).CWUt(128 * (getTier() - GTValues.ZPM)).EUt(GTValues.VA[getTier()]).buildRawRecipe();
+            Recipe recipe = getRecipeBuilder().duration(400).CWUt(128 * (getTier() - GTValues.ZPM)).EUt(GTValues.VA[getTier()]).buildRawRecipe();
             if (RecipeRunner.matchTickRecipe(this, recipe)) return recipe;
+        } else {
+            setIdleReason(IdleReason.VOLTAGE_TIER_NOT_SATISFIES);
         }
         return null;
     }

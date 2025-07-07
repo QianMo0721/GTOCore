@@ -6,7 +6,6 @@ import com.gtocore.common.data.GTORecipeTypes;
 import com.gtolib.api.machine.feature.IHeaterMachine;
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
@@ -18,7 +17,9 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;
 
+import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
+import com.lowdragmc.lowdraglib.syncdata.annotation.RequireRerender;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,8 +28,18 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     private static final FluidStack SALAMANDER = GTOMaterials.Salamander.getFluid(FluidStorageKeys.GAS, 10);
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ManaHeaterMachine.class, SimpleManaMachine.MANAGED_FIELD_HOLDER);
+
     @Persisted
+    @DescSynced
+    @RequireRerender
     private int temperature = 293;
+
+    /// an indicator used to determine if the salamander input is present
+    /// **used by client renderer**
+    @Persisted
+    @DescSynced
+    @RequireRerender
+    private boolean salamanderInput = false;
     private TickableSubscription tickSubs;
 
     public ManaHeaterMachine(IMachineBlockEntity holder) {
@@ -38,7 +49,7 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     @Nullable
     private Recipe getRecipe() {
         if (temperature >= getMaxTemperature()) return null;
-        Recipe recipe = RecipeBuilder.ofRaw().duration(20).MANAt(16).buildRawRecipe();
+        Recipe recipe = getRecipeBuilder().duration(20).MANAt(16).buildRawRecipe();
         if (RecipeRunner.matchTickRecipe(this, recipe)) {
             return recipe;
         }
@@ -92,10 +103,13 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
     public boolean onWorking() {
         if (super.onWorking()) {
             if (getOffsetTimer() % 10 == 0 && getMaxTemperature() > temperature + 10) {
-                raiseTemperature(inputFluid(SALAMANDER) ? 10 : 2);
+                var hasSalamander = inputFluid(SALAMANDER);
+                this.salamanderInput = hasSalamander;
+                raiseTemperature(hasSalamander ? 10 : 2);
             }
             return true;
         }
+        this.salamanderInput = false;
         return false;
     }
 
@@ -121,5 +135,9 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     public int getTemperature() {
         return this.temperature;
+    }
+
+    public boolean hasSalamanderInput() {
+        return salamanderInput;
     }
 }

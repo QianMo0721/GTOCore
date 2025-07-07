@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.multiblock.electric.assembly;
 
 import com.gtocore.common.machine.multiblock.part.HugeBusPartMachine;
+import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
@@ -45,7 +46,10 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
         int size = recipeIngredients.length;
         if (!hasSufficientStackTransfers(this, size)) return null;
         Ingredient[] matchIngredients = getMatchIngredients(recipeIngredients);
-        if (!validateIngredientStacks(this, size, matchIngredients)) return null;
+        if (!validateIngredientStacks(this, size, matchIngredients)) {
+            setIdleReason(IdleReason.ORDERED);
+            return null;
+        }
         return RecipeModifierFunction.laserLossOverclocking(this, RecipeModifierFunction.hatchParallel(this, recipe));
     }
 

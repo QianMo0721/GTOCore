@@ -3,7 +3,6 @@ package com.gtocore.common.machine.multiblock.water;
 import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.common.machine.multiblock.part.SensorPartMachine;
 
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
@@ -127,7 +126,7 @@ public final class ExtremeTemperatureFluctuationPurificationUnitMachine extends 
         cycle = false;
         inputCount = Math.min(parallel(), getFluidAmount(WaterPurificationPlantMachine.GradePurifiedWater4)[0]);
         if (inputCount > 0) {
-            recipe = RecipeBuilder.ofRaw().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater4, inputCount).buildRawRecipe();
+            recipe = getRecipeBuilder().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater4, inputCount).buildRawRecipe();
             if (RecipeRunner.matchRecipe(this, recipe)) {
                 calculateVoltage(inputCount);
             }

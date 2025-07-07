@@ -78,7 +78,7 @@ public final class MEPatternBufferProxyPartMachine extends TieredIOPartMachine i
             if (!isRemote()) {
                 proxySlotRecipeHandler.updateProxy(machine);
                 for (var controller : getControllers()) {
-                    ((ICheckPatternMachine) controller).gtocore$requestCheck();
+                    ((ICheckPatternMachine) controller).gtolib$requestCheck();
                 }
             }
         } else {

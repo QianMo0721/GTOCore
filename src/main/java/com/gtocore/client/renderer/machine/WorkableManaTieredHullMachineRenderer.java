@@ -38,10 +38,10 @@ public class WorkableManaTieredHullMachineRenderer extends ManaTieredHullMachine
                               ModelState modelState) {
         super.renderMachine(quads, definition, machine, frontFacing, side, rand, modelFacing, modelState);
         if (machine instanceof IWorkable workable) {
-            overlayModel.bakeQuads(side, modelState, workable.isActive(), workable.isWorkingEnabled())
+            modelToUse(definition, machine).bakeQuads(side, modelState, workable.isActive(), workable.isWorkingEnabled())
                     .forEach(quad -> quads.add(Quad.from(quad, overlayQuadsOffset()).rebake()));
         } else {
-            overlayModel.bakeQuads(side, modelState, false, false)
+            modelToUse(definition, machine).bakeQuads(side, modelState, false, false)
                     .forEach(quad -> quads.add(Quad.from(quad, overlayQuadsOffset()).rebake()));
         }
     }
@@ -53,6 +53,11 @@ public class WorkableManaTieredHullMachineRenderer extends ManaTieredHullMachine
         if (atlasName.equals(TextureAtlas.LOCATION_BLOCKS)) {
             overlayModel.registerTextureAtlas(register);
         }
+    }
+
+    /// predicate for the model to use based on the machine definition and meta machine
+    protected WorkableOverlayModel modelToUse(MachineDefinition definition, @Nullable MetaMachine machine) {
+        return overlayModel;
     }
 
     private static float overlayQuadsOffset() {

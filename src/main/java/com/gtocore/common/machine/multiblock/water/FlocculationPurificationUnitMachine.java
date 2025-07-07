@@ -2,7 +2,6 @@ package com.gtocore.common.machine.multiblock.water;
 
 import com.gtocore.common.data.GTOMaterials;
 
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.RecipeRunner;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -85,7 +84,7 @@ public final class FlocculationPurificationUnitMachine extends WaterPurification
         outputCount = 0;
         inputCount = Math.min(parallel(), getFluidAmount(WaterPurificationPlantMachine.GradePurifiedWater2)[0]);
         if (inputCount > 0) {
-            recipe = RecipeBuilder.ofRaw().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater2, inputCount).buildRawRecipe();
+            recipe = getRecipeBuilder().duration(WaterPurificationPlantMachine.DURATION).inputFluids(WaterPurificationPlantMachine.GradePurifiedWater2, inputCount).buildRawRecipe();
             if (RecipeRunner.matchRecipe(this, recipe)) {
                 calculateVoltage(inputCount);
             }

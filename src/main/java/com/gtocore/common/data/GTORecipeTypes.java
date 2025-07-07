@@ -873,35 +873,29 @@ public final class GTORecipeTypes {
             .setProgressBar(GuiTextures.PROGRESS_BAR_EXTRACT, LEFT_TO_RIGHT)
             .setSound(GTSoundEntries.ARC);
 
-    public static final RecipeType PROFESSIONAL_SCANNER_RECIPES = register("professional_scanner", "专业扫描", ELECTRIC)
-            .setMaxIOSize(2, 1, 0, 0)
+    public static final RecipeType PRIMORDIAL_SCAN_RECIPES = register("primordial_scan", "基元扫描", ELECTRIC)
+            .setMaxIOSize(2, 1, 2, 0)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, LEFT_TO_RIGHT)
-            .setSlotOverlay(true, false, GuiTextures.RESEARCH_STATION_OVERLAY)
-            .setSlotOverlay(false, false, GuiTextures.SCANNER_OVERLAY)
-            .setScanner(true)
             .setMaxTooltips(4)
-            .setSound(GTSoundEntries.SCIENCE);
+            .setSound(GTSoundEntries.COMPUTATION);
 
-    public static final RecipeType DIRECTIONAL_ANALYSIS_RECIPES = register("directional_analysis", "定向分析", ELECTRIC)
-            .setMaxIOSize(5, 1, 1, 0)
+    public static final RecipeType PRIMORDIAL_LOGIC_RECIPES = register("primordial_logic ", "基元推演", ELECTRIC)
+            .setMaxIOSize(3, 6, 3, 0)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, LEFT_TO_RIGHT)
-            .setScanner(true)
             .setMaxTooltips(4)
-            .setSound(GTSoundEntries.SCIENCE);
+            .setSound(GTSoundEntries.COMPUTATION);
 
-    public static final RecipeType FURTHER_RESEARCH_RECIPES = register("further_research", "深入研究", ELECTRIC)
-            .setMaxIOSize(12, 1, 1, 0)
+    public static final RecipeType TOPO_SYNTHESIS_RECIPES = register("topo_synthesis", "拓扑统合", ELECTRIC)
+            .setMaxIOSize(12, 1, 3, 0)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, LEFT_TO_RIGHT)
-            .setScanner(true)
             .setMaxTooltips(4)
-            .setSound(GTSoundEntries.SCIENCE);
+            .setSound(GTSoundEntries.COMPUTATION);
 
-    public static final RecipeType PRODUCTION_DEVELOPMENT_RECIPES = register("production_development", "生产开发", ELECTRIC)
-            .setMaxIOSize(12, 1, 1, 0)
+    public static final RecipeType RECIPES_DATA_GENERATE_RECIPES = register("recipes_data_generate", "配方数据生成", ELECTRIC)
+            .setMaxIOSize(12, 1, 3, 0)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, LEFT_TO_RIGHT)
-            .setScanner(true)
             .setMaxTooltips(4)
-            .setSound(GTSoundEntries.SCIENCE);
+            .setSound(GTSoundEntries.COMPUTATION);
 
     //////////////////////////////////////
     // ********** Magic **********//

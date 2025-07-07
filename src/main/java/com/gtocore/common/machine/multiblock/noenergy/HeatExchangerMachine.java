@@ -4,7 +4,6 @@ import com.gtocore.common.data.GTOMaterials;
 
 import com.gtolib.api.machine.multiblock.NoEnergyMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.modifier.ParallelLogic;
 
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
@@ -49,7 +48,7 @@ public final class HeatExchangerMachine extends NoEnergyMultiblockMachine implem
     @Override
     protected Recipe getRealRecipe(@NotNull Recipe recipe) {
         water = FluidRecipeCapability.CAP.of(recipe.inputs.get(FluidRecipeCapability.CAP).get(1).getContent()).getStacks()[0].getFluid() == Fluids.WATER;
-        var result = ParallelLogic.accurateParallel(this, RecipeBuilder.ofRaw()
+        var result = ParallelLogic.accurateParallel(this, getRecipeBuilder()
                 .inputFluids(FluidRecipeCapability.CAP.of(recipe.inputs
                         .get(FluidRecipeCapability.CAP).get(0).getContent()))
                 .outputFluids(FluidRecipeCapability.CAP.of(recipe.outputs
