@@ -355,6 +355,22 @@ public final class ManaRecipes {
                     .MANAt(128)
                     .save();
 
+            ASSEMBLER_RECIPES.builder("mana_greenhouse")
+                    .inputItems(ManaMachine.MANA_HULL[GTValues.EV].asStack())
+                    .inputItems(GTItems.FIELD_GENERATOR_IV.asStack(8))
+                    .inputItems(CustomTags.IV_CIRCUITS, 4)
+                    .inputItems("botania:agricarnation", 32)
+                    .inputItems("botania:hopperhock", 16)
+                    .inputItems("botania:rune_spring", 4)
+                    .inputItems(TagPrefix.gear, GTOMaterials.Gaia, 8)
+                    .inputItems(TagPrefix.gemExquisite, GTOMaterials.Dragonstone, 16)
+                    .inputItems("botania:fertilizer", 64)
+                    .outputItems(ManaMultiBlock.MANA_GREENHOUSE.asStack())
+                    .inputFluids(GTOMaterials.Mana, 4608)
+                    .duration(1200)
+                    .MANAt(64)
+                    .save();
+
             ASSEMBLER_RECIPES.builder("base_mana_distributor")
                     .inputItems(TagPrefix.frameGt, GTOMaterials.OriginalBronze)
                     .inputItems("botania:mana_distributor", 4)
