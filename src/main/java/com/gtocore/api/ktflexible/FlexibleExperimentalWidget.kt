@@ -136,7 +136,3 @@ fun LayoutBuilder<*>.progressBar(currentSupplier: IntSupplier, totalSupplier: In
     }
     widget(widget)
 }
-
-fun LayoutBuilder<*>.test(aSupplier: IntSupplier) {
-    text(text = { Component.literal(aSupplier.asInt.toString()) })
-}
