@@ -381,6 +381,16 @@ public final class MagicMaterial {
                 .iconSet(BRIGHT)
                 .buildAndRegister();
 
+        Aerialite = material("aerialite", "天空")
+                .ingot()
+                .fluid()
+                .blastTemp(1300, LOW)
+                .element(GTOElements.AERIALITE)
+                .color(0x8b8bff)
+                .iconSet(METALLIC)
+                .flags(GTOMaterialFlags.GENERATE_CURVED_PLATE, GENERATE_FRAME, GENERATE_LONG_ROD, GENERATE_FOIL, GENERATE_GEAR, GENERATE_BOLT_SCREW)
+                .buildAndRegister();
+
         Laureril = material("laureril", "秘金")
                 .rarity(Rarity.UNCOMMON)
                 .ingot()

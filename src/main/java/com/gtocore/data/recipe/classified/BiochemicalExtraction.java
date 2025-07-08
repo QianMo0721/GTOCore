@@ -20,6 +20,13 @@ final class BiochemicalExtraction {
                 .duration(200)
                 .save();
 
+        BIOCHEMICAL_EXTRACTION_RECIPES.recipeBuilder("phantom_membrane")
+                .notConsumable(Items.PHANTOM_SPAWN_EGG.asItem())
+                .outputItems(Items.PHANTOM_MEMBRANE.asItem(), 2)
+                .EUt(2)
+                .duration(200)
+                .save();
+
         BIOCHEMICAL_EXTRACTION_RECIPES.recipeBuilder("cerebrum")
                 .notConsumable(Tags.HUMAN_EGG)
                 .outputItems(GTOItems.CEREBRUM)

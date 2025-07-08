@@ -67,7 +67,8 @@ public final class GTOElements {
     public static final Element MANASTEEL = new Element(26, 30, -1, null, "manasteel", "*Ma*", false);
     public static final Element TERRASTEEL = new Element(56, 66, -1, null, "terrasteel", "*Tr*", false);
     public static final Element ELEMENTIUM = new Element(66, 66, -1, null, "elementium", "*Em*", false);
-    public static final Element ALFSTEEL = new Element(66, 76, -1, null, "alfsteel", "*Af*", false);
+    public static final Element ALFSTEEL = new Element(66, 76, -1, null, "alfsteel", "*Af*", false); // Mystical Botany
     public static final Element GAIASTEEL = new Element(76, 86, -1, null, "gaiasteel", "*Ga*", false);
     public static final Element GAIA = new Element(76, 88, -1, null, "gaia", "*TR*Gs*", false);
+    public static final Element AERIALITE = new Element(66, 76, -1, null, "aerialite", "*Ae*", false); // Extra Botany
 }

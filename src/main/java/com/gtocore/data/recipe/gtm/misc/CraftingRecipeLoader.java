@@ -1,5 +1,7 @@
 package com.gtocore.data.recipe.gtm.misc;
 
+import com.gtocore.common.data.GTOMaterials;
+
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialEntry;
@@ -20,13 +22,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import org.jetbrains.annotations.NotNull;
+import vazkii.botania.common.block.BotaniaBlocks;
+import vazkii.botania.common.block.BotaniaFlowerBlocks;
+import vazkii.botania.common.item.BotaniaItems;
 
 import java.util.function.Consumer;
 
 import static com.gregtechceu.gtceu.api.data.tag.TagPrefix.*;
 import static com.gregtechceu.gtceu.common.data.GTItems.*;
 import static com.gregtechceu.gtceu.common.data.GTMaterials.*;
-import static com.gtocore.common.data.GTOItems.SHAPE_EXTRUDER_ROD_LONG;
+import static com.gtocore.common.data.GTOItems.*;
 
 public final class CraftingRecipeLoader {
 
@@ -158,6 +163,24 @@ public final class CraftingRecipeLoader {
                 new MaterialEntry(pipeLargeFluid, Polybenzimidazole), 'E', EMITTER_ZPM.asStack(), 'I',
                 ITEM_FILTER.asStack(), 'S', BLACKLIGHT.asStack(), 'M', ELECTRIC_MOTOR_ZPM.asStack(), 'F',
                 new MaterialEntry(frameGt, Tritanium), 'R', new MaterialEntry(rotor, NaquadahAlloy));
+
+        VanillaRecipeHelper.addShapedRecipe(provider, "mana_ulv_prospector", PROSPECTOR_MANA_ULV.asStack(),
+                "ASB", "EDE", "SCS",
+                'A', BotaniaFlowerBlocks.solegnolia, 'B', BotaniaFlowerBlocks.hopperhock,
+                'C', BotaniaItems.manaTablet, 'D', BotaniaBlocks.manaGlass,
+                'E', new MaterialEntry(gem, GTOMaterials.ManaDiamond), 'S', new MaterialEntry(plate, GTOMaterials.Manasteel));
+
+        VanillaRecipeHelper.addShapedRecipe(provider, "mana_lv_prospector", PROSPECTOR_MANA_LV.asStack(),
+                "ASB", "EDE", "SCS",
+                'A', EMITTER_LV, 'B', SENSOR_LV,
+                'C', BotaniaItems.manaTablet, 'D', BotaniaItems.lensEfficiency,
+                'E', CustomTags.LV_CIRCUITS, 'S', new MaterialEntry(plate, GTOMaterials.Terrasteel));
+
+        VanillaRecipeHelper.addShapedRecipe(provider, "mana_hv_prospector", PROSPECTOR_MANA_HV.asStack(),
+                "ASB", "EDE", "SCS",
+                'A', EMITTER_HV, 'B', SENSOR_HV,
+                'C', BotaniaItems.manaTablet, 'D', BotaniaBlocks.bifrostPerm,
+                'E', CustomTags.HV_CIRCUITS, 'S', new MaterialEntry(plate, GTOMaterials.Alfsteel));
 
         ///////////////////////////////////////////////////
         // Shapes and Molds //

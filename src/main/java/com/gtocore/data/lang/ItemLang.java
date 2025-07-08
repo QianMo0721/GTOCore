@@ -100,5 +100,10 @@ final class ItemLang {
 
         addCNEN("gtocore.behaviour.grass_harvest.description", GOLD + "极大" + RESET + "地提升小麦种子掉落概率", GOLD + "Greatly" + RESET + " increase the probability of wheat seed dropping");
         addCNEN("gtocore.behaviour.grass_harvest.description2", "右键以收割", "Right click to harvest");
+
+        addCNEN("gtocore.tooltip.item.prospector.mana.1", "魔力: §b%s§r / §a%s§r ",
+                "Mana: §b%s§r / §a%s§r ");
+        addCNEN("gtocore.tooltip.item.prospector.mana.2", "（§b%s§r / §a%s§r 个魔力池）",
+                "（§b%s§r / §a%s§r Mana Pools）");
     }
 }
