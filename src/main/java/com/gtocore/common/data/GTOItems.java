@@ -13,7 +13,6 @@ import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
-import com.gtolib.api.item.ExDataItemBehavior;
 import com.gtolib.api.lang.CNEN;
 import com.gtolib.utils.StringUtils;
 
