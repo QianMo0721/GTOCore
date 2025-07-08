@@ -902,5 +902,14 @@ public final class BotaniaRecipes {
                 .MANAt(5120)
                 .duration(400)
                 .save();
+
+        MANA_CONDENSER_RECIPES.builder("aerialite_ingot")
+                .inputItems(Items.PHANTOM_MEMBRANE.asItem())
+                .inputItems("botania:ender_air_bottle")
+                .inputItems(gem, Dragonstone)
+                .outputItems(ingot, Aerialite, 1)
+                .MANAt(256)
+                .duration(100)
+                .save();
     }
 }

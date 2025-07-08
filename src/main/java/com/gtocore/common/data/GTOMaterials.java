@@ -988,6 +988,7 @@ public final class GTOMaterials {
     public static Material CycleofBlossomsSolvent;
     public static Material OmniFloraElixir;
     public static Material GaiaSolvent;
+    public static Material Aerialite;
 
     public static void init() {
         GTMaterialExtend.init();
