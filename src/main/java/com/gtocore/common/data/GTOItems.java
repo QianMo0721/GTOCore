@@ -398,6 +398,13 @@ public final class GTOItems {
             .onRegister(attach(new ExDataItemBehavior()))
             .register();
 
+    // 给数据镜片当合成原料使用
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK1 = register("data_crystal_component_mk1", "数据晶片组件 mk1");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK2 = register("data_crystal_component_mk2", "数据晶片组件 mk2");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK3 = register("data_crystal_component_mk3", "数据晶片组件 mk3");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK4 = register("data_crystal_component_mk4", "数据晶片组件 mk4");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK5 = register("data_crystal_component_mk5", "数据晶片组件 mk5");
+
     public static final ItemEntry<KineticRotorItem> WOOD_ROTOR = registerRotor("wood_kinetic_rotor", "木", 2400, 4, 10, 0);
     public static final ItemEntry<KineticRotorItem> IRON_ROTOR = registerRotor("iron_kinetic_rotor", "铁", 14000, 10, 20, 1);
     public static final ItemEntry<KineticRotorItem> STEEL_ROTOR = registerRotor("steel_kinetic_rotor", "钢", 16000, 10, 30, 1);
@@ -971,4 +978,22 @@ public final class GTOItems {
     public static final ItemEntry<Item> DISPOSABLE_SCREWDRIVER_MOLD = register("disposable_screwdriver_mold", "一次性螺丝刀模具");
     public static final ItemEntry<Item> DISPOSABLE_SAW_MOLD = register("disposable_saw_mold", "一次性锯模具");
     public static final ItemEntry<ComponentItem> GRASS_HARVESTER = item("grass_harvester", "割草镰刀", ComponentItem::create).properties(p -> p.stacksTo(1).durability(128).setNoRepair()).onRegister(attach(GrassHarvesterBehaviour.INSTANCE)).register();
+
+    // public static ItemEntry<SteamProspectorBehavior.ProspectorItem> PROSPECTOR_STEAM = item("prospector.steam",
+    // "原始人探矿仪", SteamProspectorBehavior.ProspectorItem::new)
+    // .properties(p -> p.stacksTo(1))
+    // .onRegister(attach(new SteamProspectorBehavior()))
+    // .register();
+    public static ItemEntry<ComponentItem> PROSPECTOR_MANA_ULV = item("prospector.mana_ulv", "魔力钢探矿仪", ComponentItem::create)
+            .properties(p -> p.stacksTo(1))
+            .onRegister(attach(ManaProspectorBehavior.create(ManaProspectorBehavior.ULV)))
+            .register();
+    public static ItemEntry<ComponentItem> PROSPECTOR_MANA_LV = item("prospector.mana_lv", "泰拉钢探矿仪", ComponentItem::create)
+            .properties(p -> p.stacksTo(1))
+            .onRegister(attach(ManaProspectorBehavior.create(ManaProspectorBehavior.LV)))
+            .register();
+    public static ItemEntry<ComponentItem> PROSPECTOR_MANA_HV = item("prospector.mana_hv", "精灵钢探矿仪", ComponentItem::create)
+            .properties(p -> p.stacksTo(1))
+            .onRegister(attach(ManaProspectorBehavior.create(ManaProspectorBehavior.HV)))
+            .register();
 }
