@@ -3,7 +3,7 @@ dependencies {
 
     jarJar("dev:ManaPeeper:1.4+1.20.1-forge")
 
-    implementation("thedarkcolour:kotlinforforge:4.11.0")
+    implementation("curse.maven:kotlin-for-forge-351264:5402061")
 
     modImplementation(jarJar("dev:gtolib:1.0"))
 
@@ -13,7 +13,7 @@ dependencies {
     api(annotationProcessor("io.github.llamalad7:mixinextras-common:$project.mixinextras_version"))
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 
-    modImplementation("com.lowdragmc.ldlib:ldlib-forge-$project.minecraft_version:$project.ldlib_version") { transitive false }
+    modImplementation("curse.maven:ldlib-626676:6745019")
 
     modImplementation("com.tterrag.registrate:Registrate:$project.registrate_version")
 
@@ -22,7 +22,7 @@ dependencies {
 
     modImplementation("dev.architectury:architectury-forge:${project.architectury_version}")
 
-    modImplementation("dev.toma.configuration:configuration-forge-$project.minecraft_version:$project.configuration_version")
+    modImplementation("curse.maven:configuration-444699:4710266")
 
     modImplementation("com.teamresourceful:yabn:1.0.3")
     modImplementation("com.teamresourceful:bytecodecs:1.0.2")
