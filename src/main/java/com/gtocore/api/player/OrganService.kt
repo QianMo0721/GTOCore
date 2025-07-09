@@ -32,10 +32,13 @@ object OrganService : IOrganService {
         if (player.tickCount % 20 != 0) return
         val cap = OrganCapability.of(player)
         val playerData = IEnhancedPlayer.of(player).playerData
+
+        playerData.wingState = false
+
         // Night Vision
         when (cap.ktMatchTierOrganSet(1)) {
             true -> run {
-                val shouldAdd = player.getEffect(MobEffects.NIGHT_VISION)?.let { it.duration < 20*45 } ?: true
+                val shouldAdd = player.getEffect(MobEffects.NIGHT_VISION)?.let { it.duration < 20*45 - 20*15 } ?: true
                 if (!shouldAdd)return@run
                 player.addEffect(MobEffectInstance(MobEffects.NIGHT_VISION, 20*45, 0, false, false, true))
             }
@@ -60,7 +63,6 @@ object OrganService : IOrganService {
             }
         }
         // Fly
-        playerData.wingState = false
         when (cap.ktMatchLowTierOrganSet(4)) { // 四级器官创造飞
             true -> run {
                 playerData.wingState = true
