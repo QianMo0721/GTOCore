@@ -1,22 +1,18 @@
 package com.gtocore.api.ktflexible
 
-import com.lowdragmc.lowdraglib.gui.widget.Widget
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+
+import com.lowdragmc.lowdraglib.gui.widget.Widget
 
 interface DataSyncOperations<T> {
     fun writeToBuffer(buffer: FriendlyByteBuf, value: T)
     fun readFromBuffer(buffer: FriendlyByteBuf): T
 }
 
-class SyncField<T>(
-    private val supplier: () -> T,
-    private val operations: DataSyncOperations<T>,
-    private val updateId: Int,
-    initialValue: T
-) {
+class SyncField<T>(private val supplier: () -> T, private val operations: DataSyncOperations<T>, private val updateId: Int, initialValue: T) {
 
     var lastValue: T = initialValue
         private set
@@ -31,9 +27,7 @@ class SyncField<T>(
         operations.writeToBuffer(buffer, lastValue)
     }
 
-    fun readFromBuffer(buffer: FriendlyByteBuf): T {
-        return operations.readFromBuffer(buffer)
-    }
+    fun readFromBuffer(buffer: FriendlyByteBuf): T = operations.readFromBuffer(buffer)
 
     fun hasChanged(): Boolean = getLatestValue() != lastValue
 
@@ -44,12 +38,7 @@ class DataSyncDelegate(private val widget: Widget) {
     private val syncFields = mutableListOf<SyncField<*>>()
     private val pendingUpdates = mutableMapOf<Int, (FriendlyByteBuf) -> Unit>()
 
-    fun <T> addSyncField(
-        supplier: () -> T,
-        operations: DataSyncOperations<T>,
-        updateId: Int,
-        initialValue: T
-    ): SyncField<T> {
+    fun <T> addSyncField(supplier: () -> T, operations: DataSyncOperations<T>, updateId: Int, initialValue: T): SyncField<T> {
         val field = SyncField(supplier, operations, updateId, initialValue)
         syncFields.add(field)
         return field
@@ -134,22 +123,11 @@ abstract class SyncWidget(x: Int, y: Int, width: Int, height: Int) : Widget(x, y
     private val syncDelegate = DataSyncDelegate(this)
 
     // 添加同步字段的便捷方法
-    protected fun <T> syncField(
-        supplier: () -> T,
-        operations: DataSyncOperations<T>,
-        updateId: Int,
-        initialValue: T
-    ): SyncField<T> {
-        return syncDelegate.addSyncField(supplier, operations, updateId, initialValue)
-    }
+    protected fun <T> syncField(supplier: () -> T, operations: DataSyncOperations<T>, updateId: Int, initialValue: T): SyncField<T> = syncDelegate.addSyncField(supplier, operations, updateId, initialValue)
 
-    protected fun syncInt(supplier: () -> Int, updateId: Int, initialValue: Int = 0): SyncField<Int> {
-        return syncField(supplier, DataOperations.INT, updateId, initialValue)
-    }
+    protected fun syncInt(supplier: () -> Int, updateId: Int, initialValue: Int = 0): SyncField<Int> = syncField(supplier, DataOperations.INT, updateId, initialValue)
 
-    protected fun syncComponent(supplier: () -> Component, updateId: Int, initialValue: Component): SyncField<Component> {
-        return syncField(supplier, DataOperations.COMPONENT, updateId, initialValue)
-    }
+    protected fun syncComponent(supplier: () -> Component, updateId: Int, initialValue: Component): SyncField<Component> = syncField(supplier, DataOperations.COMPONENT, updateId, initialValue)
 
     override fun writeInitialData(buffer: FriendlyByteBuf?) {
         super.writeInitialData(buffer)

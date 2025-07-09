@@ -38,9 +38,9 @@ object OrganService : IOrganService {
         // Night Vision
         when (cap.ktMatchTierOrganSet(1)) {
             true -> run {
-                val shouldAdd = player.getEffect(MobEffects.NIGHT_VISION)?.let { it.duration < 20*45 - 20*15 } ?: true
+                val shouldAdd = player.getEffect(MobEffects.NIGHT_VISION)?.let { it.duration < 20 * 45 - 20 * 15 } ?: true
                 if (!shouldAdd)return@run
-                player.addEffect(MobEffectInstance(MobEffects.NIGHT_VISION, 20*45, 0, false, false, true))
+                player.addEffect(MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 45, 0, false, false, true))
             }
             false -> {}
         }
@@ -77,7 +77,7 @@ object OrganService : IOrganService {
                     when {
                         durability > 0 -> run {
                             if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
-                                it.hurtAndBreak(1, player, {player1: Player -> player1.sendSystemMessage(Component.translatable("gtocore.player.organ.you_wing_is_broken"))})
+                                it.hurtAndBreak(1, player, { player1: Player -> player1.sendSystemMessage(Component.translatable("gtocore.player.organ.you_wing_is_broken")) })
                             }
                             playerData.wingState = true
                             return@root
@@ -91,7 +91,7 @@ object OrganService : IOrganService {
                     when {
                         durability > 0 -> run {
                             if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
-                                it.hurtAndBreak(1, player, {player1: Player -> player1.sendSystemMessage(Component.translatable("gtocore.player.organ.you_wing_is_broken"))})
+                                it.hurtAndBreak(1, player, { player1: Player -> player1.sendSystemMessage(Component.translatable("gtocore.player.organ.you_wing_is_broken")) })
                             }
                             playerData.wingState = true
                             return@root

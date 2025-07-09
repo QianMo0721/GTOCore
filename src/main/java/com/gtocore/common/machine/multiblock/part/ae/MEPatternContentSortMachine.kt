@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae
 
+import com.gtocore.api.ktflexible.FlexibleColorStyle
 import com.gtocore.api.ktflexible.progressBar
 
 import net.minecraft.network.chat.Component
@@ -263,14 +264,15 @@ class MEPatternContentSortMachine(holder: IMachineBlockEntity) :
 
     override fun createUIWidget(): Widget = root(PAGE_WIDTH, PAGE_HEIGHT) {
         vScroll(width = availableWidth, height = availableHeight, { spacing = 2 }) {
-            hBox(height = 12, { spacing = 2 }) {
+            hBox(height = 14, { spacing = 2 }) {
                 progressBar(
                     currentSupplier = { internalLogic.lastFlowData?.finished ?: 0 },
                     totalSupplier = { internalLogic.lastFlowData?.total ?: 1 },
                     width = this@vScroll.availableWidth - 50 - 2,
-                    height = 12,
+                    height = 14,
+                    barFlexibleColorStyle = FlexibleColorStyle.HEX(0xFF00CC00),
                 )
-                button(width = 50, height = 12, transKet = TOOLTIPS_APPLY, onClick = { ck -> internalLogic.applyRefresh() })
+                button(width = 50, height = 14, transKet = TOOLTIPS_APPLY, onClick = { ck -> internalLogic.applyRefresh() })
             }
             text(width = availableWidth, height = 20, text = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_0) })
             text(width = availableWidth, height = 20, text = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_1) })

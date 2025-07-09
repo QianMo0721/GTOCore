@@ -1,12 +1,14 @@
 package com.gtocore.api.ktflexible
 
-import com.gtolib.api.gui.ktflexible.LayoutBuilder
-import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+
+import com.gtolib.api.gui.ktflexible.LayoutBuilder
+import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
+
 import java.util.function.IntSupplier
 import java.util.function.Supplier
 
@@ -77,9 +79,10 @@ fun LayoutBuilder<*>.textBlock(textSupplier: Supplier<Component>, tab: Int = 0, 
             super.initWidget()
             updateSize()
         }
-        ////////////////////////////////
+
+        // //////////////////////////////
         // ****** 切割换行，先以单词切割，如果还超过这一行，那就换成字母切割 ******//
-        ////////////////////////////////
+        // //////////////////////////////
         private fun wrapText(text: String, font: net.minecraft.client.gui.Font, maxLineWidth: Int): List<String> {
             if (maxLineWidth <= 0) return listOf(text)
 
@@ -111,27 +114,26 @@ fun LayoutBuilder<*>.textBlock(textSupplier: Supplier<Component>, tab: Int = 0, 
                 }
         }
 
-        private fun String.splitByWidth(font: net.minecraft.client.gui.Font, maxWidth: Int): List<String> {
-            return generateSequence(this) { remaining ->
-                when {
-                    remaining.isEmpty() -> null
-                    else -> {
-                        val cutIndex = (1..remaining.length)
-                            .takeWhile { font.width(remaining.substring(0, it)) <= maxWidth }
-                            .lastOrNull() ?: 1
-                        remaining.drop(cutIndex).takeIf { it.isNotEmpty() }
-                    }
+        private fun String.splitByWidth(font: net.minecraft.client.gui.Font, maxWidth: Int): List<String> = generateSequence(this) { remaining ->
+            when {
+                remaining.isEmpty() -> null
+                else -> {
+                    val cutIndex = (1..remaining.length)
+                        .takeWhile { font.width(remaining.substring(0, it)) <= maxWidth }
+                        .lastOrNull() ?: 1
+                    remaining.drop(cutIndex).takeIf { it.isNotEmpty() }
                 }
-            }.map { remaining ->
-                val cutIndex = (1..remaining.length)
-                    .takeWhile { font.width(remaining.substring(0, it)) <= maxWidth }
-                    .lastOrNull() ?: 1
-                remaining.take(cutIndex)
-            }.toList()
-        }
-        ////////////////////////////////
+            }
+        }.map { remaining ->
+            val cutIndex = (1..remaining.length)
+                .takeWhile { font.width(remaining.substring(0, it)) <= maxWidth }
+                .lastOrNull() ?: 1
+            remaining.take(cutIndex)
+        }.toList()
+
+        // //////////////////////////////
         // ****** 变宽变高，先宽后高 ******//
-        ////////////////////////////////
+        // //////////////////////////////
         private fun updateSize() {
             val font = Minecraft.getInstance().font
             val text = textField.lastValue.string
@@ -174,7 +176,7 @@ fun LayoutBuilder<*>.textBlock(textSupplier: Supplier<Component>, tab: Int = 0, 
                     textY.toFloat(),
                     1f,
                     0xFFFFFFFF.toInt(),
-                    true
+                    true,
                 )
             }
         }
