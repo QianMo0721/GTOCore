@@ -12,7 +12,7 @@ import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
 import java.util.function.IntSupplier
 import java.util.function.Supplier
 
-fun LayoutBuilder<*>.progressBar(currentSupplier: IntSupplier, totalSupplier: IntSupplier, width: Int = 100, height: Int = 20, border: Int = 2, padding: Int = 1, processFlexibleColorStyle: FlexibleColorStyle = FlexibleColorStyle.HEX(0xFFFFFFFF), barFlexibleColorStyle: FlexibleColorStyle = FlexibleColorStyle.HEX(0xFF00FF00), borderFlexibleColorStyle: FlexibleColorStyle = FlexibleColorStyle.HEX(0xFF000000)) {
+fun LayoutBuilder<*>.progressBar(currentSupplier: IntSupplier, totalSupplier: IntSupplier, width: Int = 100, height: Int = 20, border: Int = 2, padding: Int = 1, progressColorStyle: ProgressBarColorStyle = ProgressBarColorStyle.DEFAULT_GREEN, backgroundColor: Int = 0xFF404040.toInt(), borderColor: Int = 0xFF000000.toInt(), textColor: Int = 0xFFFFFFFF.toInt(), showPercentage: Boolean = false) {
     val widget = object : SyncWidget(0, 0, width, height) {
         private val currentField = syncInt({ currentSupplier.asInt }, -1, 1)
         private val totalField = syncInt({ totalSupplier.asInt }, -2, 1)
@@ -23,46 +23,25 @@ fun LayoutBuilder<*>.progressBar(currentSupplier: IntSupplier, totalSupplier: In
 
             val safeTotal = maxOf(1, totalField.lastValue)
             val safeCurrent = currentField.lastValue.coerceIn(0, safeTotal)
-            // //////////////////////////////
-            // ****** 边框和进度条 ******//
-            // //////////////////////////////
+            val percentage = ((safeCurrent.toFloat() / safeTotal.toFloat()) * 100).toInt()
 
-            // 绘制边框
-            DrawerHelper.drawBorder(graphics, positionX + border, positionY + border, width - border * 2, height - border * 2, borderFlexibleColorStyle.color, border)
+            // 使用ProgressBarHelper绘制进度条
+            graphics.pose().pushPose()
+            graphics.pose().translate(positionX.toFloat(), positionY.toFloat(), 0f)
 
-            // 计算进度
-            val percentage: Float = safeCurrent.toFloat() / safeTotal.toFloat()
-
-            // 计算进度条尺寸
-            val startY = positionY + border + padding
-            val startX = positionX + border + padding
-            val barHeight = height - border * 2 - padding * 2
-            val barWidth = ((width - border * 2 - padding * 2) * percentage).toInt()
-
-            // 绘制进度条
-            if (barWidth > 0) {
-                DrawerHelper.drawSolidRect(graphics, startX, startY, barWidth, barHeight, barFlexibleColorStyle.color)
-            }
-            // //////////////////////////////
-            // ****** 文本 ******//
-            // //////////////////////////////
-
-            // 绘制文本
-            val textWillShow = "$safeCurrent / $safeTotal"
-            val font = Minecraft.getInstance().font
-            val textWidth = font.width(textWillShow)
-            val textHeight = font.lineHeight
-            val textX = positionX + width / 2 - textWidth / 2
-            val textY = positionY + height / 2 - textHeight / 2
-            DrawerHelper.drawText(
-                graphics,
-                textWillShow,
-                textX.toFloat(),
-                textY.toFloat(),
-                1f,
-                processFlexibleColorStyle.color,
-                true,
+            ProgressBarHelper.drawProgressBarWithText(
+                graphics = graphics,
+                progress = percentage,
+                totalWidth = width,
+                totalHeight = height,
+                text = if (showPercentage) "$percentage%" else "$safeCurrent / $safeTotal",
+                borderWidth = border,
+                progressColorStyle = progressColorStyle,
+                backgroundColor = backgroundColor,
+                borderColor = borderColor,
+                textColor = textColor,
             )
+            graphics.pose().popPose()
         }
     }
     widget(widget)

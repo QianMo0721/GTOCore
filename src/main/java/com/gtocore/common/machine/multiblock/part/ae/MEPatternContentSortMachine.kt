@@ -1,6 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae
 
-import com.gtocore.api.ktflexible.FlexibleColorStyle
+import com.gtocore.api.ktflexible.ProgressBarColorStyle
 import com.gtocore.api.ktflexible.progressBar
 
 import net.minecraft.network.chat.Component
@@ -270,7 +270,7 @@ class MEPatternContentSortMachine(holder: IMachineBlockEntity) :
                     totalSupplier = { internalLogic.lastFlowData?.total ?: 1 },
                     width = this@vScroll.availableWidth - 50 - 2,
                     height = 14,
-                    barFlexibleColorStyle = FlexibleColorStyle.HEX(0xFF00CC00),
+                    progressColorStyle = ProgressBarColorStyle.DEFAULT_GREEN,
                 )
                 button(width = 50, height = 14, transKet = TOOLTIPS_APPLY, onClick = { ck -> internalLogic.applyRefresh() })
             }
