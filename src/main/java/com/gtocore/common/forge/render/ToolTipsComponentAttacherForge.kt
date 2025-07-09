@@ -10,6 +10,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import appeng.items.storage.BasicStorageCell
 import appeng.items.tools.powered.PortableCellItem
 import appeng.me.cells.BasicCellHandler
+import com.gtolib.api.item.MultiStepItemHelper
+import com.gtolib.api.item.MultiStepItemHelper.toMultiStepItem
+import net.minecraft.nbt.CompoundTag
 
 import kotlin.math.nextUp
 
@@ -31,16 +34,33 @@ object ToolTipsComponentAttacherForge {
         tooltipWidth += 8
         tooltipHeight += 8
         val componentManager = TooltipComponentManager()
-
-        if (event.itemStack.item is BasicStorageCell || event.itemStack.item is PortableCellItem) {
-            val handler = BasicCellHandler.INSTANCE.getCellInventory(event.itemStack, null)
-            if (handler != null) {
-                val usedBytes = handler.usedBytes
-                val totalBytes = handler.totalBytes
-                val progress = if (totalBytes > 0) usedBytes.toFloat() / totalBytes.toFloat() else 0f
-                componentManager.components.add(ProgressBarComponent(progress, tooltipWidth - 4, event.font))
+        val itemStack = event.itemStack
+        ////////////////////////////////
+        // ****** AE硬盘 ******//
+        ////////////////////////////////
+        run {
+            if (itemStack.item is BasicStorageCell || itemStack.item is PortableCellItem) {
+                val handler = BasicCellHandler.INSTANCE.getCellInventory(itemStack, null)
+                if (handler != null) {
+                    val usedBytes = handler.usedBytes
+                    val totalBytes = handler.totalBytes
+                    val progress = if (totalBytes > 0) usedBytes.toFloat() / totalBytes.toFloat() else 0f
+                    componentManager.components.add(ProgressBarComponent(progress, tooltipWidth - 4, event.font))
+                }
             }
         }
+        ////////////////////////////////
+        // ****** 多步合成的物品 ******//
+        ////////////////////////////////
+        run root@{
+            if (itemStack.hasTag()){
+                val step = itemStack.tag?.getInt("current_craft_step") ?: return@root
+                val maxStep = itemStack.tag?.getInt("craft_step") ?: return@root
+                if (maxStep==0) return
+                componentManager.components.add(ProgressBarComponent(step.toFloat() / maxStep.toFloat(), tooltipWidth - 4, event.font))
+            }
+        }
+
 
         componentManager.render(
             event.graphics,
