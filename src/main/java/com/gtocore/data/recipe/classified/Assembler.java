@@ -4295,5 +4295,16 @@ final class Assembler {
                 .EUt(120)
                 .duration(200)
                 .save();
+
+        ASSEMBLER_RECIPES.builder("thermal_conductor_hatch")
+                .inputItems(GTMachines.HULL[GTValues.LuV].asStack())
+                .inputItems(TagPrefix.ingot, GTOMaterials.BasicMFPC, 16)
+                .inputItems(TagPrefix.pipeHugeRestrictive, GTMaterials.SterlingSilver, 8)
+                .inputItems(GTItems.ROBOT_ARM_LuV.asStack(8))
+                .outputItems(GTOMachines.THERMAL_CONDUCTOR_HATCH.asStack())
+                .inputFluids(GTMaterials.SodiumPotassium, 2880)
+                .EUt(VA[LuV])
+                .duration(200)
+                .save();
     }
 }

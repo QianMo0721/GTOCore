@@ -34,10 +34,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class ScanningHolderMachine extends MultiblockPartMachine implements IObjectHolder, IMachineLife {
 
-    public ObjectHolderHandler getHeldItems() {
-        return heldItems;
-    }
-
     public boolean isLocked() {
         return isLocked;
     }
@@ -50,19 +46,19 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
     protected static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ScanningHolderMachine.class,
             MultiblockPartMachine.MANAGED_FIELD_HOLDER);
 
-    public static final int SCAN_SLOT = 0;
+    public static final int DATA_SLOT = 0;
     public static final int CATALYST_SLOT = 1;
-    public static final int DATA_SLOT = 2;
+    public static final int SCAN_SLOT = 2;
 
     @Persisted
-    private final ObjectHolderHandler heldItems;
+    private final ScanningHolder heldItems;
     @Persisted
     @DescSynced
     private boolean isLocked;
 
     public ScanningHolderMachine(IMachineBlockEntity holder) {
         super(holder);
-        heldItems = new ObjectHolderHandler(this);
+        heldItems = new ScanningHolder(this);
     }
 
     @Override
@@ -116,15 +112,12 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
     public Widget createUIWidget() {
         return new WidgetGroup(new Position(0, 0))
                 .addWidget(new ImageWidget(46, 15, 84, 60, GuiTextures.PROGRESS_BAR_RESEARCH_STATION_BASE))
-                // 扫描槽 (79, 36) - 最多64个物品
                 .addWidget(new BlockableSlotWidget(heldItems, SCAN_SLOT, 79, 36)
                         .setIsBlocked(this::isLocked)
                         .setBackground(GuiTextures.SLOT, GuiTextures.RESEARCH_STATION_OVERLAY))
-                // 催化剂槽 (15, 15) - 只允许1个物品
                 .addWidget(new BlockableSlotWidget(heldItems, CATALYST_SLOT, 15, 15)
                         .setIsBlocked(this::isLocked)
                         .setBackground(GuiTextures.SLOT, GuiTextures.LENS_OVERLAY))
-                // 数据槽 (15, 57) - 输入/输出共用槽，最多1个物品
                 .addWidget(new BlockableSlotWidget(heldItems, DATA_SLOT, 15, 57)
                         .setIsBlocked(this::isLocked)
                         .setBackground(GuiTextures.SLOT, GuiTextures.DATA_ORB_OVERLAY));
@@ -146,17 +139,16 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
         return MANAGED_FIELD_HOLDER;
     }
 
-    private class ObjectHolderHandler extends NotifiableItemStackHandler {
+    private class ScanningHolder extends NotifiableItemStackHandler {
 
-        public ObjectHolderHandler(MetaMachine metaTileEntity) {
+        public ScanningHolder(MetaMachine metaTileEntity) {
             super(metaTileEntity, 3, IO.IN, IO.BOTH, size -> new CustomItemStackHandler(size) {
 
                 @Override
                 public int getSlotLimit(int slot) {
                     return switch (slot) {
                         case SCAN_SLOT -> 64;
-                        case CATALYST_SLOT -> 1;
-                        case DATA_SLOT -> 1;
+                        case CATALYST_SLOT, DATA_SLOT -> 1;
                         default -> super.getSlotLimit(slot);
                     };
                 }
@@ -168,8 +160,7 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
         public int getSlotLimit(int slot) {
             return switch (slot) {
                 case SCAN_SLOT -> 64;
-                case CATALYST_SLOT -> 1;
-                case DATA_SLOT -> 1;
+                case CATALYST_SLOT, DATA_SLOT -> 1;
                 default -> super.getSlotLimit(slot);
             };
         }
@@ -203,20 +194,10 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
             }
 
             return switch (slot) {
-                case SCAN_SLOT -> !isDataItem;
-                case CATALYST_SLOT -> true;
+                case SCAN_SLOT, CATALYST_SLOT -> !isDataItem;
                 case DATA_SLOT -> isDataItem;
                 default -> super.isItemValid(slot, stack);
             };
-        }
-
-        // 防止在锁定状态下放入物品
-        @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (isLocked()) {
-                return stack; // 锁定状态下拒绝放入
-            }
-            return super.insertItem(slot, stack, simulate);
         }
     }
 }

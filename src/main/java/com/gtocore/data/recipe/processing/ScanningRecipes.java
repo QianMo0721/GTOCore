@@ -3,6 +3,7 @@ package com.gtocore.data.recipe.processing;
 import com.gtolib.api.data.chemical.GTOChemicalHelper;
 import com.gtolib.api.recipe.builder.DataCrystalConstruction;
 
+import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 
@@ -18,6 +19,13 @@ public final class ScanningRecipes {
                 .inputScanning(new ItemStack(GTOChemicalHelper.getItem(TagPrefix.dust, GTMaterials.Naquadah)), 1, 1)
                 .EUt(VA[IV])
                 .duration(200)
+                .save();
+
+        DataCrystalConstruction.buildDataCrystal(true)
+                .inputScanning(new ItemStack(GTOChemicalHelper.getItem(TagPrefix.dust, GTMaterials.ActivatedCarbon)), 3, 2)
+                .catalyst(ChemicalHelper.get(TagPrefix.lens, GTMaterials.Amethyst))
+                .EUt(VA[ZPM])
+                .CWUt(16)
                 .save();
     }
 }
