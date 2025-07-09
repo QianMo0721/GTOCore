@@ -74,6 +74,12 @@ public final class GTOItems {
                     .onRegister(attach(StructureWriteBehavior.INSTANCE))
                     .model(NonNullBiConsumer.noop())
                     .register();
+
+            item("ui_tester", "UI测试器", ComponentItem::create)
+                    .properties(p -> p.stacksTo(1))
+                    .onRegister(attach(new TesterBehaviour()))
+                    .model(NonNullBiConsumer.noop())
+                    .register();
         }
     }
 

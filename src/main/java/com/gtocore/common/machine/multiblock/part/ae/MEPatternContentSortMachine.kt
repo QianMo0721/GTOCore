@@ -270,7 +270,7 @@ class MEPatternContentSortMachine(holder: IMachineBlockEntity) :
                     width = this@vScroll.availableWidth - 50 - 2,
                     height = 12,
                 )
-                button(width = 50, height = 12, transKet = TOOLTIPS_APPLY) { internalLogic.applyRefresh() }
+                button(width = 50, height = 12, transKet = TOOLTIPS_APPLY, onClick = { ck -> internalLogic.applyRefresh() })
             }
             text(width = availableWidth, height = 20, text = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_0) })
             text(width = availableWidth, height = 20, text = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_1) })
