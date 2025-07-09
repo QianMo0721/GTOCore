@@ -7,7 +7,9 @@ import com.gtocore.common.block.BlockMap;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTOMaterials;
+import com.gtocore.common.machine.multiblock.electric.ScanningStationMachine;
 import com.gtocore.common.machine.multiblock.electric.SupercomputingCenterMachine;
+import com.gtocore.common.machine.multiblock.part.ScanningHolderMachine;
 import com.gtocore.common.machine.multiblock.part.research.ExResearchBridgePartMachine;
 import com.gtocore.common.machine.multiblock.part.research.ExResearchComputationPartMachine;
 import com.gtocore.common.machine.multiblock.part.research.ExResearchCoolerPartMachine;
@@ -27,14 +29,16 @@ import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
+import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
+import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
+import com.gregtechceu.gtceu.client.renderer.machine.OverlayTieredActiveMachineRenderer;
 import com.gregtechceu.gtceu.client.renderer.machine.OverlayTieredMachineRenderer;
-import com.gregtechceu.gtceu.common.data.GCYMBlocks;
-import com.gregtechceu.gtceu.common.data.GTBlocks;
-import com.gregtechceu.gtceu.common.data.GTMaterials;
-import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
+import com.gregtechceu.gtceu.common.data.*;
+import com.gregtechceu.gtceu.common.data.machines.GTResearchMachines;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.DataAccessHatchMachine;
 
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 
@@ -43,7 +47,11 @@ import java.util.function.Function;
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.*;
 import static com.gregtechceu.gtceu.api.pattern.Predicates.*;
+import static com.gregtechceu.gtceu.common.data.GTBlocks.ADVANCED_COMPUTER_CASING;
+import static com.gregtechceu.gtceu.common.data.GTBlocks.COMPUTER_CASING;
+import static com.gregtechceu.gtceu.common.data.GTBlocks.COMPUTER_HEAT_VENT;
 import static com.gregtechceu.gtceu.common.data.machines.GTResearchMachines.OVERHEAT_TOOLTIPS;
+import static com.gtocore.common.data.GTORecipeTypes.PRIMORDIAL_SCAN_RECIPES;
 import static com.gtolib.api.registries.GTORegistration.GTO;
 import static com.gtolib.utils.register.BlockRegisterUtils.addLang;
 import static com.gtolib.utils.register.MachineRegisterUtils.machine;
@@ -103,7 +111,6 @@ public final class ExResearchMachines {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要 塔兰强化硼玻璃 + 引力子计算机外壳 + 逆熵计算机冷凝矩阵", "Require Taranium Borosilicate Glass + Graviton Computer Casing + Anti Entropy Computer Condensation Matrix", StyleBuilder::setMixedRedPurple), p -> p, StyleBuilder::setOneTab))))
             .nonYAxisRotation()
             .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
-            .nonYAxisRotation()
             .block(GTOBlocks.OXIDATION_RESISTANT_HASTELLOY_N_MECHANICAL_CASING)
             .pattern(definition -> FactoryBlockPattern.start()
                     .aisle(" BBB                   BBB  ", " BKB                   BKB  ", " BKB                   BKB  ", " BKB                   BKB  ", " BKB                   BKB  ", " BKBBBBBBBBBBBBBBBBBBBBBKB  ", " BKB                   BKB  ", " BKB                   BKB  ", " BKB                   BKB  ", " BKBBBBBBBBBBBBBBBBBBBBBKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB  U   H     H   U  BKB  ", " BKB   UUUUUUUUUUUUU   BKB  ", " BKB                   BKB  ", " BKBBBBBBBBBBBBBBBBBBBBBKB  ", " BKBBBBBBBBBBBBBBBBBBBBBKB  ", " BKB                   BKB  ", " BKB                   BKB  ", " BKBAAAAAAAAAAAAAAAAAAABKB  ", " BBB                   BBB  ", "                            ")
@@ -274,4 +281,63 @@ public final class ExResearchMachines {
                         !damagedTexture ? null : GTOCore.id("block/casings/about_computer/" + "damaged_" + name + "_active"),
                         !damagedTexture ? null : GTOCore.id("block/casings/about_computer/" + "damaged_" + name + "_active_emissive")));
     }
+
+    public static final MachineDefinition SCANNING_HOLDER = machine("scanning_holder", "扫描支架", ScanningHolderMachine::new)
+            .tier(ZPM)
+            .allRotation()
+            .renderer(() -> new OverlayTieredActiveMachineRenderer(ZPM, GTCEu.id("block/machine/part/object_holder"),
+                    GTCEu.id("block/machine/part/object_holder_active")))
+            .notAllowSharedTooltips()
+            .register();
+
+    public static final MultiblockMachineDefinition PRIMORDIAL_SCANNING_STATION = multiblock("primordial_scanning_station", "基元扫描站", ScanningStationMachine::new)
+            .tooltipsText("精密的多方块扫描仪。", "Precision multi-block scanner.")
+            .tooltipsText("用于扫描§b数据晶片§r。", "Used to scan onto §fData Crystal§7.")
+            .tooltipsText("需要§b算力§r来进行工作。", "Requires §fComputation§7 to work.")
+            .tooltipsText("提供更多的算力可以使研究进展的更快。", "Providing more Computation allows the recipe to run faster.")
+            .nonYAxisRotation()
+            .recipeTypes(PRIMORDIAL_SCAN_RECIPES)
+            .block(ADVANCED_COMPUTER_CASING)
+            .pattern(definition -> FactoryBlockPattern.start()
+                    .aisle("XXX", "VVV", "PPP", "PPP", "PPP", "VVV", "XXX")
+                    .aisle("XXX", "VAV", "AAA", "AAA", "AAA", "VAV", "XXX")
+                    .aisle("XXX", "VAV", "XAX", "XSX", "XAX", "VAV", "XXX")
+                    .aisle("XXX", "XAX", "---", "---", "---", "XAX", "XXX")
+                    .aisle(" X ", "XAX", "---", "---", "---", "XAX", " X ")
+                    .aisle(" X ", "XAX", "-A-", "-H-", "-A-", "XAX", " X ")
+                    .aisle("   ", "XXX", "---", "---", "---", "XXX", "   ")
+                    .where('S', controller(blocks(definition.getBlock())))
+                    .where('X', blocks(COMPUTER_CASING.get()))
+                    .where(' ', any())
+                    .where('-', air())
+                    .where('V', blocks(COMPUTER_HEAT_VENT.get()))
+                    .where('A', blocks(ADVANCED_COMPUTER_CASING.get()))
+                    .where('P', blocks(COMPUTER_CASING.get())
+                            .or(abilities(PartAbility.INPUT_ENERGY).setMinGlobalLimited(1).setMaxGlobalLimited(2, 1))
+                            .or(abilities(PartAbility.COMPUTATION_DATA_RECEPTION).setExactLimit(1))
+                            .or(autoAbilities(true, false, false)))
+                    .where('H', blocks(SCANNING_HOLDER.get()))
+                    .build())
+            .shapeInfo(definition -> MultiblockShapeInfo.builder()
+                    .aisle("---", "XXX", "---", "---", "---", "XXX", "---")
+                    .aisle("-X-", "XAX", "-A-", "-H-", "-A-", "XAX", "-X-")
+                    .aisle("-X-", "XAX", "---", "---", "---", "XAX", "-X-")
+                    .aisle("XXX", "XAX", "---", "---", "---", "XAX", "XXX")
+                    .aisle("XXX", "VAV", "XAX", "XSX", "XAX", "VAV", "XXX")
+                    .aisle("XXX", "VAV", "AAA", "AAA", "AAA", "VAV", "XXX")
+                    .aisle("XXX", "VVV", "POP", "PEP", "PMP", "VVV", "XXX")
+                    .where('S', ExResearchMachines.PRIMORDIAL_SCANNING_STATION, Direction.NORTH)
+                    .where('X', COMPUTER_CASING.get())
+                    .where('-', Blocks.AIR)
+                    .where('V', COMPUTER_HEAT_VENT.get())
+                    .where('A', ADVANCED_COMPUTER_CASING.get())
+                    .where('P', COMPUTER_CASING.get())
+                    .where('O', GTResearchMachines.COMPUTATION_HATCH_RECEIVER, Direction.SOUTH)
+                    .where('E', GTMachines.ENERGY_INPUT_HATCH[GTValues.LuV], Direction.SOUTH)
+                    .where('M', GTMachines.MAINTENANCE_HATCH.get(), Direction.SOUTH)
+                    .where('H', SCANNING_HOLDER.get(), Direction.SOUTH)
+                    .build())
+            .sidedWorkableCasingRenderer("block/casings/hpca/advanced_computer_casing",
+                    GTCEu.id("block/multiblock/research_station"))
+            .register();
 }

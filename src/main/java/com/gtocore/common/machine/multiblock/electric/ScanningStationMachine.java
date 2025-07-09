@@ -17,6 +17,7 @@ import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.ActionResult;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
+import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,12 +40,12 @@ public class ScanningStationMachine extends WorkableElectricMultiblockMachine
         return computationProvider;
     }
 
-    public ScanningHolderMachine getScanningHolder() {
-        return scanningHolder;
+    public ScanningHolderMachine getObjectHolder() {
+        return objectHolder;
     }
 
     private IOpticalComputationProvider computationProvider;
-    private ScanningHolderMachine scanningHolder;
+    private ScanningHolderMachine objectHolder;
 
     public ScanningStationMachine(IMachineBlockEntity holder, Object... args) {
         super(holder, args);
@@ -63,15 +65,14 @@ public class ScanningStationMachine extends WorkableElectricMultiblockMachine
     public void onStructureFormed() {
         super.onStructureFormed();
         for (IMultiPart part : getParts()) {
-            // 扫描部件必须是ScanningHolderMachine且朝向正确
-            if (part instanceof ScanningHolderMachine holder) {
-                if (holder.getFrontFacing() != getFrontFacing().getOpposite()) {
+            if (part instanceof ScanningHolderMachine scanningHolder) {
+                if (scanningHolder.getFrontFacing() != getFrontFacing().getOpposite()) {
                     onStructureInvalid();
                     return;
                 }
-                this.scanningHolder = holder;
+                this.objectHolder = scanningHolder;
                 // 添加物品处理器（包含扫描槽、催化剂槽和数据槽）
-                addHandlerList(RecipeHandlerList.of(IO.IN, holder.getAsHandler()));
+                addHandlerList(RecipeHandlerList.of(IO.IN, scanningHolder.getAsHandler()));
             }
 
             // 获取计算提供者
@@ -81,18 +82,27 @@ public class ScanningStationMachine extends WorkableElectricMultiblockMachine
         }
 
         // 必须同时有扫描部件和计算提供者
-        if (computationProvider == null || scanningHolder == null) {
+        if (computationProvider == null || objectHolder == null) {
             onStructureInvalid();
         }
+    }
+
+    @Override
+    public boolean checkPattern() {
+        boolean isFormed = super.checkPattern();
+        if (isFormed && objectHolder != null && objectHolder.getFrontFacing() != getFrontFacing().getOpposite()) {
+            onStructureInvalid();
+        }
+        return isFormed;
     }
 
     @Override
     public void onStructureInvalid() {
         computationProvider = null;
         // 重置扫描部件状态
-        if (scanningHolder != null) {
-            scanningHolder.setLocked(false);
-            scanningHolder = null;
+        if (objectHolder != null) {
+            objectHolder.setLocked(false);
+            objectHolder = null;
         }
         super.onStructureInvalid();
     }
@@ -126,53 +136,87 @@ public class ScanningStationMachine extends WorkableElectricMultiblockMachine
             return (ScanningStationMachine) super.getMachine();
         }
 
+        // 跳过配方输出检测
+        @Override
+        protected ActionResult matchRecipe(GTRecipe recipe) {
+            var match = matchRecipeNoOutput(recipe);
+            if (!match.isSuccess()) return match;
+
+            return matchTickRecipeNoOutput(recipe);
+        }
+
+        protected ActionResult matchRecipeNoOutput(GTRecipe recipe) {
+            if (!machine.hasCapabilityProxies()) return ActionResult.FAIL_NO_CAPABILITIES;
+            return RecipeHelper.handleRecipe(machine, recipe, IO.IN, recipe.inputs, Collections.emptyMap(), false,
+                    true);
+        }
+
+        protected ActionResult matchTickRecipeNoOutput(GTRecipe recipe) {
+            if (recipe.hasTick()) {
+                if (!machine.hasCapabilityProxies()) return ActionResult.FAIL_NO_CAPABILITIES;
+                return RecipeHelper.handleRecipe(machine, recipe, IO.IN, recipe.tickInputs, Collections.emptyMap(),
+                        false, true);
+            }
+            return ActionResult.SUCCESS;
+        }
+
         @Override
         public boolean checkMatchedRecipeAvailable(GTRecipe match) {
-            // 检查数据槽是否为空（最多只能放1个物品）
-            if (!getMachine().getScanningHolder().getDataItem(false).isEmpty()) {
-                return false;
-            }
-
             var modified = machine.fullModifyRecipe(match);
             if (modified != null) {
-                // 检查计算单元需求
+                // What is the point of this
                 if (!modified.inputs.containsKey(CWURecipeCapability.CAP) &&
                         !modified.tickInputs.containsKey(CWURecipeCapability.CAP)) {
                     return true;
                 }
-                return checkRecipe(modified).isSuccess();
+                var recipeMatch = checkRecipe(modified);
+                if (recipeMatch.isSuccess()) {
+                    setupRecipe(modified);
+                } else {
+                    setWaiting(recipeMatch.reason());
+                }
+                if (lastRecipe != null && getStatus() == Status.WORKING) {
+                    lastOriginRecipe = match;
+                    lastFailedMatches = null;
+                    return true;
+                }
             }
             return false;
         }
 
         // 处理配方输入输出
         @Override
-        protected ActionResult handleRecipeIO(GTRecipe recipe, IO io) {
-            ScanningStationMachine machine = getMachine();
-            ScanningHolderMachine holder = machine.getScanningHolder();
-
+        protected ActionResult handleRecipeIO(GTRecipe originalRecipe, IO io) {
             if (io == IO.IN) {
                 // 锁定扫描部件
+                ScanningHolderMachine holder = getMachine().getObjectHolder();
                 holder.setLocked(true);
                 return ActionResult.SUCCESS;
             }
 
-            // 处理输出
+            ScanningHolderMachine holder = getMachine().getObjectHolder();
             if (lastRecipe == null) {
                 holder.setLocked(false);
                 return ActionResult.SUCCESS;
             }
 
-            // 设置输出数据物品（前提是数据槽为空）
-            if (holder.getDataItem(false).isEmpty()) {
-                ItemStack outputItem = getOutputItem(recipe);
-                if (!outputItem.isEmpty()) {
-                    // 直接设置到数据槽
-                    holder.setDataItem(outputItem);
-                }
-            } else {
-                // 数据槽非空，无法输出
-                return ActionResult.FAIL_NO_REASON;
+            var catalyst = lastRecipe.getInputContents(ItemRecipeCapability.CAP);
+            if (ItemRecipeCapability.CAP.of(catalyst.get(0).content).getItems()[0].getItem() != holder.getCatalystItem(false).getItem()) {
+                ItemStack hold = holder.getHeldItem(true);
+                holder.setHeldItem(holder.getCatalystItem(true));
+                holder.setCatalystItem(hold);
+                holder.setLocked(false);
+                return ActionResult.SUCCESS;
+            }
+
+            holder.setHeldItem(ItemStack.EMPTY);
+            ItemStack outputItem = ItemStack.EMPTY;
+            var contents = lastRecipe.getOutputContents(ItemRecipeCapability.CAP);
+            if (!contents.isEmpty()) {
+                outputItem = ItemRecipeCapability.CAP.of(contents.get(0).content).getItems()[0];
+            }
+            if (!outputItem.isEmpty()) {
+                holder.setDataItem(outputItem);
             }
 
             // 解锁扫描部件
@@ -180,13 +224,12 @@ public class ScanningStationMachine extends WorkableElectricMultiblockMachine
             return ActionResult.SUCCESS;
         }
 
-        // 获取输出物品
-        private ItemStack getOutputItem(GTRecipe recipe) {
-            var contents = recipe.getOutputContents(ItemRecipeCapability.CAP);
-            if (!contents.isEmpty()) {
-                return ItemRecipeCapability.CAP.of(contents.get(0).content).getItems()[0];
+        @Override
+        protected ActionResult handleTickRecipeIO(GTRecipe recipe, IO io) {
+            if (io != IO.OUT) {
+                return super.handleTickRecipeIO(recipe, io);
             }
-            return ItemStack.EMPTY;
+            return ActionResult.SUCCESS;
         }
     }
 }

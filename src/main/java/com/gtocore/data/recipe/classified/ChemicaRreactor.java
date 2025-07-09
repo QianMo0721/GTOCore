@@ -1068,7 +1068,7 @@ final class ChemicaRreactor {
                 .save();
 
         CHEMICAL_RECIPES.recipeBuilder("ethylene_oxide")
-                .circuitMeta(4)
+                .circuitMeta(6)
                 .inputFluids(GTMaterials.Oxygen.getFluid(1000))
                 .inputFluids(GTMaterials.Ethylene.getFluid(1000))
                 .outputFluids(GTOMaterials.EthyleneOxide.getFluid(1000))

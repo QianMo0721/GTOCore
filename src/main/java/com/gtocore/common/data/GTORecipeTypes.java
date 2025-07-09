@@ -874,7 +874,7 @@ public final class GTORecipeTypes {
             .setSound(GTSoundEntries.ARC);
 
     public static final RecipeType PRIMORDIAL_SCAN_RECIPES = register("primordial_scan", "基元扫描", ELECTRIC)
-            .setMaxIOSize(2, 1, 2, 0)
+            .setMaxIOSize(3, 1, 0, 0)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, LEFT_TO_RIGHT)
             .setMaxTooltips(4)
             .setSound(GTSoundEntries.COMPUTATION);
