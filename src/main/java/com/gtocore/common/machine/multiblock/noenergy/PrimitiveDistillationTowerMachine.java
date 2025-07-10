@@ -545,7 +545,6 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
 
         public final @Nullable ResourceLocation overlay;
 
-
         WaterState(@Nullable String overlay) {
             this.overlay = Optional.ofNullable(overlay)
                     .map(GTOCore::id)
