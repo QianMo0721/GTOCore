@@ -4,6 +4,7 @@ import com.gtocore.client.renderer.machine.PrimitiveDistillationRenderer;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.common.machine.multiblock.part.SensorPartMachine;
 
+import com.gtolib.GTOCore;
 import com.gtolib.api.gui.MagicProgressBarProWidget;
 import com.gtolib.api.machine.feature.DummyEnergyMachine;
 import com.gtolib.api.machine.multiblock.NoEnergyMultiblockMachine;
@@ -92,7 +93,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     private int heat = 298;
     @DescSynced
     @RequireRerender
-    private PrimitiveDistillationRenderer.WaterState waterState = PrimitiveDistillationRenderer.WaterState.NO_WATER;
+    private WaterState waterState = WaterState.NO_WATER;
     @DescSynced
     @RequireRerender
     private int waterLevel = 0; // Used for rendering water level in the machine
@@ -211,18 +212,18 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     private void updateWaterState(int water) {
         if (water > 0) {
             if (water < 100) {
-                waterState = PrimitiveDistillationRenderer.WaterState.HAS_LITTLE_WATER;
+                waterState = WaterState.HAS_LITTLE_WATER;
             } else {
-                waterState = PrimitiveDistillationRenderer.WaterState.HAS_ENOUGH_WATER;
+                waterState = WaterState.HAS_ENOUGH_WATER;
             }
         } else {
-            waterState = PrimitiveDistillationRenderer.WaterState.NO_WATER;
+            waterState = WaterState.NO_WATER;
         }
         waterLevel = water;
     }
 
     private void handleCooling(boolean isCooling) {
-        waterState = isCooling ? PrimitiveDistillationRenderer.WaterState.IS_COOLING : waterState;
+        waterState = isCooling ? WaterState.IS_COOLING : waterState;
     }
 
     /**
@@ -408,7 +409,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
         return false;
     }
 
-    public PrimitiveDistillationRenderer.WaterState getWaterState() {
+    public WaterState getWaterState() {
         return waterState;
     }
 
@@ -534,5 +535,22 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     @NotNull
     private List<IFluidHandler> getFluidOutputs() {
         return this.fluidOutputs;
+    }
+
+    public enum WaterState {
+
+        NO_WATER(null),
+        HAS_LITTLE_WATER("block/multiblock/primitive_distillation_tower/water"),
+        HAS_ENOUGH_WATER("block/multiblock/primitive_distillation_tower/water"),
+        IS_COOLING("block/multiblock/primitive_distillation_tower/steam");
+
+        public final @Nullable ResourceLocation overlay;
+
+
+        WaterState(@Nullable String overlay) {
+            this.overlay = Optional.ofNullable(overlay)
+                    .map(GTOCore::id)
+                    .orElse(null);
+        }
     }
 }

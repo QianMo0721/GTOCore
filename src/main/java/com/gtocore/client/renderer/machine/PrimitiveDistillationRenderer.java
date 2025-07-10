@@ -19,19 +19,20 @@ import net.minecraft.util.RandomSource;
 
 import com.lowdragmc.lowdraglib.client.bakedpipeline.Quad;
 import com.lowdragmc.lowdraglib.client.model.ModelFactory;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
 
+@OnlyIn(Dist.CLIENT)
 public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer implements IHeaterRenderer {
 
     private static final ResourceLocation CASING = GTCEu.id("block/casings/steam/steel/side");
     private static final ResourceLocation WORKABLE_MODEL = GTOCore.id("block/multiblock/primitive_distillation_tower");
 
     private static final ResourceLocation TANK_OVERLAY = GTOCore.id("block/multiblock/primitive_distillation_tower/tank");
-    private static final ResourceLocation WATER_OVERLAY = GTOCore.id("block/multiblock/primitive_distillation_tower/water");
-    private static final ResourceLocation STEAM_OVERLAY = GTOCore.id("block/multiblock/primitive_distillation_tower/steam");
     private static final ResourceLocation TANK_BG_OVERLAY = GTOCore.id("block/multiblock/primitive_distillation_tower/tank_bg");
 
     private static final ResourceLocation WATER_STILL = GTOCore.id("block/multiblock/primitive_distillation_tower/water_still");
@@ -108,7 +109,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
             quads.add(
                     shiftQuad(IHeaterRenderer.bakeQuad(
                             layer1,
-                            waterState == WaterState.IS_COOLING ? 1f : waterLevel,
+                            waterState == PrimitiveDistillationTowerMachine.WaterState.IS_COOLING ? 1f : waterLevel,
                             direction,
                             waterLayer,
                             modelState,
@@ -137,17 +138,4 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
         return shiftedQuad.rebake();
     }
 
-    public enum WaterState {
-
-        NO_WATER(null),
-        HAS_LITTLE_WATER(WATER_OVERLAY),
-        HAS_ENOUGH_WATER(WATER_OVERLAY),
-        IS_COOLING(STEAM_OVERLAY);
-
-        private final @Nullable ResourceLocation overlay;
-
-        WaterState(@Nullable ResourceLocation overlay) {
-            this.overlay = overlay;
-        }
-    }
 }
