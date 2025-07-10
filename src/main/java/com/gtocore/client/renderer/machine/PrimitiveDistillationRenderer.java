@@ -27,6 +27,7 @@ import org.joml.Vector3f;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
+@SuppressWarnings("unused")
 public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer implements IHeaterRenderer {
 
     private static final ResourceLocation CASING = GTCEu.id("block/casings/steam/steel/side");

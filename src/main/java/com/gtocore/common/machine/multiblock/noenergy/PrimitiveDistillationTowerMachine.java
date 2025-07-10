@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.noenergy;
 
-import com.gtocore.client.renderer.machine.PrimitiveDistillationRenderer;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.common.machine.multiblock.part.SensorPartMachine;
 
