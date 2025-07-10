@@ -66,7 +66,9 @@ public final class ArsNouveauRecipes {
 
                 new ImbuementRecipe("honey_bottle", Ingredient.of(RegistriesUtils.getItem("ars_nouveau:mirrorweave")), new ItemStack(GTOItems.GAIA_CORE), 10000,
                         Ingredient.of(BotaniaItems.lifeEssence), Ingredient.of(BotaniaItems.lifeEssence), Ingredient.of(BotaniaItems.lifeEssence), Ingredient.of(BotaniaItems.lifeEssence),
-                        null, null, null, null));
+                        null, null, null, null),
+                new ImbuementRecipe("bifrost_perm", Ingredient.of(BotaniaBlocks.elfGlass), new ItemStack(BotaniaBlocks.bifrostPerm), 1000,
+                        Ingredient.of(RegistriesUtils.getItem("botania:rainbow_rod")), null, null, null, null, null, null, null));
 
         for (ImbuementRecipe recipe : Imbuement) {
             ImbuementRecipeBuilder.builder(recipe.id())

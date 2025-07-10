@@ -233,7 +233,7 @@ public final class GTOOres {
             }
             report.append("\n\n****报告结束****");
             try {
-                Path logDir = Paths.get("logs", "ore_report");
+                Path logDir = Paths.get("logs", "report");
                 if (!Files.exists(logDir)) Files.createDirectories(logDir);
                 Path reportPath = logDir.resolve("ore_report.md");
                 Path reportPath_arrays = logDir.resolve("ore_report_arrays.txt");

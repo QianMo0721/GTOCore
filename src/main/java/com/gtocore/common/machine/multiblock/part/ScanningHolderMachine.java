@@ -2,7 +2,6 @@ package com.gtocore.common.machine.multiblock.part;
 
 import com.gtolib.api.item.tool.IExDataItem;
 
-import com.gregtechceu.gtceu.api.capability.IObjectHolder;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.widget.BlockableSlotWidget;
@@ -32,13 +31,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class ScanningHolderMachine extends MultiblockPartMachine implements IObjectHolder, IMachineLife {
+public class ScanningHolderMachine extends MultiblockPartMachine implements IMachineLife {
 
     public boolean isLocked() {
         return isLocked;
     }
 
-    @Override
     public void setLocked(boolean locked) {
         isLocked = locked;
     }
@@ -61,22 +59,18 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
         heldItems = new ScanningHolder(this);
     }
 
-    @Override
     public @NotNull ItemStack getHeldItem(boolean remove) {
         return getHeldItem(SCAN_SLOT, remove);
     }
 
-    @Override
     public void setHeldItem(@NotNull ItemStack heldItem) {
         heldItems.setStackInSlot(SCAN_SLOT, heldItem);
     }
 
-    @Override
     public @NotNull ItemStack getDataItem(boolean remove) {
         return getHeldItem(DATA_SLOT, remove);
     }
 
-    @Override
     public void setDataItem(@NotNull ItemStack dataItem) {
         heldItems.setStackInSlot(DATA_SLOT, dataItem);
     }
@@ -89,7 +83,6 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
         heldItems.setStackInSlot(CATALYST_SLOT, catalystItem);
     }
 
-    @Override
     public @NotNull NotifiableItemStackHandler getAsHandler() {
         return heldItems;
     }
@@ -110,8 +103,8 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
 
     @Override
     public Widget createUIWidget() {
-        return new WidgetGroup(new Position(0, 0))
-                .addWidget(new ImageWidget(46, 15, 84, 60, GuiTextures.PROGRESS_BAR_RESEARCH_STATION_BASE))
+        WidgetGroup group = new WidgetGroup(new Position(0, 0));
+        group.addWidget(new ImageWidget(46, 15, 84, 60, GuiTextures.PROGRESS_BAR_RESEARCH_STATION_BASE))
                 .addWidget(new BlockableSlotWidget(heldItems, SCAN_SLOT, 79, 36)
                         .setIsBlocked(this::isLocked)
                         .setBackground(GuiTextures.SLOT, GuiTextures.RESEARCH_STATION_OVERLAY))
@@ -121,6 +114,7 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IObj
                 .addWidget(new BlockableSlotWidget(heldItems, DATA_SLOT, 15, 57)
                         .setIsBlocked(this::isLocked)
                         .setBackground(GuiTextures.SLOT, GuiTextures.DATA_ORB_OVERLAY));
+        return group;
     }
 
     @Override
