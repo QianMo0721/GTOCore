@@ -2,6 +2,7 @@ package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtocore.common.data.machines.GTAEMachines;
 import com.gtocore.common.machine.trait.InternalSlotRecipeHandler;
+import com.gtocore.common.network.ClientMessage;
 
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
@@ -27,7 +28,6 @@ import com.gregtechceu.gtceu.api.machine.fancyconfigurator.FancyInvConfigurator;
 import com.gregtechceu.gtceu.api.machine.fancyconfigurator.FancyTankConfigurator;
 import com.gregtechceu.gtceu.api.machine.feature.IDataStickInteractable;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
-import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
@@ -43,7 +43,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
@@ -56,6 +55,8 @@ import appeng.api.storage.StorageHelper;
 import appeng.crafting.pattern.ProcessingPatternItem;
 import com.lowdragmc.lowdraglib.gui.texture.GuiTextureGroup;
 import com.lowdragmc.lowdraglib.gui.util.ClickData;
+import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
+import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
@@ -75,28 +76,56 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBufferPartMachine.InternalSlot> implements IDataStickInteractable {
 
-    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MEPatternBufferPartMachine.class, MEPatternPartMachine.MANAGED_FIELD_HOLDER);
+    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
+            MEPatternBufferPartMachine.class, MEPatternPartMachine.MANAGED_FIELD_HOLDER);
     @RegisterLanguage(cn = "配方已缓存", en = "Recipe cached")
     private static final String CACHE = "gtocore.pattern_buffer.cache";
-    @DescSynced
+    @RegisterLanguage(cn = "样板独立配置", en = "Pattern independent configuration")
+    private static final String INDEPENDENT = "gtocore.pattern_buffer.independent";
+    @RegisterLanguage(cn = "总成共享配置", en = "Buffer share configuration")
+    private static final String SHARE = "gtocore.pattern_buffer.share";
+
     private final boolean[] caches;
     @Persisted
-    private final NotifiableNotConsumableItemHandler shareInventory;
+    public final NotifiableNotConsumableItemHandler shareInventory;
     @Persisted
-    private final NotifiableNotConsumableFluidHandler shareTank;
+    public final NotifiableNotConsumableFluidHandler shareTank;
     @Persisted
-    private final NotifiableNotConsumableItemHandler circuitInventorySimulated;
+    public final NotifiableNotConsumableItemHandler circuitInventorySimulated;
+
+    @Persisted
+    public final NotifiableNotConsumableItemHandler[] shareInventorys;
+    @Persisted
+    public final NotifiableNotConsumableFluidHandler[] shareTanks;
+    @Persisted
+    public final NotifiableNotConsumableItemHandler[] circuitInventorys;
+
     @Persisted
     private final Set<BlockPos> proxies = new ObjectOpenHashSet<>();
     private final Set<MEPatternBufferProxyPartMachine> proxyMachines = new ReferenceOpenHashSet<>();
-    private final InternalSlotRecipeHandler internalRecipeHandler;
+    public final InternalSlotRecipeHandler internalRecipeHandler;
+
+    @Persisted
+    @DescSynced
+    private int configurator = -1;
+
+    private ConfiguratorPanel configuratorPanel;
 
     public MEPatternBufferPartMachine(IMachineBlockEntity holder, int maxPatternCount) {
         super(holder, maxPatternCount);
         this.caches = new boolean[maxPatternCount];
         this.shareInventory = createShareInventory();
-        this.shareTank = new NotifiableNotConsumableFluidHandler(this, 9, 8 * FluidType.BUCKET_VOLUME);
+        this.shareTank = new NotifiableNotConsumableFluidHandler(this, 9, 64000);
         this.circuitInventorySimulated = createCircuitInventory();
+        this.shareInventorys = new NotifiableNotConsumableItemHandler[maxPatternCount];
+        this.shareTanks = new NotifiableNotConsumableFluidHandler[maxPatternCount];
+        this.circuitInventorys = new NotifiableNotConsumableItemHandler[maxPatternCount];
+        for (int i = 0; i < maxPatternCount; i++) {
+            this.shareInventorys[i] = createShareInventory();
+            this.shareTanks[i] = new NotifiableNotConsumableFluidHandler(this, 9, 64000);
+            this.circuitInventorys[i] = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE);
+            this.circuitInventorys[i].setFilter(IntCircuitBehaviour::isIntegratedCircuit);
+        }
         this.internalRecipeHandler = new InternalSlotRecipeHandler(this, getInternalInventory());
     }
 
@@ -124,10 +153,6 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
     @Override
     InternalSlot createInternalSlot(int i) {
         return new InternalSlot(this, i);
-    }
-
-    public NotifiableItemStackHandler getCircuitInventory() {
-        return circuitInventorySimulated;
     }
 
     @Override
@@ -176,6 +201,24 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
     }
 
     @Override
+    public void onMouseClicked(int index) {
+        if (isRemote()) {
+            ClientMessage.send("pattern_buffer_index", buf -> buf.writeVarInt(index));
+        }
+        if (configurator == index) {
+            configurator = -1;
+        } else {
+            configurator = index;
+        }
+        configuratorPanel.getParent().initWidget();
+    }
+
+    @Override
+    void addWidget(WidgetGroup group) {
+        group.addWidget(new LabelWidget(81, 2, () -> configurator < 0 ? SHARE : INDEPENDENT).setHoverTooltips(Component.translatable("monitor.gui.title.slot").append(String.valueOf(configurator))));
+    }
+
+    @Override
     public PatternContainerGroup getTerminalGroup() {
         if (isFormed()) {
             IMultiController controller = getControllers().first();
@@ -199,10 +242,17 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
 
     @Override
     public void attachConfigurators(ConfiguratorPanel configuratorPanel) {
+        this.configuratorPanel = configuratorPanel;
         configuratorPanel.attachConfigurators(new ButtonConfigurator(new GuiTextureGroup(GuiTextures.BUTTON, GuiTextures.REFUND_OVERLAY), this::refundAll).setTooltips(List.of(Component.translatable("gui.gtceu.refund_all.desc"))));
-        configuratorPanel.attachConfigurators(new CircuitFancyConfigurator(getCircuitInventory().storage));
-        configuratorPanel.attachConfigurators(new FancyInvConfigurator(shareInventory.storage, Component.translatable("gui.gtceu.share_inventory.title")).setTooltips(List.of(Component.translatable("gui.gtceu.share_inventory.desc.0"), Component.translatable("gui.gtceu.share_inventory.desc.1"))));
-        configuratorPanel.attachConfigurators(new FancyTankConfigurator(shareTank.getStorages(), Component.translatable("gui.gtceu.share_tank.title")).setTooltips(List.of(Component.translatable("gui.gtceu.share_tank.desc.0"), Component.translatable("gui.gtceu.share_inventory.desc.1"))));
+        if (configurator < 0) {
+            configuratorPanel.attachConfigurators(new CircuitFancyConfigurator(circuitInventorySimulated.storage));
+            configuratorPanel.attachConfigurators(new FancyInvConfigurator(shareInventory.storage, Component.translatable("gui.gtceu.share_inventory.title")).setTooltips(List.of(Component.translatable("gui.gtceu.share_inventory.desc.0"), Component.translatable("gui.gtceu.share_inventory.desc.1"))));
+            configuratorPanel.attachConfigurators(new FancyTankConfigurator(shareTank.getStorages(), Component.translatable("gui.gtceu.share_tank.title")).setTooltips(List.of(Component.translatable("gui.gtceu.share_tank.desc.0"), Component.translatable("gui.gtceu.share_inventory.desc.1"))));
+        } else {
+            configuratorPanel.attachConfigurators(new CircuitFancyConfigurator(circuitInventorys[configurator].storage));
+            configuratorPanel.attachConfigurators(new FancyInvConfigurator(shareInventorys[configurator].storage, Component.translatable("gui.gtceu.share_inventory.title")).setTooltips(List.of(Component.translatable("gui.gtceu.share_inventory.desc.0"), Component.translatable("gui.gtceu.share_inventory.desc.1"))));
+            configuratorPanel.attachConfigurators(new FancyTankConfigurator(shareTanks[configurator].getStorages(), Component.translatable("gui.gtceu.share_tank.title")).setTooltips(List.of(Component.translatable("gui.gtceu.share_tank.desc.0"), Component.translatable("gui.gtceu.share_inventory.desc.1"))));
+        }
     }
 
     @Override
@@ -214,6 +264,9 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
     public void onMachineRemoved() {
         super.onMachineRemoved();
         clearInventory(shareInventory);
+        for (var inv : shareInventorys) {
+            clearInventory(inv);
+        }
     }
 
     @Override
@@ -239,7 +292,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
         public InternalSlotRecipeHandler.AbstractRHL rhl;
         private Recipe recipe;
         private final MEPatternBufferPartMachine machine;
-        private final int index;
+        public final int index;
         final InputSink inputSink;
         private Runnable onContentsChanged = () -> {};
         public final Object2LongOpenCustomHashMap<ItemStack> itemInventory = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
@@ -527,17 +580,5 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
         void setItemCallback(final Predicate<ItemStack> itemCallback) {
             this.itemCallback = itemCallback;
         }
-    }
-
-    public NotifiableNotConsumableItemHandler getShareInventory() {
-        return this.shareInventory;
-    }
-
-    public NotifiableNotConsumableFluidHandler getShareTank() {
-        return this.shareTank;
-    }
-
-    public InternalSlotRecipeHandler getInternalRecipeHandler() {
-        return this.internalRecipeHandler;
     }
 }

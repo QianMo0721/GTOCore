@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtocore.common.data.machines.GTAEMachines;
+import com.gtocore.common.machine.multiblock.part.ae.widget.slot.AEPatternViewSlotWidget;
 
 import com.gtolib.ae2.MyPatternDetailsHelper;
 import com.gtolib.ae2.pattern.IParallelPatternDetails;
@@ -15,7 +16,6 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.integration.ae2.gui.widget.AETextInputButtonWidget;
-import com.gregtechceu.gtceu.integration.ae2.gui.widget.slot.AEPatternViewSlotWidget;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
@@ -54,9 +54,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInternalSlot> extends MEBusPartMachine implements ICraftingProvider, PatternContainer {
+abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInternalSlot> extends MEPartMachine implements ICraftingProvider, PatternContainer {
 
-    static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MEPatternPartMachine.class, MEBusPartMachine.MANAGED_FIELD_HOLDER);
+    static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
+            MEPatternPartMachine.class, MEPartMachine.MANAGED_FIELD_HOLDER);
+
     public final int maxPatternCount;
     final InternalInventory internalPatternInventory = new InternalInventory() {
 
@@ -209,6 +211,10 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
         return null;
     }
 
+    void onMouseClicked(int index) {}
+
+    void addWidget(WidgetGroup group) {}
+
     @Override
     public void attachConfigurators(ConfiguratorPanel configuratorPanel) {}
 
@@ -221,7 +227,7 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
         for (int y = 0; y < colSize; ++y) {
             for (int x = 0; x < rowSize; ++x) {
                 int finalI = index;
-                var slot = new AEPatternViewSlotWidget(patternInventory, index++, 8 + x * 18, 14 + y * 18).setOccupiedTexture(GuiTextures.SLOT).setItemHook(stack -> {
+                var slot = new AEPatternViewSlotWidget(patternInventory, index++, 8 + x * 18, 14 + y * 18, () -> onMouseClicked(finalI)).setOccupiedTexture(GuiTextures.SLOT).setItemHook(stack -> {
                     if (stack.getItem() instanceof EncodedPatternItem iep) {
                         final ItemStack out = iep.getOutput(stack);
                         if (!out.isEmpty()) {
@@ -236,6 +242,7 @@ abstract class MEPatternPartMachine<T extends MEPatternPartMachine.AbstractInter
                 group.addWidget(slot);
             }
         }
+        addWidget(group);
         group.addWidget(new LabelWidget(8, 2, () -> this.isOnline ? "gtceu.gui.me_network.online" : "gtceu.gui.me_network.offline"));
         group.addWidget(new AETextInputButtonWidget(18 * rowSize + 8 - 70, 2, 70, 10).setText(customName).setOnConfirm(this::setCustomName).setButtonTooltips(Component.translatable("gui.expatternprovider.renamer")));
         return group;

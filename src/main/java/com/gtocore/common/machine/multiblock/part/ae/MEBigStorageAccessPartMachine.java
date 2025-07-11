@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
+import com.gtolib.ae2.stacks.IKeyCounter;
 import com.gtolib.ae2.storage.BigCellDataStorage;
 import com.gtolib.ae2.storage.CellDataStorage;
 import com.gtolib.mixin.NetworkStorageAccessor;
@@ -30,7 +31,6 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.me.storage.NetworkStorage;
-import com.hepdd.gtmthings.utils.BigIntegerUtils;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
@@ -295,10 +295,7 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
         if (data == BigCellDataStorage.EMPTY) return;
         var map = data.getStoredMap();
         if (map == null) return;
-        for (ObjectIterator<Object2ObjectMap.Entry<AEKey, BigInteger>> it = map.object2ObjectEntrySet().fastIterator(); it.hasNext();) {
-            Object2ObjectMap.Entry<AEKey, BigInteger> entry = it.next();
-            out.add(entry.getKey(), BigIntegerUtils.getLongValue(entry.getValue()));
-        }
+        IKeyCounter.addAll(out, map);
     }
 
     @Override

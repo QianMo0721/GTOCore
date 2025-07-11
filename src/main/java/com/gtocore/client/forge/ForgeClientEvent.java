@@ -22,7 +22,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -96,9 +95,7 @@ public final class ForgeClientEvent {
         if (Minecraft.getInstance().player instanceof IEnhancedPlayer) {
             boolean isShiftDown = Screen.hasShiftDown();
             if (isShiftDown != lastShiftState) {
-                var data = new CompoundTag();
-                data.putBoolean("shift", isShiftDown);
-                ClientMessage.sendData("shiftKeypress", data);
+                ClientMessage.send("shiftKeypress", buf -> buf.writeBoolean(isShiftDown));
                 lastShiftState = isShiftDown;
             }
         }

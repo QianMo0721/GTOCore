@@ -15,24 +15,16 @@ import net.minecraft.world.level.Level;
 
 final class KeyMessage {
 
-    public static void pressAction(ServerPlayer player, String type) {
+    public static void pressAction(ServerPlayer player, int type) {
         Level level = player.level();
         if (!level.hasChunkAt(player.blockPosition())) {
             return;
         }
         switch (type) {
-            case "0":
-                handleFlightSpeed(player);
-                break;
-            case "1":
-                toggleNightVision(player);
-                break;
-            case "2":
-                upgradeToolSpeed(player);
-                break;
-            case "3":
-                drift(player);
-                break;
+            case 0 -> handleFlightSpeed(player);
+            case 1 -> toggleNightVision(player);
+            case 2 -> upgradeToolSpeed(player);
+            case 3 -> drift(player);
         }
     }
 

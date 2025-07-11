@@ -187,6 +187,17 @@ public final class MultiBlockG {
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.POLYMERIZATION_REACTOR_RECIPES)
             .recipeModifier(RecipeModifierFunction.coilReductionOverclock(0.5))
+            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
+                    h -> h.addLines("线圈效率加成", "Coil Efficiency Bonus", StyleBuilder::setGold),
+                    c -> c.addLines(
+                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
+                                    x -> x.addLines("线圈等级每高出白铜一级", "Each coil tier above Bronze", StyleBuilder::setWhite),
+                                    p -> p,
+                                    StyleBuilder::setOneTab),
+                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
+                                    x -> x.addLines("能耗与时间减少5%", "Reduces energy consumption and duration by 5%", StyleBuilder::setGreen),
+                                    p -> p,
+                                    StyleBuilder::setOneTab))))
             .parallelizableTooltips()
             .block(GTBlocks.CASING_STAINLESS_CLEAN)
             .pattern(definition -> FactoryBlockPattern.start()

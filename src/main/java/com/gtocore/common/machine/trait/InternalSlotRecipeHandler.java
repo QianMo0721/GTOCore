@@ -43,7 +43,7 @@ public final class InternalSlotRecipeHandler {
     public static abstract class AbstractRHL extends ExtendedRecipeHandlerList {
 
         public RecipeHandlerList rhl = this;
-        private final MEPatternBufferPartMachine.InternalSlot slot;
+        public final MEPatternBufferPartMachine.InternalSlot slot;
 
         AbstractRHL(IO handlerIO, MEPatternBufferPartMachine.InternalSlot slot, MultiblockPartMachine part) {
             super(handlerIO, part);
@@ -91,7 +91,7 @@ public final class InternalSlotRecipeHandler {
             super(IO.IN, slot, buffer);
             itemRecipeHandler = new SlotItemRecipeHandler(buffer, slot, idx);
             fluidRecipeHandler = new SlotFluidRecipeHandler(buffer, slot, idx);
-            addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.getCircuitInventory(), buffer.getShareInventory(), buffer.getShareTank());
+            addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank, buffer.circuitInventorys[idx], buffer.shareInventorys[idx], buffer.shareTanks[idx]);
         }
     }
 

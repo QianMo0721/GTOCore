@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
+import com.gtolib.ae2.stacks.IKeyCounter;
 import com.gtolib.ae2.storage.CellDataStorage;
 import com.gtolib.mixin.NetworkStorageAccessor;
 
@@ -308,10 +309,11 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
 
     @Override
     public void getAvailableStacks(KeyCounter out) {
-        for (ObjectIterator<Object2LongMap.Entry<AEKey>> it = getCellStoredMap().object2LongEntrySet().fastIterator(); it.hasNext();) {
-            Object2LongOpenHashMap.Entry<AEKey> entry = it.next();
-            out.add(entry.getKey(), entry.getLongValue());
-        }
+        var data = getCellStorage();
+        if (data == CellDataStorage.EMPTY) return;
+        var map = data.getStoredMap();
+        if (map == null) return;
+        IKeyCounter.addAll(out, map);
     }
 
     @Override

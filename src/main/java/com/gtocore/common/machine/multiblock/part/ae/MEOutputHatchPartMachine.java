@@ -20,10 +20,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class MEOutputHatchPartMachine extends MEHatchPartMachine {
+public class MEOutputHatchPartMachine extends MEPartMachine {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
-            MEOutputHatchPartMachine.class, MEHatchPartMachine.MANAGED_FIELD_HOLDER);
+            MEOutputHatchPartMachine.class, MEPartMachine.MANAGED_FIELD_HOLDER);
 
     @Persisted
     private final KeyMap internalBuffer;
