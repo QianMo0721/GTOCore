@@ -8,7 +8,6 @@ import com.gtolib.api.machine.trait.ProxyFluidRecipeHandler;
 import com.gtolib.api.machine.trait.ProxyItemExtendRecipeHandler;
 import com.gtolib.api.machine.trait.ProxyItemRecipeHandler;
 
-import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public final class ProxySlotRecipeHandler {
         private final ProxyFluidRecipeHandler slotSharedFluid;
 
         private ProxyRHL(MEPatternBufferProxyPartMachine machine, MEPatternBufferPartMachine.InternalSlot slot) {
-            super(IO.IN, slot, machine);
+            super(slot, machine);
             circuit = new ProxyItemExtendRecipeHandler(machine);
             slotCircuit = new ProxyItemExtendRecipeHandler(machine);
             sharedItem = new ProxyItemExtendRecipeHandler(machine);

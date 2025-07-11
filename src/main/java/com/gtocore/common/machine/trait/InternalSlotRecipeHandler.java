@@ -5,6 +5,7 @@ import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 import com.gtolib.api.machine.trait.ExtendedRecipeHandlerList;
 import com.gtolib.api.machine.trait.IExtendRecipeHandler;
 import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.RecipeCapabilityMap;
 
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -26,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public final class InternalSlotRecipeHandler {
 
@@ -40,15 +40,22 @@ public final class InternalSlotRecipeHandler {
         }
     }
 
+    public static class WrapperRHL extends AbstractRHL {
+
+        public WrapperRHL(AbstractRHL rhl) {
+            super(rhl.slot, rhl.part);
+            rhl.rhl = this;
+        }
+    }
+
     public static abstract class AbstractRHL extends ExtendedRecipeHandlerList {
 
         public RecipeHandlerList rhl = this;
         public final MEPatternBufferPartMachine.InternalSlot slot;
 
-        AbstractRHL(IO handlerIO, MEPatternBufferPartMachine.InternalSlot slot, MultiblockPartMachine part) {
-            super(handlerIO, part);
+        AbstractRHL(MEPatternBufferPartMachine.InternalSlot slot, MultiblockPartMachine part) {
+            super(IO.IN, part);
             this.slot = slot;
-            this.slot.rhl = this;
         }
 
         @Override
@@ -59,22 +66,31 @@ public final class InternalSlotRecipeHandler {
         @Override
         public void setDistinct(boolean ignored, boolean notify) {}
 
-        public boolean handleRecipeContent(GTRecipe recipe, Object2ObjectOpenHashMap<RecipeCapability<?>, List<Object>> contents, boolean simulate) {
+        public boolean handleRecipeContent(GTRecipe recipe, RecipeCapabilityMap<List<Object>> contents, boolean simulate) {
             if (slot.isEmpty()) return false;
-            byte success = 0;
-            for (ObjectIterator<Object2ObjectMap.Entry<RecipeCapability<?>, List<Object>>> it = contents.object2ObjectEntrySet().fastIterator(); it.hasNext();) {
-                Map.Entry<RecipeCapability<?>, List<Object>> entry = it.next();
-                List left = entry.getValue();
-                var handlerList = getCapability(entry.getKey());
-                for (var handler : handlerList) {
+            boolean item = contents.item == null;
+            if (!item) {
+                List left = contents.item;
+                for (var handler : getCapability(ItemRecipeCapability.CAP)) {
                     left = handler.handleRecipe(IO.IN, recipe, left, simulate);
                     if (left == null) {
-                        success++;
+                        item = true;
                         break;
                     }
                 }
             }
-            if (success == contents.size()) {
+            if (item) {
+                if (contents.fluid != null) {
+                    List left = contents.fluid;
+                    for (var handler : getCapability(FluidRecipeCapability.CAP)) {
+                        left = handler.handleRecipe(IO.IN, recipe, left, simulate);
+                        if (left == null) {
+                            slot.setRecipe(((Recipe) recipe).getRootRecipe());
+                            return true;
+                        }
+                    }
+                    return false;
+                }
                 slot.setRecipe(((Recipe) recipe).getRootRecipe());
                 return true;
             }
@@ -88,7 +104,8 @@ public final class InternalSlotRecipeHandler {
         final IRecipeHandlerTrait<FluidIngredient> fluidRecipeHandler;
 
         private SlotRHL(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot, int idx) {
-            super(IO.IN, slot, buffer);
+            super(slot, buffer);
+            slot.rhl = this;
             itemRecipeHandler = new SlotItemRecipeHandler(buffer, slot, idx);
             fluidRecipeHandler = new SlotFluidRecipeHandler(buffer, slot, idx);
             addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank, buffer.circuitInventorys[idx], buffer.shareInventorys[idx], buffer.shareTanks[idx]);
