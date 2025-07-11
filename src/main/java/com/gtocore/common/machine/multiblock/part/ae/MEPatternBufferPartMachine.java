@@ -85,6 +85,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
     @RegisterLanguage(cn = "总成共享配置", en = "Buffer share configuration")
     private static final String SHARE = "gtocore.pattern_buffer.share";
 
+    @DescSynced
     private final boolean[] caches;
     @Persisted
     public final NotifiableNotConsumableItemHandler shareInventory;
