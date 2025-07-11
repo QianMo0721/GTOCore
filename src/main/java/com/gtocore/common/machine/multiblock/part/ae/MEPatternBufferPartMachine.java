@@ -458,7 +458,10 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
                     }
                 }
             }
-            if (changed) onContentsChanged();
+            if (changed) {
+                itemStacks = null;
+                fluidStacks = null;
+            }
             return left.isEmpty() ? null : left;
         }
 
@@ -495,7 +498,10 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
                     }
                 }
             }
-            if (changed) onContentsChanged();
+            if (changed) {
+                itemStacks = null;
+                fluidStacks = null;
+            }
             return left.isEmpty() ? null : left;
         }
 

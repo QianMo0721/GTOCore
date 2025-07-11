@@ -106,8 +106,8 @@ public final class InternalSlotRecipeHandler {
         private SlotRHL(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot, int idx) {
             super(slot, buffer);
             slot.rhl = this;
-            itemRecipeHandler = new SlotItemRecipeHandler(buffer, slot, idx);
-            fluidRecipeHandler = new SlotFluidRecipeHandler(buffer, slot, idx);
+            itemRecipeHandler = new SlotItemRecipeHandler(buffer, slot);
+            fluidRecipeHandler = new SlotFluidRecipeHandler(buffer, slot);
             addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank, buffer.circuitInventorys[idx], buffer.shareInventorys[idx], buffer.shareTanks[idx]);
         }
     }
@@ -116,7 +116,7 @@ public final class InternalSlotRecipeHandler {
 
         private final MEPatternBufferPartMachine.InternalSlot slot;
 
-        private SlotItemRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot, int index) {
+        private SlotItemRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot) {
             super(buffer);
             this.slot = slot;
             slot.setOnContentsChanged(this::notifyListeners);
@@ -172,13 +172,18 @@ public final class InternalSlotRecipeHandler {
         public Object2LongOpenCustomHashMap<ItemStack> getItemMap() {
             return slot.itemInventory.isEmpty() ? null : slot.itemInventory;
         }
+
+        @Override
+        public boolean isRecipeOnly() {
+            return true;
+        }
     }
 
     private static final class SlotFluidRecipeHandler extends NotifiableRecipeHandlerTrait<FluidIngredient> implements IExtendRecipeHandler {
 
         private final MEPatternBufferPartMachine.InternalSlot slot;
 
-        private SlotFluidRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot, int index) {
+        private SlotFluidRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot) {
             super(buffer);
             this.slot = slot;
             slot.setOnContentsChanged(this::notifyListeners);
@@ -233,6 +238,11 @@ public final class InternalSlotRecipeHandler {
         @Override
         public Object2LongOpenHashMap<FluidStack> getFluidMap() {
             return slot.fluidInventory.isEmpty() ? null : slot.fluidInventory;
+        }
+
+        @Override
+        public boolean isRecipeOnly() {
+            return true;
         }
     }
 

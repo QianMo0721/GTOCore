@@ -78,7 +78,7 @@ public final class NanitesIntegratedMachine extends CoilCrossRecipeMultiblockMac
     @Override
     public void onMachineChanged() {
         if (isEmpty()) {
-            chance = 100;
+            chance = 0;
             return;
         }
         Material material = ChemicalHelper.getMaterialEntry(getStorageStack().getItem()).material();

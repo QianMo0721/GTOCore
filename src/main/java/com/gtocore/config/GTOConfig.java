@@ -157,8 +157,8 @@ public final class GTOConfig {
     @Configurable
     @Configurable.Comment("The interval increases gradually when the machine cannot find a recipe; this is the maximum interval.(This option will significantly affect game performance)")
     @Configurable.Range(min = 5, max = 200)
-    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Recipe Max Check Interval", cn = "配方最大检查间隔")
-    public int recipeMaxCheckInterval = 80;
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Recipe Search Max Interval", cn = "配方搜索最大间隔")
+    public int recipeSearchMaxInterval = 20;
     @Configurable
     @Configurable.Range(min = 600, max = 144000)
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Batch Processing Mode Max Duration", cn = "批处理模式最大时间")
