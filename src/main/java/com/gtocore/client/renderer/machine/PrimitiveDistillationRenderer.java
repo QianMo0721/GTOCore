@@ -16,8 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.lowdragmc.lowdraglib.client.bakedpipeline.Quad;
 import com.lowdragmc.lowdraglib.client.model.ModelFactory;
@@ -26,7 +24,6 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
 @SuppressWarnings("unused")
 public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer implements IHeaterRenderer {
 
