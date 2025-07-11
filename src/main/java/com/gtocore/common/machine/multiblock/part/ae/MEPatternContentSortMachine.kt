@@ -1,7 +1,8 @@
 package com.gtocore.common.machine.multiblock.part.ae
 
-import com.gtocore.api.ktflexible.ProgressBarColorStyle
-import com.gtocore.api.ktflexible.progressBar
+import com.gtocore.api.gui.graphic.helper.ProgressBarColorStyle
+import com.gtocore.api.gui.ktflexible.progressBar
+import com.gtocore.api.gui.ktflexible.textBlock
 
 import net.minecraft.network.chat.Component
 import net.minecraft.server.TickTask
@@ -22,7 +23,6 @@ import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.root
-import com.gtolib.api.gui.ktflexible.text
 import com.gtolib.api.machine.feature.IMetaMachine
 import com.gtolib.mixin.ae2.GridAccessor
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
@@ -62,11 +62,8 @@ class MEPatternContentSortMachine(holder: IMachineBlockEntity) :
         @RegisterLanguage(cn = "应用", en = "Apply")
         var TOOLTIPS_APPLY: String = "gtocore.tooltip.pattern_content_sort_machine.apply"
 
-        @RegisterLanguage(cn = "每行为一组，样板内所有此行物品输入会被替换为此行优先级最高的物品", en = "For each line, all items in the pattern input will be replaced with the highest priority item of that line")
+        @RegisterLanguage(cn = "    每行为一组，样板内所有此行物品输入会被替换为此行优先级最高的物品，每行物品优先级依据物品优先级从高到低排序", en = "    For each line, all items in the pattern input will be replaced with the highest priority item of that line, Prioritization of items in each row is based on item priority in descending order.")
         var TOOLTIPS_MEANS_FOR_LINE_0: String = "gtocore.tooltip.pattern_content_sort_machine.means_for_line_0"
-
-        @RegisterLanguage(cn = "每行物品优先级依据物品优先级从高到低排序", en = "Prioritization of items in each row is based on item priority in descending order.")
-        var TOOLTIPS_MEANS_FOR_LINE_1: String = "gtocore.tooltip.pattern_content_sort_machine.means_for_line_1"
     }
 
     override fun getFieldHolder() = manager
@@ -270,12 +267,12 @@ class MEPatternContentSortMachine(holder: IMachineBlockEntity) :
                     totalSupplier = { internalLogic.lastFlowData?.total ?: 1 },
                     width = this@vScroll.availableWidth - 50 - 2,
                     height = 14,
-                    progressColorStyle = ProgressBarColorStyle.DEFAULT_GREEN,
+                    textColor = 0xFFFFFFFF.toInt(),
+                    progressColorStyle = ProgressBarColorStyle.Gradient(0xFF33CC33.toInt(), 0xFF55CC55.toInt()),
                 )
                 button(width = 50, height = 14, transKet = TOOLTIPS_APPLY, onClick = { ck -> internalLogic.applyRefresh() })
             }
-            text(width = availableWidth, height = 20, text = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_0) })
-            text(width = availableWidth, height = 20, text = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_1) })
+            textBlock(maxWidth = availableWidth, textSupplier = { Component.translatable(TOOLTIPS_MEANS_FOR_LINE_0) })
             itemTransferList.transfers.forEach { transfer ->
                 vBox(width = availableWidth, alwaysHorizonCenter = true) {
                     hBox(height = 18) {

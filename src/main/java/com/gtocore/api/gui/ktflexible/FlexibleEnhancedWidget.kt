@@ -1,4 +1,4 @@
-package com.gtocore.api.ktflexible
+package com.gtocore.api.gui.ktflexible
 
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
