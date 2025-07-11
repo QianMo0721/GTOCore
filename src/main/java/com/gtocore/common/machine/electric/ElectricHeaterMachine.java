@@ -38,7 +38,7 @@ public final class ElectricHeaterMachine extends WorkableTieredMachine implement
     @Persisted
     @DescSynced
     @RequireRerender
-    private int temperature;
+    private int temperature = 273;
     private TickableSubscription tickSubs;
 
     public ElectricHeaterMachine(IMachineBlockEntity holder) {

@@ -254,7 +254,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
                     if (!simulate) {
                         ((HugeCustomItemStackHandler) storage).count -= count;
                         getStackInSlot().setCount(MathUtil.saturatedCast(((HugeCustomItemStackHandler) storage).count));
-                        onContentsChanged();
+                        changed = true;
                     }
                     amount -= count;
                 }

@@ -2,28 +2,30 @@ package com.gtocore.common.network;
 
 import com.gtocore.common.data.GTONet;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-public class FromClientMessage extends BaseC2SMessage {
+import java.util.function.Consumer;
+
+public final class FromClientMessage extends BaseC2SMessage {
 
     private final String channel;
-    private final CompoundTag data;
+    private Consumer<FriendlyByteBuf> consumer;
+    private FriendlyByteBuf buf;
 
-    FromClientMessage(String c, @Nullable CompoundTag d) {
+    FromClientMessage(String c, @NotNull Consumer<FriendlyByteBuf> consumer) {
         channel = c;
-        data = d;
+        this.consumer = consumer;
     }
 
     public FromClientMessage(FriendlyByteBuf buf) {
-        channel = buf.readUtf(120);
-        data = buf.readNbt();
+        channel = buf.readUtf();
+        this.buf = new FriendlyByteBuf(buf.copy());
     }
 
     @Override
@@ -33,14 +35,14 @@ public class FromClientMessage extends BaseC2SMessage {
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeUtf(channel, 120);
-        buf.writeNbt(data);
+        buf.writeUtf(channel);
+        consumer.accept(buf);
     }
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
-        if (!channel.isEmpty() && context.getPlayer() instanceof ServerPlayer serverPlayer) {
-            ClientMessage.handle(channel, serverPlayer, data);
+        if (buf != null && !channel.isEmpty() && context.getPlayer() instanceof ServerPlayer serverPlayer) {
+            ClientMessage.handle(channel, serverPlayer, buf);
         }
     }
 }

@@ -109,7 +109,7 @@ public class ExDataItemBehavior implements IAddInformation, IExDataItem {
             FluidStack stack = new FluidStack(fluid, 1);
             return Optional.of(Component.translatable("gtocore.tooltip.item.scanned_things",
                     Component.literal(String.valueOf(count)).withStyle(ChatFormatting.GREEN),
-                    stack.getDisplayName().copy().withStyle(ChatFormatting.BLUE)));
+                    stack.getDisplayName().copy().withStyle(ChatFormatting.LIGHT_PURPLE)));
         }
 
         return Optional.empty();

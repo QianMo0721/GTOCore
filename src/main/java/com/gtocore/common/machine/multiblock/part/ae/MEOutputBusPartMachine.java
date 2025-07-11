@@ -21,9 +21,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public final class MEOutputBusPartMachine extends MEBusPartMachine implements IInteractedMachine {
+public final class MEOutputBusPartMachine extends MEPartMachine implements IInteractedMachine {
 
-    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MEOutputBusPartMachine.class, MEBusPartMachine.MANAGED_FIELD_HOLDER);
+    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
+            MEOutputBusPartMachine.class, MEPartMachine.MANAGED_FIELD_HOLDER);
 
     @Persisted
     private final KeyMap internalBuffer;

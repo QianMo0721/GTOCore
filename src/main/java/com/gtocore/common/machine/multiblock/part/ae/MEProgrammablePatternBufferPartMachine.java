@@ -21,7 +21,7 @@ public final class MEProgrammablePatternBufferPartMachine extends MEPatternBuffe
         super(holder, 27);
         Predicate<ItemStack> itemCallback = stack -> {
             if (stack.is(CustomItems.VIRTUAL_ITEM_PROVIDER.get())) {
-                getCircuitInventory().setStackInSlot(0, VirtualItemProviderBehavior.getVirtualItem(stack));
+                circuitInventorySimulated.setStackInSlot(0, VirtualItemProviderBehavior.getVirtualItem(stack));
                 return true;
             }
             return false;

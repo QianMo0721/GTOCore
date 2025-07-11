@@ -603,6 +603,14 @@ public final class BotaniaRecipes {
                     .save();
         }
 
+        MANA_INFUSER_RECIPES.builder("bifrost_perm")
+                .notConsumable("botania:rainbow_rod")
+                .inputItems(BotaniaBlocks.elfGlass, 16)
+                .outputItems(BotaniaBlocks.bifrostPerm, 16)
+                .duration(200)
+                .MANAt(1)
+                .save();
+
         // 工业祭坛 - 符文祭坛
         record IndustrialAltarRecipe(
                                      int circuitMeta,

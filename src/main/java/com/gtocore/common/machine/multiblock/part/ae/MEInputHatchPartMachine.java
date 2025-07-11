@@ -39,10 +39,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MEInputHatchPartMachine extends MEHatchPartMachine implements IDataStickInteractable {
+public class MEInputHatchPartMachine extends MEPartMachine implements IDataStickInteractable {
 
     static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
-            MEInputHatchPartMachine.class, MEHatchPartMachine.MANAGED_FIELD_HOLDER);
+            MEInputHatchPartMachine.class, MEPartMachine.MANAGED_FIELD_HOLDER);
 
     @Nullable
     private TickableSubscription autoIOSubs;

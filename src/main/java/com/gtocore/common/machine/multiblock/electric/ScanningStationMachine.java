@@ -2,63 +2,43 @@ package com.gtocore.common.machine.multiblock.electric;
 
 import com.gtocore.common.machine.multiblock.part.ScanningHolderMachine;
 
+import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
+import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.RecipeRunner;
+
 import com.gregtechceu.gtceu.api.capability.IOpticalComputationProvider;
 import com.gregtechceu.gtceu.api.capability.IOpticalComputationReceiver;
 import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.CWURecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDisplayUIMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockDisplayText;
-import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
-import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
-import com.gregtechceu.gtceu.api.recipe.ActionResult;
-import com.gregtechceu.gtceu.api.recipe.GTRecipe;
-import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ScanningStationMachine extends WorkableElectricMultiblockMachine
-                                    implements IOpticalComputationReceiver, IDisplayUIMachine {
+public class ScanningStationMachine extends ElectricMultiblockMachine implements IOpticalComputationReceiver, IDisplayUIMachine {
 
     @Override
     public IOpticalComputationProvider getComputationProvider() {
         return computationProvider;
     }
 
-    public ScanningHolderMachine getObjectHolder() {
-        return objectHolder;
-    }
-
     private IOpticalComputationProvider computationProvider;
     private ScanningHolderMachine objectHolder;
 
-    public ScanningStationMachine(IMachineBlockEntity holder, Object... args) {
-        super(holder, args);
-    }
-
-    @Override
-    protected RecipeLogic createRecipeLogic(Object... args) {
-        return new ScanningStationRecipeLogic(this);
-    }
-
-    @Override
-    public ScanningStationRecipeLogic getRecipeLogic() {
-        return (ScanningStationRecipeLogic) super.getRecipeLogic();
+    public ScanningStationMachine(IMachineBlockEntity holder) {
+        super(holder);
     }
 
     @Override
@@ -124,112 +104,43 @@ public class ScanningStationMachine extends WorkableElectricMultiblockMachine
                 .addProgressLineOnlyPercent(recipeLogic.getProgressPercent());
     }
 
-    public static class ScanningStationRecipeLogic extends RecipeLogic {
+    @Override
+    public boolean matchRecipe(Recipe recipe) {
+        return RecipeRunner.matchRecipeInput(this, recipe);
+    }
 
-        public ScanningStationRecipeLogic(ScanningStationMachine metaTileEntity) {
-            super(metaTileEntity);
+    @Override
+    public boolean handleRecipeIO(Recipe originalRecipe, IO io) {
+        if (io == IO.IN) {
+            objectHolder.setLocked(true);
+            return true;
         }
 
-        @NotNull
-        @Override
-        public ScanningStationMachine getMachine() {
-            return (ScanningStationMachine) super.getMachine();
+        if (getRecipeLogic().getLastRecipe() == null) {
+            objectHolder.setLocked(false);
+            return true;
         }
 
-        // 跳过配方输出检测
-        @Override
-        protected ActionResult matchRecipe(GTRecipe recipe) {
-            var match = matchRecipeNoOutput(recipe);
-            if (!match.isSuccess()) return match;
-
-            return matchTickRecipeNoOutput(recipe);
+        var catalyst = getRecipeLogic().getLastRecipe().getInputContents(ItemRecipeCapability.CAP);
+        if (ItemRecipeCapability.CAP.of(catalyst.get(0).content).getItems()[0].getItem() != objectHolder.getCatalystItem(false).getItem()) {
+            ItemStack hold = objectHolder.getHeldItem(true);
+            objectHolder.setHeldItem(objectHolder.getCatalystItem(true));
+            objectHolder.setCatalystItem(hold);
+            objectHolder.setLocked(false);
+            return true;
         }
 
-        protected ActionResult matchRecipeNoOutput(GTRecipe recipe) {
-            if (!machine.hasCapabilityProxies()) return ActionResult.FAIL_NO_CAPABILITIES;
-            return RecipeHelper.handleRecipe(machine, recipe, IO.IN, recipe.inputs, Collections.emptyMap(), false,
-                    true);
+        objectHolder.setHeldItem(ItemStack.EMPTY);
+        ItemStack outputItem = ItemStack.EMPTY;
+        var contents = getRecipeLogic().getLastRecipe().getOutputContents(ItemRecipeCapability.CAP);
+        if (!contents.isEmpty()) {
+            outputItem = ItemRecipeCapability.CAP.of(contents.get(0).content).getItems()[0];
+        }
+        if (!outputItem.isEmpty()) {
+            objectHolder.setDataItem(outputItem);
         }
 
-        protected ActionResult matchTickRecipeNoOutput(GTRecipe recipe) {
-            if (recipe.hasTick()) {
-                if (!machine.hasCapabilityProxies()) return ActionResult.FAIL_NO_CAPABILITIES;
-                return RecipeHelper.handleRecipe(machine, recipe, IO.IN, recipe.tickInputs, Collections.emptyMap(),
-                        false, true);
-            }
-            return ActionResult.SUCCESS;
-        }
-
-        @Override
-        public boolean checkMatchedRecipeAvailable(GTRecipe match) {
-            var modified = machine.fullModifyRecipe(match);
-            if (modified != null) {
-                // What is the point of this
-                if (!modified.inputs.containsKey(CWURecipeCapability.CAP) &&
-                        !modified.tickInputs.containsKey(CWURecipeCapability.CAP)) {
-                    return true;
-                }
-                var recipeMatch = checkRecipe(modified);
-                if (recipeMatch.isSuccess()) {
-                    setupRecipe(modified);
-                } else {
-                    setWaiting(recipeMatch.reason());
-                }
-                if (lastRecipe != null && getStatus() == Status.WORKING) {
-                    lastOriginRecipe = match;
-                    lastFailedMatches = null;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // 处理配方输入输出
-        @Override
-        protected ActionResult handleRecipeIO(GTRecipe originalRecipe, IO io) {
-            if (io == IO.IN) {
-                // 锁定扫描部件
-                ScanningHolderMachine holder = getMachine().getObjectHolder();
-                holder.setLocked(true);
-                return ActionResult.SUCCESS;
-            }
-
-            ScanningHolderMachine holder = getMachine().getObjectHolder();
-            if (lastRecipe == null) {
-                holder.setLocked(false);
-                return ActionResult.SUCCESS;
-            }
-
-            var catalyst = lastRecipe.getInputContents(ItemRecipeCapability.CAP);
-            if (ItemRecipeCapability.CAP.of(catalyst.get(0).content).getItems()[0].getItem() != holder.getCatalystItem(false).getItem()) {
-                ItemStack hold = holder.getHeldItem(true);
-                holder.setHeldItem(holder.getCatalystItem(true));
-                holder.setCatalystItem(hold);
-                holder.setLocked(false);
-                return ActionResult.SUCCESS;
-            }
-
-            holder.setHeldItem(ItemStack.EMPTY);
-            ItemStack outputItem = ItemStack.EMPTY;
-            var contents = lastRecipe.getOutputContents(ItemRecipeCapability.CAP);
-            if (!contents.isEmpty()) {
-                outputItem = ItemRecipeCapability.CAP.of(contents.get(0).content).getItems()[0];
-            }
-            if (!outputItem.isEmpty()) {
-                holder.setDataItem(outputItem);
-            }
-
-            // 解锁扫描部件
-            holder.setLocked(false);
-            return ActionResult.SUCCESS;
-        }
-
-        @Override
-        protected ActionResult handleTickRecipeIO(GTRecipe recipe, IO io) {
-            if (io != IO.OUT) {
-                return super.handleTickRecipeIO(recipe, io);
-            }
-            return ActionResult.SUCCESS;
-        }
+        objectHolder.setLocked(false);
+        return true;
     }
 }

@@ -5,15 +5,11 @@ import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.ItemUtils;
 
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
-import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
-import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
@@ -27,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -44,9 +39,8 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
     protected Recipe getRealRecipe(@NotNull Recipe recipe) {
         Ingredient[] recipeIngredients = getRecipeIngredients(recipe);
         int size = recipeIngredients.length;
-        if (!hasSufficientStackTransfers(this, size)) return null;
-        Ingredient[] matchIngredients = getMatchIngredients(recipeIngredients);
-        if (!validateIngredientStacks(this, size, matchIngredients)) {
+        if (itemStackTransfers.size() < size) return null;
+        if (!validateIngredientStacks(this, size, getMatchIngredients(recipeIngredients))) {
             setIdleReason(IdleReason.ORDERED);
             return null;
         }
@@ -60,20 +54,12 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
      * @return 一个包含配方所需原料的Ingredient数组
      */
     private static Ingredient[] getRecipeIngredients(GTRecipe recipe) {
-        return recipe.inputs.get(ItemRecipeCapability.CAP).stream()
-                .map(i -> FastSizedIngredient.getInner(ItemRecipeCapability.CAP.of(i.getContent())))
-                .toArray(Ingredient[]::new);
-    }
-
-    /**
-     * 检查高级总装线机器的物品堆叠转移数是否满足指定的最小数量。
-     *
-     * @param lineMachine 高级总装线机器对象。
-     * @param size        要求的最小物品堆叠转移数。
-     * @return 如果物品堆叠转移数大于或等于指定的数量，则返回 true；否则返回 false。
-     */
-    private static boolean hasSufficientStackTransfers(AdvancedAssemblyLineMachine lineMachine, int size) {
-        return lineMachine.itemStackTransfers.size() >= size;
+        var inputs = recipe.inputs.get(ItemRecipeCapability.CAP);
+        Ingredient[] ingredients = new Ingredient[inputs.size()];
+        for (int i = 0; i < inputs.size(); i++) {
+            ingredients[i] = (Ingredient) inputs.get(i).getContent();
+        }
+        return ingredients;
     }
 
     /**
@@ -86,7 +72,7 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
     private static Ingredient[] getMatchIngredients(Ingredient[] recipeIngredients) {
         int size = recipeIngredients.length;
         Ingredient[] matchIngredients = new Ingredient[size];
-        ItemStack recipeStack = ItemUtils.getFirst(recipeIngredients[0]);
+        ItemStack recipeStack = ItemUtils.getFirstSized(recipeIngredients[0]);
         matchIngredients[0] = recipeIngredients[0];
 
         for (int i = 1; i < size; i++) {
@@ -97,7 +83,7 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
             } else {
                 matchIngredients[i] = currentIngredient;
             }
-            recipeStack = ItemUtils.getFirst(currentIngredient);
+            recipeStack = ItemUtils.getFirstSized(currentIngredient);
         }
         return matchIngredients;
     }
@@ -111,11 +97,11 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
      * @return 如果所有配料堆栈匹配则返回true，否则返回false
      */
     private static boolean validateIngredientStacks(AdvancedAssemblyLineMachine lineMachine, int size, Ingredient[] matchIngredients) {
+        Set<Item> itemSet = new ObjectOpenHashSet<>();
         for (int i = 0; i < size; i++) {
             Ingredient currentIngredient = matchIngredients[i];
             if (currentIngredient.isEmpty()) continue;
-            CustomItemStackHandler storage = lineMachine.itemStackTransfers.get(i);
-            if (!isValidStorage(storage, currentIngredient)) return false;
+            if (!isValidStorage(itemSet, lineMachine.itemStackTransfers.get(i), currentIngredient)) return false;
         }
         return true;
     }
@@ -127,10 +113,9 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
      * @param currentIngredient 当前的成分
      * @return 如果存储中的所有物品相同并且匹配当前成分，则返回true，否则返回false
      */
-    private static boolean isValidStorage(CustomItemStackHandler storage, Ingredient currentIngredient) {
-        Set<Item> itemSet = new ObjectOpenHashSet<>();
+    private static boolean isValidStorage(Set<Item> itemSet, CustomItemStackHandler storage, Ingredient currentIngredient) {
         ItemStack stack = ItemStack.EMPTY;
-
+        itemSet.clear();
         var slots = storage.getSlots();
         for (int j = 0; j < slots; j++) {
             ItemStack item = storage.getStackInSlot(j);
@@ -162,7 +147,8 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
         }
     }
 
-    public static Comparator<IMultiPart> partSorter(MultiblockControllerMachine mc) {
-        return Comparator.comparing(p -> p.self().getPos(), RelativeDirection.RIGHT.getSorter(mc.getFrontFacing(), mc.getUpwardsFacing(), mc.isFlipped()));
+    @Override
+    public boolean allowCircuitSlots() {
+        return false;
     }
 }

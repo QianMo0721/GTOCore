@@ -1,12 +1,14 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtolib.api.machine.feature.IMEPartMachine;
+import com.gtolib.api.machine.feature.multiblock.IExtendedRecipeCapabilityHolder;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder;
@@ -20,6 +22,7 @@ import appeng.api.networking.security.IActionSource;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -27,35 +30,39 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class MEBusPartMachine extends TieredIOPartMachine implements IMEPartMachine, IDistinctPart, IMachineLife {
+abstract class MEPartMachine extends TieredIOPartMachine implements IMEPartMachine, IDistinctPart, IMachineLife {
 
-    static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(MEBusPartMachine.class, TieredIOPartMachine.MANAGED_FIELD_HOLDER);
+    static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
+            MEPartMachine.class, TieredIOPartMachine.MANAGED_FIELD_HOLDER);
+
+    static final int CONFIG_SIZE = 16;
+
     @Persisted
     private final GridNodeHolder nodeHolder;
+
     @DescSynced
     boolean isOnline;
+
     final IActionSource actionSource;
 
     @Persisted
     protected boolean isDistinct = false;
 
-    MEBusPartMachine(IMachineBlockEntity holder, IO io) {
+    MEPartMachine(IMachineBlockEntity holder, IO io) {
         super(holder, GTValues.LuV, io);
-        this.nodeHolder = createNodeHolder();
+        this.nodeHolder = new GridNodeHolder(this);
         this.actionSource = IActionSource.ofMachine(nodeHolder.getMainNode()::getNode);
     }
 
-    private GridNodeHolder createNodeHolder() {
-        return new GridNodeHolder(this);
-    }
-
     @Override
-    public IItemHandlerModifiable getItemHandlerCap(Direction side, boolean useCoverCapability) {
+    @Nullable
+    public IItemHandlerModifiable getItemHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
         return null;
     }
 
     @Override
-    public IFluidHandlerModifiable getFluidHandlerCap(Direction side, boolean useCoverCapability) {
+    @Nullable
+    public IFluidHandlerModifiable getFluidHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
         return null;
     }
 
@@ -84,6 +91,15 @@ public abstract class MEBusPartMachine extends TieredIOPartMachine implements IM
     }
 
     @Override
+    public void onPaintingColorChanged(int color) {
+        for (var c : getControllers()) {
+            if (c instanceof IExtendedRecipeCapabilityHolder recipeCapabilityHolder) {
+                recipeCapabilityHolder.arrangeDistinct();
+            }
+        }
+    }
+
+    @Override
     public boolean isDistinct() {
         return isDistinct;
     }
@@ -91,7 +107,12 @@ public abstract class MEBusPartMachine extends TieredIOPartMachine implements IM
     @Override
     public void setDistinct(boolean isDistinct) {
         this.isDistinct = isDistinct;
-        getHandlerList().setDistinctAndNotify(isDistinct);
+        getHandlerList().setDistinct(isDistinct);
+        for (IMultiController controller : getControllers()) {
+            if (controller instanceof IExtendedRecipeCapabilityHolder recipeHolder) {
+                recipeHolder.arrangeDistinct();
+            }
+        }
     }
 
     public void setOnline(final boolean isOnline) {

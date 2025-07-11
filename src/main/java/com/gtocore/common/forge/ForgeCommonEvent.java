@@ -268,9 +268,7 @@ public final class ForgeCommonEvent {
             }
             if (!GTOConfig.INSTANCE.dev) player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
             if (player instanceof IEnhancedPlayer enhancedPlayer) {
-                final var data = new CompoundTag();
-                data.putUUID(ServerUtils.IDENTIFIER_KEY, ServerUtils.getServerIdentifier());
-                ServerMessage.sendData(player.getServer(), player, "loggedIn", data);
+                ServerMessage.send(player.getServer(), player, "loggedIn", buf -> buf.writeUUID(ServerUtils.getServerIdentifier()));
                 enhancedPlayer.getPlayerData().setDrift(enhancedPlayer.getPlayerData().disableDrift);
             }
         }

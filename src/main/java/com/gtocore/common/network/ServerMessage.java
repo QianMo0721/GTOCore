@@ -8,54 +8,56 @@ import com.gtolib.GTOCore;
 import com.gtolib.api.misc.PlanetManagement;
 import com.gtolib.api.player.organ.capability.OrganCapability;
 import com.gtolib.mixin.BookContentResourceListenerLoaderAccessor;
-import com.gtolib.utils.ServerUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import dev.emi.emi.runtime.EmiPersistentData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
+import java.util.function.Consumer;
+
 public final class ServerMessage {
 
     public static void sendData(MinecraftServer server, @Nullable ServerPlayer player, String channel, @Nullable CompoundTag data) {
+        send(server, player, channel, buf -> buf.writeNbt(data));
+    }
+
+    public static void send(MinecraftServer server, @Nullable ServerPlayer player, String channel, @NotNull Consumer<FriendlyByteBuf> consumer) {
+        var message = new FromServerMessage(channel, consumer);
         if (player != null) {
-            new FromServerMessage(channel, data).sendTo(player);
+            message.sendTo(player);
         } else {
-            new FromServerMessage(channel, data).sendToAll(server);
+            message.sendToAll(server);
         }
     }
 
     public static void disableDrift(ServerPlayer serverPlayer, boolean drift) {
-        CompoundTag data = new CompoundTag();
-        data.putBoolean("disableDrift", drift);
-        sendData(serverPlayer.server, serverPlayer, "disableDrift", data);
+        send(serverPlayer.server, serverPlayer, "disableDrift", buf -> buf.writeBoolean(drift));
     }
 
     public static void planetUnlock(ServerPlayer serverPlayer, ResourceLocation planet) {
-        CompoundTag data = new CompoundTag();
-        data.putString("planet", planet.toString());
-        sendData(serverPlayer.server, serverPlayer, "planetUnlock", data);
+        send(serverPlayer.server, serverPlayer, "planetUnlock", buf -> buf.writeResourceLocation(planet));
     }
 
     public static void organCapAsync(ServerPlayer serverPlayer, CompoundTag tag) { // ServerToClient 全量同步
         sendData(serverPlayer.server, serverPlayer, "organCapAsync", tag);
     }
 
-    static void handle(String channel, @Nullable Player player, CompoundTag data) {
+    static void handle(String channel, @Nullable Player player, FriendlyByteBuf data) {
         if (player == null) return;
         switch (channel) {
-            case "planetUnlock" -> {
-                ResourceLocation planet = new ResourceLocation(data.getString("planet"));
-                PlanetManagement.clientUnlock(planet);
-            }
-            case "disableDrift" -> ClientCache.disableDrift = data.getBoolean("disableDrift");
+            case "planetUnlock" -> PlanetManagement.clientUnlock(data.readResourceLocation());
+            case "disableDrift" -> ClientCache.disableDrift = data.readBoolean();
+            case "organCapAsync" -> OrganCapability.of(player).deserializeNBT(data.readNbt());
             case "loggedIn" -> {
                 ClientCache.UNLOCKED_PLANET.clear();
                 if (Minecraft.getInstance().level != null && !ClientCache.initializedBook) {
@@ -67,7 +69,7 @@ public final class ServerMessage {
                     thread.setDaemon(true);
                     thread.start();
                 }
-                ClientCache.SERVER_IDENTIFIER = data.getUUID(ServerUtils.IDENTIFIER_KEY);
+                ClientCache.SERVER_IDENTIFIER = data.readUUID();
                 if (!GTOConfig.INSTANCE.emiGlobalFavorites && EmiPersist.needsRefresh) {
                     // emi has loaded before we receive SERVER_IDENTIFIER, reload it.
                     EmiPersistentData.load();
@@ -75,7 +77,6 @@ public final class ServerMessage {
                     EmiPersist.needsRefresh = false;
                 }
             }
-            case "organCapAsync" -> OrganCapability.of(player).deserializeNBT(data);
         }
     }
 }

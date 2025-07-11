@@ -38,12 +38,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class MEInputBusPartMachine extends MEBusPartMachine implements IDataStickInteractable {
+public class MEInputBusPartMachine extends MEPartMachine implements IDataStickInteractable {
 
     static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
-            MEInputBusPartMachine.class, MEBusPartMachine.MANAGED_FIELD_HOLDER);
-
-    final static int CONFIG_SIZE = 16;
+            MEInputBusPartMachine.class, MEPartMachine.MANAGED_FIELD_HOLDER);
 
     private TickableSubscription autoIOSubs;
 
