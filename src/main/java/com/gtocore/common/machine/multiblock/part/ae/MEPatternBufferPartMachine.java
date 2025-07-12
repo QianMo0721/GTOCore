@@ -553,10 +553,12 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachine<MEPatternBu
             }
         }
 
+        @Override
         public void setOnContentsChanged(final Runnable onContentsChanged) {
             this.onContentsChanged = onContentsChanged;
         }
 
+        @Override
         public Runnable getOnContentsChanged() {
             return this.onContentsChanged;
         }

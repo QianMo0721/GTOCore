@@ -265,6 +265,7 @@ public final class TurbineMachine extends ElectricMultiblockMachine {
         return TurbineMachine.highSpeedModeMachineFault;
     }
 
+    @Override
     public int getTier() {
         return this.tier;
     }
