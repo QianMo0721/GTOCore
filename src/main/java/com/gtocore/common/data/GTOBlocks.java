@@ -3,7 +3,6 @@ package com.gtocore.common.data;
 import com.gtocore.common.block.*;
 
 import com.gtolib.GTOCore;
-import com.gtolib.api.lang.CNEN;
 import com.gtolib.api.registries.GTORegistration;
 import com.gtolib.utils.RLUtils;
 
