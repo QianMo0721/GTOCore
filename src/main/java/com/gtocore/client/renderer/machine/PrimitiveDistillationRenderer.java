@@ -127,7 +127,7 @@ public class PrimitiveDistillationRenderer extends WorkableCasingMachineRenderer
                         false)));
     }
 
-    private BakedQuad shiftQuad(BakedQuad quad) {
+    private static BakedQuad shiftQuad(BakedQuad quad) {
         Quad shiftedQuad = Quad.from(quad);
         for (int i = 0; i < 4; i++) {
             var pos = shiftedQuad.getVert(i);
