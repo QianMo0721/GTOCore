@@ -99,7 +99,7 @@ public final class GTAEMachines {
             .renderer(() -> new OverlayTieredMachineRenderer(UV, GTCEu.id("block/machine/part/me_pattern_buffer")))
             .register();
 
-    public static final MachineDefinition ME_EXTEND_PATTERN_BUFFER_ULTRA = machine("me_extend_pattern_buffer_ultra", "ME扩展样板总成Ultra", h -> new MEPatternBufferPartMachineKt(h, 324))
+    public static final MachineDefinition ME_EXTEND_PATTERN_BUFFER_ULTRA = machine("me_extend_pattern_buffer_ultra", "ME扩展样板总成 Ultra", h -> new MEPatternBufferPartMachineKt(h, 324))
             .langValue("ME Extend Pattern Buffer Ultra")
             .tier(UHV)
             .allRotation()

@@ -59,7 +59,7 @@ fun LayoutBuilder<*>.textBlock(textSupplier: Supplier<Component>, tab: Int = 0, 
 
         override fun initWidget() {
             super.initWidget()
-            updateSize()
+            if (isRemote) updateSize()
         }
 
         private fun updateSize() {
