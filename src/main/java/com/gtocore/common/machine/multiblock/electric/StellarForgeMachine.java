@@ -38,6 +38,8 @@ public final class StellarForgeMachine extends TierCasingMultiblockMachine imple
     @Persisted
     private int pressure;
 
+    private int consecutiveRecipes;
+
     public StellarForgeMachine(IMachineBlockEntity holder) {
         super(holder, STELLAR_CONTAINMENT_TIER);
     }
@@ -60,8 +62,9 @@ public final class StellarForgeMachine extends TierCasingMultiblockMachine imple
     @Nullable
     @Override
     protected Recipe getRealRecipe(@NotNull Recipe recipe) {
+        consecutiveRecipes++;
         recipe = RecipeModifierFunction.laserLossOverclocking(this, recipe);
-        if (recipe != null && getRecipeLogic().getConsecutiveRecipes() > 1) {
+        if (recipe != null && consecutiveRecipes > 1) {
             recipe.duration = Math.max(recipe.duration / 2, 1);
         }
         return recipe;
