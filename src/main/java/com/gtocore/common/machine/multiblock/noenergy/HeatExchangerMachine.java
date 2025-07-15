@@ -70,7 +70,7 @@ public final class HeatExchangerMachine extends NoEnergyMultiblockMachine implem
     public void onRecipeFinish() {
         super.onRecipeFinish();
         if (count != 0) {
-            if (getRecipeLogic().getConsecutiveRecipes() > 4) {
+            if (getRecipeLogic().getTotalContinuousRunningTime() > 800) {
                 if (water) {
                     outputFluid(HighPressureSteam, count);
                 } else {

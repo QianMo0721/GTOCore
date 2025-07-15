@@ -693,7 +693,7 @@ final class AssemblyLine {
                 .save();
 
         ASSEMBLY_LINE_RECIPES.builder("me_extend_pattern_buffer_ultra")
-                .inputItems(GTMachines.DUAL_IMPORT_HATCH[UV], 1)
+                .inputItems(GTMachines.DUAL_IMPORT_HATCH[UHV], 1)
                 .inputItems(GTAEMachines.ME_EXTEND_PATTERN_BUFFER, 4)
                 .inputItems(GTOItems.CELL_COMPONENT_16M.asItem())
                 .inputItems("expatternprovider:ex_pattern_provider", 16)
