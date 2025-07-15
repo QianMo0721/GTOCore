@@ -120,11 +120,11 @@ fun LayoutBuilder<*>.multiPage(width: Int, height: Int, style: (Style.() -> Unit
     val widget = object : SyncWidget(0, 0, width, height), MultiPageVScroll {
         val currentPage = syncInt({ pageSelector.asInt }, -1, pageSelector.asInt).apply {
             init = {
-                println("page init: $lastValue, isRemote: $isRemote")
+                // println("page init: $lastValue, isRemote: $isRemote")
                 if (!isRemote)refresh()
             }
             update = { old, new ->
-                println("page update: $old -> $new, isRemote: $isRemote")
+                // println("page update: $old -> $new, isRemote: $isRemote")
                 runOnUpdate.run()
                 refresh()
             }
