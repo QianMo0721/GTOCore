@@ -1,7 +1,9 @@
-package com.gtocore.api.gui.graphic.helper
+package com.gtocore.api.gui.helper
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
 
 import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
 
@@ -16,6 +18,7 @@ object ProgressBarHelper {
      * 绘制带文本的进度条
      * @return 实际绘制尺寸 (width, height)
      */
+    @OnlyIn(Dist.CLIENT)
     fun drawProgressBarWithText(graphics: GuiGraphics, progress: Int, totalWidth: Int, totalHeight: Int = 7, text: String, borderWidth: Int = 1, progressColorStyle: ProgressBarColorStyle = ProgressBarColorStyle.DEFAULT_GREEN, backgroundColor: Int = 0xFF404040.toInt(), borderColor: Int = 0xFF000000.toInt(), textColor: Int = 0xFFFFFFFF.toInt()): Pair<Int, Int> {
         val safeProgress = progress.coerceIn(0, 100)
         val progressFloat = safeProgress / 100f
@@ -130,7 +133,7 @@ sealed class ProgressBarColorStyle {
             ),
         )
         val EXPERIENCE_GRADIENT = Gradient(0xFF7FFF00.toInt(), 0xFFFFD700.toInt())
-        val DEFAULT_GREEN = Solid(0xFF00FF00.toInt())
-        val DEFAULT_RED = Solid(0xFFFF0000.toInt())
+        val DEFAULT_GREEN = Solid(0xFF2ecc71.toInt())
+        val DEFAULT_RED = Solid(0xFFe74c3c.toInt())
     }
 }

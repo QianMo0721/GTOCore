@@ -1,6 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae
 
-import com.gtocore.api.gui.graphic.helper.ProgressBarColorStyle
+import com.gtocore.api.gui.helper.ProgressBarColorStyle
 import com.gtocore.api.gui.ktflexible.progressBar
 import com.gtocore.api.gui.ktflexible.textBlock
 

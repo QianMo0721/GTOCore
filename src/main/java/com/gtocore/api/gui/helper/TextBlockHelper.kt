@@ -1,11 +1,12 @@
-package com.gtocore.api.gui.graphic.helper
+package com.gtocore.api.gui.helper
 
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
-
-import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
+
+import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
 
 /**
  * 文本块绘制辅助工具
@@ -82,7 +83,7 @@ object TextBlockHelper {
     /**
      * 文本换行处理
      */
-    private fun wrapText(text: String, font: net.minecraft.client.gui.Font, maxLineWidth: Int): List<String> {
+    private fun wrapText(text: String, font: Font, maxLineWidth: Int): List<String> {
         if (maxLineWidth <= 0) return listOf(text)
         return text.split(" ")
             .fold(mutableListOf<String>() to "") { (lines, currentLine), word ->
@@ -92,7 +93,7 @@ object TextBlockHelper {
             }
     }
 
-    private fun processWord(lines: MutableList<String>, currentLine: String, word: String, font: net.minecraft.client.gui.Font, maxLineWidth: Int): Pair<MutableList<String>, String> {
+    private fun processWord(lines: MutableList<String>, currentLine: String, word: String, font: Font, maxLineWidth: Int): Pair<MutableList<String>, String> {
         val testLine = if (currentLine.isEmpty()) word else "$currentLine $word"
         return when {
             font.width(testLine) <= maxLineWidth -> lines to testLine
@@ -114,7 +115,7 @@ object TextBlockHelper {
         else -> lines
     }
 
-    private fun String.splitByWidth(font: net.minecraft.client.gui.Font, maxWidth: Int): List<String> = generateSequence(this) { remaining ->
+    private fun String.splitByWidth(font: Font, maxWidth: Int): List<String> = generateSequence(this) { remaining ->
         when {
             remaining.isEmpty() -> null
             else -> {
@@ -127,7 +128,7 @@ object TextBlockHelper {
         remaining.take(cutIndex)
     }.toList()
 
-    private fun findCutIndex(text: String, font: net.minecraft.client.gui.Font, maxWidth: Int): Int = (1..text.length)
+    private fun findCutIndex(text: String, font: Font, maxWidth: Int): Int = (1..text.length)
         .takeWhile { font.width(text.substring(0, it)) <= maxWidth }
         .lastOrNull() ?: 1
     // endregion

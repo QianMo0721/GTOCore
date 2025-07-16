@@ -167,7 +167,7 @@ object OrganService : IOrganService {
                 if (currentCount > 40.0f) {
                     player.server.tell(TickTask(1, player::kill))
                     player.server.playerList.broadcastSystemMessage(customComponent, true)
-                    cache.floatCache?.remove("try_attack_count")
+                    cache.floatCache.put("try_attack_count", 0.0f)
                 } else {
                     cache.floatCache["try_attack_count"] = currentCount
                 }
