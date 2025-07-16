@@ -630,26 +630,26 @@ public final class FuelRecipe {
 
         NAQUADAH_REACTOR.recipeBuilder("naquadah")
                 .inputFluids(Naquadah.getFluid(1))
-                .duration(60)
-                .EUt(-32768)
+                .duration(240)
+                .EUt(-8192)
                 .save();
 
         NAQUADAH_REACTOR.recipeBuilder("enriched_naquadah")
                 .inputFluids(NaquadahEnriched.getFluid(1))
-                .duration(90)
-                .EUt(-32768)
+                .duration(360)
+                .EUt(-8192)
                 .save();
 
         NAQUADAH_REACTOR.recipeBuilder("naquadah_fuel")
                 .inputFluids(GTOMaterials.NaquadahFuel.getFluid(1))
-                .duration(546)
-                .EUt(-32768)
+                .duration(2184)
+                .EUt(-8192)
                 .save();
 
         NAQUADAH_REACTOR.recipeBuilder("enriched_naquadah_fuel")
                 .inputFluids(GTOMaterials.EnrichedNaquadahFuel.getFluid(1))
-                .duration(819)
-                .EUt(-32768)
+                .duration(3276)
+                .EUt(-8192)
                 .save();
 
         LARGE_NAQUADAH_REACTOR_RECIPES.recipeBuilder("naquadah_fuel")

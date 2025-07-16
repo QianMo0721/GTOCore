@@ -242,8 +242,8 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
     var page = 0
     lateinit var freshWidgetGroup: FreshWidgetGroupAbstract
     override fun createUIWidget(): Widget {
-        freshWidgetGroup = rootFresh(176, 166) {
-            val chunked: List<List<List<Int>>> = (0 until maxPatternCount).chunked(9).chunked(7)
+        freshWidgetGroup = rootFresh(176, 148) {
+            val chunked: List<List<List<Int>>> = (0 until maxPatternCount).chunked(9).chunked(6)
             vBox(width = availableWidth, style = { spacing = 3 }) {
                 hBox(height = 12, alwaysVerticalCenter = true) {
                     blank(width = 4)

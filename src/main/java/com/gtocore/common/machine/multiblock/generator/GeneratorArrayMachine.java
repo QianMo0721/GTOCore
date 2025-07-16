@@ -257,10 +257,6 @@ public final class GeneratorArrayMachine extends StorageMultiblockMachine implem
         return GeneratorArrayMachine.multiply;
     }
 
-    public static int getF_loss() {
-        return GeneratorArrayMachine.f_loss;
-    }
-
     @Override
     public void setWirelessEnergyContainerCache(final WirelessEnergyContainer WirelessEnergyContainerCache) {
         this.WirelessEnergyContainerCache = WirelessEnergyContainerCache;
