@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 
 import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.api.distmarker.OnlyIn
 
 /**
  * 文本块绘制辅助工具
@@ -14,6 +16,7 @@ object TextBlockHelper {
      * 绘制文本块
      * @return 实际绘制尺寸 (width, height)
      */
+    @OnlyIn(Dist.CLIENT)
     fun drawTextBlock(graphics: GuiGraphics, text: String, lineGap: Int = 1, scale: Float = 1f, color: Int = 0xFFFFFFFF.toInt(), maxWidth: Int = 40): Pair<Int, Int> {
         if (text.isEmpty()) return 0 to 0
         val textInfo = prepareTextInfo(text, maxWidth, lineGap)
@@ -24,6 +27,7 @@ object TextBlockHelper {
     /**
      * 计算文本块尺寸（不绘制）
      */
+    @OnlyIn(Dist.CLIENT)
     fun calculateTextBlockSize(text: String, lineGap: Int = 1, maxWidth: Int = 40): Pair<Int, Int> {
         if (text.isEmpty()) return 0 to 0
         return prepareTextInfo(text, maxWidth, lineGap).size
@@ -36,6 +40,7 @@ object TextBlockHelper {
     /**
      * 预处理文本信息（换行和尺寸）
      */
+    @OnlyIn(Dist.CLIENT)
     private fun prepareTextInfo(text: String, maxWidth: Int, lineGap: Int): TextInfo {
         val font = Minecraft.getInstance().font
         val wrappedLines = wrapText(text, font, maxWidth)
@@ -56,6 +61,7 @@ object TextBlockHelper {
     /**
      * 渲染文本行
      */
+    @OnlyIn(Dist.CLIENT)
     private fun renderTextLines(graphics: GuiGraphics, lines: List<String>, lineGap: Int, scale: Float, color: Int) {
         val font = Minecraft.getInstance().font
         val adjustedTextHeight = font.lineHeight - 2
