@@ -879,7 +879,7 @@ public final class GTORecipeTypes {
             .setMaxTooltips(4)
             .setSound(GTSoundEntries.COMPUTATION);
 
-    public static final RecipeType PRIMORDIAL_LOGIC_RECIPES = register("primordial_logic ", "基元推演", ELECTRIC)
+    public static final RecipeType PRIMORDIAL_LOGIC_RECIPES = register("primordial_logic", "基元推演", ELECTRIC)
             .setMaxIOSize(3, 6, 3, 0)
             .setProgressBar(GuiTextures.PROGRESS_BAR_ARROW, LEFT_TO_RIGHT)
             .setMaxTooltips(4)

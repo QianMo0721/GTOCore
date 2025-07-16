@@ -7,7 +7,6 @@ import com.gtocore.common.data.GTOEffects;
 import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.item.ItemMap;
 import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporterMachine;
-import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
 import com.gtocore.common.network.ServerMessage;
 import com.gtocore.common.saved.*;
 import com.gtocore.config.GTOConfig;
@@ -53,7 +52,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -285,19 +283,12 @@ public final class ForgeCommonEvent {
     }
 
     @SubscribeEvent
-    public static void onServerTickEvent(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            PerformanceMonitorMachine.observe = false;
-        }
-    }
-
-    @SubscribeEvent
     public static void onServerStoppingEvent(ServerStoppingEvent event) {
         ServerCache.observe = false;
     }
 
     @RegisterLanguage(valuePrefix = "gtocore.lang", en = "Channel mode command banned in expert", cn = "在专家模式下，频道模式命令被禁止")
-    public static final String CHANNEL_MODE_COMMAND_BANNED = "banned";
+    private static final String CHANNEL_MODE_COMMAND_BANNED = "banned";
 
     @SuppressWarnings("all")
     @SubscribeEvent
