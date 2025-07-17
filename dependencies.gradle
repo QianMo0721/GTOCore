@@ -1,14 +1,9 @@
 dependencies {
     compileOnly libs.jetbrains.annotations
 
-    jarJar("dev:ManaPeeper:1.4+1.20.1-forge")
-
     implementation("curse.maven:kotlin-for-forge-351264:5402061")
 
     modImplementation(jarJar("dev:gtolib:1.0"))
-
-    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.2-beta.4"))
-    implementation("com.github.bawnorton.mixinsquared:mixinsquared-neoforge:0.3.2-beta.4")
 
     api(annotationProcessor("io.github.llamalad7:mixinextras-common:$project.mixinextras_version"))
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
@@ -122,7 +117,7 @@ dependencies {
 
     jarJar(modImplementation("dev:gtceu-$project.minecraft_version:$project.gtceu_version"))
 
-    modImplementation("dev:gtmthings-1.4.9")
+    modImplementation("curse.maven:gtmthings-1104310:6725533")
 
     modImplementation("dev:Jade-1.20.1-Forge-11.13.1")
 

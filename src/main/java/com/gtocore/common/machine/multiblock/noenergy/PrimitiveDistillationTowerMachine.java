@@ -355,6 +355,11 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     }
 
     @Override
+    public Comparator<IMultiPart> getPartSorter() {
+        return Comparator.comparingInt(p -> p.self().getPos().getY());
+    }
+
+    @Override
     public void onStructureFormed() {
         super.onStructureFormed();
         int startY = getPos().getY() + 1;

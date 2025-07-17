@@ -45,8 +45,6 @@ import net.minecraft.world.level.material.Fluids;
 
 import appeng.core.definitions.AEBlocks;
 
-import java.util.Comparator;
-
 import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.*;
 import static com.gregtechceu.gtceu.api.pattern.Predicates.*;
 import static com.gregtechceu.gtceu.api.pattern.util.RelativeDirection.*;
@@ -85,7 +83,6 @@ public final class MultiBlockA {
                     .where('#', Predicates.air())
                     .where(' ', Predicates.any())
                     .build())
-            .partSorter(Comparator.comparingInt(a -> a.self().getPos().getY()))
             .workableCasingRenderer(GTOCore.id("block/casings/stainless_evaporation_casing"), GTCEu.id("block/multiblock/evaporation_plant"))
             .register();
 

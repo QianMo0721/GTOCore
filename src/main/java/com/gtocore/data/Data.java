@@ -3,7 +3,6 @@ package com.gtocore.data;
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOLoots;
 import com.gtocore.common.data.GTORecipeTypes;
-import com.gtocore.config.GTOConfig;
 import com.gtocore.data.recipe.*;
 import com.gtocore.data.recipe.classified.$ClassifiedRecipe;
 import com.gtocore.data.recipe.generated.*;
@@ -130,8 +129,11 @@ public final class Data {
         FunctionalStorage.init(consumer);
         $ClassifiedRecipe.init(consumer);
         Temporary.init();
-        if (GTOConfig.INSTANCE.dev) {
+        if (GTCEu.isDev()) {
             ScanningRecipes.init();
+            AnalyzeData.init();
+            AnalyzeRecipes.init();
+            DataGenerateRecipe.init();
         }
         if (GTCEu.isDev() || GTOCore.isSimple()) {
             SimpleModeRecipe.init();
