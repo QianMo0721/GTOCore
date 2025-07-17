@@ -5,7 +5,7 @@ import com.gtocore.client.renderer.item.OrderItemProviderRenderer;
 import com.gtocore.common.cover.PowerAmplifierCover;
 import com.gtocore.common.item.*;
 import com.gtocore.common.item.armor.SpaceArmorComponentItem;
-import com.gtocore.common.item.tools.GrassHarvesterBehaviour;
+import com.gtocore.common.item.misc.GrassHarvesterBehaviour;
 import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
@@ -56,7 +56,6 @@ import static com.gtolib.utils.register.ItemRegisterUtils.*;
 public final class GTOItems {
 
     public static void init() {
-        OrganItems.init();
         GTMaterials.Oxygen.getProperty(PropertyKey.FLUID).getStorage().store(FluidStorageKeys.GAS, ModFluids.OXYGEN, null);
         GTMaterials.Hydrogen.getProperty(PropertyKey.FLUID).getStorage().store(FluidStorageKeys.GAS, ModFluids.HYDROGEN, null);
         GTFluids.handleNonMaterialFluids(GTMaterials.Oil, ModFluids.OIL);

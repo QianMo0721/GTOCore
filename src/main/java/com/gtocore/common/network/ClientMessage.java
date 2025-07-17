@@ -4,7 +4,6 @@ import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 
 import com.gtolib.api.misc.PlanetManagement;
 import com.gtolib.api.player.IEnhancedPlayer;
-import com.gtolib.api.player.organ.capability.OrganCapability;
 import com.gtolib.utils.SortUtils;
 
 import com.gregtechceu.gtceu.api.gui.fancy.FancyMachineUIWidget;
@@ -44,7 +43,6 @@ public final class ClientMessage {
             case "key" -> KeyMessage.pressAction(serverPlayer, data.readVarInt());
             case "planetIsUnlocked" -> PlanetManagement.checkIsUnlocked(serverPlayer, data.readResourceLocation());
             case "shiftKeypress" -> IEnhancedPlayer.of(serverPlayer).getPlayerData().shiftState = data.readBoolean();
-            case "organCapAsync" -> OrganCapability.of(serverPlayer).deserializeNBT(data.readNbt());
             case "sortInventory" -> {
                 if (serverPlayer.containerMenu instanceof ModularUIContainer container) {
                     SortUtils.sort(container);

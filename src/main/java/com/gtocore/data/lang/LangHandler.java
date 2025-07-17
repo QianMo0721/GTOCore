@@ -28,8 +28,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Arrays;
 import java.util.Map;
 
-import static com.gtolib.api.player.organ.data.OrganValue.REGISTERY_ORGAN_BASE_SET;
-
 public final class LangHandler {
 
     private static final Map<String, CNEN> LANGS = new Object2ObjectOpenHashMap<>();
@@ -53,7 +51,6 @@ public final class LangHandler {
         GTOBedrockFluids.LANG.forEach((k, v) -> addCNEN("gtceu.jei.bedrock_fluid." + k, v));
         ItemRegisterUtils.LANG.forEach((k, v) -> addCN("item.gtocore." + k, v));
         BlockRegisterUtils.LANG.forEach((k, v) -> addCN("block.gtocore." + k, v));
-        REGISTERY_ORGAN_BASE_SET.forEach(organBase -> { if (organBase.getOrganFunctions() != null) organBase.getOrganFunctions().forEach(organFunction -> { if (organFunction != null) addCNEN(organFunction.getTranslateKey(), organFunction.getLang()); }); });
         GTOMachineBuilder.LANG.forEach(LangHandler::addCNEN);
         MultiblockBuilder.LANG.forEach(LangHandler::addCNEN);
         Tooltips.LANG.forEach(LangHandler::addCNEN);

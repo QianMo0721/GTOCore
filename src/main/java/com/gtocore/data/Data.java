@@ -129,7 +129,6 @@ public final class Data {
         ImmersiveAircraft.init(consumer);
         FunctionalStorage.init(consumer);
         $ClassifiedRecipe.init(consumer);
-        OrganRecipes.init(consumer);
         Temporary.init();
         if (GTOConfig.INSTANCE.dev) {
             ScanningRecipes.init();

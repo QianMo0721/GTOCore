@@ -7,14 +7,11 @@ import com.gtocore.api.gui.helper.ProgressBarHelper
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.inventory.tooltip.TooltipComponent
-
 class GTOProgressComponent(val percentage: Float, val text: String = "") :
     GTOComponent(height = 10, width = 150),
     TooltipComponent
 
 class GTOProgressClientComponent(data: GTOProgressComponent) : GTOClientTooltipComponent<GTOProgressComponent>(data) {
-    override fun getHeight() = data.height
-    override fun getWidth(p0: Font) = data.width
     override fun renderImage(font: Font, x: Int, y: Int, guiGraphics: GuiGraphics) {
         guiGraphics.pose().pushPose()
         guiGraphics.pose().translate(x.toDouble() - 1, y.toDouble(), 400.0)

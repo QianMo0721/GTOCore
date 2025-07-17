@@ -23,7 +23,7 @@ object GTOComponentHandler {
     fun onGatherTooltipComponents(event: RenderTooltipEvent.GatherComponents) {
         val itemStack = event.itemStack
         val components = mutableListOf<GTOProgressComponent>()
-        // 多步
+        // 多步合成的物品
         run {
             if (itemStack.hasTag()) {
                 val step = itemStack.tag?.getInt("current_craft_step") ?: return

@@ -1,4 +1,4 @@
-package com.gtocore.common.item.player.skill;
+package com.gtocore.common.item.misc;
 
 import com.gtolib.utils.StringUtils;
 

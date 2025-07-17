@@ -6,7 +6,6 @@ import com.gtocore.integration.emi.EmiPersist;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.misc.PlanetManagement;
-import com.gtolib.api.player.organ.capability.OrganCapability;
 import com.gtolib.mixin.BookContentResourceListenerLoaderAccessor;
 
 import net.minecraft.client.Minecraft;
@@ -57,7 +56,6 @@ public final class ServerMessage {
         switch (channel) {
             case "planetUnlock" -> PlanetManagement.clientUnlock(data.readResourceLocation());
             case "disableDrift" -> ClientCache.disableDrift = data.readBoolean();
-            case "organCapAsync" -> OrganCapability.of(player).deserializeNBT(data.readNbt());
             case "loggedIn" -> {
                 ClientCache.UNLOCKED_PLANET.clear();
                 if (Minecraft.getInstance().level != null && !ClientCache.initializedBook) {

@@ -1,4 +1,4 @@
-package com.gtocore.common.item.tools;
+package com.gtocore.common.item.misc;
 
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;
