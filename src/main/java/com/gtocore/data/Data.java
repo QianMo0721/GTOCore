@@ -133,6 +133,9 @@ public final class Data {
         Temporary.init();
         if (GTOConfig.INSTANCE.dev) {
             ScanningRecipes.init();
+            AnalyzeData.init();
+            AnalyzeRecipes.init();
+            DataGenerateRecipe.init();
         }
         if (GTCEu.isDev() || GTOCore.isSimple()) {
             SimpleModeRecipe.init();
