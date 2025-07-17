@@ -50,7 +50,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.*;
@@ -92,7 +91,6 @@ public final class MultiBlockC {
                             .or(blocks(GTOMachines.HEAT_SENSOR.getBlock()).setPreviewCount(1)))
                     .where(' ', air())
                     .build())
-            .partSorter(Comparator.comparingInt(p -> p.self().getPos().getY()))
             .renderer(PrimitiveDistillationRenderer::new)
             .register();
 
