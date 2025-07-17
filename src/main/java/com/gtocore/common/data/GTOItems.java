@@ -56,6 +56,7 @@ import static com.gtolib.utils.register.ItemRegisterUtils.*;
 public final class GTOItems {
 
     public static void init() {
+        GTOOrganItems.INSTANCE.init();
         GTMaterials.Oxygen.getProperty(PropertyKey.FLUID).getStorage().store(FluidStorageKeys.GAS, ModFluids.OXYGEN, null);
         GTMaterials.Hydrogen.getProperty(PropertyKey.FLUID).getStorage().store(FluidStorageKeys.GAS, ModFluids.HYDROGEN, null);
         GTFluids.handleNonMaterialFluids(GTMaterials.Oil, ModFluids.OIL);

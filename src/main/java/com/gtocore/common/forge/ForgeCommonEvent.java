@@ -10,6 +10,7 @@ import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporter
 import com.gtocore.common.network.ServerMessage;
 import com.gtocore.common.saved.*;
 import com.gtocore.config.GTOConfig;
+import com.gtocore.utils.OrganUtilsKt;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.Scanned;
@@ -103,6 +104,7 @@ public final class ForgeCommonEvent {
     @SubscribeEvent
     public static void onLivingJumpEvent(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && player.level() instanceof ServerLevel serverLevel) {
+            OrganUtilsKt.ktFreshOrganState(IEnhancedPlayer.of(player).getPlayerData());
             Optional.ofNullable(player.getEffect(GTOEffects.MYSTERIOUS_BOOST.get())).ifPresent(effect -> {
                 if (MetaMachine.getMachine(serverLevel, player.getOnPos()) instanceof WorkableTieredMachine machine && machine.getRecipeLogic().isWorking()) {
                     RecipeLogic recipeLogic = machine.getRecipeLogic();
@@ -268,6 +270,7 @@ public final class ForgeCommonEvent {
             if (player instanceof IEnhancedPlayer enhancedPlayer) {
                 ServerMessage.send(player.getServer(), player, "loggedIn", buf -> buf.writeUUID(ServerUtils.getServerIdentifier()));
                 enhancedPlayer.getPlayerData().setDrift(enhancedPlayer.getPlayerData().disableDrift);
+                OrganUtilsKt.ktFreshOrganState(enhancedPlayer.getPlayerData());
             }
         }
     }

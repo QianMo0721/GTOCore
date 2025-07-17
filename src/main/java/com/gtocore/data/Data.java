@@ -109,6 +109,7 @@ public final class Data {
         GCYRecipes.init(consumer);
         MachineRecipe.init(consumer);
         MiscRecipe.init(consumer);
+        OrganRecipes.INSTANCE.init(consumer);
         BotaniaRecipes.init(consumer);
         ArsNouveauRecipes.init(consumer);
         ManaRecipes.init(consumer);
