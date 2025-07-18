@@ -1,5 +1,6 @@
 package com.gtocore.client.forge;
 
+import com.gtocore.client.ClientCache;
 import com.gtocore.client.Tooltips;
 import com.gtocore.common.item.StructureDetectBehavior;
 import com.gtocore.common.item.StructureWriteBehavior;
@@ -49,6 +50,18 @@ public final class ForgeClientEvent {
 
     private static final String ITEM_PREFIX = "item." + GTOCore.MOD_ID;
     private static final String BLOCK_PREFIX = "block." + GTOCore.MOD_ID;
+
+    @SubscribeEvent
+    public static void onClientTickEvent(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            if (highlightingTime > 0) {
+                highlightingTime--;
+            }
+            if (ClientCache.highlightTime > 0) {
+                ClientCache.highlightTime--;
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onTooltipEvent(ItemTooltipEvent event) {
@@ -113,9 +126,6 @@ public final class ForgeClientEvent {
             ItemStack held = player.getMainHandItem();
             BlockPos[] poses;
             if (highlightingTime > 0) {
-                if (GTValues.CLIENT_TIME % 20 == 0) {
-                    highlightingTime--;
-                }
                 highlightSphere(camera, poseStack, highlightingPos, highlightingRadius);
             }
             if (GTOConfig.INSTANCE.dev && StructureWriteBehavior.isItem(held)) {

@@ -21,6 +21,8 @@ import com.gtolib.utils.register.MaterialsRegisterUtils;
 import com.gtolib.utils.register.RecipeTypeRegisterUtils;
 
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.api.pattern.MultiblockState;
+import com.gregtechceu.gtceu.api.pattern.error.PatternStringError;
 
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -246,6 +248,9 @@ public final class LangHandler {
         addCNEN("ftbultimine.shape.area", "不定形 (不连续)", "Shapeless (Area)");
 
         addCNEN("gtocore.source", "结构来源：%s", "Structure From: %s");
+
+        addCNEN(((PatternStringError) MultiblockState.UNLOAD_ERROR).translateKey, "区块未加载", "Chunk not loaded");
+        addCNEN(((PatternStringError) MultiblockState.UNINIT_ERROR).translateKey, "机器未初始化", "Machine not initialized");
     }
 
     public static void enInitialize(LanguageProvider provider) {
