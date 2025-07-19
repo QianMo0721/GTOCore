@@ -28,6 +28,7 @@ import appeng.items.parts.PartModels
 import appeng.parts.reporting.StorageMonitorPart
 import com.gtolib.utils.RLUtils
 import com.mojang.blaze3d.vertex.PoseStack
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 
 import kotlin.math.abs
 
@@ -43,7 +44,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     var lastReportedValue: Long = 0L
     var humanRate: String = "-"
 
-    private val historyData = mutableMapOf<Long, Long>()
+    private val historyData = Long2LongOpenHashMap()
     private var lastSecondValue: Long = 0L
     private var lastMinuteValue: Long = 0L
     private var lastHourValue: Long = 0L
@@ -231,7 +232,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
         val hasChanged = amount != lastValue
 
-        historyData[currentTick] = amount
+        historyData.put(currentTick, amount)
 
         updateReferenceData(currentTick)
         calculateChangeRate(currentTick)
@@ -261,7 +262,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
     private fun initializeHistoryData(currentTick: Long) {
         historyData.clear()
-        historyData[currentTick] = amount
+        historyData.put(currentTick, amount)
         lastSecondValue = amount
         lastMinuteValue = amount
         lastHourValue = amount
@@ -275,7 +276,11 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
     private fun cleanOldHistoryData(currentTick: Long) {
         val oneHourAgo = currentTick - (20 * 60 * 60) - 200
-        historyData.keys.removeIf { it < oneHourAgo }
+        val it = historyData.long2LongEntrySet().fastIterator()
+        while (it.hasNext()) {
+            val e = it.next()
+            if (e.longValue < oneHourAgo) it.remove()
+        }
     }
 
     private fun updateReferenceData(currentTick: Long) {
@@ -305,9 +310,9 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         }
     }
 
-    private fun findClosestHistoryData(targetTick: Long): Pair<Long, Long>? = historyData.entries
-        .minByOrNull { kotlin.math.abs(it.key - targetTick) }
-        ?.let { it.key to it.value }
+    private fun findClosestHistoryData(targetTick: Long): Pair<Long, Long>? = historyData.long2LongEntrySet()
+        .minByOrNull { abs(it.longKey - targetTick) }
+        ?.let { it.longKey to it.longValue }
 
     private fun calculateChangeRate(currentTick: Long) {
         val currentAmount = amount
@@ -322,7 +327,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                     } else {
                         val ratePerSecond = valueDiff.toDouble() / (timeDiff / 20.0)
                         val isNegative = ratePerSecond < 0
-                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(kotlin.math.abs(ratePerSecond).toLong(), AmountFormat.SLOT)} /s"
+                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(abs(ratePerSecond).toLong(), AmountFormat.SLOT)} /s"
                     }
                 } else {
                     humanRate = "－O－"
@@ -337,7 +342,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                     } else {
                         val ratePerMinute = valueDiff.toDouble() / (timeDiff / (20.0 * 60))
                         val isNegative = ratePerMinute < 0
-                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(kotlin.math.abs(ratePerMinute).toLong(), AmountFormat.SLOT)} /m"
+                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(abs(ratePerMinute).toLong(), AmountFormat.SLOT)} /m"
                     }
                 } else {
                     humanRate = "－O－"
@@ -352,7 +357,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                     } else {
                         val ratePerHour = valueDiff.toDouble() / (timeDiff / (20.0 * 60 * 60))
                         val isNegative = ratePerHour < 0
-                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(kotlin.math.abs(ratePerHour).toLong(), AmountFormat.SLOT)} /h"
+                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(abs(ratePerHour).toLong(), AmountFormat.SLOT)} /h"
                     }
                 } else {
                     humanRate = "－O－"

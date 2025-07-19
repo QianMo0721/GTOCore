@@ -6,7 +6,6 @@ import com.gtocore.common.cover.PowerAmplifierCover;
 import com.gtocore.common.item.*;
 import com.gtocore.common.item.armor.SpaceArmorComponentItem;
 import com.gtocore.common.item.misc.GrassHarvesterBehaviour;
-import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
@@ -63,7 +62,7 @@ public final class GTOItems {
         GTFluids.handleNonMaterialFluids(GTMaterials.Oil, ModFluids.OIL);
         GTFluids.handleNonMaterialFluids(GTMaterials.RocketFuel, () -> EIOFluids.ROCKET_FUEL.get().getSource());
 
-        if (GTOConfig.INSTANCE.dev) {
+        if (GTCEu.isDev()) {
             item("recipe_editor", "配方编辑器", ComponentItem::create)
                     .properties(p -> p.stacksTo(1))
                     .onRegister(attach(RecipeEditorBehavior.INSTANCE))

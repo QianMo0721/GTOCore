@@ -9,7 +9,6 @@ import com.gtocore.common.item.ItemMap;
 import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporterMachine;
 import com.gtocore.common.network.ServerMessage;
 import com.gtocore.common.saved.*;
-import com.gtocore.config.GTOConfig;
 import com.gtocore.utils.OrganUtilsKt;
 
 import com.gtolib.GTOCore;
@@ -266,7 +265,7 @@ public final class ForgeCommonEvent {
             } else {
                 Configurator.setRootLevel(org.apache.logging.log4j.Level.DEBUG);
             }
-            if (!GTOConfig.INSTANCE.dev) player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
+            if (!GTCEu.isDev()) player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
             if (player instanceof IEnhancedPlayer enhancedPlayer) {
                 ServerMessage.send(player.getServer(), player, "loggedIn", buf -> buf.writeUUID(ServerUtils.getServerIdentifier()));
                 enhancedPlayer.getPlayerData().setDrift(enhancedPlayer.getPlayerData().disableDrift);
