@@ -28,6 +28,7 @@ import appeng.items.parts.PartModels
 import appeng.parts.reporting.StorageMonitorPart
 import com.gtolib.utils.RLUtils
 import com.mojang.blaze3d.vertex.PoseStack
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 
 import kotlin.math.abs
 
@@ -44,7 +45,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     var humanRate: String = "-"
     var rateColorState: RateColorState = RateColorState.NEUTRAL
 
-    private val historyData = mutableMapOf<Long, Long>()
+    private val historyData = Long2LongOpenHashMap()
     private var lastSecondValue: Long = 0L
     private var lastMinuteValue: Long = 0L
     private var lastHourValue: Long = 0L
@@ -122,18 +123,6 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     // ////////////////////////////////
     // ****** 初始化 操作 ******//
     // //////////////////////////////
-    fun resetState() {
-        lastValue = 0L
-        laseEnum = WorkRoutine.MINUTE
-        lastTick = 0L
-        historyData.clear()
-        lastSecondValue = 0L
-        lastMinuteValue = 0L
-        lastHourValue = 0L
-        lastSecondTick = 0L
-        lastMinuteTick = 0L
-        lastHourTick = 0L
-    }
     override fun onPartActivate(player: Player?, hand: InteractionHand?, pos: Vec3?): Boolean {
         if (!isClientSide) {
             laseEnum = laseEnum.next()
@@ -241,7 +230,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
         val hasChanged = amount != lastValue
 
-        historyData[currentTick] = amount
+        historyData.put(currentTick, amount)
 
         updateReferenceData(currentTick)
         calculateChangeRate(currentTick)
@@ -271,7 +260,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
     private fun initializeHistoryData(currentTick: Long) {
         historyData.clear()
-        historyData[currentTick] = amount
+        historyData.put(currentTick, amount)
         lastSecondValue = amount
         lastMinuteValue = amount
         lastHourValue = amount
@@ -285,7 +274,11 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
     private fun cleanOldHistoryData(currentTick: Long) {
         val oneHourAgo = currentTick - (20 * 60 * 60) - 200
-        historyData.keys.removeIf { it < oneHourAgo }
+        val it = historyData.long2LongEntrySet().fastIterator()
+        while (it.hasNext()) {
+            val e = it.next()
+            if (e.longValue < oneHourAgo) it.remove()
+        }
     }
 
     private fun updateReferenceData(currentTick: Long) {
@@ -315,9 +308,9 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         }
     }
 
-    private fun findClosestHistoryData(targetTick: Long): Pair<Long, Long>? = historyData.entries
-        .minByOrNull { abs(it.key - targetTick) }
-        ?.let { it.key to it.value }
+    private fun findClosestHistoryData(targetTick: Long): Pair<Long, Long>? = historyData.long2LongEntrySet()
+        .minByOrNull { abs(it.longKey - targetTick) }
+        ?.let { it.longKey to it.longValue }
 
     private fun calculateChangeRate(currentTick: Long) {
         val currentAmount = amount
