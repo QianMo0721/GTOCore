@@ -16,7 +16,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
@@ -76,7 +76,7 @@ public final class NanoForgeMachine extends StorageMultiblockMachine implements 
         Material material = stack.material();
         if (material == GTMaterials.Carbon) {
             machineTier = 1;
-        } else if (material == GTMaterials.Neutronium) {
+        } else if (material == GTOMaterials.Amprosium) {
             machineTier = 2;
         } else if (material == GTOMaterials.Draconium) {
             machineTier = 3;
@@ -84,9 +84,9 @@ public final class NanoForgeMachine extends StorageMultiblockMachine implements 
         updateCheck();
     }
 
-    public static BlockPattern getBlockPattern(int tier, MachineDefinition definition) {
+    public static BlockPattern getBlockPattern(int tier, MultiblockMachineDefinition definition) {
         return PATTERNS.computeIfAbsent(tier, t -> {
-            FactoryBlockPattern builder = FactoryBlockPattern.start()
+            FactoryBlockPattern builder = FactoryBlockPattern.start(definition)
                     .where('~', controller(blocks(definition.get())))
                     .where(' ', any());
             return switch (t) {

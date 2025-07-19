@@ -74,7 +74,7 @@ public final class MultiBlockH {
             .perfectOCTooltips()
             .laserTooltips()
             .block(GTOBlocks.NAQUADAH_REINFORCED_PLANT_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("AAAAA", "AAAAA", "AAAAA")
                     .aisle("BBBBB", "BBCBB", "BBBBB")
                     .where('A', blocks(GTOBlocks.STRENGTHEN_THE_BASE_BLOCK.get()))

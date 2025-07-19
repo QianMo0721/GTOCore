@@ -11,7 +11,7 @@ import com.gtolib.utils.MachineUtils;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
@@ -41,9 +41,9 @@ public final class CompoundExtremeCoolingMachine extends CrossRecipeMultiblockMa
         updateCheck();
     }
 
-    public static BlockPattern getBlockPattern(int tier, MachineDefinition definition) {
+    public static BlockPattern getBlockPattern(int tier, MultiblockMachineDefinition definition) {
         return PATTERNS.computeIfAbsent(tier, t -> {
-            FactoryBlockPattern builder = FactoryBlockPattern.start(RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK).where(' ', any());
+            FactoryBlockPattern builder = FactoryBlockPattern.start(definition, RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK).where(' ', any());
             if (t == 1) {
                 builder.aisle("                   MM     MM       MM     MM                   ", "                   MMHHHHHMM       MMHHHHHMM                   ", "                   MMOOOOOMM       MMOOOOOMM                   ", "                   MMHHHHHMM QQQQQ MMHHHHHMM                   ", "                   MMPPPPPMM QQSQQ MMPPPPPMM                   ", "                   MMHHHHHMM QQQQQ MMHHHHHMM                   ", "                   MMOOOOOMM       MMOOOOOMM                   ", "                   MMHHHHHMM       MMHHHHHMM                   ", "                   MM     MM       MM     MM                   ")
                         .aisle("                 KKMMKKKKKMMQQQQQQQMMKKKKKMMKK                 ", "                 KKKKKKKKKKKKRRRRRKKKKKKKKKKKK                 ", "                 KKKKKKKKKKKKKKKKKKKKKKKKKKKKK                 ", "                 KKKKKKKKKKKKKKKKKKKKKKKKKKKKK                 ", "                 KKKKKKKKKKKKKKKKKKKKKKKKKKKKK                 ", "                 KKKKKKKKKKKKKKKKKKKKKKKKKKKKK                 ", "                 KKKKKKKKKKKKKKKKKKKKKKKKKKKKK                 ", "                 KKKKKKKKKKKKRRRRRKKKKKKKKKKKK                 ", "                 KKMMKKKKKMMQQQQQQQMMKKKKKMMKK                 ")

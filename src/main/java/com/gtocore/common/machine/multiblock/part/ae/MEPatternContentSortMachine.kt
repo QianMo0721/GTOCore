@@ -23,7 +23,6 @@ import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.root
-import com.gtolib.api.machine.feature.IMetaMachine
 import com.gtolib.mixin.ae2.GridAccessor
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
 import com.lowdragmc.lowdraglib.gui.widget.PhantomSlotWidget
@@ -51,8 +50,7 @@ import java.util.concurrent.ConcurrentHashMap
 class MEPatternContentSortMachine(holder: IMachineBlockEntity) :
     MetaMachine(holder),
     IFancyUIMachine,
-    IGridConnectedMachine,
-    IMetaMachine {
+    IGridConnectedMachine {
     @Scanned
     companion object {
         val manager = ManagedFieldHolder(MEPatternContentSortMachine::class.java, MANAGED_FIELD_HOLDER)

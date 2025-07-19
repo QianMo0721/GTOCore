@@ -5,10 +5,10 @@ import com.gtocore.common.item.StructureDetectBehavior;
 
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
-import com.gtolib.api.machine.feature.multiblock.ICheckPatternMachine;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.pattern.MultiblockState;
 
 import net.minecraft.ChatFormatting;
@@ -66,15 +66,15 @@ public final class MultiblockStructureProvider implements IBlockComponentProvide
 
     @Override
     public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
-        if (blockAccessor.getBlockEntity() instanceof MetaMachineBlockEntity blockEntity && blockEntity.getMetaMachine() instanceof ICheckPatternMachine controller) {
+        if (blockAccessor.getBlockEntity() instanceof MetaMachineBlockEntity blockEntity && blockEntity.getMetaMachine() instanceof IMultiController controller) {
             if (controller.isFormed()) {
                 compoundTag.putBoolean("hasError", false);
             } else {
                 compoundTag.putBoolean("hasError", true);
-                if (controller.gtolib$Checking()) {
+                if (controller.checking()) {
                     compoundTag.putBoolean("checking", true);
                 } else if (controller.getMultiblockState().hasError()) {
-                    if (controller.getMultiblockState().error == MultiblockState.UNINIT_ERROR && controller.gtolib$getTime() == 0) {
+                    if (controller.getMultiblockState().error == MultiblockState.UNINIT_ERROR && controller.getWaitingTime() == 0) {
                         compoundTag.putBoolean("waiting", true);
                     } else {
                         var tag = new ListTag();

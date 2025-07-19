@@ -13,7 +13,7 @@ import com.gtolib.api.recipe.Recipe;
 import com.gtolib.utils.MultiBlockFileReader;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
@@ -172,7 +172,7 @@ public final class GodForgeMachine extends NoEnergyMultiblockMachine implements 
         return getBlockPattern(getDefinition());
     }
 
-    public static BlockPattern getBlockPattern(MachineDefinition definition) {
+    public static BlockPattern getBlockPattern(MultiblockMachineDefinition definition) {
         return MultiBlockFileReader.start(definition)
                 .where('~', Predicates.controller(Predicates.blocks(definition.get())))
                 .where(' ', Predicates.any())

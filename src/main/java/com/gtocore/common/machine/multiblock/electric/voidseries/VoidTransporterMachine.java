@@ -113,7 +113,7 @@ public final class VoidTransporterMachine extends ElectricMultiblockMachine {
     @Override
     public boolean shouldOpenUI(Player player, InteractionHand hand, BlockHitResult hit) {
         if (!isFormed()) {
-            gtolib$setTime(0);
+            setWaitingTime(0);
         }
         if (consumer != null && isFormed() && (eu == 0 || check())) consumer.accept(this, player);
         return false;

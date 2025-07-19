@@ -2,8 +2,6 @@ package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtocore.common.machine.trait.ProxySlotRecipeHandler;
 
-import com.gtolib.api.machine.feature.multiblock.ICheckPatternMachine;
-
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -78,7 +76,7 @@ public final class MEPatternBufferProxyPartMachine extends TieredIOPartMachine i
             if (!isRemote()) {
                 proxySlotRecipeHandler.updateProxy(machine);
                 for (var controller : getControllers()) {
-                    ((ICheckPatternMachine) controller).gtolib$requestCheck();
+                    controller.requestCheck();
                 }
             }
         } else {

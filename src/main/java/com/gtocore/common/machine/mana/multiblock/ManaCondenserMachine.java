@@ -8,7 +8,7 @@ import com.gtolib.api.machine.feature.multiblock.IMultiStructureMachine;
 import com.gtolib.utils.RegistriesUtils;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
@@ -41,9 +41,9 @@ public final class ManaCondenserMachine extends ManaMultiblockMachine implements
         tier = level.dimension().location().equals(GTODimensions.ALFHEIM) ? 1 : 0;
     }
 
-    public static BlockPattern getBlockPattern(int tier, MachineDefinition definition) {
+    public static BlockPattern getBlockPattern(int tier, MultiblockMachineDefinition definition) {
         return PATTERNS.computeIfAbsent(tier, t -> {
-            FactoryBlockPattern builder = FactoryBlockPattern.start(RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT).where(' ', any());
+            FactoryBlockPattern builder = FactoryBlockPattern.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT).where(' ', any());
             if (t == 0) {
                 return builder.aisle("               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "       A       ", "       D       ", "       D       ", "       D       ", "       D       ", "       D       ", "       A       ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
                         .aisle("               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "         A     ", "         D     ", "     A   D     ", "     D   D     ", "     D   D     ", "     D   D     ", "     DDDDD     ", "     A   A     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")

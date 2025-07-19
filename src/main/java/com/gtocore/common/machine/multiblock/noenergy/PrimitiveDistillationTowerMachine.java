@@ -117,7 +117,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     @Override
     public void clientTick() {
         super.clientTick();
-        if (gtolib$getTickTime() % 10 == 0) {
+        if (getOffsetTimer() % 10 == 0) {
             scheduleRenderUpdate();
         }
     }

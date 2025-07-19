@@ -18,7 +18,7 @@ import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
 import com.gregtechceu.gtceu.api.gui.fancy.IFancyConfiguratorButton;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
@@ -113,9 +113,9 @@ public final class NeutronVortexMachine extends NeutronActivatorMachine implemen
                 .setTooltipsSupplier(pressed -> List.of(Component.translatable("block.ae2.energy_acceptor").append(" ").append(pressed ? Component.translatable("gtceu.creative.activity.on") : Component.translatable("gtceu.creative.activity.off")))));
     }
 
-    public static BlockPattern getBlockPattern(int tier, MachineDefinition definition) {
+    public static BlockPattern getBlockPattern(int tier, MultiblockMachineDefinition definition) {
         return PATTERNS.computeIfAbsent(tier, t -> {
-            FactoryBlockPattern builder = FactoryBlockPattern.start(RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT).where(' ', any());
+            FactoryBlockPattern builder = FactoryBlockPattern.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT).where(' ', any());
             if (t == 1) {
                 return builder.aisle("    JPPPPPJ     AAAAA    ", "    JPPPPPJ     AHHHA    ", "    J     J     AHHHA    ", "    J     J     AHHHA    ", "    J     J     AAAAA    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     A   A    ", "    J     J     AAAAA    ", "    J     J     AHHHA    ", "    J     J     AHHHA    ", "    JJJJJJJ     AHHHA    ", "    JJJJJJJ     AAAAA    ")
                         .aisle("   JAAAAAAAJ   AAAAAAA   ", "   J       J   C HHH C   ", "               A HHH A   ", "         L     C HHH C   ", "        L      AAAAAAA   ", "       L                 ", "      L                  ", "     L                   ", "                         ", "                         ", "         K               ", "        K                ", "       K                 ", "      K                  ", "     K                   ", "                         ", "                         ", "                         ", "                         ", "                         ", "                         ", "                         ", "                         ", "                         ", "                         ", "         L               ", "        L                ", "       L                 ", "      L                  ", "     L                   ", "                         ", "                         ", "         K               ", "        K                ", "       K                 ", "      K        AAAAAAA   ", "     K         C HHH C   ", "               A HHH A   ", "   J       J   C HHH C   ", "   JAAAAAAAJ   AAAAAAA   ")
