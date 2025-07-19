@@ -49,7 +49,7 @@ object GTOComponentHandler {
                 val usedBytes = cellInventory.usedBytes
                 val totalBytes = cellInventory.totalBytes
                 if (totalBytes <= 0) return@run
-                val progress = (usedBytes.toFloat() / totalBytes.toFloat())
+                val progress: Float = (usedBytes.toFloat() / totalBytes.toFloat())
                 components.add(
                     (
                         GTOProgressComponent(

@@ -84,7 +84,7 @@ class OrganService : IOrganService {
             }
             it.firstOrNull { it.item.asItem() == MECHANICAL_WING.asItem() }.let {
                 it?.let {
-                    if (whenUsingElectricWing(it, playerData, player)) return@root
+                    if (whenUsingElectricWing(it, player, playerData)) return@root
                 }
             }
         }
@@ -128,7 +128,7 @@ class OrganService : IOrganService {
         }
     }
 
-    private fun whenUsingElectricWing(stack: ItemStack, playerData: PlayerData?, player: ServerPlayer): Boolean {
+    private fun whenUsingElectricWing(stack: ItemStack, player: ServerPlayer, playerData: PlayerData?): Boolean {
         val item = GTCapabilityHelper.getElectricItem(stack) ?: return false
         if (item.charge <= 0) return false
         playerData?.wingState = true
