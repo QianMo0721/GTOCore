@@ -42,6 +42,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     var lastTick: Long = 0L
     var lastReportedValue: Long = 0L
     var humanRate: String = "-"
+    var rateColorState: RateColorState = RateColorState.NEUTRAL
 
     private val historyData = mutableMapOf<Long, Long>()
     private var lastSecondValue: Long = 0L
@@ -97,8 +98,15 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                 val width1 = fr.width(humanRate)
                 poseStack.translate(0.0f, height, 0.02f)
                 poseStack.translate(-0.5f * width1, 0.0f, 0f)
+
+                val rateTextColor: Int = when (rateColorState) {
+                    RateColorState.POSITIVE -> AEColor.GREEN.mediumVariant
+                    RateColorState.NEGATIVE -> AEColor.RED.mediumVariant
+                    RateColorState.NEUTRAL -> textColor
+                }
+
                 fr.drawInBatch(
-                    humanRate, 0f, 0f, textColor, false, poseStack.last().pose(), buffers,
+                    humanRate, 0f, 0f, rateTextColor, false, poseStack.last().pose(), buffers,
                     Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT,
                 )
                 poseStack.translate(0.5f * width1, 0.0f, 0.5f)
@@ -170,6 +178,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         data?.writeInt(laseEnum.id)
         data?.writeLong(lastTick)
         data?.writeUtf(humanRate)
+        data?.writeUtf(rateColorState.name)
     }
 
     override fun readFromStream(data: FriendlyByteBuf?): Boolean {
@@ -178,6 +187,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         laseEnum = WorkRoutine.fromId(data?.readInt() ?: 0) ?: WorkRoutine.MINUTE
         lastTick = data?.readLong() ?: 0L
         humanRate = data?.readUtf() ?: "-"
+        rateColorState = data?.readUtf().let { RateColorState.fromString(it ?: "") }
         return stream
     }
     // ////////////////////////////////
@@ -306,7 +316,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     }
 
     private fun findClosestHistoryData(targetTick: Long): Pair<Long, Long>? = historyData.entries
-        .minByOrNull { kotlin.math.abs(it.key - targetTick) }
+        .minByOrNull { abs(it.key - targetTick) }
         ?.let { it.key to it.value }
 
     private fun calculateChangeRate(currentTick: Long) {
@@ -319,13 +329,15 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                     val valueDiff = currentAmount - lastSecondValue
                     if (valueDiff == 0L) {
                         humanRate = "－O－"
+                        rateColorState = RateColorState.NEUTRAL
                     } else {
                         val ratePerSecond = valueDiff.toDouble() / (timeDiff / 20.0)
-                        val isNegative = ratePerSecond < 0
-                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(kotlin.math.abs(ratePerSecond).toLong(), AmountFormat.SLOT)} /s"
+                        rateColorState = if (ratePerSecond > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
+                        humanRate = "${displayed?.formatAmount(abs(ratePerSecond).toLong(), AmountFormat.SLOT)} /s"
                     }
                 } else {
                     humanRate = "－O－"
+                    rateColorState = RateColorState.NEUTRAL
                 }
             }
             WorkRoutine.MINUTE -> {
@@ -334,13 +346,15 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                     val valueDiff = currentAmount - lastMinuteValue
                     if (valueDiff == 0L) {
                         humanRate = "－O－"
+                        rateColorState = RateColorState.NEUTRAL
                     } else {
                         val ratePerMinute = valueDiff.toDouble() / (timeDiff / (20.0 * 60))
-                        val isNegative = ratePerMinute < 0
-                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(kotlin.math.abs(ratePerMinute).toLong(), AmountFormat.SLOT)} /m"
+                        rateColorState = if (ratePerMinute > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
+                        humanRate = "${displayed?.formatAmount(abs(ratePerMinute).toLong(), AmountFormat.SLOT)} /m"
                     }
                 } else {
                     humanRate = "－O－"
+                    rateColorState = RateColorState.NEUTRAL
                 }
             }
             WorkRoutine.HOUR -> {
@@ -349,13 +363,15 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
                     val valueDiff = currentAmount - lastHourValue
                     if (valueDiff == 0L) {
                         humanRate = "－O－"
+                        rateColorState = RateColorState.NEUTRAL
                     } else {
                         val ratePerHour = valueDiff.toDouble() / (timeDiff / (20.0 * 60 * 60))
-                        val isNegative = ratePerHour < 0
-                        humanRate = "${if (isNegative) "-" else "+"}${displayed?.formatAmount(kotlin.math.abs(ratePerHour).toLong(), AmountFormat.SLOT)} /h"
+                        rateColorState = if (ratePerHour > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
+                        humanRate = "${displayed?.formatAmount(abs(ratePerHour).toLong(), AmountFormat.SLOT)} /h"
                     }
                 } else {
                     humanRate = "－O－"
+                    rateColorState = RateColorState.NEUTRAL
                 }
             }
         }
@@ -379,5 +395,16 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         @PartModels
         @JvmStatic
         val MODEL_LOCKED_ON: ResourceLocation = RLUtils.ae("part/storage_monitor_locked_on")
+    }
+
+    enum class RateColorState {
+        POSITIVE,
+        NEGATIVE,
+        NEUTRAL,
+        ;
+
+        companion object {
+            fun fromString(name: String): RateColorState = entries.find { it.name.equals(name, ignoreCase = true) } ?: NEUTRAL
+        }
     }
 }

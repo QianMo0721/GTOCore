@@ -11,6 +11,7 @@ import appeng.core.definitions.ItemDefinition
 import appeng.items.parts.PartItem
 import appeng.items.parts.PartModelsHelper
 import com.gtolib.GTOCore
+import com.gtolib.api.annotation.component_builder.ComponentBuilder
 import com.gtolib.utils.register.ItemRegisterUtils.*
 import com.tterrag.registrate.util.entry.ItemEntry
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer
@@ -18,7 +19,7 @@ import com.tterrag.registrate.util.nullness.NonNullBiConsumer
 import java.util.function.Function
 import java.util.function.Supplier
 
-object GTOAEItems {
+object GTOAEParts {
     fun init() {
     }
 
@@ -34,6 +35,7 @@ object GTOAEItems {
         PartModels.registerModels(PartModelsHelper.createModels(partClass))
         val function: (Item.Properties) -> PartItem<T> = { p -> PartItem(p, partClass, factory) }
         val item: ItemEntry<PartItem<T>> = item(id, cn, function)
+            .toolTips(ComponentBuilder.create("此物品可以监控物品的交换速率", "This item can monitor the exchange rate of items", { p -> p }).buildSingle(), ComponentBuilder.create("锁定状态下右击可切换监控间隔", "In locked state, right click to switch monitoring interval", { p -> p }).buildSingle())
             .lang(en)
             .model(NonNullBiConsumer.noop())
             .register()
