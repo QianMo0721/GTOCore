@@ -5,7 +5,6 @@ import com.gtocore.common.saved.DysonSphereSavaedData;
 import com.gtolib.GTOCore;
 import com.gtolib.api.data.Dimension;
 import com.gtolib.api.misc.PlanetManagement;
-import com.gtolib.api.player.IEnhancedPlayer;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 import com.gtolib.utils.ItemUtils;
 import com.gtolib.utils.StringConverter;
@@ -69,13 +68,6 @@ public final class GTOCommands {
                         hand(player);
                     }
                     return 1;
-                }))
-                .then(Commands.literal("getAttributeTags").executes(ctx -> {
-                    ServerPlayer player = ctx.getSource().getPlayer();
-                    if (player != null) {
-                        getAttributeTags(player);
-                    }
-                    return 1;
                 })));
     }
 
@@ -107,18 +99,6 @@ public final class GTOCommands {
                 player.sendSystemMessage(copy(Component.literal(f).withStyle(ChatFormatting.AQUA)));
             }
             player.sendSystemMessage(copy(Component.literal(fluid.builtInRegistryHolder().key().location().toString()).withStyle(ChatFormatting.GREEN)));
-        }
-    }
-
-    private static void getAttributeTags(ServerPlayer player) {
-        var cache = IEnhancedPlayer.of(player).getPlayerData();
-        player.sendSystemMessage(Component.literal("Boolean Cache:"));
-        for (var entry : cache.booleanCache.object2BooleanEntrySet()) {
-            player.sendSystemMessage(copy(Component.literal("%s : %s".formatted(entry.getKey(), entry.getBooleanValue())).withStyle(ChatFormatting.AQUA)));
-        }
-        player.sendSystemMessage(Component.literal("Float Cache:"));
-        for (var entry : cache.floatCache.object2FloatEntrySet()) {
-            player.sendSystemMessage(copy(Component.literal("%s : %s".formatted(entry.getKey(), entry.getFloatValue())).withStyle(ChatFormatting.AQUA)));
         }
     }
 }

@@ -17,7 +17,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
-import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
@@ -81,9 +81,9 @@ public final class PCBFactoryMachine extends StorageMultiblockMachine implements
         updateCheck();
     }
 
-    public static BlockPattern getBlockPattern(int tier, MachineDefinition definition) {
+    public static BlockPattern getBlockPattern(int tier, MultiblockMachineDefinition definition) {
         return PATTERNS.computeIfAbsent(tier, t -> {
-            FactoryBlockPattern builder = FactoryBlockPattern.start().where(' ', any());
+            FactoryBlockPattern builder = FactoryBlockPattern.start(definition).where(' ', any());
             return switch (t) {
                 case 2 -> builder.aisle("       AAAAA       ", "        AAA        ", "         A         ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ")
                         .aisle("       ABCBA       ", "       AADAA       ", "        AAA        ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ", "                   ")

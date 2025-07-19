@@ -5,8 +5,7 @@ import com.gtocore.client.renderer.item.OrderItemProviderRenderer;
 import com.gtocore.common.cover.PowerAmplifierCover;
 import com.gtocore.common.item.*;
 import com.gtocore.common.item.armor.SpaceArmorComponentItem;
-import com.gtocore.common.item.tools.GrassHarvesterBehaviour;
-import com.gtocore.config.GTOConfig;
+import com.gtocore.common.item.misc.GrassHarvesterBehaviour;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
@@ -56,13 +55,14 @@ import static com.gtolib.utils.register.ItemRegisterUtils.*;
 public final class GTOItems {
 
     public static void init() {
-        OrganItems.init();
+        GTOOrganItems.INSTANCE.init();
+        GTOAEParts.INSTANCE.init();
         GTMaterials.Oxygen.getProperty(PropertyKey.FLUID).getStorage().store(FluidStorageKeys.GAS, ModFluids.OXYGEN, null);
         GTMaterials.Hydrogen.getProperty(PropertyKey.FLUID).getStorage().store(FluidStorageKeys.GAS, ModFluids.HYDROGEN, null);
         GTFluids.handleNonMaterialFluids(GTMaterials.Oil, ModFluids.OIL);
         GTFluids.handleNonMaterialFluids(GTMaterials.RocketFuel, () -> EIOFluids.ROCKET_FUEL.get().getSource());
 
-        if (GTOConfig.INSTANCE.dev) {
+        if (GTCEu.isDev()) {
             item("recipe_editor", "配方编辑器", ComponentItem::create)
                     .properties(p -> p.stacksTo(1))
                     .onRegister(attach(RecipeEditorBehavior.INSTANCE))
@@ -388,6 +388,12 @@ public final class GTOItems {
             .onRegister(attach(new DataItemBehavior(true)))
             .register();// OPV鸿蒙之眼后解锁,MAX初期开使用
 
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK1 = register("data_crystal_component_mk1", "数据晶片组件 mk1");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK2 = register("data_crystal_component_mk2", "数据晶片组件 mk2");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK3 = register("data_crystal_component_mk3", "数据晶片组件 mk3");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK4 = register("data_crystal_component_mk4", "数据晶片组件 mk4");
+    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK5 = register("data_crystal_component_mk5", "数据晶片组件 mk5");
+
     public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK1 = item("data_crystal_mk1", "数据晶片 mk1", ComponentItem::create)
             .onRegister(attach(new ExDataItemBehavior()))
             .register();
@@ -403,13 +409,6 @@ public final class GTOItems {
     public static final ItemEntry<ComponentItem> DATA_CRYSTAL_MK5 = item("data_crystal_mk5", "数据晶片 mk5", ComponentItem::create)
             .onRegister(attach(new ExDataItemBehavior()))
             .register();
-
-    // 给数据镜片当合成原料使用
-    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK1 = register("data_crystal_component_mk1", "数据晶片组件 mk1");
-    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK2 = register("data_crystal_component_mk2", "数据晶片组件 mk2");
-    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK3 = register("data_crystal_component_mk3", "数据晶片组件 mk3");
-    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK4 = register("data_crystal_component_mk4", "数据晶片组件 mk4");
-    public static final ItemEntry<Item> DATA_CRYSTAL_COMPONENT_MK5 = register("data_crystal_component_mk5", "数据晶片组件 mk5");
 
     public static final ItemEntry<KineticRotorItem> WOOD_ROTOR = registerRotor("wood_kinetic_rotor", "木", 2400, 4, 10, 0);
     public static final ItemEntry<KineticRotorItem> IRON_ROTOR = registerRotor("iron_kinetic_rotor", "铁", 14000, 10, 20, 1);

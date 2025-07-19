@@ -4,7 +4,8 @@ import com.gtocore.client.forge.ForgeClientEvent;
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOFluids;
-import com.gtocore.common.forge.render.ToolTipsComponentAttacherForge;
+import com.gtocore.common.forge.render.GTOComponentHandler;
+import com.gtocore.common.forge.render.GTOComponentRegistry;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -23,8 +24,9 @@ public final class ClientProxy extends CommonProxy {
         init();
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(ClientProxy::clientSetup);
+        eventBus.register(GTOComponentRegistry.class);
         MinecraftForge.EVENT_BUS.register(ForgeClientEvent.class);
-        MinecraftForge.EVENT_BUS.register(ToolTipsComponentAttacherForge.class);
+        MinecraftForge.EVENT_BUS.register(GTOComponentHandler.class);
     }
 
     private static void init() {

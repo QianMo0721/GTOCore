@@ -7,10 +7,9 @@ import com.gtocore.common.data.GTOEffects;
 import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.item.ItemMap;
 import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporterMachine;
-import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
 import com.gtocore.common.network.ServerMessage;
 import com.gtocore.common.saved.*;
-import com.gtocore.config.GTOConfig;
+import com.gtocore.utils.OrganUtilsKt;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.Scanned;
@@ -53,7 +52,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -105,6 +103,7 @@ public final class ForgeCommonEvent {
     @SubscribeEvent
     public static void onLivingJumpEvent(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && player.level() instanceof ServerLevel serverLevel) {
+            OrganUtilsKt.ktFreshOrganState(IEnhancedPlayer.of(player).getPlayerData());
             Optional.ofNullable(player.getEffect(GTOEffects.MYSTERIOUS_BOOST.get())).ifPresent(effect -> {
                 if (MetaMachine.getMachine(serverLevel, player.getOnPos()) instanceof WorkableTieredMachine machine && machine.getRecipeLogic().isWorking()) {
                     RecipeLogic recipeLogic = machine.getRecipeLogic();
@@ -266,10 +265,11 @@ public final class ForgeCommonEvent {
             } else {
                 Configurator.setRootLevel(org.apache.logging.log4j.Level.DEBUG);
             }
-            if (!GTOConfig.INSTANCE.dev) player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
+            if (!GTCEu.isDev()) player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
             if (player instanceof IEnhancedPlayer enhancedPlayer) {
                 ServerMessage.send(player.getServer(), player, "loggedIn", buf -> buf.writeUUID(ServerUtils.getServerIdentifier()));
                 enhancedPlayer.getPlayerData().setDrift(enhancedPlayer.getPlayerData().disableDrift);
+                OrganUtilsKt.ktFreshOrganState(enhancedPlayer.getPlayerData());
             }
         }
     }
@@ -285,19 +285,12 @@ public final class ForgeCommonEvent {
     }
 
     @SubscribeEvent
-    public static void onServerTickEvent(TickEvent.ServerTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
-            PerformanceMonitorMachine.observe = false;
-        }
-    }
-
-    @SubscribeEvent
     public static void onServerStoppingEvent(ServerStoppingEvent event) {
         ServerCache.observe = false;
     }
 
     @RegisterLanguage(valuePrefix = "gtocore.lang", en = "Channel mode command banned in expert", cn = "在专家模式下，频道模式命令被禁止")
-    public static final String CHANNEL_MODE_COMMAND_BANNED = "banned";
+    private static final String CHANNEL_MODE_COMMAND_BANNED = "banned";
 
     @SuppressWarnings("all")
     @SubscribeEvent

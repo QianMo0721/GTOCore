@@ -62,7 +62,11 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
         if (tag.contains("pos", Tag.TAG_LIST)) {
             var list = tag.getList("pos", Tag.TAG_COMPOUND);
             if (list.size() <= 2) {
-                list.set(index, pos2tag(pos));
+                if (index < 2) {
+                    list.set(index, pos2tag(pos));
+                } else {
+                    list.add(index, pos2tag(pos));
+                }
             }
         } else {
             ListTag list = new ListTag();
@@ -101,7 +105,7 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
                             controller.getPatternLock().lock();
                             try {
                                 BlockPattern pattern = controller.getPattern();
-                                var result = check(controller, pattern, stack);
+                                var result = check(controller, pattern);
                                 for (int i = 0; i < result.size(); i++) {
                                     showError(player, result.get(i), (i == 1), i, stack);
                                 }
@@ -117,7 +121,7 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
         return InteractionResult.PASS;
     }
 
-    private static List<PatternError> check(IMultiController controller, BlockPattern pattern, ItemStack stack) {
+    private static List<PatternError> check(IMultiController controller, BlockPattern pattern) {
         List<PatternError> errors = new ArrayList<>();
         if (controller == null) {
             errors.add(new PatternStringError("no controller found"));
@@ -129,54 +133,58 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
                 new Direction[] { Direction.SOUTH, Direction.NORTH, Direction.EAST, Direction.WEST };
         Direction upwardsFacing = controller.self().getUpwardsFacing();
         boolean allowsFlip = controller.self().allowFlip();
-        MultiblockState worldState = new MultiblockState(controller.self().getLevel(), controller.self().getPos());
+        MultiblockState worldState = new MultiblockState(controller, controller.self().getLevel(), controller.self().getPos());
         for (Direction direction : facings) {
             pattern.checkPatternAt(worldState, centerPos, direction, upwardsFacing, false, false);
             if (worldState.hasError()) {
                 errors.add(worldState.error);
             }
             if (allowsFlip) {
-                worldState = new MultiblockState(worldState.getWorld(), worldState.getPos());
+                worldState = new MultiblockState(controller, worldState.getWorld(), worldState.getPos());
                 pattern.checkPatternAt(worldState, centerPos, direction, upwardsFacing, true, false);
                 if (worldState.hasError()) {
                     errors.add(worldState.error);
                 }
             }
         }
+        worldState.cleanCache();
         return errors;
     }
 
     private static void showError(Player player, PatternError error, boolean flip, int index, ItemStack stack) {
+        analysis(error, flip).forEach(player::sendSystemMessage);
+        addPos(stack, index, error.getPos());
+    }
+
+    public static List<Component> analysis(PatternError error, boolean flip) {
         List<Component> show = new ArrayList<>();
         if (error instanceof PatternStringError pe) {
-            player.sendSystemMessage(pe.getErrorInfo());
-            return;
-        }
-        var pos = error.getPos();
-        var posComponent = Component.translatable("item.gtocore.structure_detect.error.2", pos.getX(), pos.getY(), pos.getZ(), flip ?
-                Component.translatable("item.gtocore.structure_detect.error.3").withStyle(ChatFormatting.GREEN) :
-                Component.translatable("item.gtocore.structure_detect.error.4").withStyle(ChatFormatting.YELLOW));
-        if (error instanceof SinglePredicateError) {
-            List<List<ItemStack>> candidates = error.getCandidates();
-            var root = candidates.get(0).get(0).getHoverName();
-            show.add(Component.translatable("item.gtocore.structure_detect.error.1", posComponent));
-            show.add(Component.literal(" - ").append(root).append(error.getErrorInfo()));
+            show.add(pe.getErrorInfo());
         } else {
-            show.add(Component.translatable("item.gtocore.structure_detect.error.0", posComponent));
-            List<List<ItemStack>> candidates = error.getCandidates();
-            for (List<ItemStack> candidate : candidates) {
-                if (!candidate.isEmpty()) {
-                    show.add(Component.literal(" - ").append(candidate.get(0).getDisplayName()));
+            var pos = error.getPos();
+            var posComponent = Component.translatable("item.gtocore.structure_detect.error.2", pos.getX(), pos.getY(), pos.getZ(), flip ?
+                    Component.translatable("item.gtocore.structure_detect.error.3").withStyle(ChatFormatting.GREEN) :
+                    Component.translatable("item.gtocore.structure_detect.error.4").withStyle(ChatFormatting.YELLOW));
+            if (error instanceof SinglePredicateError) {
+                List<List<ItemStack>> candidates = error.getCandidates();
+                var root = candidates.get(0).get(0).getHoverName();
+                show.add(Component.translatable("item.gtocore.structure_detect.error.1", posComponent));
+                show.add(Component.literal(" - ").append(root).append(error.getErrorInfo()));
+            } else {
+                show.add(Component.translatable("item.gtocore.structure_detect.error.0", posComponent));
+                List<List<ItemStack>> candidates = error.getCandidates();
+                for (List<ItemStack> candidate : candidates) {
+                    if (!candidate.isEmpty()) {
+                        show.add(Component.literal(" - ").append(candidate.get(0).getDisplayName()));
+                    }
                 }
             }
         }
-        show.forEach(player::sendSystemMessage);
-        addPos(stack, index, error.getPos());
+        return show;
     }
 
     public static boolean isItem(ItemStack stack) {
         if (stack.isEmpty()) return false;
-
         if (stack.getItem() instanceof ComponentItem item) {
             return item.getComponents().contains(INSTANCE);
         }

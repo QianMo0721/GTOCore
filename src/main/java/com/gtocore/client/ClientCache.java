@@ -19,4 +19,6 @@ public final class ClientCache {
 
     @Nullable
     public static UUID SERVER_IDENTIFIER;
+
+    public static int highlightTime;
 }

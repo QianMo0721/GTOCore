@@ -3,7 +3,6 @@ package com.gtocore.data;
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOLoots;
 import com.gtocore.common.data.GTORecipeTypes;
-import com.gtocore.config.GTOConfig;
 import com.gtocore.data.recipe.*;
 import com.gtocore.data.recipe.classified.$ClassifiedRecipe;
 import com.gtocore.data.recipe.generated.*;
@@ -14,6 +13,7 @@ import com.gtocore.data.recipe.misc.*;
 import com.gtocore.data.recipe.mod.FunctionalStorage;
 import com.gtocore.data.recipe.mod.ImmersiveAircraft;
 import com.gtocore.data.recipe.processing.*;
+import com.gtocore.data.recipe.research.*;
 import com.gtocore.integration.emi.GTEMIRecipe;
 import com.gtocore.integration.emi.multipage.MultiblockInfoEmiRecipe;
 
@@ -110,6 +110,7 @@ public final class Data {
         GCYRecipes.init(consumer);
         MachineRecipe.init(consumer);
         MiscRecipe.init(consumer);
+        OrganRecipes.INSTANCE.init(consumer);
         BotaniaRecipes.init(consumer);
         ArsNouveauRecipes.init(consumer);
         ManaRecipes.init(consumer);
@@ -129,10 +130,12 @@ public final class Data {
         ImmersiveAircraft.init(consumer);
         FunctionalStorage.init(consumer);
         $ClassifiedRecipe.init(consumer);
-        OrganRecipes.init(consumer);
         Temporary.init();
-        if (GTOConfig.INSTANCE.dev) {
+        if (GTCEu.isDev()) {
             ScanningRecipes.init();
+            AnalyzeData.init();
+            // AnalyzeRecipes.init();
+            DataGenerateRecipe.init();
         }
         if (GTCEu.isDev() || GTOCore.isSimple()) {
             SimpleModeRecipe.init();

@@ -56,7 +56,7 @@ public final class GTMachineModify {
         GTMultiMachines.DISTILLATION_TOWER.setAllowExtendedFacing(false);
         GTMultiMachines.VACUUM_FREEZER.setRecipeModifier(RecipeModifierFunction.OVERCLOCKING);
         GTMultiMachines.ASSEMBLY_LINE.setRecipeModifier(RecipeModifierFunction.OVERCLOCKING);
-        GTMultiMachines.STEAM_GRINDER.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start()
+        GTMultiMachines.STEAM_GRINDER.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start(GTMultiMachines.STEAM_GRINDER)
                 .aisle("XXX", "XXX", "XXX")
                 .aisle("XXX", "X#X", "XXX")
                 .aisle("XXX", "XSX", "XXX")
@@ -69,7 +69,7 @@ public final class GTMachineModify {
                         .or(blocks(GTOMachines.STEAM_VENT_HATCH.getBlock()).setExactLimit(1)))
                 .build()));
 
-        GTMultiMachines.STEAM_OVEN.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start()
+        GTMultiMachines.STEAM_OVEN.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start(GTMultiMachines.STEAM_OVEN)
                 .aisle("FFF", "XXX", " X ")
                 .aisle("FFF", "X#X", " X ")
                 .aisle("FFF", "XSX", " X ")
@@ -84,7 +84,7 @@ public final class GTMachineModify {
                         .or(blocks(GTOMachines.STEAM_VENT_HATCH.getBlock()).setExactLimit(1)))
                 .build()));
 
-        GTMultiMachines.PRIMITIVE_BLAST_FURNACE.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start()
+        GTMultiMachines.PRIMITIVE_BLAST_FURNACE.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start(GTMultiMachines.PRIMITIVE_BLAST_FURNACE)
                 .aisle("XXX", "XXX", "XXX", "XXX")
                 .aisle("XXX", "X#X", "X#X", "X#X")
                 .aisle("XXX", "XYX", "XXX", "XXX")
@@ -93,7 +93,7 @@ public final class GTMachineModify {
                 .where('Y', controller(blocks(PRIMITIVE_BLAST_FURNACE.getBlock())))
                 .build()));
 
-        GTMultiMachines.LARGE_BOILER_BRONZE.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start()
+        GTMultiMachines.LARGE_BOILER_BRONZE.setPatternFactory(GTMemoizer.memoize(() -> FactoryBlockPattern.start(GTMultiMachines.LARGE_BOILER_BRONZE)
                 .aisle("XXX", "CCC", "CCC", "CCC")
                 .aisle("XXX", "CPC", "CPC", "CCC")
                 .aisle("XXX", "CSC", "CCC", "CCC")
@@ -108,7 +108,7 @@ public final class GTMachineModify {
         GTMultiMachines.DISTILLATION_TOWER.setPatternFactory(GTMemoizer.memoize(() -> {
             TraceabilityPredicate exportPredicate = abilities(PartAbility.EXPORT_FLUIDS_1X).or(blocks(GTAEMachines.FLUID_EXPORT_HATCH_ME.get())).setMaxLayerLimited(1);
             TraceabilityPredicate maint = autoAbilities(true, false, false).setMaxGlobalLimited(1);
-            return FactoryBlockPattern.start(RIGHT, BACK, UP)
+            return FactoryBlockPattern.start(GTMultiMachines.DISTILLATION_TOWER, RIGHT, BACK, UP)
                     .aisle("YSY", "YYY", "YYY")
                     .aisle("ZZZ", "Z#Z", "ZZZ")
                     .aisle("XXX", "X#X", "XXX").setRepeatable(0, 10)

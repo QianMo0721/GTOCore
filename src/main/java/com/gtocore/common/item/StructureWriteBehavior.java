@@ -106,7 +106,7 @@ public final class StructureWriteBehavior implements IItemUIFactory {
             RelativeDirection[] dirs = DebugBlockPattern.getDir(direction);
             blockPattern.changeDir(dirs[0], dirs[1], dirs[2]);
             builder.append("\n.block(").append(convertBlockToString(RegistriesUtils.getBlock(part), part, StringUtils.decompose(part), true)).append(")\n");
-            builder.append(".pattern(definition -> FactoryBlockPattern.start()\n");
+            builder.append(".pattern(definition -> FactoryBlockPattern.start(definition)\n");
             for (int i = 0; i < blockPattern.pattern.length; i++) {
                 String[] strings = blockPattern.pattern[i];
                 builder.append(".aisle(\"%s\")\n".formatted(Joiner.on("\", \"").join(strings)));

@@ -46,7 +46,6 @@ import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.client.renderer.machine.FusionReactorRenderer;
 import com.gregtechceu.gtceu.common.data.*;
-import com.gregtechceu.gtceu.common.machine.multiblock.electric.AssemblyLineMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.FusionReactorMachine;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 
@@ -89,7 +88,7 @@ public final class MultiBlockD {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("太阳光照不足时速度减缓", "Speed slows down when sunlight is insufficient", StyleBuilder::setRed), p -> p, StyleBuilder::setOneTab))))
             .overclock()
             .block(GTBlocks.MACHINE_CASING_ULV)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("0BBB0", "0BBB0", "0BBB0", "0BBB0", "0BBB0")
                     .aisle("BBBBB", "BdddB", "B###B", "B###B", "BGGGB")
                     .aisle("BBBBB", "BdddB", "B###B", "B###B", "BGGGB")
@@ -135,7 +134,7 @@ public final class MultiBlockD {
             .alwaysTryModifyRecipe(true)
             .fromSourceTooltips("GTNH")
             .block(GTBlocks.HIGH_POWER_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "               A A               ", "               A A               ", "               A A               ", "            AAAAAAAAA            ", "               A A               ", "            AAAAAAAAA            ", "               A A               ", "               A A               ", "               A A               ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ")
                     .aisle("                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "               A A               ", "               A A               ", "               A A               ", "               A A               ", "              DDDDD              ", "             DDADADD             ", "         AAAADAADAADAAAA         ", "             DDDDDDD             ", "         AAAADAADAADAAAA         ", "             DDADADD             ", "              DDDDD              ", "               A A               ", "               A A               ", "               A A               ", "               A A               ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ")
                     .aisle("                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "               A A               ", "               A A               ", "               A A               ", "                D                ", "                D                ", "             DDDDDDD             ", "            DD     DD            ", "            D  EEE  D            ", "       AAA  D EFFFE D  AAA       ", "          DDD EFFFE DDD          ", "       AAA  D EFFFE D  AAA       ", "            D  EEE  D            ", "            DD     DD            ", "             DDDDDDD             ", "                D                ", "                D                ", "               A A               ", "               A A               ", "               A A               ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ")
@@ -234,7 +233,7 @@ public final class MultiBlockD {
             .laserTooltips()
             .parallelizableOverclock()
             .block(GTOBlocks.DIMENSIONALLY_TRANSCENDENT_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle(" ddd   ddd             ddd   ddd ", "                                 ", "                                 ", "                                 ", " ddd   ddd             ddd   ddd ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", " ddd   ddd             ddd   ddd ", "                                 ", "                                 ", "                                 ", " ddd   ddd   d     d   ddd   ddd ", "         d   d     d   d         ", "         d   d     d   d         ", "                                 ", "                                 ", "                                 ", "         d   d     d   d         ", "         d   d     d   d         ", "         d   d     d   d         ", "                                 ")
                     .aisle("dbbbd dbbbd    d d    dbbbd dbbbd", " CCC   CCC             CCC   CCC ", " CCC   CCC             CCC   CCC ", " CCC   CCC             CCC   CCC ", "dbbbd dbbbd           dbbbd dbbbd", "  d     d               d     d  ", "  d     d               d     d  ", "                                 ", "  d     d               d     d  ", "  d     d               d     d  ", "dbbbd dbbbd           dbbbd dbbbd", " CCC   CCC             CCC   CCC ", " CCC   CCC             CCC   CCC ", " CCC   CCC   d     d   CCC   CCC ", "dbbbd dbbdCCCb     bCCCdbbd dbbbd", "         bCCCb     bCCCb         ", "         bCCCb     bCCCb         ", "         d   d     d   d         ", "                                 ", "         d   d     d   d         ", "         bCCCb     bCCCb         ", "         bCCCb     bCCCb         ", "         bCCCb     bCCCb         ", "         d   d     d   d         ")
                     .aisle("dbbbd dbbbdddddsdsdddddbbbd dbbbd", " CbC   CbC             CbC   CbC ", " CbC   CbC             CbC   CbC ", " CbC   CbC             CbC   CbC ", "dbbbd dbbbd           dbbbd dbbbd", " ddd   ddd             ddd   ddd ", " ddd   ddd             ddd   ddd ", "  s     s               s     s  ", " ddd   ddd             ddd   ddd ", " ddd   ddd             ddd   ddd ", "dbbbd dbbbd           dbbbd dbbbd", " CbC   CbC             CbC   CbC ", " CbC   CbC             CbC   CbC ", " CbC   CbC   d     d   CbC   CbC ", "dbbbd dbbdCCCb     bCCCdbbd dbbbd", "  d     sbbbbbddsddbbbbbs     d  ", "  d      bCCCb     bCCCb      d  ", "  d      d   d     d   d      d  ", "   s                         s   ", "   s     d   d     d   d     s   ", "    ss   bCCCb     bCCCb   ss    ", "      dddbbbbbddsddbbbbbddd      ", "         bCCCb     bCCCb         ", "         d   d     d   d         ")
@@ -302,7 +301,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(h -> h.addLines("同配方机器人数量x2的并行", "Parallelism of x2 for the same recipe robots")))
             .alwaysTryModifyRecipe(true)
             .block(GTOBlocks.PIKYONIUM_MACHINE_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("bbb", "bbb", "bfb")
                     .aisle("bbb", "cec", "bdb").setRepeatable(16)
                     .aisle("bbb", "bab", "bgb")
@@ -326,7 +325,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(h -> h.addLines("4^(动力模块等级-1)", "4^(Power Module tier - 1)")))
             .alwaysTryModifyRecipe(true)
             .block(GTOBlocks.SPACE_ELEVATOR_MECHANICAL_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("a", "b", "b", "b", "b")
                     .aisle("a", "b", "b", "b", "b")
                     .aisle("c", "b", "b", "~", "b")
@@ -347,7 +346,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(h -> h.addLines("4^(动力模块等级-1)", "4^(Power Module tier - 1)")))
             .alwaysTryModifyRecipe(true)
             .block(GTOBlocks.SPACE_ELEVATOR_MECHANICAL_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("a", "b", "b", "b", "b")
                     .aisle("a", "b", "b", "b", "b")
                     .aisle("c", "b", "b", "~", "b")
@@ -370,7 +369,7 @@ public final class MultiBlockD {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("每高出MV1级，转换方块数量+4", "For each tier above MV1, block conversion +4", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab),
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("不会重复转换同一方块", "Will not repeatedly convert the same block", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab))))
             .block(GTOBlocks.ALUMINIUM_BRONZE_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("bbbbbbb", "bbbbbbb", "bdddddb", "bdddddb", "bdddddb", "bdddddb", "bdddddb", "bbbbbbb")
                     .aisle("bbbbbbb", "bcccccb", "d     d", "d     d", "d     d", "d     d", "d     d", "bbbbbbb")
                     .aisle("bbbbbbb", "bcccccb", "d     d", "d     d", "d     d", "d     d", "d     d", "bbbbbbb")
@@ -417,7 +416,7 @@ public final class MultiBlockD {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("每高出MV1级，转换方块数量+64", "For each tier above MV1, block conversion +64", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab),
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("不会重复转换同一方块", "Will not repeatedly convert the same block", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab))))
             .block(GTOBlocks.ALUMINIUM_BRONZE_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("bbbbbbbbbbb", "bbbbbbbbbbb", "bdddddddddb", "bdddddddddb", "bdddddddddb", "bdddddddddb", "bdddddddddb", "bdddddddddb", "bdddddddddb", "bbbbbbbbbbb")
                     .aisle("bbbbbbbbbbb", "bcccccccccb", "d         d", "d         d", "d         d", "d         d", "d         d", "d         d", "d         d", "bbbbbbbbbbb")
                     .aisle("bbbbbbbbbbb", "bcccccccccb", "d         d", "d         d", "d         d", "d         d", "d         d", "d         d", "d         d", "bbbbbbbbbbb")
@@ -495,7 +494,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(64))
             .recipeModifier(RecipeModifierFunction.overclocking(0.5, 1, 0.5))
             .block(GTOBlocks.BLAZE_CASING)
-            .pattern(definition -> FactoryBlockPattern.start(RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+            .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
                     .aisle(" AAAAA ", " AAAAA ", "       ", "       ", "       ", "       ")
                     .aisle("AAACAAA", "AADDDAA", " AEGEA ", "  FFF  ", "  FFF  ", "  EEE  ")
                     .aisle("AAACAAA", "BD   DB", " E   E ", " F   F ", " F   F ", " EDDDE ")
@@ -541,7 +540,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(64))
             .recipeModifiers(RecipeModifierFunction.overclocking(0.5, 1, 0.5))
             .block(GTOBlocks.COLD_ICE_CASING)
-            .pattern(definition -> FactoryBlockPattern.start(RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+            .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
                     .aisle("AAAAA", " BBB ", " BGB ", " BBB ", "AAAAA")
                     .aisle("AAAAA", "BE EB", "BE EB", "BE EB", "AAAAA")
                     .aisle("AAAAA", " F F ", " F F ", " F F ", "ABHBA")
@@ -590,7 +589,7 @@ public final class MultiBlockD {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("设置电路为1开始运行", "Set circuit to 1 to start running", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab))))
             .noRecipeModifier()
             .block(GTOBlocks.DIMENSION_CONNECTION_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "              a              ", "             aaa             ", "            aaaaa            ", "           aaaaaaa           ", "          aaaaaaaaa          ", "         aaaaaaaaaaa         ", "        aaaaaaaaaaaaa        ", "         aaaaaaaaaaa         ", "          aaaaaaaaa          ", "           aaaaaaa           ", "            aaaaa            ", "             aaa             ", "              a              ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ")
                     .aisle("                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "              a              ", "             aaa             ", "             aaa             ", "             aaa             ", "             aaa             ", "             aaa             ", "             acaa            ", "       aaaaaacccaaaaaa       ", "      aaaaaacccccaaaaaa      ", "       aaaaaacccaaaaaa       ", "            aacaa            ", "             aaa             ", "             aaa             ", "             aaa             ", "             aaa             ", "             aaa             ", "              a              ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ")
                     .aisle("                             ", "                             ", "                             ", "                             ", "                             ", "              a              ", "             aaa             ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "      a               a      ", "     aa               aa     ", "      a               a      ", "                             ", "                             ", "                             ", "                             ", "                             ", "                             ", "             aaa             ", "              a              ", "                             ", "                             ", "                             ", "                             ", "                             ")
@@ -688,7 +687,7 @@ public final class MultiBlockD {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("每次运行有10%概率破坏基岩", "Each run has 10% chance to destroy bedrock", StyleBuilder::setRed), p -> p, StyleBuilder::setOneTab))))
             .overclock()
             .block(GTOBlocks.ECHO_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("aaaaaaaaaaa", "a         a", "a         a", "ab       ba", "a         a", "a         a", "a         a", "a    b    a", "aaaaaaaaaaa")
                     .aisle("a         a", "           ", "           ", "bbb     bbb", "           ", "           ", "           ", "     b     ", "a    b    a")
                     .aisle("a         a", "           ", "           ", " bbbbcbbb  ", "    ccc    ", "    ccc    ", "    ccc    ", "    ccc    ", "a   bbb   a")
@@ -736,7 +735,7 @@ public final class MultiBlockD {
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("设置电路为1开始运行", "Set circuit to 1 to start running", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab))))
             .noRecipeModifier()
             .block(GTOBlocks.DIMENSION_CONNECTION_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("          aaaaaaa          ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "          aaaaaaa          ")
                     .aisle("       aaaaaaaaaaaaa       ", "             b             ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "                           ", "             b             ", "       aaaaaaaaaaaaa       ")
                     .aisle("     aaaaaaaaaaaaaaaaa     ", "     c      bbb      c     ", "     c       b       c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c               c     ", "     c       b       c     ", "     c      bbb      c     ", "     aaaaaaaaaaaaaaaaa     ")
@@ -795,20 +794,20 @@ public final class MultiBlockD {
             .workableCasingRenderer(GTOCore.id("block/casings/dimension_connection_casing"), GTOCore.id("block/multiblock/create_aggregation"))
             .register();
 
-    public static final MultiblockMachineDefinition SUPRACHRONAL_ASSEMBLY_LINE = multiblock("suprachronal_assembly_line", "超时空装配线", CrossRecipeMultiblockMachine::createHatchParallel)
+    public static final MultiblockMachineDefinition NYARLATHOTEPS_TENTACLE = multiblock("nyarlathoteps_tentacle", "奈亚拉托提普之触", CrossRecipeMultiblockMachine::createHatchParallel)
             .allRotation()
             .recipeTypes(GTORecipeTypes.SUPRACHRONAL_ASSEMBLY_LINE)
             .tooltips(ComponentBuilder.create().addStoryLine(
                     """
                             GTO寰宇格雷科技有限公司的顶级工程师们耗时十年，终于完成了
-                            这台跨越维度的超级装配线。当董事长第一次见到它时，惊叹于
-                            其庞大的结构和复杂的分子级线圈。这台机器能够同时操作多个
-                            平行空间，将不同维度的材料精确组装。自此，公司的生产力
+                            这台跨越维度的奈亚拉托提普之触。当董事长第一次见到它时，惊
+                            叹于其庞大的结构和复杂的分子级线圈。这台机器能够同时操作多
+                            个平行空间，将不同维度的材料精确组装。自此，公司的生产力
                             突破了物理法则的限制，员工们见证了工业史上最伟大的奇迹。
                             """,
                     """
                             GTO Universal GregTech's top engineers spent ten years to finally
-                            complete this interdimensional super assembly line. When the CEO
+                            complete this nyarlathotep's tentacle. When the CEO
                             first saw it, he marveled at its massive structure and complex
                             molecular coils. This machine can operate multiple parallel spaces
                             simultaneously, assembling materials from different dimensions precisely.
@@ -817,26 +816,44 @@ public final class MultiBlockD {
             .parallelizableTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()
-            .fromSourceTooltips("Twist Space Technology")
             .block(GTOBlocks.MOLECULAR_CASING)
-            .pattern(definition -> MultiBlockFileReader.start(definition, RelativeDirection.UP, RelativeDirection.BACK, RelativeDirection.LEFT)
-                    .where('~', controller(blocks(definition.get())))
-                    .where('A', blocks(GTBlocks.FUSION_GLASS.get()))
-                    .where('B', blocks(GTOBlocks.SPACETIME_ASSEMBLY_LINE_UNIT.get()))
-                    .where('C', blocks(GTOBlocks.SPACETIME_ASSEMBLY_LINE_CASING.get()))
-                    .where('D', cleanroomFilters())
-                    .where('E', blocks(GTOBlocks.DIMENSION_INJECTION_CASING.get()))
-                    .where('F', blocks(GTOBlocks.MOLECULAR_COIL.get()))
-                    .where('G', blocks(GTOBlocks.DIMENSIONAL_BRIDGE_CASING.get()))
-                    .where('H', blocks(GTBlocks.HIGH_POWER_CASING.get()))
-                    .where('I', blocks(GTOBlocks.MOLECULAR_CASING.get()))
-                    .where('J', blocks(GTOBlocks.DIMENSIONALLY_TRANSCENDENT_CASING.get()))
-                    .where('M', blocks(GTOBlocks.HOLLOW_CASING.get()))
-                    .where('K', blocks(GTOBlocks.MOLECULAR_CASING.get()))
-                    .where('L', blocks(GTOBlocks.MOLECULAR_CASING.get())
+            .pattern(definition -> MultiBlockFileReader.start(definition, RelativeDirection.LEFT, RelativeDirection.UP, RelativeDirection.FRONT)
+                    .where('A', blocks(GTOBlocks.MOLECULAR_CASING.get())
                             .or(GTOPredicates.autoLaserAbilities(definition.getRecipeTypes()))
                             .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(OPTICAL_DATA_RECEPTION).setExactLimit(1)))
+                    .where('B', blocks(GTOBlocks.ADVANCED_FUSION_COIL.get()))
+                    .where('C', blocks(GTOBlocks.LASER_CASING.get()))
+                    .where('D', blocks(GTOBlocks.URUIUM_COIL_BLOCK.get()))
+                    .where('E', blocks(GTOBlocks.HYPER_CORE.get()))
+                    .where('F', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTOMaterials.Amprosium)))
+                    .where('G', blocks(GTOBlocks.SPACETIME_ASSEMBLY_LINE_CASING.get()))
+                    .where('H', blocks(GTOBlocks.EXTREME_DENSITY_CASING.get()))
+                    .where('I', blocks(GTBlocks.FUSION_GLASS.get()))
+                    .where('J', blocks(GTOBlocks.LASER_COOLING_CASING.get()))
+                    .where('K', blocks(GTOBlocks.QUANTUM_GLASS.get()))
+                    .where('L', blocks(GTOBlocks.NAQUADAH_ALLOY_CASING.get()))
+                    .where('M', blocks(GTOBlocks.SPS_CASING.get()))
+                    .where('N', blocks(GTOBlocks.SPACETIME_ASSEMBLY_LINE_UNIT.get()))
+                    .where('O', blocks(GTOBlocks.MOLECULAR_CASING.get()))
+                    .where('P', blocks(GTOBlocks.CONTAINMENT_FIELD_GENERATOR.get()))
+                    .where('Q', heatingCoils())
+                    .where('R', blocks(GTBlocks.FILTER_CASING_STERILE.get()))
+                    .where('S', blocks(GTOBlocks.ELECTRON_PERMEABLE_AMPROSIUM_COATED_GLASS.get()))
+                    .where('T', blocks(GTOBlocks.HOLLOW_CASING.get()))
+                    .where('U', blocks(GTOBlocks.AMPROSIUM_ACTIVE_CASING.get()))
+                    .where('V', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTOMaterials.Mithril)))
+                    .where('W', blocks(RegistriesUtils.getBlock("gtceu:ruby_block")))
+                    .where('X', blocks(GCYMBlocks.ELECTROLYTIC_CELL.get()))
+                    .where('Y', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Trinium)))
+                    .where('Z', blocks(GTBlocks.HIGH_POWER_CASING.get()))
+                    .where('[', blocks(GTOBlocks.DIMENSIONAL_BRIDGE_CASING.get()))
+                    .where('+', blocks(GTOBlocks.RESTRAINT_DEVICE.get()))
+                    .where(']', blocks(GTOBlocks.QUARK_PIPE.get()))
+                    .where('^', blocks(GTOBlocks.MOLECULAR_COIL.get()))
+                    .where('_', blocks(GTOBlocks.DEGENERATE_RHENIUM_CONSTRAINED_CASING.get()))
+                    .where('`', blocks(GTOBlocks.DIMENSIONALLY_TRANSCENDENT_CASING.get()))
+                    .where('a', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTOCore.id("block/casings/molecular_casing"), GTCEu.id("block/multiblock/fusion_reactor"))
@@ -906,7 +923,7 @@ public final class MultiBlockD {
                     .append("，").append(Component.translatable("gtceu.circuit_assembler"))))
             .alwaysTryModifyRecipe(true)
             .block(GTOBlocks.MULTI_FUNCTIONAL_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("bbb", "bbb", "bbb")
                     .aisle("bbb", "bcb", "bbb")
                     .aisle("bbb", "bab", "bbb")
@@ -946,7 +963,7 @@ public final class MultiBlockD {
                     h -> h.addLines("运行条件", "Operating Conditions", StyleBuilder::setGold),
                     c -> c.addLines(
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要放入对应的纳米蜂群", "Requires corresponding nano swarm", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("三种等级: 碳, 中子, 龙", "Three tiers: Carbon, Neutronium, Draconium", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab))))
+                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("三种等级: 碳, 安普洛, 龙", "Three tiers: Carbon, Amprosium, Draconium", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab))))
             .specialParallelizableTooltips()
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(
                     h -> h.addLines("对应配方纳米蜂群的数量", "Number of corresponding recipe nano swarms")))
@@ -983,7 +1000,7 @@ public final class MultiBlockD {
             .perfectOverclock()
             .fromSourceTooltips("GTNH")
             .block(GTOBlocks.INCONEL_625_CASING)
-            .pattern(definition -> FactoryBlockPattern.start(RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.RIGHT)
+            .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.RIGHT)
                     .aisle("BBB", "BBB", "BBB")
                     .aisle("BBB", "BCB", "BBB")
                     .aisle("BBB", "BCB", "BBB")
@@ -1038,7 +1055,7 @@ public final class MultiBlockD {
             .fromSourceTooltips("GTNH")
             .recipeTypes(GTORecipeTypes.NEUTRON_ACTIVATOR_RECIPES)
             .block(GTBlocks.CASING_STAINLESS_CLEAN)
-            .pattern(definition -> FactoryBlockPattern.start(RelativeDirection.RIGHT, RelativeDirection.BACK, RelativeDirection.UP)
+            .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.RIGHT, RelativeDirection.BACK, RelativeDirection.UP)
                     .aisle("AAGAA", "ADDDA", "ADDDA", "ADDDA", "AAAAA")
                     .aisle("B   B", " EEE ", " EFE ", " EEE ", "B   B").setRepeatable(4, 100)
                     .aisle("CCCCC", "CDDDC", "CDDDC", "CDDDC", "CCCCC")
@@ -1085,7 +1102,7 @@ public final class MultiBlockD {
             .recipeTypes(GTORecipeTypes.HEAT_EXCHANGER_RECIPES)
             .alwaysTryModifyRecipe(true)
             .block(GTBlocks.CASING_TUNGSTENSTEEL_ROBUST)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle(" AAA ", " AAA ", " AAA ", " AAA ", " AAA ", " AAA ")
                     .aisle("AAAAA", "BCCCB", "BCCCB", "BCCCB", "BCCCB", "AAAAA")
                     .aisle("AAAAA", "BDDDB", "BDCDB", "BDCDB", "BDDDB", "AAAAA")
@@ -1131,7 +1148,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.VOLTAGE.create(c -> c.addLines(GTValues.VNF[GTValues.ZPM] + " -> " + GTValues.VNF[GTValues.UV])))
             .tooltips(NewDataAttributes.MULTIPLY.create(c -> c.addLines("256x -> 384x")))
             .block(GTOBlocks.IRIDIUM_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("XXX", "#F#", "#F#", "#F#", "###", "###", "###")
                     .aisle("XXX", "FCF", "FCF", "FCF", "#F#", "#F#", "#F#")
                     .aisle("XSX", "#F#", "#F#", "#F#", "###", "###", "###")
@@ -1170,7 +1187,7 @@ public final class MultiBlockD {
             .laserTooltips()
             .alwaysTryModifyRecipe(true)
             .block(GTBlocks.CASING_STEEL_SOLID)
-            .pattern(definition -> FactoryBlockPattern.start(RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.RIGHT)
+            .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.RIGHT)
                     .aisle("FIF", "RTR", "SAG", "#Y#")
                     .aisle("FIF", "RTR", "DAG", "#Y#").setRepeatable(3, 15)
                     .aisle("FOF", "RTR", "DAG", "#Y#")
@@ -1192,7 +1209,6 @@ public final class MultiBlockD {
                     .where('#', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_solid_steel"), GTCEu.id("block/multiblock/assembly_line"))
-            .partSorter(AssemblyLineMachine::partSorter)
             .register();
 
     public static final MultiblockMachineDefinition FISSION_REACTOR = multiblock("fission_reactor", "裂变反应堆", FissionReactorMachine::new)
@@ -1233,7 +1249,7 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(CNEN.create("等于燃料组件数量", "Number of Fuel Components")).get().toArray(new Component[0]))
             .alwaysTryModifyRecipe(true)
             .block(GTOBlocks.FISSION_REACTOR_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("AAAAAAAAA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "AAAAAAAAA")
                     .aisle("AAAAAAAAA", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "AAAAAAAAA")
                     .aisle("AAAAAAAAA", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "BCCCCCCCB", "AAAAAAAAA")
@@ -1314,7 +1330,7 @@ public final class MultiBlockD {
             .tooltipsText("非实体生成模式为虚拟掉落，如果存在刷怪笼则使用并行处理", "Non-entity generation mode is virtual drops; if a spawner exists, it uses parallel processing")
             .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
             .block(GTBlocks.CASING_STEEL_SOLID)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("AAAAAAA", "AAAAAAA", "ABBBBBA", "ABBBBBA", "ABBBBBA", "ABBBBBA", "ABBBBBA", "ABBBBBA", "ABBBBBA", "AAAAAAA")
                     .aisle("AAAAAAA", "ACCCCCA", "BDDDDDB", "BDDDDDB", "BDDDDDB", "BDDDDDB", "BDDDDDB", "BDDDDDB", "BEEEEEB", "AAAAAAA")
                     .aisle("AAAAAAA", "ACCCCCA", "BD   DB", "BD   DB", "BD   DB", "BD   DB", "BD   DB", "BD   DB", "BEEEEEB", "AAAAAAA")
@@ -1350,7 +1366,7 @@ public final class MultiBlockD {
                     .block(() -> FusionCasings.getCasingState(tier))
                     .pattern(definition -> {
                         TraceabilityPredicate casing = blocks(FusionCasings.getCasingState(tier));
-                        return FactoryBlockPattern.start()
+                        return FactoryBlockPattern.start(definition)
                                 .aisle("###############", "######OGO######", "###############")
                                 .aisle("######ICI######", "####GGAAAGG####", "######ICI######")
                                 .aisle("####CC###CC####", "###EAAOGOAAE###", "####CC###CC####")
@@ -1440,7 +1456,7 @@ public final class MultiBlockD {
                     .block(() -> FusionCasings.getCasingState(tier))
                     .pattern(definition -> {
                         TraceabilityPredicate casing = blocks(FusionCasings.getCasingState(tier));
-                        return FactoryBlockPattern.start(RelativeDirection.FRONT, RelativeDirection.UP, RelativeDirection.RIGHT)
+                        return FactoryBlockPattern.start(definition, RelativeDirection.FRONT, RelativeDirection.UP, RelativeDirection.RIGHT)
                                 .aisle("            AAAABBBBBBBAAAA            ", "                CDDDDDC                ", "                CEEEEEC                ", "                CEEEEEC                ", "                CEEEEEC                ", "                CCCCCCC                ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ")
                                 .aisle("          AAABBBBBBBBBBBBBAAA          ", "                D     D                ", "                E F F E                ", "                E     E                ", "                E     E                ", "                CEEEEEC                ", "                  AAA                  ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ")
                                 .aisle("         AABBBBBBBBBBBBBBBBBAA         ", "                D     D                ", "                E F F E                ", "                E     E                ", "                E     E                ", "                CEEEEEC                ", "                  AAA                  ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ", "                                       ")
@@ -1507,7 +1523,7 @@ public final class MultiBlockD {
             .tooltipsKey("gtceu.universal.tooltip.voltage_in", Integer.MAX_VALUE, GTValues.VNF[GTValues.MAX])
             .overclock()
             .block(GTBlocks.ADVANCED_COMPUTER_CASING)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("aa", "bb", "bb", "bb", "aa")
                     .aisle("aa", "cc", "cc", "cc", "aa")
                     .aisle("aa", "cc", "cc", "cc", "aa")
@@ -1528,7 +1544,7 @@ public final class MultiBlockD {
             .recipeTypes(GTORecipeTypes.INCUBATOR_RECIPES)
             .overclock()
             .block(GTBlocks.PLASTCRETE)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("bbbbb", "bbbbb", "ddddd", "ddddd", "bbbbb")
                     .aisle("bbbbb", "bcccb", "d   d", "d   d", "beeeb")
                     .aisle("bbbbb", "bcccb", "d   d", "d   d", "beeeb")
@@ -1553,7 +1569,7 @@ public final class MultiBlockD {
             .parallelizableTooltips()
             .parallelizableOverclock()
             .block(GTBlocks.PLASTCRETE)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("     AAA     ", "     BBB     ", "     DDD     ", "     EEE     ", "     DDD     ", "     EEE     ", "     DDD     ", "     EEE     ", "     AAA     ")
                     .aisle("   AAAAAAA   ", "   BBFFFBB   ", "   DD   DD   ", "   GGFFFGG   ", "   DD   DD   ", "   GGFFFGG   ", "   DD   DD   ", "   GGFFFGG   ", "   AAAAAAA   ")
                     .aisle("  AAAAAAAAA  ", "  BFFFFFFFB  ", "  D       D  ", "  GFFFFFFFG  ", "  D       D  ", "  GFFFFFFFG  ", "  D       D  ", "  GFFFFFFFG  ", "  AAAAAAAAA  ")
@@ -1591,7 +1607,7 @@ public final class MultiBlockD {
             .recipeTypes(GTORecipeTypes.DISSOLUTION_TREATMENT_RECIPES)
             .alwaysTryModifyRecipe(true)
             .block(GTBlocks.CASING_STAINLESS_CLEAN)
-            .pattern(definition -> FactoryBlockPattern.start()
+            .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("X###X", "OOOOO", "XGGGX", "XGGGX", "#XXX#")
                     .aisle("#####", "OKKKO", "G###G", "G###G", "XXXXX")
                     .aisle("#####", "OKKKO", "G###G", "G###G", "XXXXX")

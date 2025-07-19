@@ -53,7 +53,7 @@ public final class GenerateDisassembly {
         if (eut < 1) return;
         List<Content> c = recipeBuilder.output.getOrDefault(ItemRecipeCapability.CAP, null);
         if (c == null) {
-            GTOCore.LOGGER.atError().log("配方{}没有输出", recipeBuilder.id);
+            GTOCore.LOGGER.error("配方{}没有输出", recipeBuilder.id);
             return;
         }
         Ingredient output = ItemRecipeCapability.CAP.of(c.get(0).getContent());

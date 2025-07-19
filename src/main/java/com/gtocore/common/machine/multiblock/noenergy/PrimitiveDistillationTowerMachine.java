@@ -117,7 +117,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     @Override
     public void clientTick() {
         super.clientTick();
-        if (gtolib$getTickTime() % 10 == 0) {
+        if (getOffsetTimer() % 10 == 0) {
             scheduleRenderUpdate();
         }
     }
@@ -352,6 +352,11 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
         if (sensorMachine == null && part instanceof SensorPartMachine sensorPartMachine) {
             sensorMachine = sensorPartMachine;
         }
+    }
+
+    @Override
+    public Comparator<IMultiPart> getPartSorter() {
+        return Comparator.comparingInt(p -> p.self().getPos().getY());
     }
 
     @Override

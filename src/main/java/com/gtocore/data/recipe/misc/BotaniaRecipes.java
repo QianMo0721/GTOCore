@@ -4,13 +4,13 @@ import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.data.GTOMaterials;
-import com.gtocore.config.GTOConfig;
+import com.gtocore.data.recipe.builder.botania.*;
 import com.gtocore.data.tag.Tags;
 
 import com.gtolib.api.data.chemical.GTOChemicalHelper;
-import com.gtolib.api.recipe.builder.*;
 import com.gtolib.utils.RegistriesUtils;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
@@ -55,7 +55,7 @@ public final class BotaniaRecipes {
 
     public static void init(Consumer<FinishedRecipe> provider) {
         // 植物魔法系列测试配方
-        if (GTOConfig.INSTANCE.dev) {
+        if (GTCEu.isDev()) {
             // 植物酿造 - 好像只能酿造植物魔法的那些
             BrewRecipeBuilder.builder("iron100")
                     .brew(BotaniaBrews.clear)

@@ -1,8 +1,8 @@
 package com.gtocore.api.gui.ktflexible
 
-import com.gtocore.api.gui.graphic.helper.ProgressBarColorStyle
-import com.gtocore.api.gui.graphic.helper.ProgressBarHelper
-import com.gtocore.api.gui.graphic.helper.TextBlockHelper
+import com.gtocore.api.gui.helper.ProgressBarColorStyle
+import com.gtocore.api.gui.helper.ProgressBarHelper
+import com.gtocore.api.gui.helper.TextBlockHelper
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -59,7 +59,7 @@ fun LayoutBuilder<*>.textBlock(textSupplier: Supplier<Component>, tab: Int = 0, 
 
         override fun initWidget() {
             super.initWidget()
-            updateSize()
+            if (isRemote) updateSize()
         }
 
         private fun updateSize() {

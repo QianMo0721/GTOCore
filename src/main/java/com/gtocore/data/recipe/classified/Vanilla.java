@@ -1,10 +1,7 @@
 package com.gtocore.data.recipe.classified;
 
 import com.gtocore.api.data.tag.GTOTagPrefix;
-import com.gtocore.common.data.GTOBlocks;
-import com.gtocore.common.data.GTOItems;
-import com.gtocore.common.data.GTOMachines;
-import com.gtocore.common.data.GTOMaterials;
+import com.gtocore.common.data.*;
 import com.gtocore.common.data.machines.*;
 
 import com.gtolib.GTOCore;
@@ -69,7 +66,7 @@ final class Vanilla {
                     "BCB",
                     "DBD",
                     'A', new MaterialEntry(TagPrefix.screw, GTMaterials.WroughtIron), 'B', new ItemStack(Items.LEATHER.asItem()), 'C', RegistriesUtils.getItemStack("gtceu:wood_crate"), 'D', new ItemStack(Items.STRING.asItem()));
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("automatic_chisel"), MultiBlockG.AUTOMATIC_CHISEL.asStack(),
+            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("automatic_chisel"), MultiBlockG.CARVING_CENTER.asStack(),
                     "ABA",
                     "CDC",
                     "EFE",
@@ -117,6 +114,11 @@ final class Vanilla {
                         'A', new MaterialEntry(TagPrefix.pipeNormalFluid, GTMaterials.Bronze), 'B', GTOItems.PRECISION_STEAM_MECHANISM.asStack(), 'C', new MaterialEntry(TagPrefix.frameGt, GTMaterials.Bronze));
             }
         }
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("exchange_storage_monitor"), GTOAEParts.INSTANCE.getEXCHANGE_STORAGE_MONITOR().get().stack(1),
+                "   ",
+                "ABA",
+                "   ",
+                'A', CustomTags.MV_CIRCUITS, 'B', RegistriesUtils.getItemStack("ae2:storage_monitor"));
 
         VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("paper_dust"), ChemicalHelper.get(TagPrefix.dust, GTMaterials.Paper), "S", "m", 'S', RegistriesUtils.getItemStack("farmersdelight:tree_bark"));
         VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("cooking_pot"), RegistriesUtils.getItemStack("farmersdelight:cooking_pot"),

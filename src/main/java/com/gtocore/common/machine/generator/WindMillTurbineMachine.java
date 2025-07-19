@@ -6,7 +6,6 @@ import com.gtocore.common.machine.multiblock.part.BallHatchPartMachine;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.dynamic.DynamicInitialValue;
 import com.gtolib.api.data.GTODimensions;
-import com.gtolib.api.machine.feature.IMetaMachine;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -53,7 +52,7 @@ import static com.gtolib.api.annotation.dynamic.DynamicInitialValueTypes.KEY_AMP
 @Scanned
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public final class WindMillTurbineMachine extends TieredEnergyMachine implements IMachineModifyDrops, IFancyUIMachine, IMetaMachine {
+public final class WindMillTurbineMachine extends TieredEnergyMachine implements IMachineModifyDrops, IFancyUIMachine {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(WindMillTurbineMachine.class, TieredEnergyMachine.MANAGED_FIELD_HOLDER);
     @Persisted
@@ -181,7 +180,7 @@ public final class WindMillTurbineMachine extends TieredEnergyMachine implements
                 }
             } else {
                 if (hasRotor) {
-                    gtolib$setSync();
+                    this.requestSync();
                     inventory.storage.setStackInSlot(0, ItemStack.EMPTY);
                 }
                 spinSpeed = 0;

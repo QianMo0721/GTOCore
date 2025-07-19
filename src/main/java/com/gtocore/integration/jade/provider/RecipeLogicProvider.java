@@ -48,27 +48,36 @@ public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLog
 
     @Override
     protected void write(CompoundTag data, RecipeLogic capability) {
-        if (capability.isIdle() && capability instanceof IEnhancedRecipeLogic recipeLogic && recipeLogic.gtolib$getIdleReason() != null) {
-            data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
-        }
-        data.putBoolean("Working", capability.isWorking());
-        var recipeInfo = new CompoundTag();
-        var recipe = capability.getLastRecipe();
-        if (recipe != null) {
-            var inputEUt = recipe.getInputEUt();
-            var outputEUt = recipe.getOutputEUt();
-            var inputManat = RecipeHelper.getInputMANAt(recipe);
-            var outputManat = RecipeHelper.getOutputMANAt(recipe);
+        if (capability instanceof IEnhancedRecipeLogic recipeLogic) {
+            if (capability.isIdle() && recipeLogic.gtolib$getIdleReason() != null) {
+                data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
+            } else if (capability.isWaiting()) {
+                if (!capability.getFancyTooltip().isEmpty()) {
+                    data.putString("reason", Component.Serializer.toJson(capability.getFancyTooltip().get(0)));
+                } else if (recipeLogic.gtolib$getIdleReason() != null) {
+                    data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
+                }
+            } else {
+                data.putBoolean("Working", capability.isWorking());
+                var recipeInfo = new CompoundTag();
+                var recipe = capability.getLastRecipe();
+                if (recipe != null) {
+                    var inputEUt = recipe.getInputEUt();
+                    var outputEUt = recipe.getOutputEUt();
+                    var inputManat = RecipeHelper.getInputMANAt(recipe);
+                    var outputManat = RecipeHelper.getOutputMANAt(recipe);
 
-            recipeInfo.putLong("EUt", inputEUt - outputEUt);
-            recipeInfo.putLong("Manat", inputManat - outputManat);
+                    recipeInfo.putLong("EUt", inputEUt - outputEUt);
+                    recipeInfo.putLong("Manat", inputManat - outputManat);
 
-            if (capability.machine instanceof CrossRecipeMultiblockMachine machine && machine.getEnergyInterfacePartMachine() != null) {
-                recipeInfo.putDouble("totalEu", machine.getTotalEu());
+                    if (capability.machine instanceof CrossRecipeMultiblockMachine machine && machine.getEnergyInterfacePartMachine() != null) {
+                        recipeInfo.putDouble("totalEu", machine.getTotalEu());
+                    }
+
+                }
+                data.put("Recipe", recipeInfo);
             }
-
         }
-        data.put("Recipe", recipeInfo);
     }
 
     @Override

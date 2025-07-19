@@ -67,9 +67,6 @@ public class CommonProxy {
         ScanningClass.init();
         GTOEntityTypes.init();
         GTONet.init();
-        if (GTCEu.isDev() || GTCEu.isDataGen()) {
-            GTOConfig.INSTANCE.dev = true;
-        }
     }
 
     private static void commonSetup(FMLCommonSetupEvent event) {

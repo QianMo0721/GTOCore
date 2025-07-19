@@ -2,6 +2,7 @@ package com.gtocore.data.lang;
 
 import com.gtocore.client.Tooltips;
 import com.gtocore.common.data.GTOBedrockFluids;
+import com.gtocore.data.recipe.research.AnalyzeData;
 
 import com.gtolib.api.annotation.component_builder.TranslationKeyProvider;
 import com.gtolib.api.annotation.dynamic.DynamicInitialData;
@@ -20,6 +21,8 @@ import com.gtolib.utils.register.MaterialsRegisterUtils;
 import com.gtolib.utils.register.RecipeTypeRegisterUtils;
 
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.api.pattern.MultiblockState;
+import com.gregtechceu.gtceu.api.pattern.error.PatternStringError;
 
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -27,8 +30,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.util.Arrays;
 import java.util.Map;
-
-import static com.gtolib.api.player.organ.data.OrganValue.REGISTERY_ORGAN_BASE_SET;
 
 public final class LangHandler {
 
@@ -53,7 +54,6 @@ public final class LangHandler {
         GTOBedrockFluids.LANG.forEach((k, v) -> addCNEN("gtceu.jei.bedrock_fluid." + k, v));
         ItemRegisterUtils.LANG.forEach((k, v) -> addCN("item.gtocore." + k, v));
         BlockRegisterUtils.LANG.forEach((k, v) -> addCN("block.gtocore." + k, v));
-        REGISTERY_ORGAN_BASE_SET.forEach(organBase -> { if (organBase.getOrganFunctions() != null) organBase.getOrganFunctions().forEach(organFunction -> { if (organFunction != null) addCNEN(organFunction.getTranslateKey(), organFunction.getLang()); }); });
         GTOMachineBuilder.LANG.forEach(LangHandler::addCNEN);
         MultiblockBuilder.LANG.forEach(LangHandler::addCNEN);
         Tooltips.LANG.forEach(LangHandler::addCNEN);
@@ -248,6 +248,9 @@ public final class LangHandler {
         addCNEN("ftbultimine.shape.area", "不定形 (不连续)", "Shapeless (Area)");
 
         addCNEN("gtocore.source", "结构来源：%s", "Structure From: %s");
+
+        addCNEN(((PatternStringError) MultiblockState.UNLOAD_ERROR).translateKey, "区块未加载", "Chunk not loaded");
+        addCNEN(((PatternStringError) MultiblockState.UNINIT_ERROR).translateKey, "机器未初始化", "Machine not initialized");
     }
 
     public static void enInitialize(LanguageProvider provider) {
@@ -255,6 +258,7 @@ public final class LangHandler {
         MachineLang.init();
         BlockLang.init();
         ItemLang.init();
+        AnalyzeData.init();
         LANGS.forEach((k, v) -> {
             if (v.en() == null) return;
             provider.add(k, v.en());

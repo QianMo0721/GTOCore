@@ -117,7 +117,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
         for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
             var entry = it.next();
             if (entry.getBooleanValue()) {
-                entry.getKey().getRecipeLogic().setWaiting(null);
+                entry.getKey().getRecipeLogic().setWaiting(getEnhancedRecipeLogic().gtolib$getIdleReason());
             }
         }
         super.onWaiting();

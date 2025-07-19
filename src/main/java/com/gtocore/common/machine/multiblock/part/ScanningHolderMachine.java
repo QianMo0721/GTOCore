@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.multiblock.part;
 
+import com.gtolib.api.gui.GTOGuiTextures;
 import com.gtolib.api.item.tool.IExDataItem;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -43,8 +44,8 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IMac
     protected static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ScanningHolderMachine.class,
             MultiblockPartMachine.MANAGED_FIELD_HOLDER);
 
-    public static final int DATA_SLOT = 0;
-    public static final int CATALYST_SLOT = 1;
+    public static final int CATALYST_SLOT = 0;
+    public static final int DATA_SLOT = 1;
     public static final int SCAN_SLOT = 2;
 
     @Persisted
@@ -109,10 +110,10 @@ public class ScanningHolderMachine extends MultiblockPartMachine implements IMac
                         .setBackground(GuiTextures.SLOT, GuiTextures.RESEARCH_STATION_OVERLAY))
                 .addWidget(new BlockableSlotWidget(heldItems, CATALYST_SLOT, 15, 15)
                         .setIsBlocked(this::isLocked)
-                        .setBackground(GuiTextures.SLOT, GuiTextures.LENS_OVERLAY))
+                        .setBackground(GuiTextures.SLOT, GuiTextures.MOLECULAR_OVERLAY_1))
                 .addWidget(new BlockableSlotWidget(heldItems, DATA_SLOT, 15, 57)
                         .setIsBlocked(this::isLocked)
-                        .setBackground(GuiTextures.SLOT, GuiTextures.DATA_ORB_OVERLAY));
+                        .setBackground(GuiTextures.SLOT, GTOGuiTextures.DATA_CRYSTAL_OVERLAY));
         return group;
     }
 

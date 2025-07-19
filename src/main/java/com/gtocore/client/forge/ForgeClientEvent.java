@@ -1,17 +1,17 @@
 package com.gtocore.client.forge;
 
+import com.gtocore.client.ClientCache;
 import com.gtocore.client.Tooltips;
 import com.gtocore.common.item.StructureDetectBehavior;
 import com.gtocore.common.item.StructureWriteBehavior;
 import com.gtocore.common.network.ClientMessage;
-import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 import com.gtolib.IItem;
-import com.gtolib.api.item.MultiStepItemHelper;
 import com.gtolib.api.player.IEnhancedPlayer;
 import com.gtolib.utils.ItemUtils;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 
 import net.minecraft.client.Camera;
@@ -52,6 +52,18 @@ public final class ForgeClientEvent {
     private static final String BLOCK_PREFIX = "block." + GTOCore.MOD_ID;
 
     @SubscribeEvent
+    public static void onClientTickEvent(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
+            if (highlightingTime > 0) {
+                highlightingTime--;
+            }
+            if (ClientCache.highlightTime > 0) {
+                ClientCache.highlightTime--;
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onTooltipEvent(ItemTooltipEvent event) {
         Player player = event.getEntity();
         if (player == null) return;
@@ -63,11 +75,11 @@ public final class ForgeClientEvent {
                 event.getToolTip().add(1, Component.translatable(tooltipKey));
             }
         }
-        int maxStep = MultiStepItemHelper.getMaxStep(stack);
-        if (maxStep > 0) {
-            event.getToolTip().add(Component.translatable("gtocore.tooltip.item.craft_step",
-                    MultiStepItemHelper.getStep(stack) + " / " + maxStep));
-        }
+        // int maxStep = MultiStepItemHelper.getMaxStep(stack);
+        // if (maxStep > 0) {
+        // event.getToolTip().add(Component.translatable("gtocore.tooltip.item.craft_step",
+        // MultiStepItemHelper.getStep(stack) + " / " + maxStep));
+        // }
         Item item = stack.getItem();
         var arr = ((IItem) item).gtolib$getToolTips();
         if (arr != null) {
@@ -114,12 +126,9 @@ public final class ForgeClientEvent {
             ItemStack held = player.getMainHandItem();
             BlockPos[] poses;
             if (highlightingTime > 0) {
-                if (GTValues.CLIENT_TIME % 20 == 0) {
-                    highlightingTime--;
-                }
                 highlightSphere(camera, poseStack, highlightingPos, highlightingRadius);
             }
-            if (GTOConfig.INSTANCE.dev && StructureWriteBehavior.isItem(held)) {
+            if (GTCEu.isDev() && StructureWriteBehavior.isItem(held)) {
                 poses = StructureWriteBehavior.getPos(held);
                 if (poses != null) {
                     highlightBlock(camera, poseStack, poses);

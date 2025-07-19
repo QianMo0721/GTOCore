@@ -1,7 +1,10 @@
 package com.gtocore.api.player
 
 import com.gtocore.common.data.GTODamageTypes
-import com.gtocore.common.data.OrganItems.*
+import com.gtocore.common.data.GTOOrganItems.FAIRY_WING
+import com.gtocore.common.data.GTOOrganItems.MANA_STEEL_WING
+import com.gtocore.common.data.GTOOrganItems.MECHANICAL_WING
+import com.gtocore.utils.ktGetOrganStack
 
 import net.minecraft.network.chat.Component
 import net.minecraft.server.TickTask
@@ -11,32 +14,30 @@ import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
 
+import com.gregtechceu.gtceu.api.GTValues
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper
 import com.gtolib.api.capability.IWirelessChargerInteraction
 import com.gtolib.api.data.GTODimensions
 import com.gtolib.api.player.IEnhancedPlayer
-import com.gtolib.api.player.organ.capability.OrganCapability
+import com.gtolib.api.player.PlayerData
 import earth.terrarium.adastra.api.planets.Planet
 import earth.terrarium.adastra.api.planets.PlanetApi
 
-import java.util.*
+import java.util.UUID
 
 interface IOrganService {
-    fun tick(player: Player)
+    fun tick(player: ServerPlayer)
 }
-object OrganService : IOrganService {
-    override fun tick(player: Player) {
-        if (player !is ServerPlayer) return
+class OrganService : IOrganService {
+    override fun tick(player: ServerPlayer) {
         if (player.tickCount % 20 != 0) return
-        val cap = OrganCapability.of(player)
         val playerData = IEnhancedPlayer.of(player).playerData
-
         playerData.wingState = false
-
         // Night Vision
-        when (cap.ktMatchTierOrganSet(1)) {
+        when (playerData.organTierCache.contains(1)) {
             true -> run {
                 val shouldAdd = player.getEffect(MobEffects.NIGHT_VISION)?.let { it.duration < 20 * 45 - 20 * 15 } ?: true
                 if (!shouldAdd)return@run
@@ -48,7 +49,7 @@ object OrganService : IOrganService {
         (0..4).forEach { tier ->
             val modifierNAME = "gtocore:organ_speed_tier_$tier"
             val modifierUUID = UUID.nameUUIDFromBytes(modifierNAME.toByteArray())
-            when (cap.ktMatchTierOrganSet(tier)) {
+            when (playerData.organTierCache.contains(tier)) {
                 true -> run {
                     val modifierAmplify = 0.1f * 0.1f * tier
                     val shouldAdd = player.getAttribute(Attributes.MOVEMENT_SPEED)?.modifiers?.all { it.name != modifierNAME } ?: true
@@ -63,90 +64,42 @@ object OrganService : IOrganService {
             }
         }
         // Fly
-        when (cap.ktMatchLowTierOrganSet(4)) { // 四级器官创造飞
+        when (playerData.organTierCache.contains(4)) { // 四级器官创造飞
             true -> run {
                 playerData.wingState = true
             }
             false -> {}
         }
         // Wing
-        cap.ktGetOrganStack().flatMap { it.value }.let root@{
-            it.firstOrNull { it.item.asItem() == ORGAN_FAIRY_WING.asItem() }.let {
+        playerData.ktGetOrganStack().flatMap { it.value }.let root@{
+            it.firstOrNull { it.item.asItem() == FAIRY_WING.asItem() }.let {
                 it?.let {
-                    val durability = it.maxDamage - it.damageValue
-                    when {
-                        durability > 0 -> run {
-                            if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
-                                it.hurtAndBreak(1, player) { player1: Player ->
-                                    player1.sendSystemMessage(
-                                        Component.translatable(
-                                            "gtocore.player.organ.you_wing_is_broken",
-                                        ),
-                                    )
-                                }
-                            }
-                            playerData.wingState = true
-                            return@root
-                        }
-                    }
+                    if (tryUsingDurabilityWing(it, player, playerData)) return@root
                 }
             }
-            it.firstOrNull { it.item.asItem() == ORGAN_FRAGILE_AND_CONTAMINATED_MANA_STEEL_WING.asItem() }.let {
+            it.firstOrNull { it.item.asItem() == MANA_STEEL_WING.asItem() }.let {
                 it?.let {
-                    val durability = it.maxDamage - it.damageValue
-                    when {
-                        durability > 0 -> run {
-                            if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
-                                it.hurtAndBreak(1, player) { player1: Player ->
-                                    player1.sendSystemMessage(
-                                        Component.translatable(
-                                            "gtocore.player.organ.you_wing_is_broken",
-                                        ),
-                                    )
-                                }
-                            }
-                            playerData.wingState = true
-                            return@root
-                        }
-                    }
+                    if (tryUsingDurabilityWing(it, player, playerData)) return@root
                 }
             }
-            it.firstOrNull { it.item.asItem() == TRANSFORM_MECHANICAL_WING_TIER_1.asItem() }.let {
+            it.firstOrNull { it.item.asItem() == MECHANICAL_WING.asItem() }.let {
                 it?.let {
-                    val item = GTCapabilityHelper.getElectricItem(it) ?: return@let
-                    if (item.charge <= 0)return@let
-                    playerData.wingState = true
-                    IWirelessChargerInteraction.charge(playerData.getNetMachine(), it)
-                    if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
-                        item.discharge(256, item.tier, true, false, false)
-                    }
-                }
-            }
-            it.firstOrNull { it.item.asItem() == TRANSFORM_MECHANICAL_WING_TIER_2.asItem() }.let {
-                it?.let {
-                    val item = GTCapabilityHelper.getElectricItem(it) ?: return@let
-                    if (item.charge <= 0)return@let
-                    playerData.wingState = true
-                    IWirelessChargerInteraction.charge(playerData.getNetMachine(), it)
-                    if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
-                        item.discharge(256, item.tier, true, false, false)
-                    }
+                    if (whenUsingElectricWing(it, player, playerData)) return@root
                 }
             }
         }
         // 外星球伤害
         run {
-            val planet: Planet? = PlanetApi.API.getPlanet(player.level())
-            if (planet == null) return
-            if (!player.gameMode.isSurvival) return
-            if (GTODimensions.OVERWORLD.equals(planet.dimension().location())) return
-            if (!GTODimensions.isPlanet(planet.dimension().location())) return
+            val planet: Planet = PlanetApi.API.getPlanet(player.level()) ?: return@run
+            if (!player.gameMode.isSurvival) return@run
+            if (GTODimensions.OVERWORLD.equals(planet.dimension().location())) return@run
+            if (!GTODimensions.isPlanet(planet.dimension().location())) return@run
 
             val tier: Int = planet.tier()
             val lowerTierTag = ((tier - 1) / 2) + 1
             val cache = playerData
 
-            if (!cap.ktMatchLowTierOrganSet(lowerTierTag)) {
+            if (!playerData.organTierCache.contains(lowerTierTag)) {
                 val customComponent: Component = Component.translatable(
                     "gtocore.death.attack.turbulence_of_another_star",
                     player.name,
@@ -167,11 +120,45 @@ object OrganService : IOrganService {
                 if (currentCount > 40.0f) {
                     player.server.tell(TickTask(1, player::kill))
                     player.server.playerList.broadcastSystemMessage(customComponent, true)
-                    cache.floatCache?.remove("try_attack_count")
+                    cache.floatCache.put("try_attack_count", 0.0f)
                 } else {
                     cache.floatCache["try_attack_count"] = currentCount
                 }
             }
         }
+    }
+
+    private fun whenUsingElectricWing(stack: ItemStack, player: ServerPlayer, playerData: PlayerData?): Boolean {
+        val item = GTCapabilityHelper.getElectricItem(stack) ?: return false
+        if (item.charge <= 0) return false
+        playerData?.wingState = true
+        IWirelessChargerInteraction.charge(playerData?.getNetMachine(), stack)
+        if (player.abilities.flying && player.level().getBlockState(player.onPos.below(1)).block == Blocks.AIR) {
+            item.discharge(GTValues.V[GTValues.EV], item.tier, true, false, false)
+        }
+        return true
+    }
+
+    private fun tryUsingDurabilityWing(stack: ItemStack, player: ServerPlayer, playerData: PlayerData?): Boolean {
+        val durability = stack.maxDamage - stack.damageValue
+        when {
+            durability > 0 -> run {
+                if (player.abilities.flying &&
+                    player.level()
+                        .getBlockState(player.onPos.below(1)).block == Blocks.AIR
+                ) {
+                    stack.hurtAndBreak(1, player) { player1: Player ->
+                        player1.sendSystemMessage(
+                            Component.translatable(
+                                "gtocore.player.organ.you_wing_is_broken",
+                            ),
+                        )
+                    }
+                }
+                playerData?.wingState = true
+                return true
+            }
+        }
+        return false
     }
 }
