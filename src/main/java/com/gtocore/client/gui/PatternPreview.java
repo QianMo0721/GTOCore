@@ -44,15 +44,18 @@ import com.lowdragmc.lowdraglib.utils.TrackedDummyWorld;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.emi.emi.screen.RecipeScreen;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.longs.LongSets;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.LongStream;
 
 @OnlyIn(Dist.CLIENT)
 public final class PatternPreview extends WidgetGroup {
@@ -121,17 +124,16 @@ public final class PatternPreview extends WidgetGroup {
     }
 
     private void setupScene(MBPattern pattern) {
-        Stream<BlockPos> stream = pattern.blockMap.keySet().stream().filter(pos -> layer == -1 || layer + pattern.minY == pos.getY());
+        LongStream longStream = pattern.blockMap.keySet().longStream();
         if (pattern.controllerBase.isFormed()) {
             LongSet set = pattern.controllerBase.getMultiblockState().getMatchContext().getOrDefault("renderMask", LongSets.EMPTY_SET);
-            Set<BlockPos> modelDisabled = set.stream().map(BlockPos::of).collect(Collectors.toSet());
-            if (!modelDisabled.isEmpty()) {
-                sceneWidget.setRenderedCore(stream.filter(pos -> !modelDisabled.contains(pos)).collect(Collectors.toList()), null);
+            if (!set.isEmpty()) {
+                sceneWidget.setRenderedCore(longStream.filter(pos -> !set.contains(pos)).mapToObj(BlockPos::of).filter(pos -> layer == -1 || layer + pattern.minY == pos.getY()).collect(Collectors.toList()), null);
             } else {
-                sceneWidget.setRenderedCore(stream.toList(), null);
+                sceneWidget.setRenderedCore(longStream.mapToObj(BlockPos::of).filter(pos -> layer == -1 || layer + pattern.minY == pos.getY()).toList(), null);
             }
         } else {
-            sceneWidget.setRenderedCore(stream.toList(), null);
+            sceneWidget.setRenderedCore(longStream.mapToObj(BlockPos::of).filter(pos -> layer == -1 || layer + pattern.minY == pos.getY()).toList(), null);
         }
     }
 
@@ -175,14 +177,14 @@ public final class PatternPreview extends WidgetGroup {
             layer = -1;
             loadControllerFormed(pattern.blockMap.keySet(), controllerBase, index);
         } else {
-            sceneWidget.setRenderedCore(pattern.blockMap.keySet(), null);
+            sceneWidget.setRenderedCore(pattern.blockMap.keySet().longStream().mapToObj(BlockPos::of).toList(), null);
             controllerBase.onStructureInvalid();
         }
     }
 
     private void onPosSelected(BlockPos pos, Direction facing) {
         if (index >= patterns.length || index < 0) return;
-        TraceabilityPredicate predicate = patterns[index].predicateMap.get(pos);
+        TraceabilityPredicate predicate = patterns[index].predicateMap.get(pos.asLong());
         if (predicate != null) {
             predicates.clear();
             predicates.addAll(predicate.common);
@@ -213,7 +215,7 @@ public final class PatternPreview extends WidgetGroup {
         }
     }
 
-    private void loadControllerFormed(Collection<BlockPos> poses, IMultiController controllerBase, int index) {
+    private void loadControllerFormed(LongSet poses, IMultiController controllerBase, int index) {
         BlockPattern pattern;
         if (controllerBase instanceof IMultiStructureMachine machine) {
             pattern = machine.getMultiPattern().get(index);
@@ -225,11 +227,10 @@ public final class PatternPreview extends WidgetGroup {
         }
         if (controllerBase.isFormed()) {
             LongSet set = controllerBase.getMultiblockState().getMatchContext().getOrDefault("renderMask", LongSets.EMPTY_SET);
-            Set<BlockPos> modelDisabled = set.stream().map(BlockPos::of).collect(Collectors.toSet());
-            if (!modelDisabled.isEmpty()) {
-                sceneWidget.setRenderedCore(poses.stream().filter(pos -> !modelDisabled.contains(pos)).collect(Collectors.toList()), null);
+            if (!set.isEmpty()) {
+                sceneWidget.setRenderedCore(poses.longStream().filter(pos -> !set.contains(pos)).mapToObj(BlockPos::of).toList(), null);
             } else {
-                sceneWidget.setRenderedCore(poses, null);
+                sceneWidget.setRenderedCore(poses.longStream().mapToObj(BlockPos::of).toList(), null);
             }
         } else {
             GTCEu.LOGGER.warn("Pattern formed checking failed: {}", controllerBase.self().getDefinition());
@@ -237,14 +238,17 @@ public final class PatternPreview extends WidgetGroup {
     }
 
     private MBPattern initializePattern(MultiblockDefinition.Pattern pattern, int index) {
-        Map<BlockPos, BlockInfo> blockMap = pattern.blockMap();
+        var blockMap = pattern.blockMap();
         IMultiController controllerBase = pattern.multiController();
-        LEVEL.addBlocks(blockMap);
+        for (ObjectIterator<Long2ObjectMap.Entry<BlockInfo>> it = blockMap.long2ObjectEntrySet().fastIterator(); it.hasNext();) {
+            var entry = it.next();
+            LEVEL.addBlock(BlockPos.of(entry.getLongKey()), entry.getValue());
+        }
         if (controllerBase != null) {
             controllerBase.self().holder.getSelf().setLevel(LEVEL);
             LEVEL.setInnerBlockEntity(controllerBase.self().holder.getSelf());
         }
-        Map<BlockPos, TraceabilityPredicate> predicateMap = controllerBase == null ? null : new HashMap<>();
+        Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap = controllerBase == null ? null : new Long2ObjectOpenHashMap<>();
         if (controllerBase != null) {
             loadControllerFormed(predicateMap.keySet(), controllerBase, index);
             predicateMap = controllerBase.getMultiblockState().getMatchContext().get("predicates");
@@ -272,24 +276,25 @@ public final class PatternPreview extends WidgetGroup {
         @NotNull
         final List<ItemStack> parts;
         @NotNull
-        final Map<BlockPos, TraceabilityPredicate> predicateMap;
+        final Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap;
         @NotNull
-        final Map<BlockPos, BlockInfo> blockMap;
+        final Long2ObjectOpenHashMap<BlockInfo> blockMap;
         @NotNull
         final IMultiController controllerBase;
         final int maxY;
         final int minY;
 
-        MBPattern(@NotNull Map<BlockPos, BlockInfo> blockMap, @NotNull List<ItemStack> parts, @NotNull Map<BlockPos, TraceabilityPredicate> predicateMap, @NotNull IMultiController controllerBase) {
+        MBPattern(@NotNull Long2ObjectOpenHashMap<BlockInfo> blockMap, @NotNull List<ItemStack> parts, @NotNull Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap, @NotNull IMultiController controllerBase) {
             this.parts = parts;
             this.blockMap = blockMap;
             this.predicateMap = predicateMap;
             this.controllerBase = controllerBase;
             int min = Integer.MAX_VALUE;
             int max = Integer.MIN_VALUE;
-            for (BlockPos pos : blockMap.keySet()) {
-                min = Math.min(min, pos.getY());
-                max = Math.max(max, pos.getY());
+            for (ObjectIterator<Long2ObjectMap.Entry<BlockInfo>> it = blockMap.long2ObjectEntrySet().fastIterator(); it.hasNext();) {
+                var y = BlockPos.getY(it.next().getLongKey());
+                min = Math.min(min, y);
+                max = Math.max(max, y);
             }
             minY = min;
             maxY = max;
@@ -356,9 +361,5 @@ public final class PatternPreview extends WidgetGroup {
                 this.afterWorldRender.accept(this);
             }
         }
-    }
-
-    public DraggableScrollableWidgetGroup getScrollableWidgetGroup() {
-        return this.scrollableWidgetGroup;
     }
 }

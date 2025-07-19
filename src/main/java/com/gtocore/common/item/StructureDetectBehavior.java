@@ -133,14 +133,14 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
                 new Direction[] { Direction.SOUTH, Direction.NORTH, Direction.EAST, Direction.WEST };
         Direction upwardsFacing = controller.self().getUpwardsFacing();
         boolean allowsFlip = controller.self().allowFlip();
-        MultiblockState worldState = new MultiblockState(controller.self().getLevel(), controller.self().getPos());
+        MultiblockState worldState = new MultiblockState(controller, controller.self().getLevel(), controller.self().getPos());
         for (Direction direction : facings) {
             pattern.checkPatternAt(worldState, centerPos, direction, upwardsFacing, false, false);
             if (worldState.hasError()) {
                 errors.add(worldState.error);
             }
             if (allowsFlip) {
-                worldState = new MultiblockState(worldState.getWorld(), worldState.getPos());
+                worldState = new MultiblockState(controller, worldState.getWorld(), worldState.getPos());
                 pattern.checkPatternAt(worldState, centerPos, direction, upwardsFacing, true, false);
                 if (worldState.hasError()) {
                     errors.add(worldState.error);

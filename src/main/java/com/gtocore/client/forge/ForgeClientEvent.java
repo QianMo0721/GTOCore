@@ -5,13 +5,13 @@ import com.gtocore.client.Tooltips;
 import com.gtocore.common.item.StructureDetectBehavior;
 import com.gtocore.common.item.StructureWriteBehavior;
 import com.gtocore.common.network.ClientMessage;
-import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 import com.gtolib.IItem;
 import com.gtolib.api.player.IEnhancedPlayer;
 import com.gtolib.utils.ItemUtils;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 
 import net.minecraft.client.Camera;
@@ -128,7 +128,7 @@ public final class ForgeClientEvent {
             if (highlightingTime > 0) {
                 highlightSphere(camera, poseStack, highlightingPos, highlightingRadius);
             }
-            if (GTOConfig.INSTANCE.dev && StructureWriteBehavior.isItem(held)) {
+            if (GTCEu.isDev() && StructureWriteBehavior.isItem(held)) {
                 poses = StructureWriteBehavior.getPos(held);
                 if (poses != null) {
                     highlightBlock(camera, poseStack, poses);

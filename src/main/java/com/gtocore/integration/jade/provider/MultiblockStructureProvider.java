@@ -34,7 +34,7 @@ public final class MultiblockStructureProvider implements IBlockComponentProvide
     private static final String CHECKING = "gtocore.top.checking";
 
     @RegisterLanguage(cn = "排队等待检查结构", en = "Waiting in line for check structure")
-    private static final String WAITING = "gtocore.top.checking";
+    private static final String WAITING = "gtocore.top.waiting";
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

@@ -4,6 +4,7 @@ import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
 import dev.toma.configuration.Configuration;
@@ -139,7 +140,7 @@ public final class GTOConfig {
             ConfigHolder.INSTANCE.gameplay.hazardsEnabled = false;
             ConfigHolder.INSTANCE.gameplay.universalHazards = false;
         }
-        ConfigHolder.INSTANCE.dev.debug = INSTANCE.dev;
+        ConfigHolder.INSTANCE.dev.debug = GTCEu.isDev();
     }
 
     @Configurable
