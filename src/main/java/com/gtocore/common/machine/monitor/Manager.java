@@ -606,7 +606,6 @@ public final class Manager {
 
         @SubscribeEvent
         public static void onLoad(LevelEvent.Load event) {
-            clearCache(event.getLevel().isClientSide());
         }
 
         @SubscribeEvent
