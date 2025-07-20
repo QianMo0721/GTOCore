@@ -41,6 +41,11 @@ import static com.gtocore.client.renderer.machine.MonitorRenderer.gridToNetworkC
 public final class Manager {
 
     private static final Queue<Runnable> Loading = new LinkedList<>();
+    /**
+     * The maximum allowed size for a grid in the system. This limit exists to ensure
+     * optimal performance and prevent excessive memory usage. Exceeding this limit
+     * may result in undefined behavior or errors during grid operations.
+     */
     static final int MAX_GRID_SIZE = 16;
     static final Map<GridFacedPoint, GridNetwork> gridToNetwork = new ConcurrentHashMap<>();
 
