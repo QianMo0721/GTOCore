@@ -53,6 +53,8 @@ public class MonitorRenderer extends MachineRenderer {
     public static final ResourceLocation MONITOR_OVERLAY_FULL_CTM = GTOCore.id("block/overlay/machine/overlay_monitor_full_ctm");
     private static final Map<BlockEntity, Manager.GridNetwork> renderedThisTick = new ConcurrentHashMap<>();
     public static final Map<Manager.GridFacedPoint, Manager.GridNetwork> gridToNetworkCLIENT = new ConcurrentHashMap<>();
+    // Minimum width for text rendering, measured in pixels.
+    // This ensures that text elements are not rendered too small to be legible.
     private static final int MIN_WIDTH_TEXT = 100;
 
     public MonitorRenderer() {
