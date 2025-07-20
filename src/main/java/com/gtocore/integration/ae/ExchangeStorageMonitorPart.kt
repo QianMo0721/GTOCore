@@ -1,5 +1,7 @@
 package com.gtocore.integration.ae
 
+import com.gtocore.utils.toTicks
+
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.renderer.LightTexture
@@ -28,9 +30,11 @@ import appeng.items.parts.PartModels
 import appeng.parts.reporting.StorageMonitorPart
 import com.gtolib.utils.RLUtils
 import com.mojang.blaze3d.vertex.PoseStack
-import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 
 import kotlin.math.abs
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     StorageMonitorPart(partItem),
@@ -45,13 +49,60 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
     var humanRate: String = "-"
     var rateColorState: RateColorState = RateColorState.NEUTRAL
 
-    private val historyData = Long2LongOpenHashMap()
+    private val ringBuffer = RingBuffer(3600)
     private var lastSecondValue: Long = 0L
     private var lastMinuteValue: Long = 0L
     private var lastHourValue: Long = 0L
     private var lastSecondTick: Long = 0L
     private var lastMinuteTick: Long = 0L
     private var lastHourTick: Long = 0L
+
+    private var cachedRate: String = "-"
+    private var cachedColorState: RateColorState = RateColorState.NEUTRAL
+    private var lastCalculationTick: Long = -1L
+    private var lastCalculationAmount: Long = -1L
+
+    private class RingBuffer(private val capacity: Int) {
+        private val data = LongArray(capacity * 2)
+        private var head = 0
+        private var size = 0
+
+        fun put(tick: Long, value: Long) {
+            val index = (head * 2) % (capacity * 2)
+            data[index] = tick
+            data[index + 1] = value
+            head = (head + 1) % capacity
+            if (size < capacity) size++
+        }
+
+        fun findClosest(targetTick: Long): Pair<Long, Long>? {
+            if (size == 0) return null
+
+            var bestIndex = -1
+            var bestDiff = Long.MAX_VALUE
+
+            for (i in 0 until size) {
+                val actualIndex = ((head - 1 - i + capacity) % capacity) * 2
+                val tick = data[actualIndex]
+                val diff = abs(tick - targetTick)
+                if (diff < bestDiff) {
+                    bestDiff = diff
+                    bestIndex = actualIndex
+                }
+            }
+
+            return if (bestIndex >= 0) {
+                data[bestIndex] to data[bestIndex + 1]
+            } else {
+                null
+            }
+        }
+
+        fun clear() {
+            head = 0
+            size = 0
+        }
+    }
 
     // ////////////////////////////////
     // ****** RENDER  ******//
@@ -198,6 +249,16 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
             fun fromId(id: Int): WorkRoutine? = entries.find { it.id == id }
         }
     }
+    enum class RateColorState {
+        POSITIVE,
+        NEGATIVE,
+        NEUTRAL,
+        ;
+
+        companion object {
+            fun fromString(name: String): RateColorState = entries.find { it.name.equals(name, ignoreCase = true) } ?: NEUTRAL
+        }
+    }
     override fun onMainNodeStateChanged(reason: IGridNodeListener.State?) {
         mainNode?.let { it.grid?.tickManager?.wakeDevice(it.node) }
         super.onMainNodeStateChanged(reason)
@@ -213,7 +274,7 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         lastReportedValue = amount
     }
 
-    override fun getTickingRequest(node: IGridNode): TickingRequest = TickingRequest(5, 100, !isActive || displayed == null, true)
+    override fun getTickingRequest(node: IGridNode): TickingRequest = TickingRequest(5, 40, !isActive || displayed == null, true)
 
     override fun tickingRequest(node: IGridNode?, ticksSinceLastCall: Int): TickRateModulation {
         if (mainNode.isActive.not() || displayed == null) {
@@ -230,143 +291,156 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
 
         val hasChanged = amount != lastValue
 
-        historyData.put(currentTick, amount)
+        ringBuffer.put(currentTick, amount)
 
-        updateReferenceData(currentTick)
-        calculateChangeRate(currentTick)
-
-        if (currentTick % 100 == 0L) {
-            cleanOldHistoryData(currentTick)
+        val shouldCalculate = shouldRecalculate(currentTick, hasChanged)
+        if (shouldCalculate) {
+            updateReferenceDataOptimized(currentTick)
+            calculateChangeRateOptimized(currentTick)
         }
 
         lastTick = currentTick
         lastValue = amount
-        host.markForUpdate()
 
-        return when {
-            hasChanged -> TickRateModulation.URGENT
-            laseEnum == WorkRoutine.SECOND -> {
-                TickRateModulation.FASTER
-            }
-            laseEnum == WorkRoutine.MINUTE -> {
-                TickRateModulation.SAME
-            }
-            laseEnum == WorkRoutine.HOUR -> {
-                TickRateModulation.SLOWER
-            }
-            else -> TickRateModulation.SAME
+        if (shouldCalculate || hasChanged) {
+            host.markForUpdate()
         }
+
+        return getOptimalTickRate(hasChanged)
+    }
+
+    private fun shouldRecalculate(currentTick: Long, hasChanged: Boolean): Boolean {
+        if (hasChanged) return true
+
+        val intervalTicks = when (laseEnum) {
+            WorkRoutine.SECOND -> 5
+            WorkRoutine.MINUTE -> 20
+            WorkRoutine.HOUR -> 100
+        }
+
+        return (currentTick - lastCalculationTick) >= intervalTicks
+    }
+
+    private fun getOptimalTickRate(hasChanged: Boolean): TickRateModulation = when {
+        hasChanged -> TickRateModulation.URGENT
+        laseEnum == WorkRoutine.SECOND -> TickRateModulation.URGENT
+        laseEnum == WorkRoutine.MINUTE -> TickRateModulation.FASTER
+        laseEnum == WorkRoutine.HOUR -> TickRateModulation.SAME
+        else -> TickRateModulation.SAME
     }
 
     private fun initializeHistoryData(currentTick: Long) {
-        historyData.clear()
-        historyData.put(currentTick, amount)
+        ringBuffer.clear()
+        ringBuffer.put(currentTick, amount)
         lastSecondValue = amount
         lastMinuteValue = amount
         lastHourValue = amount
         lastSecondTick = currentTick
         lastMinuteTick = currentTick
         lastHourTick = currentTick
+        lastCalculationTick = -1L
+        lastCalculationAmount = -1L
     }
+
     // ////////////////////////////////
     // ****** 计算 ******//
     // //////////////////////////////
 
-    private fun cleanOldHistoryData(currentTick: Long) {
-        val oneHourAgo = currentTick - (20 * 60 * 60) - 200
-        val it = historyData.long2LongEntrySet().fastIterator()
-        while (it.hasNext()) {
-            val e = it.next()
-            if (e.longValue < oneHourAgo) it.remove()
-        }
-    }
+    private fun updateReferenceDataOptimized(currentTick: Long) {
+        val oneSecondAgo = currentTick - 1.seconds.toTicks()
+        val oneMinuteAgo = currentTick - 1.minutes.toTicks()
+        val oneHourAgo = currentTick - 1.hours.toTicks()
 
-    private fun updateReferenceData(currentTick: Long) {
-        val oneSecondAgo = currentTick - 20
-        val oneMinuteAgo = currentTick - (20 * 60)
-        val oneHourAgo = currentTick - (20 * 60 * 60)
-
-        if (currentTick - lastSecondTick >= 20) {
-            findClosestHistoryData(oneSecondAgo)?.let { (tick, value) ->
+        if (currentTick - lastSecondTick >= 1.seconds.toTicks()) {
+            ringBuffer.findClosest(oneSecondAgo)?.let { (tick, value) ->
                 lastSecondValue = value
                 lastSecondTick = tick
             }
         }
 
-        if (currentTick - lastMinuteTick >= 20 * 60) {
-            findClosestHistoryData(oneMinuteAgo)?.let { (tick, value) ->
+        if (currentTick - lastMinuteTick >= 1.minutes.toTicks()) {
+            ringBuffer.findClosest(oneMinuteAgo)?.let { (tick, value) ->
                 lastMinuteValue = value
                 lastMinuteTick = tick
             }
         }
 
-        if (currentTick - lastHourTick >= 20 * 60 * 60) {
-            findClosestHistoryData(oneHourAgo)?.let { (tick, value) ->
+        if (currentTick - lastHourTick >= 1.hours.toTicks()) {
+            ringBuffer.findClosest(oneHourAgo)?.let { (tick, value) ->
                 lastHourValue = value
                 lastHourTick = tick
             }
         }
     }
 
-    private fun findClosestHistoryData(targetTick: Long): Pair<Long, Long>? = historyData.long2LongEntrySet()
-        .minByOrNull { abs(it.longKey - targetTick) }
-        ?.let { it.longKey to it.longValue }
-
-    private fun calculateChangeRate(currentTick: Long) {
+    private fun calculateChangeRateOptimized(currentTick: Long) {
         val currentAmount = amount
 
-        when (laseEnum) {
-            WorkRoutine.SECOND -> {
-                val timeDiff = currentTick - lastSecondTick
-                if (timeDiff > 0) {
-                    val valueDiff = currentAmount - lastSecondValue
-                    if (valueDiff == 0L) {
-                        humanRate = "－O－"
-                        rateColorState = RateColorState.NEUTRAL
-                    } else {
-                        val ratePerSecond = valueDiff.toDouble() / (timeDiff / 20.0)
-                        rateColorState = if (ratePerSecond > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
-                        humanRate = "${displayed?.formatAmount(abs(ratePerSecond).toLong(), AmountFormat.SLOT)} /s"
-                    }
-                } else {
-                    humanRate = "－O－"
-                    rateColorState = RateColorState.NEUTRAL
-                }
+        if (currentTick == lastCalculationTick && currentAmount == lastCalculationAmount) {
+            humanRate = cachedRate
+            rateColorState = cachedColorState
+            return
+        }
+
+        val (rate, colorState) = when (laseEnum) {
+            WorkRoutine.SECOND -> calculateSecondRate(currentAmount, currentTick)
+            WorkRoutine.MINUTE -> calculateMinuteRate(currentAmount, currentTick)
+            WorkRoutine.HOUR -> calculateHourRate(currentAmount, currentTick)
+        }
+
+        humanRate = rate
+        rateColorState = colorState
+        cachedRate = rate
+        cachedColorState = colorState
+        lastCalculationTick = currentTick
+        lastCalculationAmount = currentAmount
+    }
+
+    private fun calculateSecondRate(currentAmount: Long, currentTick: Long): Pair<String, RateColorState> {
+        val timeDiff = currentTick - lastSecondTick
+        return if (timeDiff > 0) {
+            val valueDiff = currentAmount - lastSecondValue
+            if (valueDiff == 0L) {
+                "－O－" to RateColorState.NEUTRAL
+            } else {
+                val ratePerSecond = valueDiff.toDouble() / (timeDiff / 20.0)
+                val colorState = if (ratePerSecond > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
+                "${displayed?.formatAmount(abs(ratePerSecond).toLong(), AmountFormat.SLOT)} /s" to colorState
             }
-            WorkRoutine.MINUTE -> {
-                val timeDiff = currentTick - lastMinuteTick
-                if (timeDiff > 0) {
-                    val valueDiff = currentAmount - lastMinuteValue
-                    if (valueDiff == 0L) {
-                        humanRate = "－O－"
-                        rateColorState = RateColorState.NEUTRAL
-                    } else {
-                        val ratePerMinute = valueDiff.toDouble() / (timeDiff / (20.0 * 60))
-                        rateColorState = if (ratePerMinute > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
-                        humanRate = "${displayed?.formatAmount(abs(ratePerMinute).toLong(), AmountFormat.SLOT)} /m"
-                    }
-                } else {
-                    humanRate = "－O－"
-                    rateColorState = RateColorState.NEUTRAL
-                }
+        } else {
+            "－O－" to RateColorState.NEUTRAL
+        }
+    }
+
+    private fun calculateMinuteRate(currentAmount: Long, currentTick: Long): Pair<String, RateColorState> {
+        val timeDiff = currentTick - lastMinuteTick
+        return if (timeDiff > 0) {
+            val valueDiff = currentAmount - lastMinuteValue
+            if (valueDiff == 0L) {
+                "－O－" to RateColorState.NEUTRAL
+            } else {
+                val ratePerMinute = valueDiff.toDouble() / (timeDiff / (20.0 * 60))
+                val colorState = if (ratePerMinute > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
+                "${displayed?.formatAmount(abs(ratePerMinute).toLong(), AmountFormat.SLOT)} /m" to colorState
             }
-            WorkRoutine.HOUR -> {
-                val timeDiff = currentTick - lastHourTick
-                if (timeDiff > 0) {
-                    val valueDiff = currentAmount - lastHourValue
-                    if (valueDiff == 0L) {
-                        humanRate = "－O－"
-                        rateColorState = RateColorState.NEUTRAL
-                    } else {
-                        val ratePerHour = valueDiff.toDouble() / (timeDiff / (20.0 * 60 * 60))
-                        rateColorState = if (ratePerHour > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
-                        humanRate = "${displayed?.formatAmount(abs(ratePerHour).toLong(), AmountFormat.SLOT)} /h"
-                    }
-                } else {
-                    humanRate = "－O－"
-                    rateColorState = RateColorState.NEUTRAL
-                }
+        } else {
+            "－O－" to RateColorState.NEUTRAL
+        }
+    }
+
+    private fun calculateHourRate(currentAmount: Long, currentTick: Long): Pair<String, RateColorState> {
+        val timeDiff = currentTick - lastHourTick
+        return if (timeDiff > 0) {
+            val valueDiff = currentAmount - lastHourValue
+            if (valueDiff == 0L) {
+                "－O－" to RateColorState.NEUTRAL
+            } else {
+                val ratePerHour = valueDiff.toDouble() / (timeDiff / (20.0 * 60 * 60))
+                val colorState = if (ratePerHour > 0) RateColorState.POSITIVE else RateColorState.NEGATIVE
+                "${displayed?.formatAmount(abs(ratePerHour).toLong(), AmountFormat.SLOT)} /h" to colorState
             }
+        } else {
+            "－O－" to RateColorState.NEUTRAL
         }
     }
     companion object {
@@ -388,16 +462,5 @@ class ExchangeStorageMonitorPart(partItem: IPartItem<*>) :
         @PartModels
         @JvmStatic
         val MODEL_LOCKED_ON: ResourceLocation = RLUtils.ae("part/storage_monitor_locked_on")
-    }
-
-    enum class RateColorState {
-        POSITIVE,
-        NEGATIVE,
-        NEUTRAL,
-        ;
-
-        companion object {
-            fun fromString(name: String): RateColorState = entries.find { it.name.equals(name, ignoreCase = true) } ?: NEUTRAL
-        }
     }
 }
