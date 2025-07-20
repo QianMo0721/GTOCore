@@ -1,5 +1,6 @@
 package com.gtocore.data.recipe.classified;
 
+import com.gregtechceu.gtceu.common.data.machines.GTResearchMachines;
 import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOItems;
@@ -17,6 +18,7 @@ import com.gregtechceu.gtceu.common.data.*;
 import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 
+import com.hepdd.gtmthings.data.WirelessMachines;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -25,6 +27,7 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import com.kyanite.deeperdarker.content.DDItems;
 import earth.terrarium.adastra.common.registry.ModItems;
+import vazkii.botania.common.item.BotaniaItems;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gregtechceu.gtceu.api.data.tag.TagPrefix.*;
@@ -4306,5 +4309,39 @@ final class Assembler {
                 .EUt(VA[LuV])
                 .duration(200)
                 .save();
+
+        ASSEMBLER_RECIPES.builder("basic_monitor")
+                .inputItems(GTBlocks.CASING_STEEL_SOLID)
+                .inputItems(GTItems.COVER_SCREEN)
+                .inputItems(GTItems.SENSOR_LV.asStack(2))
+                .outputItems(GTOMachines.BASIC_MONITOR)
+                .EUt(15)
+                .duration(100)
+                .save();
+
+        ASSEMBLER_RECIPES.builder("monitor_elec")
+                .inputItems(GTOMachines.BASIC_MONITOR)
+                .inputItems(WirelessMachines.WIRELESS_ENERGY_MONITOR)
+                .outputItems(GTOMachines.MONITOR_MACHINE_ELECTRICITY)
+                .EUt(15)
+                .duration(100)
+                .save();
+
+        ASSEMBLER_RECIPES.builder("monitor_mana")
+                .inputItems(GTOMachines.BASIC_MONITOR)
+                .inputItems(BotaniaItems.manaMirror)
+                .outputItems(GTOMachines.MONITOR_MACHINE_MANA)
+                .EUt(15)
+                .duration(100)
+                .save();
+
+        ASSEMBLER_RECIPES.builder("monitor_cwu")
+                .inputItems(GTOMachines.BASIC_MONITOR)
+                .inputItems(GTResearchMachines.HPCA_BRIDGE_COMPONENT)
+                .outputItems(GTOMachines.MONITOR_MACHINE_CWU)
+                .EUt(15)
+                .duration(100)
+                .save();
+
     }
 }

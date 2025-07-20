@@ -25,6 +25,7 @@ class GTOProgressClientComponent(data: GTOProgressComponent) : GTOClientTooltipC
             backgroundColor = 0xFF404040.toInt(),
             borderColor = 0xFF000000.toInt(),
         )
+        guiGraphics.pose().popPose()
     }
 }
 infix fun Int.toPercentageWith(other: Int): Float = (this.toDouble() / other.toDouble()).toFloat()

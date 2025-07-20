@@ -1,6 +1,7 @@
 package com.gtocore.common.network;
 
 import com.gtocore.client.ClientCache;
+import com.gtocore.common.machine.monitor.Manager;
 import com.gtocore.config.GTOConfig;
 import com.gtocore.integration.emi.EmiPersist;
 
@@ -73,6 +74,12 @@ public final class ServerMessage {
                     EmiPersistentData.load();
                     GTOCore.LOGGER.warn("emi reloaded");
                     EmiPersist.needsRefresh = false;
+                }
+            }
+            case "monitorChanged" -> {
+                var monitorData = data.readNbt();
+                if (monitorData != null && player.level().isClientSide) {
+                    Manager.onClientReceived(monitorData);
                 }
             }
         }

@@ -26,9 +26,9 @@ object GTOComponentHandler {
         // 多步合成的物品
         run {
             if (itemStack.hasTag()) {
-                val step = itemStack.tag?.getInt("current_craft_step") ?: return
-                val maxStep = itemStack.tag?.getInt("craft_step") ?: return
-                if (maxStep == 0) return
+                val step = itemStack.tag?.getInt("current_craft_step") ?: return@run
+                val maxStep = itemStack.tag?.getInt("craft_step") ?: return@run
+                if (maxStep == 0) return@run
                 val text = Component.translatable(
                     "gtocore.tooltip.item.craft_step",
                     "$step/$maxStep (${((step.toFloat() / maxStep.toFloat()) * 100).toInt()}%)",
@@ -52,11 +52,11 @@ object GTOComponentHandler {
                 val progress: Float = (usedBytes.toFloat() / totalBytes.toFloat())
                 components.add(
                     (
-                        GTOProgressComponent(
-                            percentage = usedBytes toPercentageWith totalBytes,
-                            text = "${(progress * 100).toInt()}%",
-                        )
-                        ),
+                            GTOProgressComponent(
+                                percentage = usedBytes toPercentageWith totalBytes,
+                                text = "${(progress * 100).toInt()}%",
+                            )
+                            ),
                 )
             }
         }
