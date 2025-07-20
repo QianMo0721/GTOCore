@@ -78,13 +78,13 @@ public class MonitorMana extends AbstractInfoProviderMonitor implements ITeamInf
                         DisplayRegistry.MANA_CHANGE.id(),
                         Component.translatable("gtocore.machine.monitor.mana.decrease",
                                 manaChangeAbs).withStyle(ChatFormatting.GOLD)
-                                .append(Component.literal(String.format(" (%.02f)", manaChangeAbs / 1e6)).withStyle(ChatFormatting.AQUA))
+                                .append(Component.literal(String.format(" (%.02f)", manaChangeAbs / MANA_PER_POOL)).withStyle(ChatFormatting.AQUA))
                                 .getVisualOrderText());
                 informationList.addIfAbsent(
                         DisplayRegistry.MANA_CHANGE_AS_POOL.id(),
                         Component.translatable("gtocore.machine.monitor.mana.pool.0")
                                 .withStyle(ChatFormatting.BLUE)
-                                .append(Component.literal(String.format("%.02f", manaChangeAbs / 1e6)).withStyle(ChatFormatting.AQUA))
+                                .append(Component.literal(String.format("%.02f", manaChangeAbs / MANA_PER_POOL)).withStyle(ChatFormatting.AQUA))
                                 .append(Component.translatable("gtocore.machine.monitor.mana.pool.2").withStyle(ChatFormatting.BLUE))
                                 .getVisualOrderText());
                 informationList.addIfAbsent(
