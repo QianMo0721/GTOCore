@@ -2,6 +2,7 @@ package com.gtocore.common.data
 
 import com.gtocore.integration.ae.ExchangeStorageMonitorPart
 
+import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 
 import appeng.api.parts.IPart
@@ -26,16 +27,20 @@ object GTOAEParts {
     val EXCHANGE_STORAGE_MONITOR: Supplier<ItemDefinition<PartItem<ExchangeStorageMonitorPart>>> = createPart(
         id = "exchange_storage_monitor",
         en = "Exchange Storage Monitor",
-        cn = "交换存储监控器",
+        cn = "交换率存储监控器",
         partClass = ExchangeStorageMonitorPart::class.java,
         factory = ::ExchangeStorageMonitorPart,
+        tooltips = listOf(
+            ComponentBuilder.create("此物品可以监控物品的交换速率", "This item can monitor the exchange rate of items", { p -> p }).buildSingle(),
+            ComponentBuilder.create("锁定状态下右击可切换监控间隔", "In locked state, right click to switch monitoring interval", { p -> p }).buildSingle(),
+        ),
     )
 
-    private fun <T : IPart> createPart(id: String, en: String, cn: String, partClass: Class<T>, factory: Function<IPartItem<T>, T>): Supplier<ItemDefinition<PartItem<T>>> {
+    private fun <T : IPart> createPart(id: String, en: String, cn: String, partClass: Class<T>, factory: Function<IPartItem<T>, T>, tooltips: List<Component> = listOf()): Supplier<ItemDefinition<PartItem<T>>> {
         PartModels.registerModels(PartModelsHelper.createModels(partClass))
         val function: (Item.Properties) -> PartItem<T> = { p -> PartItem(p, partClass, factory) }
         val item: ItemEntry<PartItem<T>> = item(id, cn, function)
-            .toolTips(ComponentBuilder.create("此物品可以监控物品的交换速率", "This item can monitor the exchange rate of items", { p -> p }).buildSingle(), ComponentBuilder.create("锁定状态下右击可切换监控间隔", "In locked state, right click to switch monitoring interval", { p -> p }).buildSingle())
+            .toolTips(*tooltips.toTypedArray())
             .lang(en)
             .model(NonNullBiConsumer.noop())
             .register()
