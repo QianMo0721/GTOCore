@@ -16,7 +16,7 @@ public class GtmtReflect {
             method.setAccessible(true);
             return (Component) method.invoke(null, value);
         } catch (Exception e) {
-            GTOCore.LOGGER.error("Failed to invoke getTimeToFillDrainText method via reflection", e);
+            GTOCore.LOGGER.error("Failed to invoke GtmtReflect.getTimeToFillDrainText(BigInteger value) method via reflection", e);
             return Component.empty();
         }
     }
