@@ -55,7 +55,7 @@ public class MonitorMana extends AbstractInfoProviderMonitor implements ITeamInf
                     DisplayRegistry.MANA_CURRENT_AS_POOL.id(),
                     Component.translatable("gtocore.machine.monitor.mana.pool.0")
                             .withStyle(ChatFormatting.GRAY)
-                            .append(Component.literal(String.format("%.02f", manaBufferCache / 1e6)).withStyle(ChatFormatting.AQUA))
+                            .append(Component.literal(String.format("%.02f", (float) (manaBufferCache / ManaPoolBlockEntity.MAX_MANA))).withStyle(ChatFormatting.AQUA))
                             .append(Component.translatable("gtocore.machine.monitor.mana.pool.1").withStyle(ChatFormatting.GRAY))
                             .getVisualOrderText());
             long manaChange = (manaBufferCache - manaBufferCache1s);
@@ -65,7 +65,7 @@ public class MonitorMana extends AbstractInfoProviderMonitor implements ITeamInf
                         DisplayRegistry.MANA_CHANGE.id(),
                         Component.translatable("gtocore.machine.monitor.mana.increase",
                                 manaChangeAbs).withStyle(ChatFormatting.BLUE)
-                                .append(Component.literal(String.valueOf(manaChangeAbs / 1e6)).withStyle(ChatFormatting.AQUA))
+                                .append(Component.literal(String.valueOf(manaChangeAbs)).withStyle(ChatFormatting.AQUA))
                                 .getVisualOrderText());
                 informationList.addIfAbsent(
                         DisplayRegistry.MANA_CHANGE_AS_POOL.id(),
