@@ -150,7 +150,7 @@ public final class Manager {
         }
 
         static GridFacing get(Direction facing, ResourceKey<Level> level, int theThirdValue) {
-            Long key = (long) Arrays.asList(facing, level, theThirdValue).hashCode();
+            Long key = (long) Objects.hash(facing, level, theThirdValue);
             return GRID_AXES.computeIfAbsent(key, k -> new GridFacing(facing, level, theThirdValue));
         }
 
