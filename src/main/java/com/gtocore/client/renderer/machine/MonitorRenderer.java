@@ -1,8 +1,8 @@
 package com.gtocore.client.renderer.machine;
 
 import com.gtocore.common.machine.monitor.*;
-
 import com.gtocore.config.GTOConfig;
+
 import com.gtolib.GTOCore;
 
 import com.gregtechceu.gtceu.GTCEu;

@@ -1,6 +1,5 @@
 package com.gtocore.data.recipe.classified;
 
-import com.gregtechceu.gtceu.common.data.machines.GTResearchMachines;
 import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOItems;
@@ -16,15 +15,16 @@ import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
 import com.gregtechceu.gtceu.common.data.*;
 import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
+import com.gregtechceu.gtceu.common.data.machines.GTResearchMachines;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 
-import com.hepdd.gtmthings.data.WirelessMachines;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
+import com.hepdd.gtmthings.data.WirelessMachines;
 import com.kyanite.deeperdarker.content.DDItems;
 import earth.terrarium.adastra.common.registry.ModItems;
 import vazkii.botania.common.item.BotaniaItems;
@@ -4342,6 +4342,5 @@ final class Assembler {
                 .EUt(15)
                 .duration(100)
                 .save();
-
     }
 }

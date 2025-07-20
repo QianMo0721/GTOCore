@@ -52,11 +52,11 @@ object GTOComponentHandler {
                 val progress: Float = (usedBytes.toFloat() / totalBytes.toFloat())
                 components.add(
                     (
-                            GTOProgressComponent(
-                                percentage = usedBytes toPercentageWith totalBytes,
-                                text = "${(progress * 100).toInt()}%",
-                            )
-                            ),
+                        GTOProgressComponent(
+                            percentage = usedBytes toPercentageWith totalBytes,
+                            text = "${(progress * 100).toInt()}%",
+                        )
+                        ),
                 )
             }
         }
