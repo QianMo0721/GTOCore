@@ -1,12 +1,12 @@
 package com.gtocore.common.machine.monitor;
 
 import com.gtocore.common.network.ServerMessage;
+import com.gtocore.config.GTOConfig;
 
 import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 
-import com.gtocore.config.GTOConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -561,6 +561,7 @@ public final class Manager {
         }
 
         private final List<IInformationProvider> informationProviders = new ArrayList<>();
+        private final List<IDisplayComponent> displayComponentCache = new ArrayList<>();
         private long lastRefreshTime = 0;
 
         /// 这个将会被客户端所用到！！！
@@ -576,18 +577,18 @@ public final class Manager {
                         informationProviders.add(provider);
                     }
                 }
+                displayComponentCache.clear();
+                informationProviders.stream()
+                        .sorted(Comparator.comparingLong(IInformationProvider::getPriority).reversed())
+                        .map(IInformationProvider::provideInformation)
+                        .forEachOrdered(displayComponentCache::addAll);
             }
         }
 
         /// 这个将会被客户端所用到！！！
         @NotNull
         public List<IDisplayComponent> getForDisplay() {
-            List<IDisplayComponent> list = new ArrayList<>();
-            informationProviders.stream()
-                    .sorted(Comparator.comparingLong(IInformationProvider::getPriority).reversed())
-                    .map(IInformationProvider::provideInformation)
-                    .forEachOrdered(list::addAll);
-            return list;
+            return new ArrayList<>(displayComponentCache);
         }
     }
 

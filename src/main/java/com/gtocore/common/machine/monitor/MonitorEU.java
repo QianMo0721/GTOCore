@@ -2,9 +2,9 @@ package com.gtocore.common.machine.monitor;
 
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
-import com.gtocore.mixin.gtmt.IWirelessMonitorAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -121,11 +121,11 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
                 textListCache[7] = (Component.translatable("gtceu.multiblock.power_substation.time_to_fill",
                         container.getCapacity() == null ?
                                 Component.translatable("gtmthings.machine.wireless_energy_monitor.tooltip.time_to_fill") :
-                                IWirelessMonitorAccessor.getTimeToFillDrainText(container.getCapacity().subtract(energyTotal).divide(multiply)))
+                                PowerSubstationMachine.getTimeToFillDrainText(container.getCapacity().subtract(energyTotal).divide(multiply)))
                         .withStyle(ChatFormatting.GRAY));
             } else if (compare < 0) {
                 textListCache[7] = (Component.translatable("gtceu.multiblock.power_substation.time_to_drain",
-                        IWirelessMonitorAccessor.getTimeToFillDrainText(energyTotal.divide(multiply))).withStyle(ChatFormatting.GRAY));
+                        PowerSubstationMachine.getTimeToFillDrainText(energyTotal.divide(multiply))).withStyle(ChatFormatting.GRAY));
             } else textListCache[7] = Component.translatable("gtceu.multiblock.power_substation.time_to_drain",
                     Component.translatable("gtceu.multiblock.power_substation.time_forever").withStyle(ChatFormatting.GRAY));
 

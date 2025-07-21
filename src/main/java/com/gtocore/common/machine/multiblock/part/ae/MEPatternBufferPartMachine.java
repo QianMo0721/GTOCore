@@ -64,7 +64,6 @@ import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -96,15 +95,6 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     public final NotifiableNotConsumableItemHandler circuitInventorySimulated;
 
     @Persisted
-    public final NotifiableNotConsumableItemHandler[] shareInventorys;
-    @Persisted
-    public final NotifiableNotConsumableFluidHandler[] shareTanks;
-    @Persisted
-    public final NotifiableNotConsumableItemHandler[] circuitInventorys;
-    @Persisted
-    public final List<Integer> circuitConfigurations;
-
-    @Persisted
     private final Set<BlockPos> proxies = new ObjectOpenHashSet<>();
     private final Set<MEPatternBufferProxyPartMachine> proxyMachines = new ReferenceOpenHashSet<>();
     public final InternalSlotRecipeHandler internalRecipeHandler;
@@ -121,16 +111,6 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         this.shareInventory = createShareInventory();
         this.shareTank = new NotifiableNotConsumableFluidHandler(this, 9, 64000);
         this.circuitInventorySimulated = createCircuitInventory();
-        this.shareInventorys = new NotifiableNotConsumableItemHandler[maxPatternCount];
-        this.shareTanks = new NotifiableNotConsumableFluidHandler[maxPatternCount];
-        this.circuitInventorys = new NotifiableNotConsumableItemHandler[maxPatternCount];
-        this.circuitConfigurations = new ArrayList<>(Collections.nCopies(maxPatternCount, 0));
-        for (int i = 0; i < maxPatternCount; i++) {
-            this.shareInventorys[i] = createShareInventory();
-            this.shareTanks[i] = new NotifiableNotConsumableFluidHandler(this, 9, 64000);
-            this.circuitInventorys[i] = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE);
-            this.circuitInventorys[i].setFilter(IntCircuitBehaviour::isIntegratedCircuit);
-        }
         this.internalRecipeHandler = new InternalSlotRecipeHandler(this, getInternalInventory());
     }
 
@@ -264,8 +244,8 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     public void onMachineRemoved() {
         super.onMachineRemoved();
         clearInventory(shareInventory);
-        for (var inv : shareInventorys) {
-            clearInventory(inv);
+        for (var inv : getInternalInventory()) {
+            clearInventory(inv.shareInventory);
         }
     }
 
@@ -300,9 +280,18 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         private List<ItemStack> itemStacks = null;
         private List<FluidStack> fluidStacks = null;
 
+        public final NotifiableNotConsumableItemHandler shareInventory;
+        public final NotifiableNotConsumableFluidHandler shareTank;
+        public final NotifiableNotConsumableItemHandler circuitInventory;
+
         private InternalSlot(MEPatternBufferPartMachine machine, int index) {
             this.machine = machine;
             this.index = index;
+            this.shareInventory = machine.createShareInventory();
+            this.shareTank = new NotifiableNotConsumableFluidHandler(machine, 9, 64000);
+            this.circuitInventory = new NotifiableNotConsumableItemHandler(machine, 1, IO.NONE);
+            this.circuitInventory.setFilter(IntCircuitBehaviour::isIntegratedCircuit);
+            this.circuitInventory.shouldSearchContent(false);
             this.inputSink = new InputSink(this);
         }
 
@@ -526,6 +515,13 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
                 fluidsTag.add(ct);
             }
             if (!fluidsTag.isEmpty()) tag.put("fluidInventory", fluidsTag);
+            tag.put("inv", shareInventory.storage.serializeNBT());
+            ListTag tanks = new ListTag();
+            for (var tank : shareTank.getStorages()) {
+                tanks.add(tank.serializeNBT());
+            }
+            tag.put("tank", tanks);
+            tag.putInt("c", IntCircuitBehaviour.getCircuitConfiguration(circuitInventory.storage.getStackInSlot(0)));
             return tag;
         }
 
@@ -550,6 +546,13 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
                     fluidInventory.put(stack, amount);
                 }
             }
+            shareInventory.storage.deserializeNBT(tag.getCompound("inv"));
+            ListTag tanks = tag.getList("tank", Tag.TAG_COMPOUND);
+            for (int i = 0; i < tanks.size(); i++) {
+                var tank = shareTank.getStorages()[i];
+                tank.deserializeNBT(tanks.getCompound(i));
+            }
+            circuitInventory.storage.setStackInSlot(0, IntCircuitBehaviour.stack(tag.getInt("c")));
         }
 
         @Override

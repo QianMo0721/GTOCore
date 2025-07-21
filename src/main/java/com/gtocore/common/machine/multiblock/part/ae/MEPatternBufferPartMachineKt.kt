@@ -51,7 +51,7 @@ open class MEPatternBufferPartMachineKt(holder: IMachineBlockEntity, maxPatternC
             configurator >= 0 && configurator < maxPatternCount -> {
                 vBox(width = availableWidth, alwaysHorizonCenter = true, style = { spacing = 2 }) {
                     val width = this@vBox.availableWidth
-                    val itemHandler = shareInventorys[configurator].storage
+                    val itemHandler = getInternalInventory()[configurator].shareInventory.storage
                     textBlock(maxWidth = width, textSupplier = { Component.translatable(item_special) })
                     (0 until itemHandler.slots).chunked(9).forEach { indices ->
                         hBox(height = 18) {
@@ -64,7 +64,7 @@ open class MEPatternBufferPartMachineKt(holder: IMachineBlockEntity, maxPatternC
                             }
                         }
                     }
-                    val fluidHandler: Array<CustomFluidTank> = shareTanks[configurator].storages
+                    val fluidHandler: Array<CustomFluidTank> = getInternalInventory()[configurator].shareTank.storages
                     textBlock(maxWidth = width, textSupplier = { Component.translatable(fluid_special) })
                     (0 until fluidHandler.size).chunked(9).forEach { indices ->
                         hBox(height = 18) {
@@ -83,10 +83,10 @@ open class MEPatternBufferPartMachineKt(holder: IMachineBlockEntity, maxPatternC
                             }
                         }
                     }
-                    val circuitHandler = circuitInventorys[configurator].storage
+                    val circuitHandler = getInternalInventory()[configurator].circuitInventory.storage
                     textBlock(maxWidth = width, textSupplier = { Component.translatable(circuit_special) })
                     hBox(height = 18, style = { spacing = 4 }) {
-                        run { if (circuitInventorys[configurator].storage.getStackInSlot(0).isEmpty) circuitInventorys[configurator].storage.setStackInSlot(0, IntCircuitBehaviour.stack(0)) }
+                        run { if (getInternalInventory()[configurator].circuitInventory.storage.getStackInSlot(0).isEmpty) getInternalInventory()[configurator].circuitInventory.storage.setStackInSlot(0, IntCircuitBehaviour.stack(0)) }
                         widget(
                             SlotWidget(circuitHandler, 0, 0, 0, false, false).apply {
                                 setBackgroundTexture(GuiTextures.SLOT)
@@ -95,14 +95,13 @@ open class MEPatternBufferPartMachineKt(holder: IMachineBlockEntity, maxPatternC
                         )
                         field(
                             height = 18,
-                            getter = { circuitConfigurations[configurator].toString() },
+                            getter = { IntCircuitBehaviour.getCircuitConfiguration(getInternalInventory()[configurator].circuitInventory.storage.getStackInSlot(0)).toString() },
                             setter = {
                                 val circuit = when {
                                     it.toIntOrNull() == null -> 0
                                     else -> it.toInt().coerceAtMost(32).coerceAtLeast(0)
                                 }
-                                circuitConfigurations[configurator] = circuit
-                                circuitInventorys[configurator].storage.setStackInSlot(0, IntCircuitBehaviour.stack(circuit))
+                                getInternalInventory()[configurator].circuitInventory.storage.setStackInSlot(0, IntCircuitBehaviour.stack(circuit))
                             },
                         )
                     }

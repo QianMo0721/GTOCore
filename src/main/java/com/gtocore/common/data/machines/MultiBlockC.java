@@ -23,7 +23,6 @@ import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.lang.CNEN;
-import com.gtolib.api.machine.feature.multiblock.ICoilMachine;
 import com.gtolib.api.machine.feature.multiblock.ITierCasingMachine;
 import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
@@ -35,6 +34,7 @@ import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.ICoilMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
@@ -592,7 +592,7 @@ public final class MultiBlockC {
             .tooltipsKey("gtocore.machine.automatic_chisel.tooltip.1")
             .tooltipsText("线圈温度越高，运行速度越快", "The higher the coil temperature, the faster the operation speed")
             .recipeTypes(GTORecipeTypes.CHEMICAL_VAPOR_DEPOSITION_RECIPES)
-            .recipeModifiers((machine, recipe) -> RecipeModifierFunction.recipeReduction(recipe, 1, Math.log(900) / Math.log(((ICoilMachine) machine).gto$getTemperature())), RecipeModifierFunction.OVERCLOCKING)
+            .recipeModifiers((machine, recipe) -> RecipeModifierFunction.recipeReduction(recipe, 1, Math.log(900) / Math.log(((ICoilMachine) machine).getTemperature())), RecipeModifierFunction.OVERCLOCKING)
             .block(GTBlocks.CASING_PTFE_INERT)
             .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
                     .aisle("     BBHBB", "     BGGGB", "     BGGGB", "     BGGGB", "     EEEEE")
@@ -612,7 +612,7 @@ public final class MultiBlockC {
                     .where('H', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
-            .additionalDisplay((controller, components) -> components.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", Component.literal(FormattingUtil.formatNumbers(Math.log(900) / Math.log(((ICoilMachine) controller).gto$getTemperature()))))))
+            .additionalDisplay((controller, components) -> components.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", Component.literal(FormattingUtil.formatNumbers(Math.log(900) / Math.log(((ICoilMachine) controller).getTemperature()))))))
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_inert_ptfe"), GTCEu.id("block/multiblock/gcym/large_chemical_bath"))
             .register();
 

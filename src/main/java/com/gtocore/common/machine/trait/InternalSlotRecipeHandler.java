@@ -34,9 +34,8 @@ public final class InternalSlotRecipeHandler {
 
     public InternalSlotRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot[] slots) {
         this.slotHandlers = new ArrayList<>(slots.length);
-        for (int i = 0; i < slots.length; i++) {
-            var rhl = new SlotRHL(buffer, slots[i], i);
-            slotHandlers.add(rhl);
+        for (MEPatternBufferPartMachine.InternalSlot slot : slots) {
+            slotHandlers.add(new SlotRHL(buffer, slot));
         }
     }
 
@@ -103,12 +102,12 @@ public final class InternalSlotRecipeHandler {
         final IRecipeHandlerTrait<Ingredient> itemRecipeHandler;
         final IRecipeHandlerTrait<FluidIngredient> fluidRecipeHandler;
 
-        private SlotRHL(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot, int idx) {
+        private SlotRHL(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot) {
             super(slot, buffer);
             slot.rhl = this;
             itemRecipeHandler = new SlotItemRecipeHandler(buffer, slot);
             fluidRecipeHandler = new SlotFluidRecipeHandler(buffer, slot);
-            addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank, buffer.circuitInventorys[idx], buffer.shareInventorys[idx], buffer.shareTanks[idx]);
+            addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank, slot.circuitInventory, slot.shareInventory, slot.shareTank);
         }
     }
 

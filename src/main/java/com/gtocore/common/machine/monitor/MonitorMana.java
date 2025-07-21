@@ -1,9 +1,9 @@
 package com.gtocore.common.machine.monitor;
 
-import com.gtocore.mixin.gtmt.IWirelessMonitorAccessor;
 import com.gtolib.api.wireless.WirelessManaContainer;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -90,7 +90,7 @@ public class MonitorMana extends AbstractInfoProviderMonitor implements ITeamInf
                 informationList.addIfAbsent(
                         DisplayRegistry.MANA_REMAINING_TIME.id(),
                         Component.translatable("gtceu.multiblock.power_substation.time_to_drain",
-                                        IWirelessMonitorAccessor.getTimeToFillDrainText(BigInteger.valueOf(manaChangeAbs)))
+                                PowerSubstationMachine.getTimeToFillDrainText(BigInteger.valueOf(manaChangeAbs)))
                                 .getVisualOrderText());
             }
             informationList.addIfAbsent(
