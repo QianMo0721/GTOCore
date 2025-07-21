@@ -27,7 +27,7 @@ object GTOOrganItems {
     // ////////////////////////////////
     // ****** 翅膀 ******//
     // //////////////////////////////
-    val FAIRY_WING = OrganItemBase.registerOrganItem(id = "fairy_wing", organType = OrganType.Wing, resourceName = "fairy_wing", en = "Fairy Wing", cn = "翅膀 妖精之翼", itemFactory = { properties, organType -> OrganItem(properties.durability(10.minutes.toSeconds()), organType) })
+    val FAIRY_WING = OrganItemBase.registerOrganItem(id = "fairy_wing", organType = OrganType.Wing, resourceName = "fairy_wing", en = "Fairy Wing", cn = "翅膀 妖精之翼", itemFactory = { properties, organType -> OrganItem(properties.durability(15.minutes.toSeconds()), organType) })
     val MANA_STEEL_WING = OrganItemBase.registerOrganItem(id = "mana_steel_wing", organType = OrganType.Wing, resourceName = "mana_steel_wing", en = "Mana Steel Wing", cn = "翅膀 魔力钢之翼", itemFactory = { properties, organType -> OrganItem(properties.durability(4.hours.toSeconds()), organType) })
     val MECHANICAL_WING = OrganItemBase.registerOrganItem(
         id = "mechanical_wing",

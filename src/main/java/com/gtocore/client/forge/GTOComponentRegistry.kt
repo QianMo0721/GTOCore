@@ -1,7 +1,7 @@
 package com.gtocore.common.forge.render
 
-import com.gtocore.api.gui.g.impl.GTOProgressClientComponent
-import com.gtocore.api.gui.g.impl.GTOProgressComponent
+import com.gtocore.api.gui.graphic.impl.GTOProgressClientComponent
+import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent
 
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
@@ -14,7 +14,7 @@ object GTOComponentRegistry {
     @JvmStatic
     fun onClientSetup(event: RegisterClientTooltipComponentFactoriesEvent) {
         event.register(
-            GTOProgressComponent::class.java,
+            GTOProgressToolTipComponent::class.java,
             ::GTOProgressClientComponent,
         )
     }

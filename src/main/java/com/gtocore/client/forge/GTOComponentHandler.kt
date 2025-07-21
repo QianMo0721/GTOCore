@@ -1,7 +1,9 @@
 package com.gtocore.common.forge.render
 
-import com.gtocore.api.gui.g.impl.GTOProgressComponent
-import com.gtocore.api.gui.g.impl.toPercentageWith
+import com.gtocore.api.gui.graphic.GTOToolTipComponent
+import com.gtocore.api.gui.graphic.GTOTooltipComponentItem
+import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent
+import com.gtocore.api.gui.graphic.impl.toPercentageWith
 
 import net.minecraft.network.chat.Component
 import net.minecraftforge.api.distmarker.Dist
@@ -12,7 +14,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 
 import appeng.api.storage.StorageCells
 import appeng.api.storage.cells.IBasicCellItem
-import appeng.items.tools.powered.PortableCellItem
 import appeng.me.cells.BasicCellHandler
 import com.mojang.datafixers.util.Either
 
@@ -22,7 +23,14 @@ object GTOComponentHandler {
     @JvmStatic
     fun onGatherTooltipComponents(event: RenderTooltipEvent.GatherComponents) {
         val itemStack = event.itemStack
-        val components = mutableListOf<GTOProgressComponent>()
+        val components = mutableListOf<GTOToolTipComponent>()
+        val item = itemStack.item
+        // 附着在Item上的处理器
+        run {
+            if (item is GTOTooltipComponentItem) {
+                item.attachGTOTooltip(itemStack, components)
+            }
+        }
         // 多步合成的物品
         run {
             if (itemStack.hasTag()) {
@@ -33,7 +41,7 @@ object GTOComponentHandler {
                     "gtocore.tooltip.item.craft_step",
                     "$step/$maxStep (${((step.toFloat() / maxStep.toFloat()) * 100).toInt()}%)",
                 ).string
-                val component = GTOProgressComponent(
+                val component = GTOProgressToolTipComponent(
                     percentage = step toPercentageWith maxStep,
                     text = text,
                 )
@@ -42,7 +50,7 @@ object GTOComponentHandler {
         }
         // AE使用量
         run {
-            if (itemStack.item is IBasicCellItem || itemStack.item is PortableCellItem) {
+            if (item is IBasicCellItem) {
                 val cellHandler = StorageCells.getHandler(itemStack) ?: return@run
                 if (cellHandler !is BasicCellHandler) return@run
                 val cellInventory = cellHandler.getCellInventory(itemStack, null) ?: return@run
@@ -52,7 +60,7 @@ object GTOComponentHandler {
                 val progress: Float = (usedBytes.toFloat() / totalBytes.toFloat())
                 components.add(
                     (
-                        GTOProgressComponent(
+                        GTOProgressToolTipComponent(
                             percentage = usedBytes toPercentageWith totalBytes,
                             text = "${(progress * 100).toInt()}%",
                         )

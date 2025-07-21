@@ -1,17 +1,16 @@
-package com.gtocore.api.gui.g.impl
+package com.gtocore.api.gui.graphic.impl
 
-import com.gtocore.api.gui.graphic.helper.GTOClientTooltipComponent
-import com.gtocore.api.gui.graphic.helper.GTOComponent
+import com.gtocore.api.gui.graphic.GTOClientTooltipComponent
+import com.gtocore.api.gui.graphic.GTOToolTipComponent
+import com.gtocore.api.gui.helper.ProgressBarColorStyle
 import com.gtocore.api.gui.helper.ProgressBarHelper
 
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.world.inventory.tooltip.TooltipComponent
-class GTOProgressComponent(val percentage: Float, val text: String = "") :
-    GTOComponent(height = 10, width = 150),
-    TooltipComponent
 
-class GTOProgressClientComponent(data: GTOProgressComponent) : GTOClientTooltipComponent<GTOProgressComponent>(data) {
+class GTOProgressToolTipComponent(val percentage: Float, val text: String = "", val progressColorStyle: ProgressBarColorStyle = ProgressBarColorStyle.DEFAULT_GREEN) : GTOToolTipComponent(height = 10, width = 150)
+
+class GTOProgressClientComponent(data: GTOProgressToolTipComponent) : GTOClientTooltipComponent<GTOProgressToolTipComponent>(data) {
     override fun renderImage(font: Font, x: Int, y: Int, guiGraphics: GuiGraphics) {
         guiGraphics.pose().pushPose()
         guiGraphics.pose().translate(x.toDouble() - 1, y.toDouble(), 400.0)
@@ -24,6 +23,7 @@ class GTOProgressClientComponent(data: GTOProgressComponent) : GTOClientTooltipC
             borderWidth = 1,
             backgroundColor = 0xFF404040.toInt(),
             borderColor = 0xFF000000.toInt(),
+            progressColorStyle = data.progressColorStyle,
         )
         guiGraphics.pose().popPose()
     }
