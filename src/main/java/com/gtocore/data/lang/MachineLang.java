@@ -1,5 +1,7 @@
 package com.gtocore.data.lang;
 
+import com.gtocore.common.machine.monitor.DisplayRegistry;
+
 import static com.gtocore.data.lang.LangHandler.addCNEN;
 
 final class MachineLang {
@@ -133,5 +135,18 @@ final class MachineLang {
         addCNEN("gtocore.machine.wireless_mode", "无线模式", "Wireless Mode");
         addCNEN("gtocore.machine.alchemical_device.1", "嬗变中", "Transmutation");
         addCNEN("gtocore.machine.alchemical_device.2", "完美嬗变中", "Perfect Transmutation");
+        addCNEN("gtocore.machine.monitor.no_information", "没有可显示的信息", "No information to display");
+        addCNEN("gtocore.machine.monitor.mana.current", "当前网络魔力: ", "Current Network Mana: ");
+        addCNEN("gtocore.machine.monitor.mana.pool.0", "(约", "(Approx. ");
+        addCNEN("gtocore.machine.monitor.mana.pool.1", "池)", "Pools)");
+        addCNEN("gtocore.machine.monitor.mana.pool.2", "池/s)", "Pools per Second)");
+        addCNEN("gtocore.machine.monitor.mana.increase", "每秒魔力增长: ", "Mana Growth Per Second: ");
+        addCNEN("gtocore.machine.monitor.mana.decrease", "每秒魔力消耗: ", "Mana Consumption Per Second: ");
+        addCNEN("gtocore.machine.monitor.cwu.capacity", "当前网络算力: %s/%s CWU", "Current Network Hashrate: %s/%s CWU");
+        addCNEN("gtocore.machine.monitor.cwu.used", "（已使用: %s CWU）", "(Used: %s CWU)");
+        addCNEN("gtocore.machine.monitor.cwu.no_container", "警告：算力信息缺失！", "Warning: Hashrate information is missing!");
+        addCNEN("gtocore.machine.monitor.priority", "调整显示的优先级", "Adjust the display priority");
+
+        DisplayRegistry.registerLanguage();
     }
 }

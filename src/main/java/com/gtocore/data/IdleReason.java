@@ -10,7 +10,7 @@ public final class IdleReason extends com.gtolib.api.recipe.IdleReason {
 
     public static final IdleReason GRIND_BALL = new IdleReason("gtocore.idle_reason.grindball", "需要研磨球", "Need to grind ball");
 
-    public static final IdleReason CHARGE = new IdleReason("gtocore.idle_reason.charge", "需要充能", "Need to charge");
+    public static final IdleReason CHARGE = new IdleReason("gtocore.idle_reason.charge", "工具剩余电量不足以支持此次运行", "Tool charge is not enough to support this run");
 
     public static final IdleReason FELLING_TOOL = new IdleReason("gtocore.idle_reason.felling_tool", "需要伐木工具", "Need to felling tool");
 

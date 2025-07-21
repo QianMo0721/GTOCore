@@ -3,12 +3,14 @@ package com.gtocore.common.data;
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.client.renderer.machine.BallHatchRenderer;
 import com.gtocore.client.renderer.machine.HeaterRenderer;
+import com.gtocore.client.renderer.machine.MonitorRenderer;
 import com.gtocore.client.renderer.machine.WindMillTurbineRenderer;
 import com.gtocore.common.data.machines.*;
 import com.gtocore.common.machine.electric.ElectricHeaterMachine;
 import com.gtocore.common.machine.electric.VacuumPumpMachine;
 import com.gtocore.common.machine.generator.LightningRodMachine;
 import com.gtocore.common.machine.generator.WindMillTurbineMachine;
+import com.gtocore.common.machine.monitor.*;
 import com.gtocore.common.machine.multiblock.part.*;
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine;
 import com.gtocore.common.machine.multiblock.part.maintenance.*;
@@ -25,16 +27,24 @@ import com.gtolib.api.machine.SimpleNoEnergyMachine;
 import com.gtolib.api.machine.feature.multiblock.IParallelMachine;
 import com.gtolib.api.machine.part.DroneHatchPartMachine;
 import com.gtolib.api.machine.part.ItemHatchPartMachine;
+import com.gtolib.api.registries.GTORegistration;
+import com.gtolib.utils.register.BlockRegisterUtils;
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
+import com.gregtechceu.gtceu.api.data.RotationState;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.api.item.MetaMachineItem;
+import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
+import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.steam.SimpleSteamMachine;
+import com.gregtechceu.gtceu.api.registry.registrate.MachineBuilder;
 import com.gregtechceu.gtceu.client.renderer.machine.*;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
@@ -48,6 +58,7 @@ import net.minecraft.network.chat.Component;
 
 import com.hepdd.gtmthings.GTMThings;
 import com.hepdd.gtmthings.common.block.machine.multiblock.part.ProgrammableHatchPartMachine;
+import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.Pair;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
@@ -776,4 +787,28 @@ public final class GTOMachines {
             .renderer(() -> new OverlayTieredMachineRenderer(MAX, GTMThings.id("block/machine/part/energy_hatch.input")))
             .tier(MAX)
             .register();
+
+    public static final MachineDefinition BASIC_MONITOR = registerMonitor("basic_monitor", "基础监控器", BasicMonitor::new)
+            .register();
+    public static final MachineDefinition MONITOR_MACHINE_ELECTRICITY = registerMonitor("monitor_electricity", "监控器电网组件", MonitorEU::new)
+            .register();
+    public static final MachineDefinition MONITOR_MACHINE_MANA = registerMonitor("monitor_mana", "监控器魔力网络组件", MonitorMana::new)
+            .register();
+    public static final MachineDefinition MONITOR_MACHINE_CWU = registerMonitor("monitor_cwu", "监控器算力网络组件", MonitorCWU::new)
+            .register();
+
+    private static MachineBuilder<MachineDefinition> registerMonitor(String id, String cn, Function<IMachineBlockEntity, MetaMachine> monitorConstructor) {
+        BlockRegisterUtils.addLang(id, cn);
+        return MachineBuilder.create(
+                GTORegistration.GTO,
+                id,
+                MachineDefinition::createDefinition,
+                monitorConstructor,
+                MonitorBlock::new,
+                MetaMachineItem::new,
+                MetaMachineBlockEntity::createBlockEntity)
+                .rotationState(RotationState.NON_Y_AXIS)// 也许会支持面朝上下？
+                .renderer(MonitorRenderer::new)
+                .hasTESR(true);
+    }
 }
