@@ -13,7 +13,6 @@
     "gtm.AssemblyLineMachineMixin",
     "mae2.EUP2PTunnelPartMixin",
     "mc.BlockBehaviourMixin",
-    "gtmt.IWirelessMonitorAccessor",
     "mc.mob.AbstractSkeletonMixin",
     "mc.mob.MobMixin"
   ],
