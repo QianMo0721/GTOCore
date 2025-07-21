@@ -65,22 +65,22 @@ public final class FuelRecipe {
 
         STEAM_BOILER_RECIPES.recipeBuilder("lava")
                 .inputFluids(new FluidStack(Fluids.LAVA, 100))
-                .duration(4800)
+                .duration(1200)
                 .save();
 
         STEAM_BOILER_RECIPES.recipeBuilder("creosote")
                 .inputFluids(Creosote.getFluid(250))
-                .duration(4800)
+                .duration(3000)
                 .save();
 
         LARGE_BOILER_RECIPES.recipeBuilder("lava")
                 .inputFluids(new FluidStack(Fluids.LAVA, 100))
-                .duration(40)
+                .duration(10)
                 .save();
 
         LARGE_BOILER_RECIPES.recipeBuilder("creosote")
-                .inputFluids(Creosote.getFluid(160))
-                .duration(40)
+                .inputFluids(Creosote.getFluid(250))
+                .duration(25)
                 .save();
 
         LARGE_BOILER_RECIPES.recipeBuilder("biomass")

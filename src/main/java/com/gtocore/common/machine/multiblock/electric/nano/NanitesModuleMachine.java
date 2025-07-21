@@ -34,7 +34,7 @@ public final class NanitesModuleMachine extends ElectricMultiblockMachine {
 
     @Override
     public boolean beforeWorking(Recipe recipe) {
-        if (!effective() || recipe.data.getInt("ebf_temp") > nanitesIntegratedMachine.gto$getTemperature() || recipe.data.getInt("module") != type) return false;
+        if (!effective() || recipe.data.getInt("ebf_temp") > nanitesIntegratedMachine.getTemperature() || recipe.data.getInt("module") != type) return false;
         return super.beforeWorking(recipe);
     }
 
@@ -47,7 +47,7 @@ public final class NanitesModuleMachine extends ElectricMultiblockMachine {
         super.customText(textList);
         if (effective()) {
             textList.add(Component.translatable("tooltip.emi.chance.consume", 100 - nanitesIntegratedMachine.chance));
-            textList.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature", Component.translatable(FormattingUtil.formatNumbers(nanitesIntegratedMachine.gto$getTemperature()) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
+            textList.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature", Component.translatable(FormattingUtil.formatNumbers(nanitesIntegratedMachine.getTemperature()) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
         }
     }
 }

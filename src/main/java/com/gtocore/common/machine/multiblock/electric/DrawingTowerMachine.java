@@ -51,8 +51,8 @@ public final class DrawingTowerMachine extends CoilMultiblockMachine {
         if (container != null) {
             height = container.getValue();
         }
-        reduction = Math.max(0.00001, 2 / Math.pow(1.2, ((height / 8D) * ((gto$getTemperature() - 5000D) / 900D))));
-        parallels = (gto$getTemperature() <= 10000) ? 1 : (int) Math.round(Math.log(gto$getTemperature() - 9600) / Math.log(1.08) - 84);
+        reduction = Math.max(0.00001, 2 / Math.pow(1.2, ((height / 8D) * ((getTemperature() - 5000D) / 900D))));
+        parallels = (getTemperature() <= 10000) ? 1 : (int) Math.round(Math.log(getTemperature() - 9600) / Math.log(1.08) - 84);
     }
 
     @Override

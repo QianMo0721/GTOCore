@@ -17,7 +17,6 @@ import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
-import com.gtolib.api.machine.feature.multiblock.ICoilMachine;
 import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.api.recipe.modifier.ParallelLogic;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
@@ -29,6 +28,7 @@ import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.ICoilMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
@@ -2151,7 +2151,7 @@ public final class MultiBlockA {
 
     public static final MultiblockMachineDefinition VACUUM_DRYING_FURNACE = multiblock("vacuum_drying_furnace", "真空干燥炉", CoilCustomParallelMultiblockMachine.createParallelCoil(m -> {
         if (m.getRecipeType() == GTORecipeTypes.DEHYDRATOR_RECIPES) {
-            return 1L << (long) (m.gto$getTemperature() / 900.0D);
+            return 1L << (long) (m.getTemperature() / 900.0D);
         }
         return 1;
     }, true, false, false))

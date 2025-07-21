@@ -397,7 +397,7 @@ public final class GCYMMachines {
     public static final MultiblockMachineDefinition BLAST_ALLOY_SMELTER = GTM
             .multiblock("alloy_blast_smelter", CoilCustomParallelMultiblockMachine.createParallelCoil(m -> {
                 if (m.getRecipeType() == ALLOY_SMELTER_RECIPES) {
-                    return 1L << (long) (m.gto$getTemperature() / 900.0D);
+                    return 1L << (long) (m.getTemperature() / 900.0D);
                 }
                 return 1;
             }, true, true, false))

@@ -5,8 +5,8 @@ import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
-import com.gtolib.utils.ItemUtils;
 
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -17,8 +17,7 @@ import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Items;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.NotNull;
@@ -40,10 +39,10 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
     @Nullable
     @Override
     protected Recipe getRealRecipe(@NotNull Recipe recipe) {
-        Ingredient[] recipeIngredients = getRecipeIngredients(recipe);
+        FastSizedIngredient[] recipeIngredients = getRecipeIngredients(recipe);
         int size = recipeIngredients.length;
         if (itemStackTransfers.size() < size) return null;
-        if (!validateIngredientStacks(this, size, getMatchIngredients(recipeIngredients))) {
+        if (!validateIngredientStacks(this, size, recipeIngredients)) {
             setIdleReason(IdleReason.ORDERED);
             return null;
         }
@@ -56,54 +55,32 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
      * @param recipe 包含配方信息的GTRecipe对象
      * @return 一个包含配方所需原料的Ingredient数组
      */
-    private static Ingredient[] getRecipeIngredients(GTRecipe recipe) {
+    private static FastSizedIngredient[] getRecipeIngredients(GTRecipe recipe) {
         var inputs = recipe.inputs.get(ItemRecipeCapability.CAP);
-        Ingredient[] ingredients = new Ingredient[inputs.size()];
+        FastSizedIngredient[] ingredients = new FastSizedIngredient[inputs.size()];
         for (int i = 0; i < inputs.size(); i++) {
-            ingredients[i] = (Ingredient) inputs.get(i).getContent();
+            if (inputs.get(i).getContent() instanceof FastSizedIngredient ingredient && !ingredient.isEmpty()) {
+                ingredients[i] = ingredient;
+            } else {
+                ingredients[i] = null;
+            }
         }
         return ingredients;
     }
 
     /**
-     * 获取匹配的配方原料数组，并根据第一个原料的堆栈检测其余原料是否匹配。
-     * 如果匹配，将对应位置的原料设为空。
-     *
-     * @param recipeIngredients 配方原料数组
-     * @return 匹配后的原料数组
-     */
-    private static Ingredient[] getMatchIngredients(Ingredient[] recipeIngredients) {
-        int size = recipeIngredients.length;
-        Ingredient[] matchIngredients = new Ingredient[size];
-        ItemStack recipeStack = ItemUtils.getFirstSized(recipeIngredients[0]);
-        matchIngredients[0] = recipeIngredients[0];
-
-        for (int i = 1; i < size; i++) {
-            Ingredient currentIngredient = recipeIngredients[i];
-            if (currentIngredient.test(recipeStack)) {
-                matchIngredients[i - 1] = Ingredient.EMPTY;
-                matchIngredients[i] = Ingredient.EMPTY;
-            } else {
-                matchIngredients[i] = currentIngredient;
-            }
-            recipeStack = ItemUtils.getFirstSized(currentIngredient);
-        }
-        return matchIngredients;
-    }
-
-    /**
      * 验证AdvancedAssemblyLineMachine中的配料堆栈是否满足给定的匹配配料。
      *
-     * @param lineMachine      AdvancedAssemblyLineMachine对象
-     * @param size             配料的数量
-     * @param matchIngredients 用于匹配的配料数组
+     * @param lineMachine       AdvancedAssemblyLineMachine对象
+     * @param size              配料的数量
+     * @param recipeIngredients 用于匹配的配料数组
      * @return 如果所有配料堆栈匹配则返回true，否则返回false
      */
-    private static boolean validateIngredientStacks(AdvancedAssemblyLineMachine lineMachine, int size, Ingredient[] matchIngredients) {
+    private static boolean validateIngredientStacks(AdvancedAssemblyLineMachine lineMachine, int size, FastSizedIngredient[] recipeIngredients) {
         Set<Item> itemSet = new ObjectOpenHashSet<>();
         for (int i = 0; i < size; i++) {
-            Ingredient currentIngredient = matchIngredients[i];
-            if (currentIngredient.isEmpty()) continue;
+            FastSizedIngredient currentIngredient = recipeIngredients[i];
+            if (currentIngredient == null) continue;
             if (!isValidStorage(itemSet, lineMachine.itemStackTransfers.get(i), currentIngredient)) return false;
         }
         return true;
@@ -116,19 +93,18 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
      * @param currentIngredient 当前的成分
      * @return 如果存储中的所有物品相同并且匹配当前成分，则返回true，否则返回false
      */
-    private static boolean isValidStorage(Set<Item> itemSet, CustomItemStackHandler storage, Ingredient currentIngredient) {
-        ItemStack stack = ItemStack.EMPTY;
+    private static boolean isValidStorage(Set<Item> itemSet, CustomItemStackHandler storage, FastSizedIngredient currentIngredient) {
+        Item item = Items.AIR;
         itemSet.clear();
         var slots = storage.getSlots();
         for (int j = 0; j < slots; j++) {
-            ItemStack item = storage.getStackInSlot(j);
-            if (!item.isEmpty()) {
-                itemSet.add(item.getItem());
-                stack = item;
-            }
+            Item i = storage.getStackInSlot(j).getItem();
+            if (i == Items.AIR) continue;
+            itemSet.add(item);
+            item = i;
         }
 
-        return itemSet.size() == 1 && currentIngredient.test(stack);
+        return itemSet.size() == 1 && currentIngredient.testItem(item);
     }
 
     @Override

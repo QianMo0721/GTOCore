@@ -57,7 +57,7 @@ public final class GTOConfig {
         ConfigHolder.INSTANCE.compat.energy.enableFEConverters = true;
         ConfigHolder.INSTANCE.compat.energy.feToEuRatio = 20;
         ConfigHolder.INSTANCE.compat.energy.euToFeRatio = 16;
-        ConfigHolder.INSTANCE.compat.ae2.meHatchEnergyUsage = 1920;
+        ConfigHolder.INSTANCE.compat.ae2.meHatchEnergyUsage = 480 * difficulty;
         ConfigHolder.INSTANCE.compat.minimap.toggle.ftbChunksIntegration = false;
         ConfigHolder.INSTANCE.compat.minimap.toggle.journeyMapIntegration = false;
         ConfigHolder.INSTANCE.compat.showDimensionTier = true;
@@ -156,7 +156,7 @@ public final class GTOConfig {
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Fast MultiBlock Page", cn = "快速多方块页面")
     public boolean fastMultiBlockPage = true;
     @Configurable
-    @Configurable.Comment("The interval increases gradually when the machine cannot find a recipe; this is the maximum interval.(This option will significantly affect game performance)")
+    @Configurable.Comment("The interval increases gradually when the machine cannot find a recipe; this is the maximum interval.")
     @Configurable.Range(min = 5, max = 200)
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Recipe Search Max Interval", cn = "配方搜索最大间隔")
     public int recipeSearchMaxInterval = 20;

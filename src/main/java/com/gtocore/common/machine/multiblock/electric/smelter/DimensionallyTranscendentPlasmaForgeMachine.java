@@ -32,7 +32,7 @@ public final class DimensionallyTranscendentPlasmaForgeMachine extends CoilMulti
             } else if (recipe.data.getInt("ebf_temp") > 32000) {
                 return false;
             }
-        } else if (recipe.data.getInt("ebf_temp") > gto$getTemperature()) {
+        } else if (recipe.data.getInt("ebf_temp") > getTemperature()) {
             return false;
         }
         return super.beforeWorking(recipe);
@@ -40,8 +40,8 @@ public final class DimensionallyTranscendentPlasmaForgeMachine extends CoilMulti
 
     @Override
     public void customText(@NotNull List<Component> textList) {
-        textList.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature", Component.literal(FormattingUtil.formatNumbers((gto$getTemperature() == 273 ? 32000 : gto$getTemperature())) + "K").withStyle(ChatFormatting.BLUE)));
-        if (getRecipeType() == GTORecipeTypes.STELLAR_FORGE_RECIPES && gto$getTemperature() != 273) {
+        textList.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature", Component.literal(FormattingUtil.formatNumbers((getTemperature() == 273 ? 32000 : getTemperature())) + "K").withStyle(ChatFormatting.BLUE)));
+        if (getRecipeType() == GTORecipeTypes.STELLAR_FORGE_RECIPES && getTemperature() != 273) {
             textList.add(Component.translatable("gtocore.machine.dimensionally_transcendent_plasma_forge.coil").withStyle(ChatFormatting.RED));
         }
     }

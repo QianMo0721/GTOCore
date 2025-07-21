@@ -70,9 +70,9 @@ public final class ProxySlotRecipeHandler {
             sharedFluid.setProxy(buffer.shareTank);
             slotItem.setProxy(slotRHL.itemRecipeHandler);
             slotFluid.setProxy(slotRHL.fluidRecipeHandler);
-            slotCircuit.setProxy(buffer.circuitInventorys[slotRHL.slot.index]);
-            slotSharedItem.setProxy(buffer.shareInventorys[slotRHL.slot.index]);
-            slotSharedFluid.setProxy(buffer.shareTanks[slotRHL.slot.index]);
+            slotCircuit.setProxy(slotRHL.slot.circuitInventory);
+            slotSharedItem.setProxy(slotRHL.slot.shareInventory);
+            slotSharedFluid.setProxy(slotRHL.slot.shareTank);
         }
 
         private void clearBuffer() {

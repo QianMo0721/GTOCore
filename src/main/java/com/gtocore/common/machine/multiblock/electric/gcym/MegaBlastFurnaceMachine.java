@@ -1,10 +1,10 @@
 package com.gtocore.common.machine.multiblock.electric.gcym;
 
-import com.gtolib.api.machine.feature.multiblock.ICoilMachine;
 import com.gtolib.api.machine.trait.CoilTrait;
 
 import com.gregtechceu.gtceu.api.block.ICoilType;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.ICoilMachine;
 
 public final class MegaBlastFurnaceMachine extends GCYMMultiblockMachine implements ICoilMachine {
 
@@ -16,13 +16,8 @@ public final class MegaBlastFurnaceMachine extends GCYMMultiblockMachine impleme
     }
 
     @Override
-    public int gto$getTemperature() {
+    public int getTemperature() {
         return coilTrait.getTemperature();
-    }
-
-    @Override
-    public int getCoilTier() {
-        return coilTrait.getCoilTier();
     }
 
     @Override

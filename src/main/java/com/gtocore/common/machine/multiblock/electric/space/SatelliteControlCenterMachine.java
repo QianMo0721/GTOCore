@@ -92,6 +92,7 @@ public final class SatelliteControlCenterMachine extends ElectricMultiblockMachi
         if (clickData.isRemote) return;
         if ("set_out".equals(componentData)) {
             launch = true;
+            getRecipeLogic().updateTickSubscription();
         } else if (!isActive()) {
             index = Mth.clamp(index + (componentData.equals("add") ? 1 : -1), 0, Wrapper.LIST.length - 1);
         }

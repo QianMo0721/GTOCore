@@ -14,7 +14,6 @@ import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.common.block.CableBlock;
 import com.gregtechceu.gtceu.common.blockentity.CableBlockEntity;
-import com.gregtechceu.gtceu.common.blockentity.FluidPipeBlockEntity;
 import com.gregtechceu.gtceu.common.data.GTMaterialItems;
 import com.gregtechceu.gtceu.integration.jade.provider.*;
 
@@ -59,7 +58,6 @@ public final class GTOJadePlugin implements IWailaPlugin {
 
         registration.registerItemStorage(GTItemStorageProvider.INSTANCE, MetaMachineBlockEntity.class);
         registration.registerFluidStorage(GTFluidStorageProvider.INSTANCE, MetaMachineBlockEntity.class);
-        registration.registerFluidStorage(FluidPipeStorageProvider.INSTANCE, FluidPipeBlockEntity.class);
 
         registration.registerBlockDataProvider(new CableBlockProvider(), CableBlockEntity.class);
 
@@ -101,7 +99,6 @@ public final class GTOJadePlugin implements IWailaPlugin {
 
         registration.registerItemStorageClient(GTItemStorageProvider.INSTANCE);
         registration.registerFluidStorageClient(GTFluidStorageProvider.INSTANCE);
-        registration.registerFluidStorageClient(FluidPipeStorageProvider.INSTANCE);
 
         registration.registerBlockComponent(new WirelessEnergyHatchProvider(), MetaMachineBlock.class);
         registration.registerBlockComponent(new WirelessOpticalComputationHatchProvider(), MetaMachineBlock.class);
