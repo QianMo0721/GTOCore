@@ -39,7 +39,9 @@ public class BasicMonitor extends TieredMachine implements IBindable, IMachineLi
     @Override
     public void clientTick() {
         super.clientTick();
-        Manager.updateAllNetworkDisplayMachines(getLevel());
+        if (getOffsetTimer() % 10 == 0) {
+            Manager.updateAllNetworkDisplayMachines(getLevel());
+        }
     }
 
     @Override

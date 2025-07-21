@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 
+import com.gtocore.config.GTOConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,6 +22,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
@@ -90,23 +94,24 @@ public final class Manager {
         });
     }
 
-    // 不用加入加载队列，因为这个方法只在方块被移除时调用
     public static void removeBlock(BlockState pState, BlockPos pPos, @Nullable Level pLevel) {
         if (pLevel != null && !pLevel.isClientSide) {
-            Direction facing = getFrontFacing(pState);
-            var point = GridFacing.get(
-                    facing,
-                    pLevel,
-                    GridFacing.getThirdValue(facing, pPos))
-                    .getPoint(pPos);
-            var network = gridToNetwork.get(point);
-            if (network != null) {
-                network.split(point);
-                if (network.points.isEmpty()) {
-                    gridToNetwork.remove(point);
+            requireQueue(() -> {
+                Direction facing = getFrontFacing(pState);
+                var point = GridFacing.of(
+                        facing,
+                        pLevel,
+                        GridFacing.getThirdValue(facing, pPos))
+                        .getPoint(pPos);
+                var network = gridToNetwork.get(point);
+                if (network != null) {
+                    network.split(point);
+                    // if (network.points.isEmpty()) {
+                    // gridToNetwork.remove(point);
+                    // }
                 }
-            }
-            broadcast(pLevel.getServer());
+                broadcast(pLevel.getServer());
+            });
         }
     }
 
@@ -150,13 +155,14 @@ public final class Manager {
 
         private static final Map<Long, GridFacing> GRID_AXES = new ConcurrentHashMap<>();
 
-        static GridFacing get(Direction facing, Level level, int theThirdValue) {
-            return get(facing, level.dimension(), theThirdValue);
+        static GridFacing of(Direction facing, Level level, int theThirdValue) {
+            return of(facing, level.dimension(), theThirdValue);
         }
 
-        static GridFacing get(Direction facing, ResourceKey<Level> level, int theThirdValue) {
-            Long key = (long) Objects.hash(facing, level, theThirdValue);
-            return GRID_AXES.computeIfAbsent(key, k -> new GridFacing(facing, level, theThirdValue));
+        static GridFacing of(Direction facing, ResourceKey<Level> level, int theThirdValue) {
+            GridFacing gridFacing = new GridFacing(facing, level, theThirdValue);
+            long key = gridFacing.hashCode();
+            return GRID_AXES.computeIfAbsent(key, k -> gridFacing);
         }
 
         @Override
@@ -168,7 +174,7 @@ public final class Manager {
 
         @Override
         public int hashCode() {
-            return Objects.hash(facing(), level(), theThirdValue());
+            return ((facing().ordinal() * 31 + level().hashCode()) * 0xFFFFF + theThirdValue());
         }
 
         static int getThirdValue(Direction facing, BlockPos pos) {
@@ -213,7 +219,7 @@ public final class Manager {
 
         @Override
         public int hashCode() {
-            return Objects.hash(facing(), x(), y());
+            return (facing().hashCode() * 31 + x()) * 0xFFFFF + y();
         }
 
         @Contract("_, _ -> new")
@@ -246,7 +252,7 @@ public final class Manager {
         int toX;
         int fromY;
         int toY;
-        final Set<GridFacedPoint> points = new HashSet<>();
+        // final Set<GridFacedPoint> points = new HashSet<>();
         final GridFacing facing;
         @Nullable
         GridListener listener;
@@ -256,7 +262,7 @@ public final class Manager {
         }
 
         public static GridNetwork fromBlock(Direction facing, BlockPos pos, ResourceKey<Level> level) {
-            GridFacing axis = GridFacing.get(facing, level, GridFacing.getThirdValue(facing, pos));
+            GridFacing axis = GridFacing.of(facing, level, GridFacing.getThirdValue(facing, pos));
             var point = axis.getPoint(pos);
             if (gridToNetwork.containsKey(point)) {
                 return gridToNetwork.get(point); // 如果该点已经存在于网格中，则返回已存在的网格
@@ -264,23 +270,36 @@ public final class Manager {
             return createSingleBlockNetwork(facing, pos, level);
         }
 
+        Set<GridFacedPoint> points() {
+            Set<GridFacedPoint> points = new HashSet<>();
+            for (int i = fromX; i <= toX; i++) {
+                for (int j = fromY; j <= toY; j++) {
+                    points.add(new GridFacedPoint(facing, i, j));
+                }
+            }
+            return points;
+        }
+
         public static GridNetwork createSingleBlockNetwork(Direction facing, BlockPos pos, ResourceKey<Level> level) {
-            GridFacing axis = GridFacing.get(facing, level, GridFacing.getThirdValue(facing, pos));
+            GridFacing axis = GridFacing.of(facing, level, GridFacing.getThirdValue(facing, pos));
             var point = axis.getPoint(pos);
+            if (gridToNetwork.containsKey(point)) {
+                throw new IllegalStateException("GridNetwork already exists for point: " + point);
+            }
             GridNetwork network = new GridNetwork(axis);
             network.fromX = point.x;
             network.toX = point.x;
             network.fromY = point.y;
             network.toY = point.y;
-            network.points.add(point);
-            gridToNetwork.put(point, network);
+            // network.points.add(point);
+            put(point, network);
             return network;
         }
 
         @Nullable
         @OnlyIn(Dist.CLIENT)
         public static GridNetwork fromClientBlock(Direction facing, BlockPos pos, Level level) {
-            GridFacing axis = GridFacing.get(facing, level, GridFacing.getThirdValue(facing, pos));
+            GridFacing axis = GridFacing.of(facing, level, GridFacing.getThirdValue(facing, pos));
             var point = axis.getPoint(pos);
             if (gridToNetworkCLIENT.containsKey(point)) {
                 return gridToNetworkCLIENT.get(point); // 如果该点已经存在于网格中，则返回已存在的网格
@@ -331,24 +350,24 @@ public final class Manager {
         /// - 如果没有超过，则将该网格合并到当前网格中。
         /// 2. 如果前一部分扩展成功，则继续尝试上下左右扩展一轮，直到无法扩展为止。
         private void merge() {
-            var success = tryMerge(Direction2D.UP) || // 向上扩展
-                    tryMerge(Direction2D.DOWN) || // 向下扩展
-                    tryMerge(Direction2D.LEFT) || // 向左扩展
-                    tryMerge(Direction2D.RIGHT); // 向右扩展
-            while (success) {
-                success = tryMerge(Direction2D.UP) ||
+            synchronized (gridToNetwork) {
+                boolean success = tryMerge(Direction2D.UP) ||
                         tryMerge(Direction2D.DOWN) ||
                         tryMerge(Direction2D.LEFT) ||
                         tryMerge(Direction2D.RIGHT);
+                while (success) {
+                    success = tryMerge(Direction2D.UP) ||
+                            tryMerge(Direction2D.DOWN) ||
+                            tryMerge(Direction2D.LEFT) ||
+                            tryMerge(Direction2D.RIGHT);
+                }
             }
         }
 
-        private boolean canMerge(GridFacedPoint point, Direction2D facing2D) {
-            if (points.contains(point)) return false; // 如果该点已经在网格中，则不能合并
-            var other = gridToNetwork.get(point);
-            return other != null && other != this && other.facing == facing &&
-                    (facing2D.isHorizontal ? other.height() == this.height() : other.width() == this.width()) &&
-                    other.width() + this.width() <= MAX_GRID_SIZE;
+        private boolean canMerge(GridNetwork other, Direction2D facing2D) {
+            return other != null && other.facing == facing &&
+                    (facing2D.isHorizontal ? other.height() == this.height() && other.width() + this.width() <= MAX_GRID_SIZE :
+                            other.width() == this.width() && other.height() + this.height() <= MAX_GRID_SIZE);
         }
 
         private boolean tryMerge(Direction2D direction) {
@@ -358,30 +377,65 @@ public final class Manager {
                 case LEFT -> point -> point.x == fromX;
                 case RIGHT -> point -> point.x == toX;
             };
-            var shiftedPoints = points.stream()
+            var shiftedPoints = points().stream()
                     .filter(pointPredicate)
                     .map(point -> point.shift(direction))
                     .toList();
-            var canMerge = !shiftedPoints.isEmpty() && shiftedPoints.stream()
-                    .allMatch((p) -> this.canMerge(p, direction));
-            if (canMerge) {
-                int fromX1 = Math.min(fromX, shiftedPoints.stream().mapToInt(GridFacedPoint::x).min().orElse(fromX));
-                int toX1 = Math.max(toX, shiftedPoints.stream().mapToInt(GridFacedPoint::x).max().orElse(toX));
-                int fromY1 = Math.min(fromY, shiftedPoints.stream().mapToInt(GridFacedPoint::y).min().orElse(fromY));
-                int toY1 = Math.max(toY, shiftedPoints.stream().mapToInt(GridFacedPoint::y).max().orElse(toY));
-                modifySelf(
-                        fromX1, toX1, fromY1, toY1);
-                // 尝试合并所有符合条件的点
-                for (GridFacedPoint point : shiftedPoints) {
-                    GridNetwork otherNetwork = gridToNetwork.get(point);
+            if (shiftedPoints.isEmpty()) {
+                return false;
+            } else {
+                var otherNetwork = gridToNetwork.get(shiftedPoints.get(0));
+                boolean canMerge = shiftedPoints.stream()
+                        .allMatch(newPoint -> gridToNetwork.get(newPoint) == otherNetwork) &&
+                        canMerge(otherNetwork, direction);
+                if (canMerge) {
+                    int fromX1 = Math.min(fromX, otherNetwork.fromX);
+                    int toX1 = Math.max(toX, otherNetwork.toX);
+                    int fromY1 = Math.min(fromY, otherNetwork.fromY);
+                    int toY1 = Math.max(toY, otherNetwork.toY);
+                    // 尝试合并所有符合条件的点
                     if (this.listener != null) {
                         listener.onGridChanged(this, otherNetwork);
                     }
-                    gridToNetwork.put(point, this);
-                    points.add(point);
+                    fromX = fromX1;
+                    toX = toX1;
+                    fromY = fromY1;
+                    toY = toY1;
+                    for (GridFacedPoint point : this.points()) {
+                        // 将其他网格的点添加到当前网格中
+                        put(point, this);
+                    }
+                    if (GTOConfig.INSTANCE.dev) {
+                        if (gridToNetwork.keySet().stream().filter(
+                                p -> p.facing == facing && p.x >= fromX && p.x <= toX && p.y >= fromY && p.y <= toY).anyMatch(p -> gridToNetwork.get(p) != this)) {
+                            // 如果当前网格仍然有点存在
+                            throw new IllegalStateException("GridNetwork still has points after split: " + otherNetwork);
+                        }
+                        debugCheckValid();
+                    }
                 }
+                return canMerge;
             }
-            return canMerge;
+        }
+
+        private static final Lock gridToNetworkLock = new java.util.concurrent.locks.ReentrantLock();
+
+        private static GridNetwork put(GridFacedPoint point, GridNetwork network) {
+            gridToNetworkLock.lock();
+            try {
+                return gridToNetwork.put(point, network);
+            } finally {
+                gridToNetworkLock.unlock();
+            }
+        }
+
+        private static GridNetwork remove(GridFacedPoint point) {
+            gridToNetworkLock.lock();
+            try {
+                return gridToNetwork.remove(point);
+            } finally {
+                gridToNetworkLock.unlock();
+            }
         }
 
         /**
@@ -396,20 +450,21 @@ public final class Manager {
          * @param point 要删除的点
          */
         private void split(GridFacedPoint point) {
-            if (!points.remove(point)) {
-                return; // 点不在网格中，直接返回
-            }
-            gridToNetwork.remove(point);
-            if (points.isEmpty()) {
-                // 如果网格没有点了，则从网格列表中删除该网格
+            // if (!points.remove(point)) {
+            // return; // 点不在网格中，直接返回
+            // }
+            remove(point);
+            if (points().size() <= 1) {
+                // 如果网格的宽度和高度都小于等于1，则说明该网格只包含一个点，
+                // 直接从网格列表中删除该网格
                 return;
             }
             final int fromX = this.fromX;
             final int toX = this.toX;
             final int fromY = this.fromY;
             final int toY = this.toY;
-            List<GridNetwork> created = new ArrayList<>();
-            final var oldPoints = new ArrayList<>(points); // 复制当前网格的点
+            List<GridFacedPoint> created = new ArrayList<>();
+            final var oldPoints = new ArrayList<>(points()); // 复制当前网格的点
             for (var direction : Direction2D.values()) {
                 final var shifted = point.shift(direction);
                 if (oldPoints.contains(shifted)) {
@@ -437,25 +492,32 @@ public final class Manager {
                     network1.toX = newToX;
                     network1.fromY = newFromY;
                     network1.toY = newToY;
-                    for (int i = newFromX; i <= newToX; i++) {
-                        for (int j = newFromY; j <= newToY; j++) {
-                            var newPoint = new GridFacedPoint(facing, i, j);
-                            if (oldPoints.contains(newPoint)) {
-                                points.remove(newPoint);
-                                network1.points.add(newPoint);
-                                gridToNetwork.put(newPoint, network1);
-                            }
-                        }
-                    }
+                    // for (int i = newFromX; i <= newToX; i++) {
+                    // for (int j = newFromY; j <= newToY; j++) {
+                    // var newPoint = new GridFacedPoint(facing, i, j);
+                    // if (oldPoints.contains(newPoint)) {
+                    //// points.remove(newPoint);
+                    //// network1.points.add(newPoint);
+                    // }
+                    // }
+                    // }
+                    network1.points().forEach(newPoint -> put(newPoint, network1));
                     if (listener != null) {
                         listener.onGridChanged(network1, null); // selfModified ? null : network1
                     }
-                    created.add(network1);
+                    created.add(shifted);
                 }
             }
+            if (GTOConfig.INSTANCE.dev) {
+                if (gridToNetwork.keySet().stream().anyMatch(p -> gridToNetwork.get(p) == this)) {
+                    // 如果当前网格仍然有点存在
+                    throw new IllegalStateException("GridNetwork still has points after split: " + this);
+                }
+                debugCheckValid();
+            }
             // 如果创建了新的网格，尝试使他们合并
-            for (GridNetwork network : created) {
-                network.merge(); // 合并新创建的网格
+            for (var p : created) {
+                gridToNetwork.get(p).merge(); // 合并新创建的网格
             }
         }
 
@@ -465,44 +527,6 @@ public final class Manager {
             return new AABB(
                     pointFrom.getX(), pointFrom.getY(), pointFrom.getZ(),
                     pointTo.getX() + 1, pointTo.getY() + 1, pointTo.getZ() + 1);
-        }
-
-        /**
-         * 尝试修改当前网格。
-         */
-        private void modifySelf(int fromX, int toX, int fromY, int toY) {
-            var shrunkPoints = points.stream()
-                    .filter(point -> point.facing.equals(facing) &&
-                            (point.x < fromX || point.x > toX || point.y < fromY || point.y > toY))
-                    .toList();
-            var newlyAddedPoints = points.stream()
-                    .filter(point -> point.facing.equals(facing) &&
-                            point.x >= fromX && point.x <= toX && point.y >= fromY && point.y <= toY)
-                    .filter(point -> !points.contains(point))
-                    .toList();
-            this.fromX = fromX;
-            this.toX = toX;
-            this.fromY = fromY;
-            this.toY = toY;
-            // 找出旧的点并将其从网格中删除
-            // 如果网格被缩小了，则需要删除不在新范围内的点
-            // 为它们创建新的单格网格
-            gridToNetwork.keySet().stream()
-                    .filter(shrunkPoints::contains)
-                    .forEach(point -> {
-                        points.remove(point);
-                        createSingleBlockNetwork(facing.facing, point.toBlockPos(), facing.level());
-                    });
-            // 添加新点到网格中
-            newlyAddedPoints.forEach(point -> {
-                points.add(point);
-                gridToNetwork.put(point, this);
-            });
-            // 合并单格网格使得网格的总数尽可能小
-            // 这一操作在self不再被修改时进行
-            gridToNetwork.keySet().stream()
-                    .filter(shrunkPoints::contains)
-                    .forEach(point -> gridToNetwork.get(point).merge());
         }
 
         public CompoundTag serializeNBT() {
@@ -527,19 +551,12 @@ public final class Manager {
             ResourceKey<Level> level = Optional.of(ResourceLocation.parse(tag.getString("level")))
                     .map(rl -> ResourceKey.create(Registries.DIMENSION, rl))
                     .orElseThrow(() -> new IllegalArgumentException("Invalid level dimension: " + tag.getString("level")));
-            GridFacing facing = GridFacing.get(facingDirection, level, theThirdValue);
+            GridFacing facing = GridFacing.of(facingDirection, level, theThirdValue);
             GridNetwork network = new GridNetwork(facing);
             network.fromX = fromX;
             network.toX = toX;
             network.fromY = fromY;
             network.toY = toY;
-            for (int i = fromX; i <= toX; i++) {
-                for (int j = fromY; j <= toY; j++) {
-                    var point = new GridFacedPoint(facing, i, j);
-                    network.points.add(point);
-                    gridToNetwork.put(point, network);
-                }
-            }
             return network;
         }
 
@@ -552,7 +569,7 @@ public final class Manager {
             if (level.getGameTime() - lastRefreshTime >= 10) {
                 lastRefreshTime = level.getGameTime();
                 informationProviders.clear();
-                for (GridFacedPoint point : points) {
+                for (GridFacedPoint point : points()) {
                     var blockEntity = level.getBlockEntity(point.toBlockPos());
                     if (blockEntity instanceof IMachineBlockEntity be &&
                             be.getMetaMachine() instanceof IInformationProvider provider) {
@@ -580,12 +597,24 @@ public final class Manager {
         gridToNetworkCLIENT.values().forEach(network -> network.refreshDisplayingMachine(level));
     }
 
-    private static void clearCache(boolean isClient) {
+    private static void clearCache(Level level) {
         // 清空网格数据
-        if (isClient) {
-            gridToNetworkCLIENT.clear();
-        } else {
-            gridToNetwork.clear();
+        var grid2Network = level.isClientSide ? gridToNetworkCLIENT : Manager.gridToNetwork;
+        grid2Network.entrySet().removeIf(entry -> {
+            GridFacedPoint point = entry.getKey();
+            // 如果网格不在当前世界中，或者网格的点不在当前世界中，则移除该网格
+            return !point.facing.level.equals(level.dimension()) || !level.isLoaded(point.toBlockPos());
+        });
+    }
+
+    private static void debugCheckValid() {
+        for (var network : gridToNetwork.values()) {
+            network.points().forEach(point -> {
+                var otherNetwork = gridToNetwork.get(point);
+                if (otherNetwork != network) {
+                    throw new IllegalStateException("GridNetwork " + network + " contains point " + point + " which belongs to another network: " + otherNetwork);
+                }
+            });
         }
     }
 
@@ -593,26 +622,45 @@ public final class Manager {
     static class Factory {
 
         @SubscribeEvent
-        public void onServerStopped(ServerStoppedEvent event) {
+        public static void onServerStopped(ServerStoppedEvent event) {
             // 服务器完全停止时触发
             gridToNetwork.clear();
+            Loading.clear();
+            GridFacing.GRID_AXES.clear();
         }
 
         @SubscribeEvent
-        public void onWorldUnload(LevelEvent.Unload event) {
+        public static void onWorldUnload(LevelEvent.Unload event) {
             // 世界卸载时触发（客户端/服务端均会触发）
-            clearCache(event.getLevel().isClientSide());
+            clearCache((Level) event.getLevel());
+            Loading.clear();
         }
 
+        // static boolean enteredWorld = false;
         @SubscribeEvent
         public static void onLoad(LevelEvent.Load event) {
+            // if (!enteredWorld) {
+            // enteredWorld = true;
+            // }
+            clearCache((Level) event.getLevel());
         }
+
+        @SubscribeEvent
+        public static void onSave(LevelEvent.Save event) {}
 
         @SubscribeEvent
         public static void onTick(TickEvent.ServerTickEvent event) {
             // 方块可以tick多次但这个只能tick一次
             if (event.phase == TickEvent.Phase.START) {
                 poll();
+            }
+        }
+
+        @SubscribeEvent
+        public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+            // 玩家登录时触发
+            if (event.getEntity() instanceof ServerPlayer sp) {
+                broadcast(sp.getServer());
             }
         }
     }
@@ -636,7 +684,7 @@ public final class Manager {
         for (String key : tag.getAllKeys()) {
             CompoundTag networkTag = tag.getCompound(key);
             GridNetwork network = GridNetwork.deserializeNBT(networkTag);
-            for (GridFacedPoint point : network.points) {
+            for (GridFacedPoint point : network.points()) {
                 gridToNetworkCLIENT.put(point, network);
             }
         }
@@ -676,7 +724,7 @@ public final class Manager {
             if (level == null) {
                 return NONE; // 物品栏
             }
-            GridFacing axis = GridFacing.get(facing, level, GridFacing.getThirdValue(facing, pos));
+            GridFacing axis = GridFacing.of(facing, level, GridFacing.getThirdValue(facing, pos));
             var point = axis.getPoint(pos);
             var network = gridToNetworkCLIENT.get(point);
             if (network == null) return NONE;

@@ -42,8 +42,7 @@ public class MonitorBlock extends MetaMachineBlock {
     public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
         var newState = super.rotate(state, level, pos, direction);
         if (!level.isClientSide()) {
-            // 手动加入更新队列确保先移除再添加
-            Manager.requireQueue(() -> Manager.removeBlock(state, pos, (Level) level));
+            Manager.removeBlock(state, pos, (Level) level);
             Manager.addBlock(newState, pos, (Level) level);
         }
         return newState;
