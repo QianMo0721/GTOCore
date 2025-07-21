@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.block.Blocks
+import net.minecraftforge.common.ForgeMod.BLOCK_REACH
 
 import com.gregtechceu.gtceu.api.GTValues
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper
@@ -51,7 +52,7 @@ class OrganService : IOrganService {
             val modifierUUID = UUID.nameUUIDFromBytes(modifierNAME.toByteArray())
             when (playerData.organTierCache.contains(tier)) {
                 true -> run {
-                    val modifierAmplify = 0.1f * 0.1f * tier
+                    val modifierAmplify = 0.1f * 0.1f * tier * 1.5f // 1.5倍
                     val shouldAdd = player.getAttribute(Attributes.MOVEMENT_SPEED)?.modifiers?.all { it.name != modifierNAME } ?: true
                     if (!shouldAdd)return@run
                     player.getAttribute(Attributes.MOVEMENT_SPEED)?.addPermanentModifier(
@@ -60,6 +61,24 @@ class OrganService : IOrganService {
                 }
                 false -> run {
                     player.getAttribute(Attributes.MOVEMENT_SPEED)?.removeModifier(modifierUUID)
+                }
+            }
+        }
+        // Block Reach
+        run {
+            val modifierNAME = "gtocore:organ_reach"
+            val modifierUUID = UUID.nameUUIDFromBytes(modifierNAME.toByteArray())
+            when (playerData.organTierCache.contains(2)) {
+                true -> run {
+                    val modifierAmplify = 2 // 加两格
+                    val shouldAdd = player.getAttribute(BLOCK_REACH.get())?.modifiers?.all { it.name != modifierNAME } ?: true
+                    if (!shouldAdd)return@run
+                    player.getAttribute(BLOCK_REACH.get())?.addPermanentModifier(
+                        AttributeModifier(modifierUUID, modifierNAME, modifierAmplify.toDouble(), AttributeModifier.Operation.ADDITION),
+                    )
+                }
+                false -> run {
+                    player.getAttribute(BLOCK_REACH.get())?.removeModifier(modifierUUID)
                 }
             }
         }
@@ -82,10 +101,8 @@ class OrganService : IOrganService {
                     if (tryUsingDurabilityWing(it, player, playerData)) return@root
                 }
             }
-            it.firstOrNull { it.item.asItem() == MECHANICAL_WING.asItem() }.let {
-                it?.let {
-                    if (whenUsingElectricWing(it, player, playerData)) return@root
-                }
+            it.filter { it.item.asItem() == MECHANICAL_WING.asItem() }.forEach {
+                if (whenUsingElectricWing(it, player, playerData)) return@root
             }
         }
         // 外星球伤害
