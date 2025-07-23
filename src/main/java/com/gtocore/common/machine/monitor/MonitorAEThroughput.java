@@ -169,6 +169,7 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
                                             .append(Component.literal(i == 0 ? "" : "B").withStyle(ChatFormatting.GRAY))
                                             .append(Component.literal("(").withStyle(ChatFormatting.WHITE)
                                                     .append(formatter.apply(nowStat[i], ChatFormatting.DARK_PURPLE))
+                                                    .append(Component.literal("/t").withStyle(ChatFormatting.GRAY))
                                                     .append(")").withStyle(ChatFormatting.WHITE)))
                                     .getVisualOrderText());
                     infoList.addIfAbsent(
@@ -207,7 +208,7 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
             return Component.literal(sign).withStyle(color)
                     .append(Component.literal(FormatUtil.formatNumber(Math.abs(num) / unit))
                             .withStyle(color))
-                    .append(Component.translatable("gtocore.machine.monitor.ae.amount.unit." + i).withStyle(ChatFormatting.GRAY));
+                    .append(Component.literal(i == 0 ? "" : "B").withStyle(ChatFormatting.GRAY));
         };
     }
 

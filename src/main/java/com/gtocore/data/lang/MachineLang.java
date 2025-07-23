@@ -166,8 +166,6 @@ final class MachineLang {
         addCNEN("gtocore.machine.monitor.ae.stat.minute", "近一分钟：%s", "Last Minute: %s");
         addCNEN("gtocore.machine.monitor.ae.stat.hour", "近一小时：%s", "Last Hour: %s");
         addCNEN("gtocore.machine.monitor.ae.stat.day", "近一天：%s", "Last Day: %s");
-        addCNEN("gtocore.machine.monitor.ae.amount.unit.0", "/t", "/t");
-        addCNEN("gtocore.machine.monitor.ae.amount.unit.1", "B/t", "B/t");
         addCNEN("gtocore.machine.monitor.ae.stat.remaining_time", "预计耗尽时间：%s", "Estimated Depletion Time: %s");
         addCNEN("gtocore.machine.monitor.ae.set_filter", "设置过滤器", "Set Filter");
         addCNEN("gtocore.machine.basic_monitor.tooltip.1", "将多个监控器连接在一起，形成一个多功能监控器", "Connect multiple monitors together to form a multifunctional monitor");
