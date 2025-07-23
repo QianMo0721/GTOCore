@@ -36,7 +36,6 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.data.RotationState;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
-import com.gregtechceu.gtceu.api.item.MetaMachineItem;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
@@ -789,6 +788,8 @@ public final class GTOMachines {
             .register();
 
     public static final MachineDefinition BASIC_MONITOR = registerMonitor("basic_monitor", "基础监控器", BasicMonitor::new)
+            .tooltips(Component.translatable("gtocore.machine.basic_monitor.tooltip.1"),
+                    Component.translatable("gtocore.machine.basic_monitor.tooltip.2"))
             .register();
     public static final MachineDefinition MONITOR_MACHINE_ELECTRICITY = registerMonitor("monitor_electricity", "监控器电网组件", MonitorEU::new)
             .register();
@@ -796,16 +797,21 @@ public final class GTOMachines {
             .register();
     public static final MachineDefinition MONITOR_MACHINE_CWU = registerMonitor("monitor_cwu", "监控器算力网络组件", MonitorCWU::new)
             .register();
+    public static final MachineDefinition MONITOR_MACHINE_CUSTOM = registerMonitor("monitor_custom", "监控器自定义文本组件", MonitorCustomInfo::new)
+            .register();
+    public static final MachineDefinition MONITOR_AE_THROUGHPUT = registerMonitor("monitor_ae_throughput", "监控器ME网络吞吐量组件", MonitorAEThroughput::new)
+            .register();
 
     private static MachineBuilder<MachineDefinition> registerMonitor(String id, String cn, Function<IMachineBlockEntity, MetaMachine> monitorConstructor) {
         BlockRegisterUtils.addLang(id, cn);
+        MonitorBlockItem.addItem(GTOCore.id(id));
         return MachineBuilder.create(
                 GTORegistration.GTO,
                 id,
                 MachineDefinition::createDefinition,
                 monitorConstructor,
                 MonitorBlock::new,
-                MetaMachineItem::new,
+                MonitorBlockItem::new,
                 MetaMachineBlockEntity::createBlockEntity)
                 .rotationState(RotationState.NON_Y_AXIS)// 也许会支持面朝上下？
                 .renderer(MonitorRenderer::new)

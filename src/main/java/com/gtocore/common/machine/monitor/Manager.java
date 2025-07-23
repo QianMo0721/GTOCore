@@ -581,6 +581,7 @@ public final class Manager {
                 informationProviders.stream()
                         .sorted(Comparator.comparingLong(IInformationProvider::getPriority).reversed())
                         .map(IInformationProvider::provideInformation)
+                        .map(DisplayComponentList::sortInner)
                         .forEachOrdered(displayComponentCache::addAll);
             }
         }
