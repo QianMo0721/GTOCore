@@ -51,7 +51,7 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
 
     @DescSynced
     private Component[] displayingName = new Component[] { Component.empty(), Component.empty() };
-    private final EnergyStat[] stat = new EnergyStat[2];
+    private final EnergyStat[] stats = new EnergyStat[2];
     private final long[] lastAmount = new long[] { 0, 0 };
     @Persisted
     private final AEItem aeItem = new AEItem();
@@ -101,15 +101,17 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
             }
             long amount = grid.getStorageService().getCachedInventory().get(current);
             var change = amount - lastAmount[i];
-            if (stat[i] == null) {
-                stat[i] = new EnergyStat(lastUpdateTime);
-            }
-            stat[i].update(BigInteger.valueOf(change), lastUpdateTime);
+            if (stats[i] == null) {
+                stats[i] = new EnergyStat(lastUpdateTime);
+                stats[i].update(BigInteger.ZERO, lastUpdateTime);
+            } else stats[i].update(BigInteger.valueOf(change), lastUpdateTime);
             lastAmount[i] = currentAmount[i];
             currentAmount[i] = amount;
-            lastMinuteStat[i] = stat[i].getMinuteAvg().longValue();
-            lastHourStat[i] = stat[i].getHourAvg().longValue();
-            lastDayStat[i] = stat[i].getDayAvg().longValue();
+
+            lastMinuteStat[i] = stats[i].getMinuteAvg().longValue();
+            lastHourStat[i] = stats[i].getHourAvg().longValue();
+            lastDayStat[i] = stats[i].getDayAvg().longValue();
+
             nowStat[i] = change;
             state[i] = State.NORMAL;
             displayingName[i] = current.getDisplayName();
@@ -152,9 +154,9 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
                         DisplayRegistry.AE_STATUS_0.id(),
                         Component.translatable("gtocore.machine.monitor.ae.status.no_config").withStyle(ChatFormatting.RED).getVisualOrderText());
                 case NORMAL -> {
-                    var unit = i == 0 ? 1 : 1000; // Items are in units, fluids are in mB
+                    final var unit = i == 0 ? 80 : 80000; // Items are in units, fluids are in mB
                     var atomI = new AtomicInteger(i == 0 ? 0 : 6);
-                    BiFunction<Long, ChatFormatting, Component> formatter = getAmountFormatter(i, unit);
+                    final BiFunction<Long, ChatFormatting, Component> formatter = getAmountFormatter(i, unit);
                     infoList.addIfAbsent(
                             ID_MAP.get(atomI.getAndIncrement()).id(),
                             Component.translatable("gtocore.machine.monitor.ae.status." + i,
@@ -164,7 +166,10 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
                             Component.translatable("gtocore.machine.monitor.ae.amount",
                                     Component.literal(FormatUtil.formatNumber(currentAmount[i] / unit))
                                             .withStyle(ChatFormatting.GOLD)
-                                            .append(Component.literal(i == 0 ? "" : "B").withStyle(ChatFormatting.GRAY)))
+                                            .append(Component.literal(i == 0 ? "" : "B").withStyle(ChatFormatting.GRAY))
+                                            .append(Component.literal("(").withStyle(ChatFormatting.WHITE)
+                                                    .append(formatter.apply(nowStat[i], ChatFormatting.DARK_PURPLE))
+                                                    .append(")").withStyle(ChatFormatting.WHITE)))
                                     .getVisualOrderText());
                     infoList.addIfAbsent(
                             DisplayRegistry.AE_STAT_TITLE.id(),
@@ -180,7 +185,7 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
                     infoList.addIfAbsent(
                             ID_MAP.get(atomI.getAndIncrement()).id(),
                             Component.translatable("gtocore.machine.monitor.ae.stat.day",
-                                    formatter.apply(lastDayStat[i], ChatFormatting.DARK_PURPLE)).getVisualOrderText());
+                                    formatter.apply(lastDayStat[i], ChatFormatting.DARK_GREEN)).getVisualOrderText());
                     if (nowStat[i] < 0) {
                         var absSec = Math.abs(nowStat[i]) * 20;
                         infoList.addIfAbsent(
@@ -196,11 +201,14 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
     }
 
     private @NotNull BiFunction<Long, ChatFormatting, Component> getAmountFormatter(int i, int unit) {
-        var sign = nowStat[i] >= 0 ? "+" : "-";
-        return (num, color) -> Component.literal(sign).withStyle(color)
-                .append(Component.literal(FormatUtil.formatNumber(Math.abs(num) / unit))
-                        .withStyle(color))
-                .append(Component.translatable("gtocore.machine.monitor.ae.amount.unit." + i).withStyle(ChatFormatting.GRAY));
+        return (num, color) -> {
+            var sign = nowStat[i] >= 0 ? "+" : "-";
+            if (num % unit != 0) sign += "~";
+            return Component.literal(sign).withStyle(color)
+                    .append(Component.literal(FormatUtil.formatNumber(Math.abs(num) / unit))
+                            .withStyle(color))
+                    .append(Component.translatable("gtocore.machine.monitor.ae.amount.unit." + i).withStyle(ChatFormatting.GRAY));
+        };
     }
 
     @Override
