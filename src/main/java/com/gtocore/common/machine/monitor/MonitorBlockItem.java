@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MonitorBlockItem extends MetaMachineItem {
 
-    private static final String path = "textures/item/monitor/";
+    private static final String TEXTURE_PATH_PREFIX = "textures/item/monitor/";
     private static final List<ResourceLocation> itemList = new ArrayList<>();
 
     public MonitorBlockItem(IMachineBlock block, Properties properties) {
