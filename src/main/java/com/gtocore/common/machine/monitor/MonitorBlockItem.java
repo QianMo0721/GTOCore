@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 import com.google.common.collect.ImmutableList;
 import com.lowdragmc.lowdraglib.client.renderer.IRenderer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class MonitorBlockItem extends MetaMachineItem {
 
-    private static final String path = "textures/item/monitor/";
+    private static final String TEXTURE_PATH_PREFIX = "textures/item/monitor/";
     private static final List<ResourceLocation> itemList = new ArrayList<>();
 
     public MonitorBlockItem(IMachineBlock block, Properties properties) {
@@ -33,11 +34,11 @@ public class MonitorBlockItem extends MetaMachineItem {
     }
 
     public static ResourceLocation getTexturePath(ResourceLocation rl) {
-        return rl.withPrefix(path).withSuffix(".png");
+        return rl.withPrefix(TEXTURE_PATH_PREFIX).withSuffix(".png");
     }
 
     @Override
-    public @Nullable IRenderer getRenderer(ItemStack stack) {
+    public @Nullable IRenderer getRenderer(@NotNull ItemStack stack) {
         return super.getRenderer(stack);
     }
 }
