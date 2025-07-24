@@ -31,6 +31,8 @@ public enum DisplayRegistry {
     COMPUTATION_WORK_USED("computation_work_used", "算力使用量", "Computation Work Used"),
     COMPUTATION_WORK_UNAVAILABLE("computation_work_unavailable", "算力容器不可用信息", "Computation Work Container Unavailable Information"),
 
+    AE_ERROR("ae_error", "ME监视器错误信息", "ME Monitor Error Information"),
+
     AE_STATUS_0("ae_status", "监视的物品信息", "Monitored Item Information"),
     AE_STATUS_1("ae_status1", "监视的流体信息", "Monitored Fluid Information"),
     AE_AMOUNT_0("ae_amount", "物品总量统计", "Item Amount"),
@@ -44,6 +46,13 @@ public enum DisplayRegistry {
     AE_STAT_DAY_1("ae_stat_day1", "上一天流体统计", "Last Day Fluid Statistics"),
     AE_STAT_REMAINING_TIME_0("ae_stat_remaining_time", "剩余时间统计（物品）", "Remaining Time Statistics (Item)"),
     AE_STAT_REMAINING_TIME_1("ae_stat_remaining_time1", "剩余时间统计（流体）", "Remaining Time Statistics (Fluid)"),
+
+    AE_CPU_MONITORED("ae_cpu_monitored", "监视的CPU信息", "Monitored CPU Information"),
+    AE_CPU_USAGE("ae_cpu_usage", "CPU使用率", "CPU Usage"),
+    AE_CPU_CAPACITY("ae_cpu_capacity", "CPU容量", "CPU Capacity"),
+    AE_CPU_MODE("ae_cpu_mode", "CPU模式", "CPU Mode"),
+    AE_CPU_CURRENT_CRAFTING("ae_cpu_current_crafting", "当前正在制作的物品", "Currently Crafting Item"),
+    AE_CPU_CURRENT_PROGRESS("ae_cpu_current_progress", "当前制作进度", "Current Crafting Progress"),
 
     CUSTOM_DISPLAY("custom_display", "自定义显示", "Custom Display"),
 

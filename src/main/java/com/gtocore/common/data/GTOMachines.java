@@ -202,16 +202,21 @@ public final class GTOMachines {
                     "根据温度发出红石信号。")
             .tooltipsText("Stop heating after front side is blocked.",
                     "前方被阻挡后停止加热。")
+            .tooltipsKey("gtceu.fluid_pipe.max_temperature", 800)
             .renderer(() -> new HeaterRenderer(ULV))
             .register();
 
-    public static final MachineDefinition BOILER = machine("boiler", "锅炉", BoilWaterMachine::new)
+    public static final MachineDefinition BOILER = machine("boiler", "外置热源锅炉", BoilWaterMachine::new)
             .tier(ULV)
             .editableUI(SimpleNoEnergyMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("boiler"), GTRecipeTypes.STEAM_TURBINE_FUELS))
             .recipeType(GTRecipeTypes.DUMMY_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
+            .tooltipsText("Need an external heat source to work.",
+                    "需要外部热源才能工作。")
+            .tooltips(Component.translatable("gtocore.machine.boiler.tooltip.warning"))
             .tooltipsKey("gtceu.universal.tooltip.produces_fluid", 48)
+            .tooltipsKey("gtceu.fluid_pipe.max_temperature", 600)
             .workableTieredHullRenderer(GTCEu.id("block/generators/boiler/lava"))
             .register();
 
@@ -230,6 +235,7 @@ public final class GTOMachines {
             .nonYAxisRotation()
             .tooltipsText("Start heating after power on. This machine will not explode.",
                     "通电后开始加热。不会爆炸。")
+            .tooltipsKey("gtceu.fluid_pipe.max_temperature", 1200)
             .renderer(() -> new HeaterRenderer(LV))
             .register();
 
@@ -800,6 +806,8 @@ public final class GTOMachines {
     public static final MachineDefinition MONITOR_MACHINE_CUSTOM = registerMonitor("monitor_custom", "监控器自定义文本组件", MonitorCustomInfo::new)
             .register();
     public static final MachineDefinition MONITOR_AE_THROUGHPUT = registerMonitor("monitor_ae_throughput", "监控器ME网络吞吐量组件", MonitorAEThroughput::new)
+            .register();
+    public static final MachineDefinition MONITOR_AE_CPU = registerMonitor("monitor_ae_cpu", "监控器ME合成处理单元组件", MonitorAECPU::new)
             .register();
 
     private static MachineBuilder<MachineDefinition> registerMonitor(String id, String cn, Function<IMachineBlockEntity, MetaMachine> monitorConstructor) {

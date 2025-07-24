@@ -4355,5 +4355,12 @@ final class Assembler {
                 .EUt(15)
                 .duration(100)
                 .save();
+        ASSEMBLER_RECIPES.builder("monitor_ae_cpu")
+                .inputItems(GTOMachines.BASIC_MONITOR)
+                .inputItems(AEBlocks.CRAFTING_MONITOR.asItem())
+                .outputItems(GTOMachines.MONITOR_AE_CPU)
+                .EUt(15)
+                .duration(100)
+                .save();
     }
 }

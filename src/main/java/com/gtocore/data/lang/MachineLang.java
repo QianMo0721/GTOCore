@@ -170,6 +170,12 @@ final class MachineLang {
         addCNEN("gtocore.machine.monitor.ae.set_filter", "设置过滤器", "Set Filter");
         addCNEN("gtocore.machine.basic_monitor.tooltip.1", "将多个监控器连接在一起，形成一个多功能监控器", "Connect multiple monitors together to form a multifunctional monitor");
         addCNEN("gtocore.machine.basic_monitor.tooltip.2", "在连接的监控器中添加§b组件§r来显示不同的信息", "Add §bcomponents§r in connected monitors to display different information");
+        addCNEN("gtocore.machine.boiler.tooltip.warning", "§c警告§r：请勿在锅炉内积攒过多的蒸汽！", "§cWarning: §rDo not accumulate too much steam in the boiler!");
+        addCNEN("gtocore.machine.monitor.ae.cpu.usage", "正在工作的CPU: %s 个（总数： %s 个）", "Working CPUs: %s (Total: %s)");
+        addCNEN("gtocore.machine.monitor.ae.cpu.monitored", "正在监视的CPU: #%s - %s", "Monitored CPU: #%s - %s");
+        addCNEN("gtocore.machine.monitor.ae.cpu.list", "CPU列表", "CPU List");
+        addCNEN("gtocore.machine.monitor.ae.cpu.set.1", "设置监视的CPU", "Set Monitored CPU");
+        addCNEN("gtocore.machine.monitor.ae.cpu.set.2", "§c警告§r：网络中CPU变动时，需要重新选择！", "Warning: When the CPU changes in the network, you need to reselect!");
 
         DisplayRegistry.registerLanguage();
     }

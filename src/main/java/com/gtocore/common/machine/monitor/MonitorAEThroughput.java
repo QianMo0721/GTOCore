@@ -5,21 +5,17 @@ import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEItemList;
 import com.gtocore.common.machine.multiblock.part.ae.widget.AEFluidConfigWidget;
 import com.gtocore.common.machine.multiblock.part.ae.widget.AEItemConfigWidget;
 
-import com.gtolib.api.machine.feature.IMEPartMachine;
+import com.gtolib.GTOCore;
 
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;
-import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import appeng.api.networking.IManagedGridNode;
-import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
 import com.google.common.collect.ImmutableList;
 import com.hepdd.gtmthings.api.misc.EnergyStat;
@@ -33,21 +29,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigInteger;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
-public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements IMEPartMachine {
-
-    @Persisted
-    private final GridNodeHolder nodeHolder;
-
-    @DescSynced
-    boolean isOnline;
-
-    final IActionSource actionSource;
+public class MonitorAEThroughput extends AbstractAEInfoMonitor {
 
     @DescSynced
     private Component[] displayingName = new Component[] { Component.empty(), Component.empty() };
@@ -67,16 +54,10 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
     private long[] lastDayStat = new long[] { 0, 0 };
     @DescSynced
     private long[] nowStat = new long[] { 0, 0 };
-    @DescSynced
-    private final State[] state = new State[] { State.NO_GRID, State.NO_GRID };
     private final CurrentGettable[] aeItemFluidGettables = new CurrentGettable[] { aeItem, aeFluid };
-
-    int lastUpdateTime = 0;
 
     public MonitorAEThroughput(IMachineBlockEntity holder) {
         super(holder);
-        this.nodeHolder = new GridNodeHolder(this);
-        this.actionSource = IActionSource.ofMachine(nodeHolder.getMainNode()::getNode);
     }
 
     public MonitorAEThroughput(Object o) {
@@ -89,16 +70,18 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
         if (time - lastUpdateTime < 40) return; // Update every 2 seconds
         lastUpdateTime = time;
         var grid = nodeHolder.getMainNode().getGrid();
+        if (grid == null || !isOnline()) {
+            state = State.NO_GRID;
+            return;
+        }
+        var hasConfig = false;
         for (int i = 0; i < 2; i++) {
             var current = aeItemFluidGettables[i].getCurrent();
-            if (grid == null || !isOnline()) {
-                state[i] = State.NO_GRID;
-                continue;
-            }
             if (current == null) {
-                state[i] = State.NO_CONFIG;
+                displayingName[i] = Component.empty();
                 continue;
             }
+            hasConfig = true;
             long amount = grid.getStorageService().getCachedInventory().get(current);
             var change = amount - lastAmount[i];
             if (stats[i] == null) {
@@ -108,14 +91,22 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
             lastAmount[i] = currentAmount[i];
             currentAmount[i] = amount;
 
-            lastMinuteStat[i] = stats[i].getMinuteAvg().longValue();
-            lastHourStat[i] = stats[i].getHourAvg().longValue();
-            lastDayStat[i] = stats[i].getDayAvg().longValue();
+            try {
+                lastMinuteStat[i] = stats[i].getMinuteAvg().longValue();
+                lastHourStat[i] = stats[i].getHourAvg().longValue();
+                lastDayStat[i] = stats[i].getDayAvg().longValue();
+            } catch (ArithmeticException e) {
+                // This can happen if the stats are not initialized properly
+                GTOCore.LOGGER.error("Error calculating AE stats for {}: {}", current.getDisplayName(), e.getMessage());
+                lastMinuteStat[i] = 0;
+                lastHourStat[i] = 0;
+                lastDayStat[i] = 0;
+            }
 
             nowStat[i] = change;
-            state[i] = State.NORMAL;
             displayingName[i] = current.getDisplayName();
         }
+        state = hasConfig ? State.NORMAL : State.NO_CONFIG;
     }
 
     private static final ImmutableList<DisplayRegistry> ID_MAP = ImmutableList.of(
@@ -145,15 +136,9 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
     @Override
     public DisplayComponentList provideInformation() {
         var infoList = super.provideInformation();
-        for (int i = 0; i < 2; i++) {
-            switch (state[i]) {
-                case NO_GRID -> infoList.addIfAbsent(
-                        DisplayRegistry.AE_STATUS_0.id(),
-                        Component.translatable("gtocore.machine.monitor.ae.status.no_grid").withStyle(ChatFormatting.RED).getVisualOrderText());
-                case NO_CONFIG -> infoList.addIfAbsent(
-                        DisplayRegistry.AE_STATUS_0.id(),
-                        Component.translatable("gtocore.machine.monitor.ae.status.no_config").withStyle(ChatFormatting.RED).getVisualOrderText());
-                case NORMAL -> {
+        if (state == State.NORMAL) {
+            for (int i = 0; i < 2; i++) {
+                if (!Objects.equals(displayingName[i], Component.empty())) {
                     final var unit = i == 0 ? 80 : 80000; // Items are in units, fluids are in mB
                     var atomI = new AtomicInteger(i == 0 ? 0 : 6);
                     final BiFunction<Long, ChatFormatting, Component> formatter = getAmountFormatter(i, unit);
@@ -194,7 +179,6 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
                                 Component.translatable("gtocore.machine.monitor.ae.stat.remaining_time",
                                         PowerSubstationMachine.getTimeToFillDrainText(BigInteger.valueOf(currentAmount[i] / absSec)).withStyle(ChatFormatting.GRAY)).getVisualOrderText());
                     }
-
                 }
             }
         }
@@ -210,32 +194,6 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
                             .withStyle(color))
                     .append(Component.literal(i == 0 ? "" : "B").withStyle(ChatFormatting.GRAY));
         };
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        getMainNode().setExposedOnSides(EnumSet.allOf(Direction.class));
-    }
-
-    @Override
-    public IManagedGridNode getMainNode() {
-        return nodeHolder.getMainNode();
-    }
-
-    @Override
-    public void setOnline(final boolean isOnline) {
-        this.isOnline = isOnline;
-    }
-
-    @Override
-    public boolean isOnline() {
-        return this.isOnline;
-    }
-
-    @Override
-    public IActionSource getActionSource() {
-        return this.actionSource;
     }
 
     @Override
@@ -287,11 +245,5 @@ public class MonitorAEThroughput extends AbstractInfoProviderMonitor implements 
 
         @Nullable
         AEKey getCurrent();
-    }
-
-    private enum State {
-        NO_GRID,
-        NO_CONFIG,
-        NORMAL,
     }
 }

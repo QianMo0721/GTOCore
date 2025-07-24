@@ -34,7 +34,7 @@ public abstract class AbstractInfoProviderMonitor extends BasicMonitor implement
     private ResourceLocation[] displayOrderCache = new ResourceLocation[0];
     private static final ManagedFieldHolder BASIC_MONITOR_HOLDER = new ManagedFieldHolder(AbstractInfoProviderMonitor.class, MetaMachine.MANAGED_FIELD_HOLDER);
 
-    protected static ManagedFieldHolder getManagedFieldHolder(Class<? extends BasicMonitor> clazz) {
+    protected ManagedFieldHolder getManagedFieldHolder(Class<? extends BasicMonitor> clazz) {
         return new ManagedFieldHolder(clazz, BASIC_MONITOR_HOLDER);
     }
 
