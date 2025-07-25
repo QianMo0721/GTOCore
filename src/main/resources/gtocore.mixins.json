@@ -10,9 +10,12 @@
     "mc.GuiGraphicsAccessor"
   ],
   "mixins": [
+    "ae.CraftingStatusMenuAccessor",
     "gtm.AssemblyLineMachineMixin",
+    "gtmt.TimeWheelMixin",
     "mae2.EUP2PTunnelPartMixin",
     "mc.BlockBehaviourMixin",
+    "mc.SharedConstantsMixin",
     "mc.mob.AbstractSkeletonMixin",
     "mc.mob.MobMixin"
   ],
