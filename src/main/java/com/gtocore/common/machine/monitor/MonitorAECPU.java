@@ -174,7 +174,7 @@ public class MonitorAECPU extends AbstractAEInfoMonitor {
                             DisplayRegistry.AE_CPU_CURRENT_PROGRESS.id(),
                             DisplayComponent.progressBar(DisplayRegistry.AE_CPU_CURRENT_PROGRESS.id(),
                                     elapsedTimeTracker.getProgress(),
-                                            50, 12, etaTimeText,
+                                    50, 12, etaTimeText,
                                     ProgressBarColorStyle.Companion.getDEFAULT_GREEN()));
                 }
             }

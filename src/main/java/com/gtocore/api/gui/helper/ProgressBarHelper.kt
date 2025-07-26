@@ -6,11 +6,8 @@ import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 
 import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.concurrent.atomics.AtomicInt
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.concurrent.atomics.fetchAndIncrement
 
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.roundToInt
 
 /**
@@ -38,7 +35,7 @@ object ProgressBarHelper {
                 {
                     DrawerHelper.drawBorder(graphics, innerX, innerY, innerWidth, innerHeight, borderColor, borderWidth)
                 },
-                zOrder = atomicZOrder
+                zOrder = atomicZOrder,
             )
         }
         if (innerWidth > 0 && innerHeight > 0) {
@@ -48,7 +45,7 @@ object ProgressBarHelper {
                 {
                     DrawerHelper.drawSolidRect(graphics, innerX, innerY, innerWidth, innerHeight, backgroundColor)
                 },
-                zOrder = atomicZOrder
+                zOrder = atomicZOrder,
             )
         }
         val progressWidth = (innerWidth * progressFloat).roundToInt()
@@ -65,7 +62,7 @@ object ProgressBarHelper {
                 {
                     DrawerHelper.drawSolidRect(graphics, innerX, innerY, progressWidth, innerHeight, color)
                 },
-                zOrder = atomicZOrder
+                zOrder = atomicZOrder,
             )
         }
         if (text.isNotEmpty()) {
@@ -80,7 +77,7 @@ object ProgressBarHelper {
                 {
                     DrawerHelper.drawText(graphics, text, textX, textY, 1f, textColor, false)
                 },
-                zOrder = atomicZOrder
+                zOrder = atomicZOrder,
             )
         }
         return totalWidth to totalHeight

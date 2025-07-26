@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.enderio.base.common.init.EIOFluids;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import dev.shadowsoffire.apotheosis.ench.Ench;
 
 import static com.gtocore.common.data.GTORecipeTypes.CANNER_RECIPES;
@@ -181,6 +182,30 @@ final class Canner {
                 .inputFluids(GTOMaterials.CoolantLiquid, 1000)
                 .EUt(30)
                 .duration(200)
+                .save();
+
+        CANNER_RECIPES.builder("vanilla_ink_sac")
+                .inputItems(Items.LEATHER)
+                .inputFluids(GTMaterials.DyeBlack.getFluid(144))
+                .outputItems(Items.INK_SAC)
+                .EUt(30)
+                .duration(100)
+                .save();
+
+        CANNER_RECIPES.builder("vanilla_ink_sac2")
+                .inputItems(Items.PHANTOM_MEMBRANE)
+                .inputFluids(GTMaterials.DyeBlack.getFluid(144))
+                .outputItems(Items.INK_SAC)
+                .EUt(30)
+                .duration(100)
+                .save();
+
+        CANNER_RECIPES.builder("vanilla_ink_sac3")
+                .inputItems(ItemsRegistry.WILDEN_WING.asItem())
+                .inputFluids(GTMaterials.DyeBlack.getFluid(144))
+                .outputItems(Items.INK_SAC)
+                .EUt(30)
+                .duration(100)
                 .save();
     }
 }

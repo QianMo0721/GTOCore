@@ -191,7 +191,7 @@ public final class MultiBlockG {
                     h -> h.addLines("线圈效率加成", "Coil Efficiency Bonus", StyleBuilder::setGold),
                     c -> c.addLines(
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
-                                    x -> x.addLines("线圈等级每高出白铜一级", "Each coil tier above Bronze", StyleBuilder::setWhite),
+                                    x -> x.addLines("线圈等级每高出白铜一级", "Each coil tier above Cupronickel", StyleBuilder::setWhite),
                                     p -> p,
                                     StyleBuilder::setOneTab),
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(

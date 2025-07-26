@@ -1,11 +1,12 @@
 package com.gtocore.common.machine.monitor;
 
+import com.gtocore.api.gui.helper.ProgressBarColorStyle;
+
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
-import com.gtocore.api.gui.helper.ProgressBarColorStyle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -148,7 +149,6 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
             energyFullness = (container.getCapacity() == null || container.getCapacity().equals(BigInteger.ZERO)) ?
                     0f : new BigDecimal(energyTotal).divide(new BigDecimal(container.getCapacity()), 4, RoundingMode.DOWN).floatValue();
 
-
             WirelessEnergyContainer.observed = true;
             WirelessEnergyContainer.TRANSFER_DATA.clear();
             return textListCache;
@@ -172,9 +172,7 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
                             energyFullness,
                             50, 12,
                             Component.translatable("gtocore.machine.monitor.eu.fullness", String.format("%.2f", energyFullness * 100)).getString(),
-                            ProgressBarColorStyle.Companion.getHEALTH_GRADIENT()
-                    )
-            );
+                            ProgressBarColorStyle.Companion.getHEALTH_GRADIENT()));
         }
         return informationList;
     }

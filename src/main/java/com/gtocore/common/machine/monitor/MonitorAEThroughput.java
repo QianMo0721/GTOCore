@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.monitor;
 
-import appeng.api.stacks.GenericStack;
 import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEFluidList;
 import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEItemList;
 import com.gtocore.common.machine.multiblock.part.ae.widget.AEFluidConfigWidget;
@@ -79,7 +78,7 @@ public class MonitorAEThroughput extends AbstractAEInfoMonitor {
         for (int i = 0; i < 2; i++) {
             var current = aeItemFluidGettables[i].getCurrent();
             if (current == null) {
-//                displayingName[i] = Component.empty();
+                // displayingName[i] = Component.empty();
                 continue;
             }
             hasConfig = true;
@@ -100,7 +99,7 @@ public class MonitorAEThroughput extends AbstractAEInfoMonitor {
             lastDayStat[i] = stats[i].getDayAvg().longValue();
 
             nowStat[i] = change;
-//            displayingName[i] = current.getDisplayName();
+            // displayingName[i] = current.getDisplayName();
             displayingEntry.put(String.valueOf(i), current.toTagGeneric());
         }
         state = hasConfig ? State.NORMAL : State.NO_CONFIG;
@@ -142,13 +141,13 @@ public class MonitorAEThroughput extends AbstractAEInfoMonitor {
                     var itemId = ID_MAP.get(atomI.getAndIncrement()).id();
                     var itemKey = AEKey.fromTagGeneric(displayingEntry.getCompound(String.valueOf(i)));
                     if (itemKey != null) {
-//                        infoList.addIfAbsent(
-//                                itemId,
-//                                DisplayComponent.textWithStack(itemId,
-//                                        Component.translatable("gtocore.machine.monitor.ae.status." + i,
-//                                                itemKey.getDisplayName().copy().withStyle(ChatFormatting.AQUA)).getVisualOrderText(),
-//                                        new GenericStack(itemKey, 0))
-//                        );
+                        // infoList.addIfAbsent(
+                        // itemId,
+                        // DisplayComponent.textWithStack(itemId,
+                        // Component.translatable("gtocore.machine.monitor.ae.status." + i,
+                        // itemKey.getDisplayName().copy().withStyle(ChatFormatting.AQUA)).getVisualOrderText(),
+                        // new GenericStack(itemKey, 0))
+                        // );
                         infoList.addIfAbsent(
                                 itemId,
                                 Component.translatable("gtocore.machine.monitor.ae.status." + i,

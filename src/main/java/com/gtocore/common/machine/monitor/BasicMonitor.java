@@ -1,9 +1,7 @@
 package com.gtocore.common.machine.monitor;
 
-import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
-import com.gregtechceu.gtceu.api.machine.TieredMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife;
 
 import com.hepdd.gtmthings.api.capability.IBindable;

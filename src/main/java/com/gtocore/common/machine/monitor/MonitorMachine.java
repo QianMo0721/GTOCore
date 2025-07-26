@@ -2,6 +2,7 @@ package com.gtocore.common.machine.monitor;
 
 import com.gtocore.common.data.GTOItems;
 
+import com.gtolib.GTOCore;
 import com.gtolib.api.machine.mana.feature.IManaEnergyMachine;
 import com.gtolib.api.recipe.ContentBuilder;
 import com.gtolib.utils.FluidUtils;
@@ -12,6 +13,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
+import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.steam.SimpleSteamMachine;
@@ -43,6 +45,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.google.common.collect.ImmutableBiMap;
+import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
+import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
 import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
@@ -296,7 +300,7 @@ public class MonitorMachine extends AbstractInfoProviderMonitor {
                 BigInteger threshold = BigInteger.valueOf(1000000000000L);
                 String energyStr = FormattingUtil.formatNumberOrSic(energy, threshold);
                 String maxEnergyStr = FormattingUtil.formatNumberOrSic(maxEnergy, threshold);
-                component = Component.translatable("gtceu.jade.energy_stored", new Object[] { energyStr, maxEnergyStr });
+                component = Component.translatable("gtceu.jade.energy_stored", energyStr, maxEnergyStr);
             }
         }
         return component;
@@ -309,15 +313,15 @@ public class MonitorMachine extends AbstractInfoProviderMonitor {
             int currentProgress = capData.getInt("Progress");
             int maxProgress = capData.getInt("MaxProgress");
             if (capData.getBoolean("Research")) {
-                String current = FormattingUtil.formatNumberReadable((long) currentProgress);
-                String max = FormattingUtil.formatNumberReadable((long) maxProgress);
-                component = Component.translatable("gtceu.jade.progress_computation", new Object[] { current, max });
+                String current = FormattingUtil.formatNumberReadable(currentProgress);
+                String max = FormattingUtil.formatNumberReadable(maxProgress);
+                component = Component.translatable("gtceu.jade.progress_computation", current, max);
             } else {
                 Component text;
                 if (maxProgress < 20) {
-                    text = Component.translatable("gtceu.jade.progress_tick", new Object[] { currentProgress, maxProgress });
+                    text = Component.translatable("gtceu.jade.progress_tick", currentProgress, maxProgress);
                 } else {
-                    text = Component.translatable("gtceu.jade.progress_sec", new Object[] { Math.round((float) currentProgress / 20.0F), Math.round((float) maxProgress / 20.0F) });
+                    text = Component.translatable("gtceu.jade.progress_sec", Math.round((float) currentProgress / 20.0F), Math.round((float) maxProgress / 20.0F));
                 }
                 if (maxProgress > 0) {
                     component = text;
@@ -541,6 +545,7 @@ public class MonitorMachine extends AbstractInfoProviderMonitor {
         return ComponentUtils.wrapInSquareBrackets(stack.getDisplayName()).withStyle(ChatFormatting.WHITE);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private int IndexOf(DisplayRegistry name) {
         return DISPLAY_REGISTRY.inverse().get(name);
     }
@@ -551,7 +556,10 @@ public class MonitorMachine extends AbstractInfoProviderMonitor {
         SlotWidget slot = new SlotWidget(inventory.storage, 0, 16, 144, true, true);
         slot.appendHoverTooltips(Component.translatable("gtocore.machine.machine_monitor.slot"));
         slot.setChangeListener(() -> isCardChange = true);
+        slot.setBackground(GuiTextures.SLOT.copy().scale(18 / 16f), MACHINE_COORDS_OVERLAY);
         baseWidget.addWidget(slot);
         return baseWidget;
     }
+
+    private static final IGuiTexture MACHINE_COORDS_OVERLAY = new ResourceTexture(GTOCore.id("textures/gui/machine_coords_overlay.png")).scale(15 / 16f);
 }

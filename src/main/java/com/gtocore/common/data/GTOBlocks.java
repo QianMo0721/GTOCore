@@ -449,4 +449,6 @@ public final class GTOBlocks {
     public static final BlockEntry<Block> BIOACTIVE_MECHANICAL_CASING = createCasingBlock("bioactive_mechanical_casing", "生物活性机械方块", GTOCore.id("block/casings/bioactive_mechanical_casing"));
     // 工业无框玻璃
     public static final BlockEntry<Block> INDUSTRIAL_FRAMELESS_GLASS = createGlassCasingBlock("industrial_frameless_glass", "工业无框玻璃", GTOCore.id("block/industrial_frameless_glass"));
+    // 工程机械方块
+    public static final BlockEntry<Block> ENGINEERING_MECHANICAL_CASING = createCasingBlock("engineering_mechanical_casing", "工程机械方块", GTOCore.id("block/casings/engineering_mechanical_casing"));
 }

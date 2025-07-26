@@ -57,6 +57,7 @@ final class ItemLang {
         addCNEN("tagprefix.artificial_gem", "人造%s", "Artificial %s");
         addCNEN("tagprefix.crystal_seed", "%s晶种", "%s Crystal Seed");
         addCNEN("tagprefix.superconductor_base", "%s超导粗胚", "%s Superconductor Base");
+        addCNEN("tagprefix.coin", "%s币", "%s Coin");
 
         addCNEN("gtocore.tooltip.artificial_gem", "比自然的更好", "Better than nature");
         addCNEN("gtocore.tooltip.unknown", "未知", "Unknown");

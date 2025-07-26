@@ -1,20 +1,21 @@
 package com.gtocore.common.machine.monitor;
 
-import appeng.api.client.AEKeyRendering;
-import appeng.api.stacks.AmountFormat;
-import appeng.api.stacks.GenericStack;
-import appeng.client.gui.me.common.StackSizeRenderer;
 import com.gtocore.api.gui.graphic.impl.GTOProgressClientComponent;
 import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent;
 import com.gtocore.api.gui.helper.GuiIn3DHelper;
 import com.gtocore.api.gui.helper.ProgressBarColorStyle;
-import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import appeng.api.client.AEKeyRendering;
+import appeng.api.stacks.AmountFormat;
+import appeng.api.stacks.GenericStack;
+import appeng.client.gui.me.common.StackSizeRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class DisplayComponent implements IDisplayComponent {
@@ -80,25 +81,25 @@ public abstract class DisplayComponent implements IDisplayComponent {
     }
 
     public static class ProgressBar extends DisplayComponent {
+
         private float progress; // 0.0 to 1.0
         private int width;
         private int height;
         private String text = ""; // Optional text to display on the progress bar
         private ProgressBarColorStyle style = ProgressBarColorStyle.Companion.getDEFAULT_GREEN(); // Default style
+
         private ProgressBar(ResourceLocation id) {
             super(id);
         }
 
         @Override
         public IDisplayComponent setInformation(Object... information) {
-            if (information.length >= 3 && information[0] instanceof Float progressValue
-                    && information[1] instanceof Integer widthValue
-                    && information[2] instanceof Integer heightValue) {
+            if (information.length >= 3 && information[0] instanceof Float progressValue && information[1] instanceof Integer widthValue && information[2] instanceof Integer heightValue) {
                 this.progress = progressValue;
                 this.width = widthValue;
                 this.height = heightValue;
                 if (information.length >= 5 && information[3] instanceof String text0 &&
-                 information[4] instanceof ProgressBarColorStyle style0) {
+                        information[4] instanceof ProgressBarColorStyle style0) {
                     // Optionally handle text if needed, currently unused
                     this.text = text0;
                     this.style = style0;
@@ -128,36 +129,38 @@ public abstract class DisplayComponent implements IDisplayComponent {
 
         @Override
         public void renderDisplay(
-                Manager.GridNetwork network,
-                BlockEntity blockEntity,
-                float partialTicks,
-                PoseStack stack,
-                MultiBufferSource buffer,
-                int combinedLight,
-                int combinedOverlay,
-                int lastLineX,
-                int startY) {
+                                  Manager.GridNetwork network,
+                                  BlockEntity blockEntity,
+                                  float partialTicks,
+                                  PoseStack stack,
+                                  MultiBufferSource buffer,
+                                  int combinedLight,
+                                  int combinedOverlay,
+                                  int lastLineX,
+                                  int startY) {
             GuiIn3DHelper.renderIn3D(
                     stack,
                     (gui, pose) -> {
 
-//            guiPose.translate(0, 0, -400);
+                        // guiPose.translate(0, 0, -400);
                         pose.scale(1f, 1f, 1e-3f);
                         new GTOProgressClientComponent(new GTOProgressToolTipComponent(progress, text, style)).renderImage(Minecraft.getInstance().font, 0, startY, gui);
-                    }
-            );
+                    });
         }
     }
+
     public static ProgressBar progressBar(ResourceLocation id, float progress, int width, int height) {
         return (ProgressBar) new ProgressBar(id)
                 .setInformation(progress, width, height);
     }
+
     public static ProgressBar progressBar(ResourceLocation id, float progress, int width, int height, String text, ProgressBarColorStyle style) {
         return (ProgressBar) new ProgressBar(id)
                 .setInformation(progress, width, height, text, style);
     }
 
     public static class TextWithStack extends Text {
+
         @Nullable
         private GenericStack genericStack; // Optional text to display on the AEGenericStack
 
@@ -176,10 +179,9 @@ public abstract class DisplayComponent implements IDisplayComponent {
 
         @Override
         public void renderDisplay(Manager.GridNetwork network, BlockEntity blockEntity, float partialTicks, PoseStack stack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, int lastLineX, int startY) {
-
             if (genericStack != null) {
                 GuiIn3DHelper.renderIn3D(
-                        stack, (guiGraphics, pose) ->{
+                        stack, (guiGraphics, pose) -> {
 
                             pose.scale(1f, 1f, 1e-3f);
                             AEKeyRendering.drawInGui(
@@ -195,8 +197,7 @@ public abstract class DisplayComponent implements IDisplayComponent {
                                         super.getVisualWidth() + 2,
                                         startY, amtText, false);
                             }
-                        }
-                );
+                        });
 
             }
         }
@@ -217,6 +218,7 @@ public abstract class DisplayComponent implements IDisplayComponent {
             return Math.max(super.getVisualHeight(), iconHeight);
         }
     }
+
     public static Text textWithStack(ResourceLocation id, FormattedCharSequence text, @Nullable GenericStack stack) {
         if (stack == null) {
             return text(id, text);

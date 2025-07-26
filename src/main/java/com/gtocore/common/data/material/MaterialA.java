@@ -489,7 +489,7 @@ public final class MaterialA {
                 .blastTemp(32000, HIGHEST)
                 .element(GTOElements.INFINITY)
                 .iconSet(INFINITY)
-                .flags(GENERATE_FRAME, GENERATE_GEAR, GENERATE_BOLT_SCREW)
+                .flags(GENERATE_FRAME, GENERATE_GEAR, GENERATE_BOLT_SCREW, GTOMaterialFlags.GENERATE_COIN)
                 .cableProperties(Integer.MAX_VALUE, 8192, 0, true)
                 .buildAndRegister();
 
@@ -500,7 +500,7 @@ public final class MaterialA {
                 .element(GTOElements.ADAMANTINE)
                 .color(0xe6e600)
                 .iconSet(METALLIC)
-                .flags(GENERATE_FINE_WIRE)
+                .flags(GENERATE_FINE_WIRE, GTOMaterialFlags.GENERATE_COIN)
                 .cableProperties(GTValues.V[GTValues.UIV], 4, 128)
                 .buildAndRegister();
 
