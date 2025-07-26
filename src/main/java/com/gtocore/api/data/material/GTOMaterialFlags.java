@@ -37,4 +37,7 @@ public final class GTOMaterialFlags {
     public static final MaterialFlag GENERATE_ARTIFICIAL_GEM = new MaterialFlag.Builder("generate_artificial_gem")
             .requireFlags(GENERATE_CRYSTAL_SEED)
             .build();
+
+    public static final MaterialFlag GENERATE_COIN = new MaterialFlag.Builder("generate_coin")
+            .build();
 }

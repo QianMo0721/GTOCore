@@ -125,6 +125,14 @@ public final class StructureWriteBehavior implements IItemUIFactory {
                     builder.append(".where('").append(c).append("', air())\n");
                     return;
                 }
+                if (b == Blocks.GLASS) {
+                    builder.append(".where('").append(c).append("', GTOPredicates.glass())\n");
+                    return;
+                }
+                if (b == Blocks.GLOWSTONE) {
+                    builder.append(".where('").append(c).append("', GTOPredicates.light())\n");
+                    return;
+                }
                 if (b == Blocks.COBBLESTONE) {
                     builder.append(".where('").append(c).append("', blocks(").append(convertBlockToString(RegistriesUtils.getBlock(part), part, StringUtils.decompose(part), false))
                             .append(")\n").append(itemStack.getOrCreateTag().getBoolean("laser") ? ".or(GTOPredicates.autoLaserAbilities(definition.getRecipeTypes()))\n.or(abilities(MAINTENANCE).setExactLimit(1)))\n" : ".or(autoAbilities(definition.getRecipeTypes()))\n.or(abilities(MAINTENANCE).setExactLimit(1)))\n");

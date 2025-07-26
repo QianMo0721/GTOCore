@@ -35,6 +35,7 @@ import com.gtolib.utils.register.BlockRegisterUtils;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
+import com.gregtechceu.gtceu.api.data.RotationState;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -843,7 +844,7 @@ public final class GTOMachines {
                 MonitorBlock::new,
                 MonitorBlockItem::new,
                 MetaMachineBlockEntity::createBlockEntity)
-                .nonYAxisRotation()// 也许会支持面朝上下？
+                .rotationState(RotationState.NON_Y_AXIS)
                 .renderer(MonitorRenderer::new)
                 .hasTESR(true);
     }

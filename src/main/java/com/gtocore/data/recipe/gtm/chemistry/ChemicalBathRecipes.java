@@ -75,5 +75,12 @@ final class ChemicalBathRecipes {
                 .outputItems(dust, TungsticAcid, 7)
                 .outputItems(dust, LithiumChloride, 4)
                 .duration(210).EUt(960).save();
+
+        CHEMICAL_BATH_RECIPES.recipeBuilder("vanilla_glow_ink_sac")
+                .inputItems(Items.INK_SAC)
+                .inputFluids(Glowstone.getFluid(144))
+                .outputItems(Items.GLOW_INK_SAC)
+                .duration(300).EUt(VA[ULV])
+                .save();
     }
 }

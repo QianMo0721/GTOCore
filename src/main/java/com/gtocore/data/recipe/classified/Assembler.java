@@ -4365,7 +4365,7 @@ final class Assembler {
 
         ASSEMBLER_RECIPES.builder("monitor_machine")
                 .inputItems(GTOMachines.BASIC_MONITOR)
-                .inputItems(GTBlocks.MACHINE_CASING_LV.asItem())
+                .inputItems(GTItems.PORTABLE_SCANNER)
                 .outputItems(GTOMachines.MONITOR_MACHINE)
                 .EUt(15)
                 .duration(100)

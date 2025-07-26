@@ -146,6 +146,7 @@ final class MachineLang {
         addCNEN("gtocore.machine.monitor.cwu.used", "（已使用: %s CWU）", "(Used: %s CWU)");
         addCNEN("gtocore.machine.monitor.cwu.no_container", "警告：算力信息缺失！", "Warning: Hashrate information is missing!");
         addCNEN("gtocore.machine.monitor.eu.no_container", "警告：无限能源塔绑定信息缺失！", "Warning: Infinite Energy Tower binding information is missing!");
+        addCNEN("gtocore.machine.monitor.eu.fullness", "能量塔能量存量: %s%%", "Energy Tower Energy Storage: %s%%");
         addCNEN("gtocore.machine.monitor.priority", "调整显示的优先级", "Adjust the display priority");
         addCNEN("gtocore.machine.monitor.adjust_component.move_up", "上移", "Move Up");
         addCNEN("gtocore.machine.monitor.adjust_component.move_down", "下移", "Move Down");

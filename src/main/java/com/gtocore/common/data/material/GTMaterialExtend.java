@@ -37,7 +37,7 @@ public final class GTMaterialExtend {
                 .color(16777215)
                 .iconSet(GTOMaterialIconSet.AMPROSIUM)
                 .secondaryColor(0)
-                .appendFlags(GTMaterials.EXT_METAL, MaterialFlags.GENERATE_BOLT_SCREW, MaterialFlags.GENERATE_FRAME, MaterialFlags.GENERATE_GEAR, MaterialFlags.GENERATE_LONG_ROD)
+                .appendFlags(GTMaterials.EXT_METAL, MaterialFlags.GENERATE_BOLT_SCREW, MaterialFlags.GENERATE_FRAME, MaterialFlags.GENERATE_GEAR, MaterialFlags.GENERATE_LONG_ROD, GTOMaterialFlags.GENERATE_COIN)
                 .element(GTElements.Nq2)
                 .toolStats(ToolProperty.Builder.of(160.0F, 80.0F, 65535, 6).attackSpeed(0.5F).enchantability(33).magnetic().build()).rotorStats(400, 250, 12.0F, 655360)
                 .fluidPipeProperties(100000, 5000, true, true, true, true).radioactiveHazard(10.0F)
@@ -287,11 +287,16 @@ public final class GTMaterialExtend {
         Carbon.addFlags(GTOMaterialFlags.GENERATE_NANITES);
         Iron.addFlags(GTOMaterialFlags.GENERATE_NANITES);
         Glowstone.addFlags(GTOMaterialFlags.GENERATE_NANITES);
-        Copper.addFlags(GTOMaterialFlags.GENERATE_NANITES);
-        Silver.addFlags(GTOMaterialFlags.GENERATE_NANITES);
-        Gold.addFlags(GTOMaterialFlags.GENERATE_NANITES);
+        Copper.addFlags(GTOMaterialFlags.GENERATE_NANITES, GTOMaterialFlags.GENERATE_COIN); // coin t0 铜币
+        Cupronickel.addFlags(GTOMaterialFlags.GENERATE_COIN); // coin t1 白铜币
+        Silver.addFlags(GTOMaterialFlags.GENERATE_NANITES, GTOMaterialFlags.GENERATE_COIN); // coin t2 银币
+        Gold.addFlags(GTOMaterialFlags.GENERATE_NANITES, GTOMaterialFlags.GENERATE_COIN); // coin t3 金币
+        Osmium.addFlags(GTOMaterialFlags.GENERATE_NANITES, GTOMaterialFlags.GENERATE_COIN); // coin t4 锇币
+        Naquadah.addFlags(GTOMaterialFlags.GENERATE_COIN); // coin t5 硅岩币
+        // Amprosium.addFlags(GTOMaterialFlags.GENERATE_COIN); // coin t6 安普洛币
+        // Adamantine.addFlags(GTOMaterialFlags.GENERATE_COIN); // coin t7 精金币
+        // Infinity.addFlags(GTOMaterialFlags.GENERATE_COIN); // coin t8 无尽币
         Iridium.addFlags(GTOMaterialFlags.GENERATE_NANITES);
-        Osmium.addFlags(GTOMaterialFlags.GENERATE_NANITES);
         Rhenium.addFlags(GTOMaterialFlags.GENERATE_NANITES);
         Nickel.addFlags(GTOMaterialFlags.GENERATE_MILLED);
         Platinum.addFlags(GTOMaterialFlags.GENERATE_MILLED);

@@ -21,6 +21,7 @@ import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
 import com.gregtechceu.gtceu.api.pattern.error.PatternStringError;
 import com.gregtechceu.gtceu.api.pattern.predicates.SimplePredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
+import com.gregtechceu.gtceu.common.data.GTBlocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.lowdragmc.lowdraglib.utils.BlockInfo;
+import com.tterrag.registrate.util.entry.RegistryEntry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 import java.util.ArrayList;
@@ -166,5 +168,9 @@ public final class GTOPredicates {
             }
             return false;
         }, () -> predicate.common.stream().map(p -> p.candidates).filter(Objects::nonNull).map(Supplier::get).flatMap(Arrays::stream).toArray(BlockInfo[]::new)));
+    }
+
+    public static TraceabilityPredicate light() {
+        return Predicates.blocks(GTBlocks.LAMPS.values().stream().map(RegistryEntry::get).toArray(Block[]::new));
     }
 }
