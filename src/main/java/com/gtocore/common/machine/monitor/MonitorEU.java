@@ -5,6 +5,7 @@ import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
+import com.gtocore.api.gui.helper.ProgressBarColorStyle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,7 @@ import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -39,6 +41,9 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
             .build();
     @DescSynced
     private Component[] bufferCache = new Component[0];
+
+    @DescSynced
+    private float energyFullness = 0.0f;
 
     public MonitorEU(Object o) {
         this((IMachineBlockEntity) o);
@@ -82,7 +87,7 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
         if (container == null) {
             return new Component[0];
         } else {
-            Component[] textListCache = new Component[9];
+            Component[] textListCache = new Component[DISPLAY_REGISTRY.size()];
             BigInteger energyTotal = container.getStorage();
             // Total energy
             textListCache[0] = (Component.translatable("gtmthings.machine.wireless_energy_monitor.tooltip.1", Component.literal(FormatUtil.formatBigIntegerNumberOrSic(energyTotal)), new Component[0]).withStyle(ChatFormatting.GOLD));
@@ -140,6 +145,9 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
                                 new Object[] { container.getBindPos().dimension().location().toString() }).append(" [").append(pos).append("] "))
                         .withStyle(ChatFormatting.GRAY));
             }
+            energyFullness = (container.getCapacity() == null || container.getCapacity().equals(BigInteger.ZERO)) ?
+                    0f : new BigDecimal(energyTotal).divide(new BigDecimal(container.getCapacity()), 4, RoundingMode.DOWN).floatValue();
+
 
             WirelessEnergyContainer.observed = true;
             WirelessEnergyContainer.TRANSFER_DATA.clear();
@@ -158,6 +166,15 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
                             bufferCache[i].getVisualOrderText());
                 }
             }
+            informationList.addIfAbsent(
+                    DisplayRegistry.EU_STATUS_BAR.id(),
+                    DisplayComponent.progressBar(DisplayRegistry.EU_STATUS_BAR.id(),
+                            energyFullness,
+                            50, 12,
+                            Component.translatable("gtocore.machine.monitor.eu.fullness", String.format("%.2f", energyFullness * 100)).getString(),
+                            ProgressBarColorStyle.Companion.getHEALTH_GRADIENT()
+                    )
+            );
         }
         return informationList;
     }
@@ -170,6 +187,7 @@ public class MonitorEU extends AbstractInfoProviderMonitor implements IWirelessM
                 .map(Map.Entry::getValue)
                 .map(DisplayRegistry::id)
                 .toList());
+        rls.add(DisplayRegistry.EU_STATUS_BAR.id());
         return rls;
     }
 }

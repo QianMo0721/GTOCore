@@ -111,11 +111,6 @@ public class MonitorRenderer extends MachineRenderer {
     }
 
     @Override
-    public boolean shouldRender(BlockEntity blockEntity, Vec3 cameraPos) {
-        return true;
-    }
-
-    @Override
     @OnlyIn(Dist.CLIENT)
     public boolean hasTESR(BlockEntity blockEntity) {
         return true;
@@ -181,16 +176,19 @@ public class MonitorRenderer extends MachineRenderer {
                         var factor = getGlobalScaleFactor(info, MIN_WIDTH_TEXT, network.width3D() - MARGIN * 2f, network.height3D() - MARGIN * 2f);
                         stack.scale(-factor, -factor, -factor);
                         int cumulatedHeight = 0;
+                        int lastLineX = 0;
                         for (IDisplayComponent iDisplayComponent : info) {
-                            if (iDisplayComponent.getDisplayType() == DisplayType.STYLED_TEXT) {
+                            if (iDisplayComponent.getDisplayType().hasStyledText()) {
                                 FormattedCharSequence text = iDisplayComponent.getDisplayValue();
                                 font.drawInBatch(text, 0, cumulatedHeight, 0xFFFFFFFF, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0x000000, LightTexture.FULL_BRIGHT);
-                            } else if (iDisplayComponent.getDisplayType() == DisplayType.CUSTOM_RENDERER) {
+                            }
+                            if (iDisplayComponent.getDisplayType().hasCustomRenderer()) {
                                 stack.pushPose();
-                                iDisplayComponent.renderDisplay(network, blockEntity, partialTicks, stack, buffer, combinedLight, combinedOverlay);
+                                iDisplayComponent.renderDisplay(network, blockEntity, partialTicks, stack, buffer, combinedLight, combinedOverlay, lastLineX, cumulatedHeight);
                                 stack.popPose();
                             }
                             cumulatedHeight += iDisplayComponent.getVisualHeight() + 2;
+                            lastLineX = iDisplayComponent.getVisualWidth();
                         }
                         stack.popPose();
                     }

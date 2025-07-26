@@ -29,6 +29,12 @@ public interface IDisplayComponent {
 
     ResourceLocation getId();
 
+    /**
+     * 允许builder设置显示组件的额外信息。
+     * 这些信息可以是任何类型的对象，通常用于提供显示组件的具体内容或状态。
+     * @param information 可以是任意类型的对象，通常是格式化的文本或其他信息。
+     * @return 返回当前的显示组件实例，以便进行链式调用。
+     */
     @Contract("_, -> this")
     IDisplayComponent setInformation(Object... information);
 
@@ -44,7 +50,7 @@ public interface IDisplayComponent {
     /**
      * 自定义的渲染逻辑。
      */
-    default void renderDisplay(Manager.GridNetwork network, BlockEntity blockEntity, float partialTicks, PoseStack stack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {}
+    default void renderDisplay(Manager.GridNetwork network, BlockEntity blockEntity, float partialTicks, PoseStack stack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, int lastLineX, int startY) {}
 
     DisplayType getDisplayType();
 

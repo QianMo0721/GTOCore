@@ -1,16 +1,16 @@
 package com.gtocore.common.machine.monitor;
 
+import appeng.api.stacks.GenericStack;
 import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEFluidList;
 import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEItemList;
 import com.gtocore.common.machine.multiblock.part.ae.widget.AEFluidConfigWidget;
 import com.gtocore.common.machine.multiblock.part.ae.widget.AEItemConfigWidget;
 
-import com.gtolib.GTOCore;
-
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +37,7 @@ import java.util.function.BiFunction;
 public class MonitorAEThroughput extends AbstractAEInfoMonitor {
 
     @DescSynced
-    private Component[] displayingName = new Component[] { Component.empty(), Component.empty() };
+    private CompoundTag displayingEntry = new CompoundTag();
     private final EnergyStat[] stats = new EnergyStat[2];
     private final long[] lastAmount = new long[] { 0, 0 };
     @Persisted
@@ -75,10 +75,11 @@ public class MonitorAEThroughput extends AbstractAEInfoMonitor {
             return;
         }
         var hasConfig = false;
+        displayingEntry = new CompoundTag();
         for (int i = 0; i < 2; i++) {
             var current = aeItemFluidGettables[i].getCurrent();
             if (current == null) {
-                displayingName[i] = Component.empty();
+//                displayingName[i] = Component.empty();
                 continue;
             }
             hasConfig = true;
@@ -86,25 +87,21 @@ public class MonitorAEThroughput extends AbstractAEInfoMonitor {
             var change = amount - lastAmount[i];
             if (stats[i] == null) {
                 stats[i] = new EnergyStat(lastUpdateTime);
-                stats[i].update(BigInteger.ZERO, lastUpdateTime);
-            } else stats[i].update(BigInteger.valueOf(change), lastUpdateTime);
+            }
+            if (change != 0) {
+                // No zero update otherwise ArithmeticException will be thrown
+                stats[i].update(BigInteger.valueOf(change), lastUpdateTime);
+            }
             lastAmount[i] = currentAmount[i];
             currentAmount[i] = amount;
 
-            try {
-                lastMinuteStat[i] = stats[i].getMinuteAvg().longValue();
-                lastHourStat[i] = stats[i].getHourAvg().longValue();
-                lastDayStat[i] = stats[i].getDayAvg().longValue();
-            } catch (ArithmeticException e) {
-                // This can happen if the stats are not initialized properly
-                GTOCore.LOGGER.error("Error calculating AE stats for {}: {}", current.getDisplayName(), e.getMessage());
-                lastMinuteStat[i] = 0;
-                lastHourStat[i] = 0;
-                lastDayStat[i] = 0;
-            }
+            lastMinuteStat[i] = stats[i].getMinuteAvg().longValue();
+            lastHourStat[i] = stats[i].getHourAvg().longValue();
+            lastDayStat[i] = stats[i].getDayAvg().longValue();
 
             nowStat[i] = change;
-            displayingName[i] = current.getDisplayName();
+//            displayingName[i] = current.getDisplayName();
+            displayingEntry.put(String.valueOf(i), current.toTagGeneric());
         }
         state = hasConfig ? State.NORMAL : State.NO_CONFIG;
     }
@@ -138,14 +135,27 @@ public class MonitorAEThroughput extends AbstractAEInfoMonitor {
         var infoList = super.provideInformation();
         if (state == State.NORMAL) {
             for (int i = 0; i < 2; i++) {
-                if (!Objects.equals(displayingName[i], Component.empty())) {
+                if (displayingEntry.contains(String.valueOf(i))) {
                     final var unit = i == 0 ? 80 : 80000; // Items are in units, fluids are in mB
                     var atomI = new AtomicInteger(i == 0 ? 0 : 6);
                     final BiFunction<Long, ChatFormatting, Component> formatter = getAmountFormatter(i, unit);
-                    infoList.addIfAbsent(
-                            ID_MAP.get(atomI.getAndIncrement()).id(),
-                            Component.translatable("gtocore.machine.monitor.ae.status." + i,
-                                    displayingName[i].copy().withStyle(ChatFormatting.AQUA)).getVisualOrderText());
+                    var itemId = ID_MAP.get(atomI.getAndIncrement()).id();
+                    var itemKey = AEKey.fromTagGeneric(displayingEntry.getCompound(String.valueOf(i)));
+                    if (itemKey != null) {
+//                        infoList.addIfAbsent(
+//                                itemId,
+//                                DisplayComponent.textWithStack(itemId,
+//                                        Component.translatable("gtocore.machine.monitor.ae.status." + i,
+//                                                itemKey.getDisplayName().copy().withStyle(ChatFormatting.AQUA)).getVisualOrderText(),
+//                                        new GenericStack(itemKey, 0))
+//                        );
+                        infoList.addIfAbsent(
+                                itemId,
+                                Component.translatable("gtocore.machine.monitor.ae.status." + i,
+                                        itemKey.getDisplayName().copy().withStyle(ChatFormatting.AQUA)).getVisualOrderText());
+
+                    }
+
                     infoList.addIfAbsent(
                             ID_MAP.get(atomI.getAndIncrement()).id(),
                             Component.translatable("gtocore.machine.monitor.ae.amount",

@@ -1,5 +1,6 @@
 package com.gtocore.common.machine.monitor;
 
+import com.gtocore.api.gui.helper.ProgressBarColorStyle;
 import com.gtocore.mixin.ae.CraftingStatusMenuAccessor;
 
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
@@ -171,7 +172,10 @@ public class MonitorAECPU extends AbstractAEInfoMonitor {
                                     .getVisualOrderText());
                     infoList.addIfAbsent(
                             DisplayRegistry.AE_CPU_CURRENT_PROGRESS.id(),
-                            Component.literal(etaTimeText).withStyle(ChatFormatting.DARK_BLUE).getVisualOrderText());
+                            DisplayComponent.progressBar(DisplayRegistry.AE_CPU_CURRENT_PROGRESS.id(),
+                                    elapsedTimeTracker.getProgress(),
+                                            50, 12, etaTimeText,
+                                    ProgressBarColorStyle.Companion.getDEFAULT_GREEN()));
                 }
             }
         }

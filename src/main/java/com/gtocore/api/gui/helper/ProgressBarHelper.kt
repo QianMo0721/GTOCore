@@ -6,6 +6,10 @@ import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 
 import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.fetchAndIncrement
 
 import kotlin.math.roundToInt
 
@@ -26,11 +30,26 @@ object ProgressBarHelper {
         val innerY = borderWidth
         val innerWidth = totalWidth - borderWidth * 2
         val innerHeight = totalHeight - borderWidth * 2
+        val atomicZOrder = AtomicInteger(0)
         if (borderWidth > 0) {
-            DrawerHelper.drawBorder(graphics, innerX, innerY, innerWidth, innerHeight, borderColor, borderWidth)
+//            DrawerHelper.drawBorder(graphics, innerX, innerY, innerWidth, innerHeight, borderColor, borderWidth)
+            renderAndAddZOrder(
+                graphics,
+                {
+                    DrawerHelper.drawBorder(graphics, innerX, innerY, innerWidth, innerHeight, borderColor, borderWidth)
+                },
+                zOrder = atomicZOrder
+            )
         }
         if (innerWidth > 0 && innerHeight > 0) {
-            DrawerHelper.drawSolidRect(graphics, innerX, innerY, innerWidth, innerHeight, backgroundColor)
+//            DrawerHelper.drawSolidRect(graphics, innerX, innerY, innerWidth, innerHeight, backgroundColor)
+            renderAndAddZOrder(
+                graphics,
+                {
+                    DrawerHelper.drawSolidRect(graphics, innerX, innerY, innerWidth, innerHeight, backgroundColor)
+                },
+                zOrder = atomicZOrder
+            )
         }
         val progressWidth = (innerWidth * progressFloat).roundToInt()
         if (progressWidth > 0 && innerHeight > 0) {
@@ -40,7 +59,14 @@ object ProgressBarHelper {
                 is ProgressBarColorStyle.Gradient -> interpolateColor(progressColorStyle.startColor, progressColorStyle.endColor, progressFloat)
                 is ProgressBarColorStyle.MultiGradient -> getMultiGradientColor(progressFloat, progressColorStyle.colors)
             }
-            DrawerHelper.drawSolidRect(graphics, innerX, innerY, progressWidth, innerHeight, color)
+//            DrawerHelper.drawSolidRect(graphics, innerX, innerY, progressWidth, innerHeight, color)
+            renderAndAddZOrder(
+                graphics,
+                {
+                    DrawerHelper.drawSolidRect(graphics, innerX, innerY, progressWidth, innerHeight, color)
+                },
+                zOrder = atomicZOrder
+            )
         }
         if (text.isNotEmpty()) {
             val font = Minecraft.getInstance().font
@@ -48,7 +74,14 @@ object ProgressBarHelper {
             val textHeight = font.lineHeight
             val textX = (totalWidth - textWidth) / 2f
             val textY = (totalHeight - textHeight) / 2f + 1f
-            DrawerHelper.drawText(graphics, text, textX, textY, 1f, textColor, true)
+//            DrawerHelper.drawText(graphics, text, textX, textY, 1f, textColor, true)
+            renderAndAddZOrder(
+                graphics,
+                {
+                    DrawerHelper.drawText(graphics, text, textX, textY, 1f, textColor, false)
+                },
+                zOrder = atomicZOrder
+            )
         }
         return totalWidth to totalHeight
     }
@@ -93,6 +126,12 @@ object ProgressBarHelper {
         val g = (startG + (endG - startG) * safeFactor).roundToInt()
         val b = (startB + (endB - startB) * safeFactor).roundToInt()
         return (a shl 24) or (r shl 16) or (g shl 8) or b
+    }
+    private fun renderAndAddZOrder(graphics: GuiGraphics, renderFunc: (GuiGraphics) -> Unit, zOrder: AtomicInteger) {
+        graphics.pose().pushPose()
+        graphics.pose().translate(0.0, 0.0, zOrder.andIncrement.toDouble())
+        renderFunc(graphics)
+        graphics.pose().popPose()
     }
     // endregion
 }
