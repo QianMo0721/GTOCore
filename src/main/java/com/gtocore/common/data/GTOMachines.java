@@ -18,6 +18,8 @@ import com.gtocore.common.machine.noenergy.BoilWaterMachine;
 import com.gtocore.common.machine.noenergy.HeaterMachine;
 import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
 import com.gtocore.common.machine.steam.SteamVacuumPumpMachine;
+import com.gtocore.integration.ae.MEWirelessConnectionMachine;
+import com.gtocore.integration.ae.SyncTesterMachine;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
@@ -81,6 +83,13 @@ public final class GTOMachines {
 
         if (GTCEu.isDev() || GTCEu.isDataGen() || GTOCore.isSimple()) {
             SimpleModeMachine.init();
+        }
+        if (GTCEu.isDev() || GTCEu.isDataGen()) {
+            final MachineDefinition SYNC_TESTER_MACHINE = machine("sync_tester_machine", "同步测试机", SyncTesterMachine::new)
+                    .allRotation()
+                    .tooltipsText("用于测试机器同步的工具。", "A tool for testing machine synchronization.")
+                    .tooltipsText("请勿在生产环境中使用。", "Do not use in production environment.")
+                    .register();
         }
     }
 
@@ -441,6 +450,18 @@ public final class GTOMachines {
                             Just connect this machine to the ME network, and when the pattern is called,
                             its content will be replaced by the same line according to your priority.
                             The more items in a row, the higher its priority.""")))
+            .register();
+
+    public static final MachineDefinition ME_WIRELESS_CONNECTION_MACHINE = machine("me_wireless_connection_machine", "ME无线连接机", MEWirelessConnectionMachine::new)
+            .overlayTieredHullRenderer("neutron_sensor")
+            .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME无线连接机", "ME Wireless Connection Machine"), p -> p.addCommentLines(
+                    """
+                            多对多的ME无线网络节点
+                            可以在不同世界传输""",
+                    """
+                            A many-to-many ME wireless network node
+                            Can transmit across different worlds""")))
+            .allRotation()
             .register();
 
     public static final MachineDefinition[] NEUTRON_ACCELERATOR = registerTieredMachines("neutron_accelerator", tier -> VNF[tier] + "中子加速器",

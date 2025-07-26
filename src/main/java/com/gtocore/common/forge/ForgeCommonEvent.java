@@ -8,6 +8,7 @@ import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.item.ItemMap;
 import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporterMachine;
 import com.gtocore.common.network.ServerMessage;
+import com.gtocore.common.network.SyncFieldManager;
 import com.gtocore.common.saved.*;
 import com.gtocore.utils.OrganUtilsKt;
 
@@ -290,11 +291,13 @@ public final class ForgeCommonEvent {
             if (serverLevel == null) return;
             DysonSphereSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(DysonSphereSavaedData::new, DysonSphereSavaedData::new, "dyson_sphere_data");
             RecipeRunLimitSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(RecipeRunLimitSavaedData::new, RecipeRunLimitSavaedData::new, " recipe_run_limit_data");
+            serverLevel.getDataStorage().computeIfAbsent(MEWirelessSavedData.INSTANCE::load, (() -> MEWirelessSavedData.INSTANCE), "me_wireless_connection_manager");
         }
     }
 
     @SubscribeEvent
     public static void onServerStoppingEvent(ServerStoppingEvent event) {
+        SyncFieldManager.INSTANCE.clear();
         ServerCache.observe = false;
     }
 

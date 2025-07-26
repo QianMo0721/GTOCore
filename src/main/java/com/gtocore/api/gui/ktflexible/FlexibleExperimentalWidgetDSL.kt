@@ -3,6 +3,7 @@ package com.gtocore.api.gui.ktflexible
 import com.gtocore.api.gui.helper.ProgressBarColorStyle
 import com.gtocore.api.gui.helper.ProgressBarHelper
 import com.gtocore.api.gui.helper.TextBlockHelper
+import com.gtocore.common.network.IntSyncField
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -116,21 +117,21 @@ interface MultiPageVScroll {
     fun refresh()
     fun getMaxPage(): Int
 }
-fun LayoutBuilder<*>.multiPage(width: Int, height: Int, style: (Style.() -> Unit)? = null, pageSelector: IntSupplier, runOnUpdate: Runnable = Runnable {}, builder: MultiPageDSLBuilder.() -> Unit): MultiPageVScroll {
+fun LayoutBuilder<*>.multiPageAdvanced(width: Int, height: Int, style: (Style.() -> Unit)? = null, pageSelector: IntSyncField, runOnUpdate: Runnable = Runnable {}, builder: MultiPageDSLBuilder.() -> Unit): MultiPageVScroll {
     val widget = object : SyncWidget(0, 0, width, height), MultiPageVScroll {
-        val currentPage = syncInt({ pageSelector.asInt }, -1, pageSelector.asInt).apply {
-            init = {
-                // println("page init: $lastValue, isRemote: $isRemote")
-                if (!isRemote)refresh()
-            }
-            update = { old, new ->
-                // println("page update: $old -> $new, isRemote: $isRemote")
-                runOnUpdate.run()
-                refresh()
-            }
-        }
+        var currentPage: IntSyncField = pageSelector
         val pageSuppliers: MutableList<Supplier<VBoxBuilder.() -> Unit>> = mutableListOf()
         init {
+            currentPage.apply {
+                onInitCallBack = { field, newValue ->
+                    runOnUpdate
+                    refresh()
+                }
+                onSyncCallBack = { field, oldValue, newValue ->
+                    runOnUpdate
+                    refresh()
+                }
+            }
             with(MultiPageDSLBuilder()) {
                 builder()
                 pageSuppliers.addAll(build())
@@ -138,7 +139,7 @@ fun LayoutBuilder<*>.multiPage(width: Int, height: Int, style: (Style.() -> Unit
         }
         override fun refresh() {
             clearAllWidgets()
-            val receiver = pageSuppliers[currentPage.lastValue].get()
+            val receiver = pageSuppliers[currentPage.value].get()
             val vBoxBuilder = VBoxBuilder(width = width, style = style?.run { Style().apply { style() } } ?: Style { spacing = 0 })
             vBoxBuilder.buildAndInit(receiver)
             addWidget(vBoxBuilder.getBuiltWidget())

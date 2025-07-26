@@ -48,10 +48,6 @@ public final class ServerMessage {
         send(serverPlayer.server, serverPlayer, "planetUnlock", buf -> buf.writeResourceLocation(planet));
     }
 
-    public static void organCapAsync(ServerPlayer serverPlayer, CompoundTag tag) { // ServerToClient 全量同步
-        sendData(serverPlayer.server, serverPlayer, "organCapAsync", tag);
-    }
-
     static void handle(String channel, @Nullable Player player, FriendlyByteBuf data) {
         if (player == null) return;
         switch (channel) {
@@ -81,6 +77,9 @@ public final class ServerMessage {
                 if (monitorData != null && player.level().isClientSide) {
                     Manager.onClientReceived(monitorData);
                 }
+            }
+            case "sync_field" -> {
+                SyncFieldManager.INSTANCE.handleFromServer(data);
             }
         }
     }
