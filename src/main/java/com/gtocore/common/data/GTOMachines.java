@@ -33,7 +33,6 @@ import com.gtolib.utils.register.BlockRegisterUtils;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.data.RotationState;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -144,7 +143,6 @@ public final class GTOMachines {
                     .langValue("%s Vacuum Pump %s".formatted(VLVH[tier], VLVT[tier]))
                     .nonYAxisRotation()
                     .editableUI(SimpleTieredMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("vacuum_pump"), GTORecipeTypes.VACUUM_PUMP_RECIPES))
-                    .alwaysTryModifyRecipe(true)
                     .recipeType(GTORecipeTypes.VACUUM_PUMP_RECIPES)
                     .workableTieredHullRenderer(GTOCore.id("block/machines/vacuum_pump"))
                     .tooltips(Component.translatable("gtocore.recipe.vacuum.tier", tier + 1))
@@ -824,7 +822,7 @@ public final class GTOMachines {
                 MonitorBlock::new,
                 MonitorBlockItem::new,
                 MetaMachineBlockEntity::createBlockEntity)
-                .rotationState(RotationState.NON_Y_AXIS)// 也许会支持面朝上下？
+                .nonYAxisRotation()// 也许会支持面朝上下？
                 .renderer(MonitorRenderer::new)
                 .hasTESR(true);
     }

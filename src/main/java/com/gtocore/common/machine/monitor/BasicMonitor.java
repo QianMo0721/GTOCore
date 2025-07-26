@@ -57,5 +57,4 @@ public class BasicMonitor extends TieredMachine implements IBindable, IMachineLi
             Manager.addBlock(getBlockState(), getPos(), getLevel(), color);
         }
     }
-
 }

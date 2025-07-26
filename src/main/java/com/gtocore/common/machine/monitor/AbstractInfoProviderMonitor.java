@@ -41,7 +41,7 @@ public abstract class AbstractInfoProviderMonitor extends BasicMonitor implement
     public AbstractInfoProviderMonitor(IMachineBlockEntity holder) {
         super(holder);
         Class<? extends BasicMonitor> clazz = this.getClass();
-        MANAGED_FIELD_HOLDER_MAP.putIfAbsent(clazz, getManagedFieldHolder(clazz));
+        MANAGED_FIELD_HOLDER_MAP.computeIfAbsent(clazz, this::getManagedFieldHolder);
         this.subscribeServerTick(() -> {
             if (this.getOffsetTimer() % 10 == 0) {
                 this.syncInfoFromServer();
