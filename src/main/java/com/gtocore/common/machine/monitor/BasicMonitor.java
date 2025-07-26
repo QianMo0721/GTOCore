@@ -49,4 +49,13 @@ public class BasicMonitor extends MetaMachine implements IBindable, IMachineLife
     public @Nullable UUID getUUID() {
         return getOwnerUUID();
     }
+
+    @Override
+    public void onPaintingColorChanged(int color) {
+        super.onPaintingColorChanged(color);
+        if (getLevel() != null && !getLevel().isClientSide) {
+            Manager.removeBlock(getBlockState(), getPos(), getLevel());
+            Manager.addBlock(getBlockState(), getPos(), getLevel(), color);
+        }
+    }
 }

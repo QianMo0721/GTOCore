@@ -138,7 +138,6 @@ public final class ManaMachine {
             .tier(LV)
             .editableUI(SimpleNoEnergyMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("alchemy_cauldron"), GTORecipeTypes.ALCHEMY_CAULDRON_RECIPES))
             .recipeType(GTORecipeTypes.ALCHEMY_CAULDRON_RECIPES)
-            .alwaysTryModifyRecipe(true)
             .tooltipsText("§7Do not use it for cooking food", "§7不要用它来做饭")
             .tooltipsText("§7Alchemy is a mysterious process", "§7炼金是一个神秘的过程")
             .tooltipsText("§7The probability of partial recipe output increases with the number of runs", "§7部分配方产出概率随运行次数增长")

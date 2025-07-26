@@ -2,7 +2,7 @@ package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtocore.common.data.machines.GTAEMachines;
 import com.gtocore.common.machine.trait.InternalSlotRecipeHandler;
-import com.gtocore.common.network.ClientMessage;
+import com.gtocore.common.network.IntSyncField;
 
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
@@ -61,6 +61,7 @@ import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import it.unimi.dsi.fastutil.objects.*;
+import kotlin.Unit;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
@@ -70,6 +71,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import static com.gtocore.common.network.SyncFieldManagerKt.createLogicalSide;
 
 @Scanned
 @ParametersAreNonnullByDefault
@@ -99,9 +102,28 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     private final Set<MEPatternBufferProxyPartMachine> proxyMachines = new ReferenceOpenHashSet<>();
     public final InternalSlotRecipeHandler internalRecipeHandler;
 
-    @Persisted
-    @DescSynced
-    protected int configurator = -1;
+    protected IntSyncField configuratorField = new IntSyncField(createLogicalSide(isRemote()), () -> getPos() + " configurator", -1, (integerSyncField, integer) -> Unit.INSTANCE, (integerSyncField, integer, integer2) -> Unit.INSTANCE);
+
+    @Override
+    public void onLoad() {
+        configuratorField.setOnInitCallBack((integerSyncField, integer) -> {
+            System.out.println(integerSyncField.getSide());
+            freshWidgetGroup.fresh();
+            return Unit.INSTANCE;
+        });
+        configuratorField.setOnSyncCallBack((integerSyncField, integer, integer2) -> {
+            System.out.println(integerSyncField.getSide());
+            freshWidgetGroup.fresh();
+            return Unit.INSTANCE;
+        });
+        super.onLoad();
+    }
+
+    @Override
+    public void onUnload() {
+        configuratorField.unregister();
+        super.onUnload();
+    }
 
     protected ConfiguratorPanel configuratorPanel;
 
@@ -187,21 +209,17 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
 
     @Override
     public void onMouseClicked(int index) {
-        if (isRemote()) {
-            ClientMessage.send("pattern_buffer_index", buf -> buf.writeVarInt(index));
-        }
-        if (configurator == index) {
-            configurator = -1;
+        if (!isRemote()) return;
+        if (configuratorField.getValue() == index) {
+            configuratorField.updateInClient(-1);
         } else {
-            configurator = index;
+            configuratorField.updateInClient(index);
         }
-        // if (getFancyMachineUIWidget()!=null) getFancyMachineUIWidget().initWidget();
-        freshWidgetGroup.fresh();
     }
 
     @Override
     public void addWidget(WidgetGroup group) {
-        group.addWidget(new LabelWidget(81, 2, () -> configurator < 0 ? SHARE : INDEPENDENT).setHoverTooltips(Component.translatable("monitor.gui.title.slot").append(String.valueOf(configurator))));
+        group.addWidget(new LabelWidget(81, 2, () -> configuratorField.getValue() < 0 ? SHARE : INDEPENDENT).setHoverTooltips(Component.translatable("monitor.gui.title.slot").append(String.valueOf(configuratorField.getValue()))));
     }
 
     @Override

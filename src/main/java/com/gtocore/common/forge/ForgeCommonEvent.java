@@ -8,6 +8,7 @@ import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.item.ItemMap;
 import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporterMachine;
 import com.gtocore.common.network.ServerMessage;
+import com.gtocore.common.network.SyncFieldManager;
 import com.gtocore.common.saved.*;
 import com.gtocore.utils.OrganUtilsKt;
 
@@ -63,6 +64,7 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import earth.terrarium.adastra.common.entities.mob.GlacianRam;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -139,6 +141,13 @@ public final class ForgeCommonEvent {
         InteractionHand hand = event.getHand();
         ItemStack itemStack = player.getItemInHand(hand);
         Item item = itemStack.getItem();
+        if (item instanceof SpellBook spellBook) {
+            if (spellBook.use(level, player, hand).getResult().consumesAction()) {
+                event.setCanceled(true);
+            }
+            return;
+        }
+
         if (item == GTOItems.RAW_VACUUM_TUBE.get() && player.isShiftKeyDown() && MetaMachine.getMachine(level, pos) instanceof IVacuumMachine vacuumMachine && vacuumMachine.getVacuumTier() > 0) {
             player.setItemInHand(hand, itemStack.copyWithCount(itemStack.getCount() - 1));
             level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY() + 1, pos.getZ(), GTItems.VACUUM_TUBE.asStack()));
@@ -261,11 +270,12 @@ public final class ForgeCommonEvent {
     public static void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             if (GTCEu.isProd()) {
+                player.displayClientMessage(Component.translatable("gtocore.gtm", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
+                player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
                 Configurator.setRootLevel(org.apache.logging.log4j.Level.INFO);
             } else {
                 Configurator.setRootLevel(org.apache.logging.log4j.Level.DEBUG);
             }
-            if (!GTCEu.isDev()) player.displayClientMessage(Component.translatable("gtocore.dev", Component.literal("GitHub").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/GregTech-Odyssey/GregTech-Odyssey/issues")))), false);
             if (player instanceof IEnhancedPlayer enhancedPlayer) {
                 ServerMessage.send(player.getServer(), player, "loggedIn", buf -> buf.writeUUID(ServerUtils.getServerIdentifier()));
                 enhancedPlayer.getPlayerData().setDrift(enhancedPlayer.getPlayerData().disableDrift);
@@ -281,11 +291,13 @@ public final class ForgeCommonEvent {
             if (serverLevel == null) return;
             DysonSphereSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(DysonSphereSavaedData::new, DysonSphereSavaedData::new, "dyson_sphere_data");
             RecipeRunLimitSavaedData.INSTANCE = serverLevel.getDataStorage().computeIfAbsent(RecipeRunLimitSavaedData::new, RecipeRunLimitSavaedData::new, " recipe_run_limit_data");
+            serverLevel.getDataStorage().computeIfAbsent(MEWirelessSavedData.INSTANCE::load, (() -> MEWirelessSavedData.INSTANCE), "me_wireless_connection_manager");
         }
     }
 
     @SubscribeEvent
     public static void onServerStoppingEvent(ServerStoppingEvent event) {
+        SyncFieldManager.INSTANCE.clear();
         ServerCache.observe = false;
     }
 

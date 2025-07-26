@@ -18,6 +18,8 @@ import com.gtocore.common.machine.noenergy.BoilWaterMachine;
 import com.gtocore.common.machine.noenergy.HeaterMachine;
 import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
 import com.gtocore.common.machine.steam.SteamVacuumPumpMachine;
+import com.gtocore.integration.ae.MEWirelessConnectionMachine;
+import com.gtocore.integration.ae.SyncTesterMachine;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
@@ -33,7 +35,6 @@ import com.gtolib.utils.register.BlockRegisterUtils;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.data.RotationState;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -82,6 +83,13 @@ public final class GTOMachines {
 
         if (GTCEu.isDev() || GTCEu.isDataGen() || GTOCore.isSimple()) {
             SimpleModeMachine.init();
+        }
+        if (GTCEu.isDev() || GTCEu.isDataGen()) {
+            final MachineDefinition SYNC_TESTER_MACHINE = machine("sync_tester_machine", "同步测试机", SyncTesterMachine::new)
+                    .allRotation()
+                    .tooltipsText("用于测试机器同步的工具。", "A tool for testing machine synchronization.")
+                    .tooltipsText("请勿在生产环境中使用。", "Do not use in production environment.")
+                    .register();
         }
     }
 
@@ -144,7 +152,6 @@ public final class GTOMachines {
                     .langValue("%s Vacuum Pump %s".formatted(VLVH[tier], VLVT[tier]))
                     .nonYAxisRotation()
                     .editableUI(SimpleTieredMachine.EDITABLE_UI_CREATOR.apply(GTCEu.id("vacuum_pump"), GTORecipeTypes.VACUUM_PUMP_RECIPES))
-                    .alwaysTryModifyRecipe(true)
                     .recipeType(GTORecipeTypes.VACUUM_PUMP_RECIPES)
                     .workableTieredHullRenderer(GTOCore.id("block/machines/vacuum_pump"))
                     .tooltips(Component.translatable("gtocore.recipe.vacuum.tier", tier + 1))
@@ -443,6 +450,18 @@ public final class GTOMachines {
                             Just connect this machine to the ME network, and when the pattern is called,
                             its content will be replaced by the same line according to your priority.
                             The more items in a row, the higher its priority.""")))
+            .register();
+
+    public static final MachineDefinition ME_WIRELESS_CONNECTION_MACHINE = machine("me_wireless_connection_machine", "ME无线连接机", MEWirelessConnectionMachine::new)
+            .overlayTieredHullRenderer("neutron_sensor")
+            .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME无线连接机", "ME Wireless Connection Machine"), p -> p.addCommentLines(
+                    """
+                            多对多的ME无线网络节点
+                            可以在不同世界传输""",
+                    """
+                            A many-to-many ME wireless network node
+                            Can transmit across different worlds""")))
+            .allRotation()
             .register();
 
     public static final MachineDefinition[] NEUTRON_ACCELERATOR = registerTieredMachines("neutron_accelerator", tier -> VNF[tier] + "中子加速器",
@@ -810,6 +829,9 @@ public final class GTOMachines {
     public static final MachineDefinition MONITOR_AE_CPU = registerMonitor("monitor_ae_cpu", "监控器ME合成处理单元组件", MonitorAECPU::new)
             .register();
 
+    public static final MachineDefinition MONITOR_MACHINE = registerMonitor("monitor_machine", "监控器通用机器组件", MonitorMachine::new)
+            .register();
+
     private static MachineBuilder<MachineDefinition> registerMonitor(String id, String cn, Function<IMachineBlockEntity, MetaMachine> monitorConstructor) {
         BlockRegisterUtils.addLang(id, cn);
         MonitorBlockItem.addItem(GTOCore.id(id));
@@ -821,7 +843,7 @@ public final class GTOMachines {
                 MonitorBlock::new,
                 MonitorBlockItem::new,
                 MetaMachineBlockEntity::createBlockEntity)
-                .rotationState(RotationState.NON_Y_AXIS)// 也许会支持面朝上下？
+                .nonYAxisRotation()// 也许会支持面朝上下？
                 .renderer(MonitorRenderer::new)
                 .hasTESR(true);
     }
