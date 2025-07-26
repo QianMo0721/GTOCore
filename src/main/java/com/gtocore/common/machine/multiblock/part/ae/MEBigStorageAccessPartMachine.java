@@ -252,15 +252,14 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
         if (!isInfinite) {
             amount = (long) Math.min(capacity - data.getBytes(), amount);
         }
-        if (amount > 0) {
-            if (mode == Actionable.MODULATE) {
-                long finalAmount = amount;
-                getCellStoredMap().compute(what, (k, v) -> {
-                    if (v == null) return BigInteger.valueOf(finalAmount);
-                    return v.add(BigInteger.valueOf(finalAmount));
-                });
-                data.setPersisted(false);
-            }
+        if (amount < 1) return 0;
+        if (mode == Actionable.MODULATE) {
+            long finalAmount = amount;
+            getCellStoredMap().compute(what, (k, v) -> {
+                if (v == null) return BigInteger.valueOf(finalAmount);
+                return v.add(BigInteger.valueOf(finalAmount));
+            });
+            data.setPersisted(false);
         }
         return amount;
     }

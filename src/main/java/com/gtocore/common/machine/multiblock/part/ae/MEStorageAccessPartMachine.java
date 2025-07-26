@@ -283,11 +283,10 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
         if (!isInfinite) {
             amount = (long) Math.min(capacity - data.getBytes(), amount);
         }
-        if (amount > 0) {
-            if (mode == Actionable.MODULATE) {
-                getCellStoredMap().addTo(what, amount);
-                data.setPersisted(false);
-            }
+        if (amount < 1) return 0;
+        if (mode == Actionable.MODULATE) {
+            getCellStoredMap().addTo(what, amount);
+            data.setPersisted(false);
         }
         return amount;
     }

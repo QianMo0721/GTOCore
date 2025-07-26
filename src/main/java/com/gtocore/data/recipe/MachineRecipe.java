@@ -38,6 +38,8 @@ public final class MachineRecipe {
 
     public static void init(Consumer<FinishedRecipe> provider) {
         HatchRecipe.init(provider);
+        VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("multiblock_crate"), MultiBlockG.MULTIBLOCK_CRATE.asStack(), "RPR",
+                "PCP", "RPR", 'P', new MaterialEntry(plateDouble, GTMaterials.Steel), 'R', new MaterialEntry(TagPrefix.rodLong, GTMaterials.Steel), 'C', GTMachines.BRONZE_CRATE.asStack());
         VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("evaporation_plant"),
                 MultiBlockA.EVAPORATION_PLANT.asStack(), "CBC", "FMF", "CBC", 'M', GTMachines.HULL[HV].asStack(),
                 'B', new MaterialEntry(TagPrefix.wireGtDouble, GTMaterials.Kanthal), 'C', CustomTags.HV_CIRCUITS,

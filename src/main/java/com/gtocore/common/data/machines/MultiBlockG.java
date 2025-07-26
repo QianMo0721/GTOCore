@@ -13,6 +13,7 @@ import com.gtocore.common.machine.multiblock.electric.voidseries.VoidTransporter
 import com.gtocore.common.machine.multiblock.noenergy.AlgaeFarmMachine;
 import com.gtocore.common.machine.multiblock.noenergy.LargeCokeOvenMachine;
 import com.gtocore.common.machine.multiblock.storage.MEStorageMachine;
+import com.gtocore.common.machine.multiblock.storage.MultiblockCrateMachine;
 import com.gtocore.common.machine.multiblock.storage.WirelessDimensionRepeaterMachine;
 import com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine;
 
@@ -942,5 +943,20 @@ public final class MultiBlockG {
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTOCore.id("block/casings/iridium_casing"), GTCEu.id("block/multiblock/fusion_reactor"))
+            .register();
+
+    public static final MultiblockMachineDefinition MULTIBLOCK_CRATE = multiblock("multiblock_crate", "多方块板条箱", MultiblockCrateMachine::new)
+            .allRotation()
+            .recipeTypes(GTORecipeTypes.DUMMY_RECIPES)
+            .block(GTBlocks.STEEL_HULL)
+            .pattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle("aaa", "aaa", "aaa")
+                    .aisle("aaa", "aca", "aaa")
+                    .aisle("aaa", "aia", "aaa")
+                    .where('a', blocks(GTBlocks.STEEL_HULL.get()))
+                    .where('i', controller(blocks(definition.get())))
+                    .where('c', air())
+                    .build())
+            .workableCasingRenderer(GTCEu.id("block/casings/steam/steel/side"), GTCEu.id("block/multiblock/multiblock_tank"))
             .register();
 }

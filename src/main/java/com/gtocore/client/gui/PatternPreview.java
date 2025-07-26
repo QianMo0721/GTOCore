@@ -251,7 +251,7 @@ public final class PatternPreview extends WidgetGroup {
         Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap = controllerBase == null ? null : new Long2ObjectOpenHashMap<>();
         if (controllerBase != null) {
             loadControllerFormed(predicateMap.keySet(), controllerBase, index);
-            predicateMap = controllerBase.getMultiblockState().getMatchContext().get("predicates");
+            predicateMap = controllerBase.getMultiblockState().getMatchContext().getPredicates();
         }
         return controllerBase == null ? null : new MBPattern(blockMap, pattern.parts(), predicateMap, controllerBase);
     }

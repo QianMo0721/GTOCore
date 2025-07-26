@@ -8,6 +8,7 @@ import com.gtocore.data.Data;
 import com.gtocore.data.Datagen;
 import com.gtocore.integration.ftbquests.EMIRecipeModHelper;
 import com.gtocore.integration.ftbu.AreaShape;
+import com.gtocore.integration.gtmt.AdvancedTerminalBehavior;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.data.Dimension;
@@ -33,6 +34,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import appeng.api.networking.pathing.ChannelMode;
 import appeng.core.AEConfig;
+import com.hepdd.gtmthings.data.CustomItems;
 import earth.terrarium.adastra.api.events.AdAstraEvents;
 import org.embeddedt.modernfix.spark.SparkLaunchProfiler;
 
@@ -71,6 +73,9 @@ public class CommonProxy {
 
     private static void commonSetup(FMLCommonSetupEvent event) {
         if (GTOCore.isExpert()) AEConfig.instance().setChannelModel(ChannelMode.DEFAULT);
+
+        CustomItems.ADVANCED_TERMINAL.get().getComponents().clear();
+        CustomItems.ADVANCED_TERMINAL.get().getComponents().add(new AdvancedTerminalBehavior());
 
         FusionReactorMachine.registerFusionTier(GTValues.UHV, " (MKIV)");
         FusionReactorMachine.registerFusionTier(GTValues.UEV, " (MKV)");

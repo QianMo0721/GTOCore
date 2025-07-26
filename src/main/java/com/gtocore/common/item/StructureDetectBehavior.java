@@ -98,7 +98,7 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
                         MultiblockState multiblockState = controller.getMultiblockState();
                         PatternError error = multiblockState.error;
                         if (error != null) {
-                            showError(player, error, false, 0, stack);
+                            showError(player, error, 0, stack);
                         }
                     } else {
                         ((ServerLevel) level).getServer().execute(() -> {
@@ -107,7 +107,7 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
                                 BlockPattern pattern = controller.getPattern();
                                 var result = check(controller, pattern);
                                 for (int i = 0; i < result.size(); i++) {
-                                    showError(player, result.get(i), (i == 1), i, stack);
+                                    showError(player, result.get(i), i, stack);
                                 }
                             } finally {
                                 controller.getPatternLock().unlock();
@@ -151,20 +151,18 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
         return errors;
     }
 
-    private static void showError(Player player, PatternError error, boolean flip, int index, ItemStack stack) {
-        analysis(error, flip).forEach(player::sendSystemMessage);
+    private static void showError(Player player, PatternError error, int index, ItemStack stack) {
+        analysis(error).forEach(player::sendSystemMessage);
         addPos(stack, index, error.getPos());
     }
 
-    public static List<Component> analysis(PatternError error, boolean flip) {
+    public static List<Component> analysis(PatternError error) {
         List<Component> show = new ArrayList<>();
         if (error instanceof PatternStringError pe) {
             show.add(pe.getErrorInfo());
         } else {
             var pos = error.getPos();
-            var posComponent = Component.translatable("item.gtocore.structure_detect.error.2", pos.getX(), pos.getY(), pos.getZ(), flip ?
-                    Component.translatable("item.gtocore.structure_detect.error.3").withStyle(ChatFormatting.GREEN) :
-                    Component.translatable("item.gtocore.structure_detect.error.4").withStyle(ChatFormatting.YELLOW));
+            var posComponent = Component.translatable("item.gtocore.structure_detect.error.2", pos.getX(), pos.getY(), pos.getZ());
             if (error instanceof SinglePredicateError) {
                 List<List<ItemStack>> candidates = error.getCandidates();
                 var root = candidates.get(0).get(0).getHoverName();

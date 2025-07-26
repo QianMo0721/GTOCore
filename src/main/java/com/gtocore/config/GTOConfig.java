@@ -90,7 +90,6 @@ public final class GTOConfig {
         ConfigHolder.INSTANCE.machines.enableMaintenance = difficulty > 1;
         ConfigHolder.INSTANCE.machines.enableWorldAccelerators = true;
         ConfigHolder.INSTANCE.machines.gt6StylePipesCables = true;
-        ConfigHolder.INSTANCE.machines.ghostCircuit = true;
         ConfigHolder.INSTANCE.machines.doBedrockOres = true;
         ConfigHolder.INSTANCE.machines.bedrockOreDropTagPrefix = "raw";
         ConfigHolder.INSTANCE.machines.minerSpeed = 80;
