@@ -130,9 +130,4 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
             }
         }
     }
-
-    @Override
-    public boolean allowCircuitSlots() {
-        return false;
-    }
 }

@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.pattern.MultiblockState;
+import com.gregtechceu.gtceu.api.pattern.error.PatternError;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import com.glodblock.github.extendedae.client.render.EAEHighlightHandler;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
@@ -36,6 +39,9 @@ public final class MultiblockStructureProvider implements IBlockComponentProvide
     @RegisterLanguage(cn = "排队等待检查结构", en = "Waiting in line for check structure")
     private static final String WAITING = "gtocore.top.waiting";
 
+    @RegisterLanguage(cn = "可能的错误 ", en = "Probable errors ")
+    private static final String ERRORS = "gtocore.top.errors";
+
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         if (blockAccessor.getServerData().contains("hasError")) {
@@ -46,16 +52,30 @@ public final class MultiblockStructureProvider implements IBlockComponentProvide
                 } else if (blockAccessor.getServerData().getBoolean("waiting")) {
                     iTooltip.add(Component.translatable(WAITING).withStyle(ChatFormatting.DARK_AQUA));
                 } else {
-                    for (var error : blockAccessor.getServerData().getList("error", Tag.TAG_STRING)) {
-                        var c = Component.Serializer.fromJson(error.getAsString());
-                        if (c != null) {
-                            iTooltip.add(c);
+                    boolean highlight = ClientCache.highlightTime < 1;
+                    boolean isHighlight = false;
+                    int i = 0;
+                    for (var error : blockAccessor.getServerData().getList("error", Tag.TAG_COMPOUND)) {
+                        if (error instanceof CompoundTag compoundTag) {
+                            var infos = compoundTag.getList("info", Tag.TAG_STRING);
+                            iTooltip.add(Component.translatable(ERRORS).append(String.valueOf(++i)).withStyle(ChatFormatting.GOLD));
+                            for (var info : infos) {
+                                var c = Component.Serializer.fromJson(info.getAsString());
+                                if (c != null) {
+                                    iTooltip.add(c);
+                                }
+                            }
+                            var errorPos = compoundTag.getLong("pos");
+                            if (errorPos != 0) {
+                                if (highlight) {
+                                    isHighlight = true;
+                                    EAEHighlightHandler.highlight(BlockPos.of(errorPos), blockAccessor.getLevel().dimension(), System.currentTimeMillis() + 10000);
+                                }
+                            }
                         }
                     }
-                    if (ClientCache.highlightTime < 1 && blockAccessor.getServerData().contains("errorPos")) {
+                    if (isHighlight) {
                         ClientCache.highlightTime = 200;
-                        var pos = BlockPos.of(blockAccessor.getServerData().getLong("errorPos"));
-                        EAEHighlightHandler.highlight(pos, blockAccessor.getLevel().dimension(), System.currentTimeMillis() + 10000);
                     }
                 }
             } else {
@@ -77,21 +97,45 @@ public final class MultiblockStructureProvider implements IBlockComponentProvide
                     if (controller.getMultiblockState().error == MultiblockState.UNINIT_ERROR && controller.getWaitingTime() == 0) {
                         compoundTag.putBoolean("waiting", true);
                     } else {
-                        var tag = new ListTag();
-                        for (var error : StructureDetectBehavior.analysis(controller.getMultiblockState().error, controller.getMultiblockState().neededFlip)) {
-                            tag.add(StringTag.valueOf(Component.Serializer.toJson(error)));
+                        var errors = new ListTag();
+                        LongSet posSet = new LongOpenHashSet();
+                        for (var error : controller.getMultiblockState().errorRecord) {
+                            var tag = toTag(error, posSet);
+                            if (tag != null) {
+                                errors.add(tag);
+                            }
                         }
-                        compoundTag.put("error", tag);
-                        var pos = controller.getMultiblockState().error.getPos();
-                        if (pos != null) {
-                            compoundTag.putLong("errorPos", pos.asLong());
+                        var tag = toTag(controller.getMultiblockState().error, posSet);
+                        if (tag != null) {
+                            errors.add(tag);
                         }
+                        compoundTag.put("error", errors);
                     }
                 } else {
                     compoundTag.putBoolean("waiting", true);
                 }
             }
         }
+    }
+
+    private static Tag toTag(PatternError error, LongSet set) {
+        var infos = new ListTag();
+        for (var err : StructureDetectBehavior.analysis(error)) {
+            infos.add(StringTag.valueOf(Component.Serializer.toJson(err)));
+        }
+        if (!infos.isEmpty()) {
+            var tag = new CompoundTag();
+            var pos = error.getPos();
+            if (pos != null) {
+                long posLong = pos.asLong();
+                if (set.contains(posLong)) return null;
+                tag.putLong("pos", posLong);
+                set.add(posLong);
+            }
+            tag.put("info", infos);
+            return tag;
+        }
+        return null;
     }
 
     @Override

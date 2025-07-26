@@ -82,9 +82,7 @@ final class ItemLang {
 
         addCNEN("item.gtocore.structure_detect.error.0", "需要在 %s:", "Required at %s:");
         addCNEN("item.gtocore.structure_detect.error.1", "在 %s:", "At %s:");
-        addCNEN("item.gtocore.structure_detect.error.2", "[%s, %s, %s]-(%s)", "[%s, %s, %s]-(%s)");
-        addCNEN("item.gtocore.structure_detect.error.3", "翻转的坐标", "Flipped Coordinates");
-        addCNEN("item.gtocore.structure_detect.error.4", "正常坐标", "Normal Coordinates");
+        addCNEN("item.gtocore.structure_detect.error.2", "[%s, %s, %s]", "[%s, %s, %s]");
         addCNEN("item.gtocore.structure_detect.tooltip.0", "潜行右键主方块以检测多方块结构", "Sneak right-click the main block to detect multiblock structure.");
         addCNEN("item.gtocore.structure_detect.tooltip.1", "检测大型结构时可能会有延迟", "There may be lag when detecting large structures.");
         addCNEN("item.gtocore.disc.data", "光盘数据：%s", "Disc data: %s");
