@@ -65,6 +65,8 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
     private final Set<MEStorageAccessPartMachine> proxyMachines = new ReferenceOpenHashSet<>();
     private final ConditionalSubscriptionHandler tickSubs;
 
+    private boolean dirty = false;
+
     public MEStorageAccessPartMachine(IMachineBlockEntity holder) {
         super(holder);
         this.nodeHolder = new GridNodeHolder(this);
@@ -141,6 +143,11 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
     }
 
     private void tickUpdate() {
+        if (dirty) {
+            dirty = false;
+            getCellStorage().setPersisted(false);
+            markDirty();
+        }
         if (uuid == null || capacity == 0 || !isOnline) return;
         if (!check) {
             counter++;
@@ -286,7 +293,7 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
         if (amount < 1) return 0;
         if (mode == Actionable.MODULATE) {
             getCellStoredMap().addTo(what, amount);
-            data.setPersisted(false);
+            dirty = true;
         }
         return amount;
     }
@@ -299,13 +306,13 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
             if (amount >= currentAmount) {
                 if (mode == Actionable.MODULATE) {
                     map.remove(what, currentAmount);
-                    getCellStorage().setPersisted(false);
+                    dirty = true;
                 }
                 return currentAmount;
             } else {
                 if (mode == Actionable.MODULATE) {
                     map.put(what, currentAmount - amount);
-                    getCellStorage().setPersisted(false);
+                    dirty = true;
                 }
                 return amount;
             }

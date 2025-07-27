@@ -142,9 +142,7 @@ public final class ForgeCommonEvent {
         ItemStack itemStack = player.getItemInHand(hand);
         Item item = itemStack.getItem();
         if (item instanceof SpellBook spellBook) {
-            if (spellBook.use(level, player, hand).getResult().consumesAction()) {
-                event.setCanceled(true);
-            }
+            event.setCanceled(true);
             return;
         }
 
@@ -263,6 +261,9 @@ public final class ForgeCommonEvent {
                 level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), ItemMap.getScrapItem()));
                 player.setItemInHand(event.getHand(), itemStack.copyWithCount(count - 1));
             }
+        } else if (item instanceof SpellBook spellBook) {
+            event.setCancellationResult(spellBook.use(level, player, event.getHand()).getResult());
+            event.setCanceled(true);
         }
     }
 

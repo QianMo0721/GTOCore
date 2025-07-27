@@ -63,6 +63,8 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
     private UUID uuid;
     private final ConditionalSubscriptionHandler tickSubs;
 
+    private boolean dirty = false;
+
     public MEBigStorageAccessPartMachine(IMachineBlockEntity holder) {
         super(holder);
         this.nodeHolder = new GridNodeHolder(this);
@@ -102,6 +104,11 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
     }
 
     private void tickUpdate() {
+        if (dirty) {
+            dirty = false;
+            getCellStorage().setPersisted(false);
+            markDirty();
+        }
         if (uuid == null || capacity == 0 || !isOnline) return;
         if (!check) {
             counter++;
@@ -259,7 +266,7 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
                 if (v == null) return BigInteger.valueOf(finalAmount);
                 return v.add(BigInteger.valueOf(finalAmount));
             });
-            data.setPersisted(false);
+            dirty = true;
         }
         return amount;
     }
@@ -271,20 +278,19 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
         var map = data.getStoredMap();
         if (map == null) return 0;
         var o = map.get(what);
-        var currentAmount = (BigInteger) o;
-        if (currentAmount == null) return 0;
-        if (currentAmount.signum() > 0) {
+        if (o == null) return 0;
+        if (o.signum() > 0) {
             var extractAmount = BigInteger.valueOf(amount);
-            if (currentAmount.compareTo(extractAmount) < 1) {
+            if (o.compareTo(extractAmount) < 1) {
                 if (mode == Actionable.MODULATE) {
                     map.remove(what);
-                    data.setPersisted(false);
+                    dirty = true;
                 }
-                return currentAmount.longValue();
+                return o.longValue();
             } else {
                 if (mode == Actionable.MODULATE) {
-                    map.put(what, currentAmount.subtract(extractAmount));
-                    data.setPersisted(false);
+                    map.put(what, o.subtract(extractAmount));
+                    dirty = true;
                 }
                 return amount;
             }

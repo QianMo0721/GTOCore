@@ -3,15 +3,12 @@ package com.gtocore.common.data.machines;
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.common.data.*;
-import com.gtocore.common.machine.multiblock.electric.DissolutionCoreMachine;
 import com.gtocore.common.machine.multiblock.electric.processing.EncapsulatorExecutionModuleMachine;
 import com.gtocore.common.machine.multiblock.electric.processing.ProcessingEncapsulatorMachine;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
-import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
-import com.gtolib.api.machine.multiblock.NoRecipeLogicMultiblockMachine;
-import com.gtolib.api.machine.multiblock.TierCasingParallelMultiblockMachine;
+import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.utils.MultiBlockFileReader;
 import com.gtolib.utils.RegistriesUtils;
 
@@ -30,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 
 import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.*;
 import static com.gregtechceu.gtceu.api.pattern.Predicates.*;
-import static com.gtocore.api.machine.part.GTOPartAbility.*;
 import static com.gtolib.api.GTOValues.GLASS_TIER;
 import static com.gtolib.utils.register.MachineRegisterUtils.multiblock;
 
@@ -136,7 +132,7 @@ public final class MultiBlockH {
             .workableCasingRenderer(GTCEu.id("block/casings/gcym/atomic_casing"), GTCEu.id("block/multiblock/fusion_reactor"))
             .register();
 
-    public static final MultiblockMachineDefinition GIANT_FLOTATION_TANK = multiblock("giant_flotation_tank", "巨型浮游选矿池", ElectricMultiblockMachine::new)
+    public static final MultiblockMachineDefinition GIANT_FLOTATION_TANK = multiblock("giant_flotation_tank", "巨型浮游选矿池", CrossRecipeMultiblockMachine::createHatchParallel)
             .nonYAxisRotation()
             .tooltipsText("工业级巨型浮游选矿池", "Industrial-grade giant flotation pool")
             .tooltipsText("安全生产 警钟长鸣", "Safety production requires constant vigilance")
@@ -147,11 +143,8 @@ public final class MultiBlockH {
             .block(GTOBlocks.HASTELLOY_N_75_CASING)
             .pattern(definition -> MultiBlockFileReader.start(definition)
                     .where('A', blocks(GTOBlocks.HASTELLOY_N_75_CASING.get())
-                            .or(autoAbilities(definition.getRecipeTypes()))
+                            .or(GTOPredicates.autoThreadLaserAbilities(definition.getRecipeTypes()))
                             .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(THREAD_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(OVERCLOCK_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(ACCELERATE_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('B', controller(blocks(definition.get())))
                     .where('C', blocks(GCYMBlocks.CASING_CORROSION_PROOF.get()))
@@ -172,13 +165,11 @@ public final class MultiBlockH {
             .workableCasingRenderer(GTOCore.id("block/casings/hastelloy_n_75_casing"), GTCEu.id("block/multiblock/gcym/large_chemical_bath"))
             .register();
 
-    public static final MultiblockMachineDefinition ENTROPY_FLUX_ENGINE = multiblock("entropy_flux_engine", "熵流引擎", TierCasingParallelMultiblockMachine.createParallel(m -> 2 << (m.getCasingTier(GLASS_TIER) - 1), true, GLASS_TIER))
+    public static final MultiblockMachineDefinition ENTROPY_FLUX_ENGINE = multiblock("entropy_flux_engine", "熵流引擎", TierCasingCrossRecipeMultiblockMachine.createParallel(m -> 2L << m.getCasingTier(GLASS_TIER), GLASS_TIER))
             .nonYAxisRotation()
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(
                     h -> h.addLines("由玻璃等级决定", "Determined by glass tier"),
-                    c -> c.addCommentLines(
-                            "高等级玻璃可以提供更多的并行数量",
-                            "Higher tier glass provides more parallelism")))
+                    c -> c.addCommentLines("公式 : 4^玻璃等级", "Formula: 4^(Glass Tier)")))
             .laserTooltips()
             .multipleRecipesTooltips()
             .recipeTypes(GTORecipeTypes.DECAY_HASTENER_RECIPES)
@@ -197,10 +188,7 @@ public final class MultiBlockH {
                     .where('K', blocks(GTOBlocks.URUIUM_COIL_BLOCK.get()))
                     .where('L', blocks(GTOBlocks.IMPROVED_SUPERCONDUCTOR_COIL.get()))
                     .where('M', blocks(GTOBlocks.GRAVITON_FIELD_CONSTRAINT_CASING.get())
-                            .or(autoAbilities(definition.getRecipeTypes()))
-                            .or(abilities(THREAD_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(OVERCLOCK_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(ACCELERATE_HATCH).setMaxGlobalLimited(1))
+                            .or(GTOPredicates.autoThreadLaserAbilities(definition.getRecipeTypes()))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('N', controller(blocks(definition.get())))
                     .where(' ', any())
@@ -208,13 +196,11 @@ public final class MultiBlockH {
             .workableCasingRenderer(GTOCore.id("block/casings/graviton_field_constraint_casing"), GTCEu.id("block/multiblock/gcym/large_chemical_bath"))
             .register();
 
-    public static final MultiblockMachineDefinition TRANSLIMINAL_OASIS = multiblock("transliminal_oasis", "超限绿洲", TierCasingParallelMultiblockMachine.createParallel(m -> 2 << (m.getCasingTier(GLASS_TIER) - 1), true, GLASS_TIER))
+    public static final MultiblockMachineDefinition TRANSLIMINAL_OASIS = multiblock("transliminal_oasis", "超限绿洲", TierCasingCrossRecipeMultiblockMachine.createParallel(m -> 2L << m.getCasingTier(GLASS_TIER), GLASS_TIER))
             .nonYAxisRotation()
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(
                     h -> h.addLines("由玻璃等级决定", "Determined by glass tier"),
-                    c -> c.addCommentLines(
-                            "高等级玻璃可以提供更多的并行数量",
-                            "Higher tier glass provides more parallelism")))
+                    c -> c.addCommentLines("公式 : 4^玻璃等级", "Formula: 4^(Glass Tier)")))
             .laserTooltips()
             .multipleRecipesTooltips()
             .recipeTypes(GTORecipeTypes.GREENHOUSE_RECIPES)
@@ -241,10 +227,7 @@ public final class MultiBlockH {
                     .where('R', blocks(GCYMBlocks.ELECTROLYTIC_CELL.get()))
                     .where('S', blocks(GTOBlocks.FLOCCULATION_CASING.get()))
                     .where('T', blocks(GTBlocks.PLASTCRETE.get())
-                            .or(autoAbilities(definition.getRecipeTypes()))
-                            .or(abilities(THREAD_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(OVERCLOCK_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(ACCELERATE_HATCH).setMaxGlobalLimited(1))
+                            .or(GTOPredicates.autoThreadLaserAbilities(definition.getRecipeTypes()))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('U', blocks(GTBlocks.HIGH_POWER_CASING.get()))
                     .where('V', controller(blocks(definition.get())))
@@ -253,7 +236,7 @@ public final class MultiBlockH {
             .workableCasingRenderer(GTCEu.id("block/casings/cleanroom/plascrete"), GTCEu.id("block/multiblock/gcym/large_chemical_bath"))
             .register();
 
-    public static final MultiblockMachineDefinition NEUTRON_FORGING_ANVIL = multiblock("neutron_forging_anvil", "中子锻砧", ElectricMultiblockMachine::new)
+    public static final MultiblockMachineDefinition NEUTRON_FORGING_ANVIL = multiblock("neutron_forging_anvil", "中子锻砧", CrossRecipeMultiblockMachine::createHatchParallel)
             .nonYAxisRotation()
             .parallelizableTooltips()
             .laserTooltips()
@@ -276,11 +259,8 @@ public final class MultiBlockH {
                     .where('L', blocks(GTOBlocks.ENHANCE_HYPER_MECHANICAL_CASING.get()))
                     .where('M', blocks(GTOBlocks.NAQUADAH_REINFORCED_PLANT_CASING.get()))
                     .where('N', blocks(GTOBlocks.HYPER_MECHANICAL_CASING.get())
-                            .or(autoAbilities(definition.getRecipeTypes()))
+                            .or(GTOPredicates.autoThreadLaserAbilities(definition.getRecipeTypes()))
                             .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(THREAD_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(OVERCLOCK_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(ACCELERATE_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('O', blocks(GTOBlocks.AMPROSIUM_ACTIVE_CASING.get()))
                     .where('P', blocks(GTOBlocks.HYPER_CORE.get()))
@@ -295,13 +275,13 @@ public final class MultiBlockH {
             .workableCasingRenderer(GTOCore.id("block/casings/hyper_mechanical_casing"), GTCEu.id("block/multiblock/gcym/large_chemical_bath"))
             .register();
 
-    public static final MultiblockMachineDefinition DISSOLUTION_CORE = multiblock("dissolution_core", "溶解核心", DissolutionCoreMachine::new)
+    public static final MultiblockMachineDefinition DISSOLUTION_CORE = multiblock("dissolution_core", "溶解核心", CoilCrossRecipeMultiblockMachine.createHatchParallel(false))
             .nonYAxisRotation()
             .parallelizableTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()
-            .recipeTypes(GTRecipeTypes.FORGE_HAMMER_RECIPES)
-            .recipeTypes(GTORecipeTypes.ISOSTATIC_PRESSING_RECIPES)
+            .recipeTypes(GTORecipeTypes.DISSOLUTION_TREATMENT_RECIPES)
+            .recipeTypes(GTORecipeTypes.DIGESTION_TREATMENT_RECIPES)
             .block(GTOBlocks.HYPER_MECHANICAL_CASING)
             .pattern(definition -> MultiBlockFileReader.start(definition, RelativeDirection.FRONT, RelativeDirection.UP, RelativeDirection.LEFT)
                     .where('A', blocks(GTOBlocks.REINFORCED_STERILE_WATER_PLANT_CASING.get()))
@@ -317,10 +297,8 @@ public final class MultiBlockH {
                     .where('K', blocks(GTOBlocks.PLASMA_HEATER_CASING.get()))
                     .where('L', blocks(GTOBlocks.HYPER_MECHANICAL_CASING.get()))
                     .where('M', blocks(GTOBlocks.HYPER_MECHANICAL_CASING.get())
-                            .or(autoAbilities(definition.getRecipeTypes()))
-                            .or(abilities(THREAD_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(OVERCLOCK_HATCH).setMaxGlobalLimited(1))
-                            .or(abilities(ACCELERATE_HATCH).setMaxGlobalLimited(1))
+                            .or(GTOPredicates.autoThreadLaserAbilities(definition.getRecipeTypes()))
+                            .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('N', blocks(GTOBlocks.PPS_CORROSION_RESISTANT_MECHANICAL_HOUSING.get()))
                     .where('O', blocks(GTOBlocks.NAQUADAH_REINFORCED_PLANT_CASING.get()))
