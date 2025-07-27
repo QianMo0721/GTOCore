@@ -140,14 +140,6 @@ public final class BotaniaRecipes {
                     .addIngredient(recipe.input13).addIngredient(recipe.input14).addIngredient(recipe.input15).addIngredient(recipe.input16)
                     .save(provider);
         }
-        PetalApothecaryRecipeBuilder.builder("motif_daybloom")
-                .reagent(Ingredient.of(ForgeTags.SEEDS))
-                .output(motifDaybloom)
-                .addIngredient(Ingredient.of(BotaniaItems.orangePetal))
-                .addIngredient(Ingredient.of(BotaniaItems.orangePetal))
-                .addIngredient(Ingredient.of(BotaniaItems.lightBluePetal))
-                .addIngredient(Ingredient.of(BotaniaItems.yellowPetal))
-                .save(provider);
 
         // 符文祭坛
         record RunicAltarRecipe(
