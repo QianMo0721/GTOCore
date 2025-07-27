@@ -1,5 +1,7 @@
 package com.gtocore.integration.jade.provider;
 
+import com.gtolib.api.annotation.Scanned;
+import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.machine.feature.DummyEnergyMachine;
 import com.gtolib.api.machine.mana.feature.IManaEnergyMachine;
 import com.gtolib.api.machine.multiblock.CrossRecipeMultiblockMachine;
@@ -18,6 +20,7 @@ import com.gregtechceu.gtceu.common.machine.multiblock.steam.SteamParallelMultib
 import com.gregtechceu.gtceu.integration.jade.provider.CapabilityBlockProvider;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
+import com.gregtechceu.gtceu.utils.PosUtils;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -25,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,7 +38,11 @@ import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
+@Scanned
 public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLogic> {
+
+    @RegisterLanguage(cn = "该机器所在区块未强制加载", en = "The chunk the machine is in is not forced loaded")
+    private static final String LOADED = "gtocore.machine.forced_loaded";
 
     public RecipeLogicProvider() {
         super(GTCEu.id("recipe_logic_provider"));
@@ -48,6 +56,9 @@ public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLog
 
     @Override
     protected void write(CompoundTag data, RecipeLogic capability) {
+        if (capability.getMachine().getLevel() instanceof ServerLevel serverLevel && !serverLevel.getChunkSource().chunkMap.getDistanceManager().shouldForceTicks(PosUtils.getChunkLong(capability.getMachine().getPos()))) {
+            data.putBoolean("notLoaded", true);
+        }
         if (capability instanceof IEnhancedRecipeLogic recipeLogic) {
             if (capability.isIdle() && recipeLogic.gtolib$getIdleReason() != null) {
                 data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
@@ -82,6 +93,9 @@ public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLog
 
     @Override
     protected void addTooltip(CompoundTag capData, ITooltip tooltip, Player player, BlockAccessor block, BlockEntity blockEntity, IPluginConfig config) {
+        if (capData.getBoolean("notLoaded")) {
+            tooltip.add(Component.translatable(LOADED).withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
         if (capData.getBoolean("Working")) {
             var recipeInfo = capData.getCompound("Recipe");
             if (!recipeInfo.isEmpty()) {
