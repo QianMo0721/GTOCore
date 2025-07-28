@@ -80,8 +80,12 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
     }
 
     @Override
+    public void loadFromItem(CompoundTag tag) {
+        inventory.storage.deserializeNBT(tag.getCompound("inventory"));
+    }
+
+    @Override
     public void saveToItem(CompoundTag tag) {
-        IDropSaveMachine.super.saveToItem(tag);
         tag.put("inventory", inventory.storage.serializeNBT());
     }
 }
