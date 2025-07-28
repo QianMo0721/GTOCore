@@ -98,7 +98,7 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                                 .setHoverTooltips(Component.translatable("item.gtmthings.advanced_terminal.setting.2.tooltip")))
                         .addWidget(new TerminalInputWidget(140, 5 + 16 * rowIndex++, 20, 16, () -> getRepeatCount(handItem),
                                 (v) -> setRepeatCount(v, handItem))
-                                .setMin(0).setMax(99))
+                                .setMin(0).setMax(1000))
                         .addWidget(new LabelWidget(4, 5 + 16 * rowIndex, "item.gtmthings.advanced_terminal.setting.3")
                                 .setHoverTooltips("item.gtmthings.advanced_terminal.setting.3.tooltip"))
                         .addWidget(new TerminalInputWidget(140, 5 + 16 * rowIndex++, 20, 16, () -> getIsBuildHatches(handItem),

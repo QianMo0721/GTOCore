@@ -4,8 +4,6 @@ import com.gtocore.api.data.material.GTOMaterialFlags;
 import com.gtocore.common.data.GTOElements;
 
 import com.gregtechceu.gtceu.api.fluids.FluidBuilder;
-import com.gregtechceu.gtceu.api.fluids.attribute.FluidAttributes;
-import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
 
 import static com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags.DISABLE_DECOMPOSITION;
 import static com.gregtechceu.gtceu.api.data.chemical.material.info.MaterialFlags.GENERATE_PLATE;
@@ -491,7 +489,7 @@ public final class MaterialB {
                 .buildAndRegister().setFormula("?", false);
 
         Tannic = material("tannic", "丹宁")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .components(Carbon, 76, Hydrogen, 52, Oxygen, 46)
                 .flags(DISABLE_DECOMPOSITION)
                 .color(0xffff66)
@@ -523,7 +521,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         BoricAcid = material("boric_acide", "硼酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .components(Hydrogen, 3, Boron, 1, Oxygen, 3)
                 .flags(DISABLE_DECOMPOSITION)
                 .color(0x8fbc8f)
@@ -531,7 +529,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         FluoroboricAcid = material("fluoroboric_acide", "氟硼酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .components(Hydrogen, 1, Boron, 1, Fluorine, 4)
                 .color(0x8fbc8f)
                 .iconSet(DULL)
@@ -785,7 +783,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         StearicAcid = material("stearic_acid", "硬脂酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0x239791)
                 .components(Carbon, 18, Hydrogen, 36, Oxygen, 2)
                 .flags(DISABLE_DECOMPOSITION)
@@ -1407,7 +1405,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         PhenylPentanoicAcid = material("phenylpentanoic_acid", "苯基戊酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0x4d3833)
                 .components(Carbon, 11, Hydrogen, 14, Oxygen, 2)
                 .flags(DISABLE_DECOMPOSITION)
@@ -1439,7 +1437,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         HydrobromicAcid = material("hydrobromic_acid", "氢溴酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .components(Hydrogen, 1, Bromine, 1)
                 .color(0xa2573f)
                 .iconSet(DULL)
@@ -1552,7 +1550,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         AcrylicAcid = material("acrylic_acid", "丙烯酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0xb41558)
                 .components(Carbon, 3, Hydrogen, 4, Oxygen, 2)
                 .flags(DISABLE_DECOMPOSITION)
@@ -1670,7 +1668,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         AstatideSolution = material("astatide_solution", "砹化物溶液")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0x4ff417)
                 .components(Astatine, 1, SulfuricAcid, 1)
                 .iconSet(DULL)
@@ -2033,7 +2031,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         HexafluorophosphoricAcid = material("hexafluorophosphoric_acid", "单氟磷酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0xd5d54b)
                 .components(Hydrogen, 1, Phosphorus, 1, Fluorine, 6)
                 .flags(DISABLE_DECOMPOSITION)
@@ -2057,7 +2055,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         PhenylenedioxydiaceticAcid = material("phenylenedioxydiacetic_acid", "亚苯基二氧二乙酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0x7c4456)
                 .components(Carbon, 10, Hydrogen, 10, Oxygen, 6)
                 .flags(DISABLE_DECOMPOSITION)
@@ -3257,7 +3255,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         XenoauricFluoroantimonicAcid = material("xenoauric_fluoroantimonic_acid", "氟锑酸二氙")
-                .fluid(FluidStorageKeys.LIQUID, new FluidBuilder().attribute(FluidAttributes.ACID))
+                .fluid()
                 .color(0xe0bd74)
                 .components(Xenon, 1, Gold, 1, Antimony, 1, Fluorine, 6)
                 .flags(DISABLE_DECOMPOSITION)
@@ -3988,7 +3986,7 @@ public final class MaterialB {
                 .buildAndRegister();
 
         OxalicAcid = material("oxalic_acid", "草酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .components(Carbon, 2, Hydrogen, 2, Oxygen, 4)
                 .flags(DISABLE_DECOMPOSITION)
                 .color(0xa0ffa0)
@@ -4780,7 +4778,7 @@ public final class MaterialB {
                 .buildAndRegister().setFormula("Y(NO3)3");
 
         CitricAcid = material("citric_acid", "柠檬酸")
-                .liquid(new FluidBuilder().attribute(FluidAttributes.ACID))
+                .liquid()
                 .color(0xFADD0C)
                 .iconSet(DULL)
                 .buildAndRegister().setFormula("C6H8O7");

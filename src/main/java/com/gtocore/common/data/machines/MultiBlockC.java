@@ -1009,7 +1009,7 @@ public final class MultiBlockC {
             .tooltipsText("安装附属结构后可开启能源转换模式，消耗电力自动适应配方的中子动能", "After installing auxiliary structures, you can enable energy conversion mode, which automatically adapts the neutron kinetic energy consumption based on the recipe.")
             .recipeTypes(GTORecipeTypes.NEUTRON_ACTIVATOR_RECIPES)
             .block(GTOBlocks.NAQUADAH_REINFORCED_PLANT_CASING)
-            .pattern(MachineUtils.EMPTY_PATTERN)
+            .pattern(definition -> NeutronVortexMachine.getBlockPattern(0, definition))
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 0; i < 2; i++) {

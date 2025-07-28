@@ -41,7 +41,7 @@ public final class VacuumCondition extends AbstractRecipeCondition {
         MetaMachine machine = recipeLogic.getMachine();
 
         if (machine instanceof MultiblockControllerMachine controllerMachine) {
-            if (checkVacuumTier(controllerMachine.self().getParts())) {
+            if (checkVacuumTier(controllerMachine.getParts())) {
                 return true;
             }
         }

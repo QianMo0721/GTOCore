@@ -104,7 +104,7 @@ public final class MultiBlockF {
             .recipeTypes(GTRecipeTypes.VACUUM_RECIPES)
             .recipeTypes(GTORecipeTypes.PLASMA_CONDENSER_RECIPES)
             .block(GTBlocks.CASING_ALUMINIUM_FROSTPROOF)
-            .pattern(MachineUtils.EMPTY_PATTERN)
+            .pattern(definition -> CompoundExtremeCoolingMachine.getBlockPattern(0, definition))
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 0; i < 2; i++) {

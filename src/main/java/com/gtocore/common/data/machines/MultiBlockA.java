@@ -829,7 +829,6 @@ public final class MultiBlockA {
                     .where('L', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
-            .additionalDisplay(CHEMICAL_PLANT_DISPLAY)
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_inert_ptfe"), GTCEu.id("block/machines/chemical_reactor"))
             .register();
 
