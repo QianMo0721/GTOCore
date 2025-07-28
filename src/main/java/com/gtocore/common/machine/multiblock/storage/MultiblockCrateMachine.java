@@ -49,18 +49,6 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
     }
 
     @Override
-    public void onStructureFormed() {
-        super.onStructureFormed();
-        clearDirectionCache();
-    }
-
-    @Override
-    public void onStructureInvalid() {
-        super.onStructureInvalid();
-        clearDirectionCache();
-    }
-
-    @Override
     @Nullable
     public IItemHandlerModifiable getItemHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
         return isFormed ? super.getItemHandlerCap(side, useCoverCapability) : null;

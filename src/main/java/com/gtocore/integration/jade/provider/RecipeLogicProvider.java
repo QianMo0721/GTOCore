@@ -12,87 +12,41 @@ import com.gtolib.utils.NumberUtils;
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
-import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
+import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.steam.SimpleSteamMachine;
-import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.client.util.TooltipHelper;
 import com.gregtechceu.gtceu.common.machine.multiblock.steam.SteamParallelMultiblockMachine;
-import com.gregtechceu.gtceu.integration.jade.provider.CapabilityBlockProvider;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
 import com.gregtechceu.gtceu.utils.PosUtils;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
 @Scanned
-public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLogic> {
+public final class RecipeLogicProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
     @RegisterLanguage(cn = "该机器所在区块未强制加载", en = "The chunk the machine is in is not forced loaded")
     private static final String LOADED = "gtocore.machine.forced_loaded";
 
-    public RecipeLogicProvider() {
-        super(GTCEu.id("recipe_logic_provider"));
-    }
-
-    @Nullable
     @Override
-    protected RecipeLogic getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        return GTCapabilityHelper.getRecipeLogic(level, pos, side);
+    public ResourceLocation getUid() {
+        return GTCEu.id("recipe_logic_provider");
     }
 
     @Override
-    protected void write(CompoundTag data, RecipeLogic capability) {
-        if (capability.getMachine().getLevel() instanceof ServerLevel serverLevel && !serverLevel.getChunkSource().chunkMap.getDistanceManager().shouldForceTicks(PosUtils.getChunkLong(capability.getMachine().getPos()))) {
-            data.putBoolean("notLoaded", true);
-        }
-        if (capability instanceof IEnhancedRecipeLogic recipeLogic) {
-            if (capability.isIdle() && recipeLogic.gtolib$getIdleReason() != null) {
-                data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
-            } else if (capability.isWaiting()) {
-                if (!capability.getFancyTooltip().isEmpty()) {
-                    data.putString("reason", Component.Serializer.toJson(capability.getFancyTooltip().get(0)));
-                } else if (recipeLogic.gtolib$getIdleReason() != null) {
-                    data.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
-                }
-            } else {
-                data.putBoolean("Working", capability.isWorking());
-                var recipeInfo = new CompoundTag();
-                var recipe = capability.getLastRecipe();
-                if (recipe != null) {
-                    var inputEUt = recipe.getInputEUt();
-                    var outputEUt = recipe.getOutputEUt();
-                    var inputManat = RecipeHelper.getInputMANAt(recipe);
-                    var outputManat = RecipeHelper.getOutputMANAt(recipe);
-
-                    recipeInfo.putLong("EUt", inputEUt - outputEUt);
-                    recipeInfo.putLong("Manat", inputManat - outputManat);
-
-                    if (capability.machine instanceof CrossRecipeMultiblockMachine machine && machine.getEnergyInterfacePartMachine() != null) {
-                        recipeInfo.putDouble("totalEu", machine.getTotalEu());
-                    }
-
-                }
-                data.put("Recipe", recipeInfo);
-            }
-        }
-    }
-
-    @Override
-    protected void addTooltip(CompoundTag capData, ITooltip tooltip, Player player, BlockAccessor block, BlockEntity blockEntity, IPluginConfig config) {
+    public void appendTooltip(ITooltip tooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
+        var capData = blockAccessor.getServerData();
         if (capData.getBoolean("notLoaded")) {
             tooltip.add(Component.translatable(LOADED).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
@@ -126,7 +80,7 @@ public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLog
                     var EUt = recipeInfo.getLong("EUt");
                     var Manat = recipeInfo.getLong("Manat");
                     boolean isSteam = false;
-                    if (blockEntity instanceof MetaMachineBlockEntity mbe) {
+                    if (blockAccessor.getBlockEntity() instanceof MetaMachineBlockEntity mbe) {
                         var machine = mbe.getMetaMachine();
                         if (machine instanceof DummyEnergyMachine energyMachine && !energyMachine.jade()) {
                             return;
@@ -201,6 +155,48 @@ public final class RecipeLogicProvider extends CapabilityBlockProvider<RecipeLog
             var c = Component.Serializer.fromJson(reason);
             if (c == null) return;
             tooltip.add(c.withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    @Override
+    public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
+        if (blockAccessor.getBlockEntity() instanceof MetaMachineBlockEntity machineBlock) {
+            if (machineBlock.getLevel() instanceof ServerLevel serverLevel && !serverLevel.getChunkSource().chunkMap.getDistanceManager().shouldForceTicks(PosUtils.getChunkLong(machineBlock.getBlockPos()))) {
+                compoundTag.putBoolean("notLoaded", true);
+            }
+            if (machineBlock.metaMachine instanceof IRecipeLogicMachine recipeLogicMachine) {
+                var capability = recipeLogicMachine.getRecipeLogic();
+                if (capability instanceof IEnhancedRecipeLogic recipeLogic) {
+                    if (capability.isIdle() && recipeLogic.gtolib$getIdleReason() != null) {
+                        compoundTag.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
+                    } else if (capability.isWaiting()) {
+                        if (!capability.getFancyTooltip().isEmpty()) {
+                            compoundTag.putString("reason", Component.Serializer.toJson(capability.getFancyTooltip().get(0)));
+                        } else if (recipeLogic.gtolib$getIdleReason() != null) {
+                            compoundTag.putString("reason", Component.Serializer.toJson(recipeLogic.gtolib$getIdleReason()));
+                        }
+                    } else {
+                        compoundTag.putBoolean("Working", capability.isWorking());
+                        var recipeInfo = new CompoundTag();
+                        var recipe = capability.getLastRecipe();
+                        if (recipe != null) {
+                            var inputEUt = recipe.getInputEUt();
+                            var outputEUt = recipe.getOutputEUt();
+                            var inputManat = RecipeHelper.getInputMANAt(recipe);
+                            var outputManat = RecipeHelper.getOutputMANAt(recipe);
+
+                            recipeInfo.putLong("EUt", inputEUt - outputEUt);
+                            recipeInfo.putLong("Manat", inputManat - outputManat);
+
+                            if (capability.machine instanceof CrossRecipeMultiblockMachine machine && machine.getEnergyInterfacePartMachine() != null) {
+                                recipeInfo.putDouble("totalEu", machine.getTotalEu());
+                            }
+
+                        }
+                        compoundTag.put("Recipe", recipeInfo);
+                    }
+                }
+            }
         }
     }
 }

@@ -56,7 +56,7 @@ public class MEInputHatchPartMachine extends MEPartMachine implements IDataStick
     public MEInputHatchPartMachine(IMachineBlockEntity holder) {
         super(holder, IO.IN);
         aeFluidHandler = createTank();
-        circuitInventory = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE).setFilter(IntCircuitBehaviour::isIntegratedCircuit).shouldSearchContent(false);
+        circuitInventory = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE).setSkipParallelComputing().setFilter(IntCircuitBehaviour::isIntegratedCircuit).shouldSearchContent(false);
     }
 
     /////////////////////////////////

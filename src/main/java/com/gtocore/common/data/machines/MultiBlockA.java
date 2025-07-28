@@ -829,7 +829,6 @@ public final class MultiBlockA {
                     .where('L', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
-            .additionalDisplay(CHEMICAL_PLANT_DISPLAY)
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_inert_ptfe"), GTCEu.id("block/machines/chemical_reactor"))
             .register();
 
@@ -2022,7 +2021,7 @@ public final class MultiBlockA {
                     .where('A', blocks(GTBlocks.HIGH_POWER_CASING.get()))
                     .where('B', blocks(GCYMBlocks.CASING_ATOMIC.get()))
                     .where('C', blocks(GCYMBlocks.CASING_ATOMIC.get())
-                            .or(autoAbilities(definition.getRecipeTypes()))
+                            .or(GTOPredicates.autoLaserAbilities(definition.getRecipeTypes()))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('D', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Trinium)))
                     .where('E', blocks(GTOBlocks.ADVANCED_FUSION_COIL.get()))

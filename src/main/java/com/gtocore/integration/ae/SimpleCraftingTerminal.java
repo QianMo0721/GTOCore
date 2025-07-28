@@ -158,12 +158,7 @@ public class SimpleCraftingTerminal extends AbstractTerminalPart
     @Override
     public final void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
         if (pos.relative(getSide()).equals(neighbor)) {
-            var te = level.getBlockEntity(neighbor);
-
-            if (te == null) {
-                // In case the TE was destroyed, we have to update the target handler immediately.
-                this.updateTarget();
-            }
+            this.updateTarget();
         }
     }
 
