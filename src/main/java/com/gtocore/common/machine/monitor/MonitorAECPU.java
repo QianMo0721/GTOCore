@@ -74,6 +74,10 @@ public class MonitorAECPU extends AbstractAEInfoMonitor {
     public void syncInfoFromServer() {
         var time = (int) Objects.requireNonNull(getLevel(), "Not on the server side").getGameTime();
         if (time - lastUpdateTime < 20) return; // Update every second
+        if (!isOnline || getGridNode() == null) {
+            state = State.NO_GRID;
+            return;
+        }
         updateCpus();
         lastUpdateTime = time;
         CompoundTag tag = new CompoundTag();
