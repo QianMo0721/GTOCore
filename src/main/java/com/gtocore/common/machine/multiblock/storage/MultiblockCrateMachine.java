@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
 import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
@@ -51,7 +52,7 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
     @Override
     @Nullable
     public IItemHandlerModifiable getItemHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
-        return isFormed ? super.getItemHandlerCap(side, useCoverCapability) : null;
+        return isFormed ? super.getItemHandlerCap(side, useCoverCapability) : (IItemHandlerModifiable) EmptyHandler.INSTANCE;
     }
 
     @Override

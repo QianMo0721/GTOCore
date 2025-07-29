@@ -64,7 +64,6 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import earth.terrarium.adastra.common.entities.mob.GlacianRam;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -141,10 +140,6 @@ public final class ForgeCommonEvent {
         InteractionHand hand = event.getHand();
         ItemStack itemStack = player.getItemInHand(hand);
         Item item = itemStack.getItem();
-        if (item instanceof SpellBook spellBook) {
-            event.setCanceled(true);
-            return;
-        }
 
         if (item == GTOItems.RAW_VACUUM_TUBE.get() && player.isShiftKeyDown() && MetaMachine.getMachine(level, pos) instanceof IVacuumMachine vacuumMachine && vacuumMachine.getVacuumTier() > 0) {
             player.setItemInHand(hand, itemStack.copyWithCount(itemStack.getCount() - 1));
@@ -261,9 +256,6 @@ public final class ForgeCommonEvent {
                 level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), ItemMap.getScrapItem()));
                 player.setItemInHand(event.getHand(), itemStack.copyWithCount(count - 1));
             }
-        } else if (item instanceof SpellBook spellBook) {
-            event.setCancellationResult(spellBook.use(level, player, event.getHand()).getResult());
-            event.setCanceled(true);
         }
     }
 

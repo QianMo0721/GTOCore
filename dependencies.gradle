@@ -109,6 +109,8 @@ dependencies {
     modCompileOnly("curse.maven:xaeros-world-map-317780:6212637")
     modCompileOnly("curse.maven:xaeros-minimap-263420:6306155")
 
+    modCompileOnly("curse.maven:athena-841890:5176879")
+
     modRuntimeOnly("curse.maven:cloth-config-348521:5729105")
 
     modImplementation("curse.maven:embeddium-908741:5681725")
