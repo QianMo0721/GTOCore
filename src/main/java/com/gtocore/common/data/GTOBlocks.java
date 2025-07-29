@@ -451,4 +451,16 @@ public final class GTOBlocks {
     public static final BlockEntry<Block> INDUSTRIAL_FRAMELESS_GLASS = createGlassCasingBlock("industrial_frameless_glass", "工业无框玻璃", GTOCore.id("block/industrial_frameless_glass"));
     // 工程机械方块
     public static final BlockEntry<Block> ENGINEERING_MECHANICAL_CASING = createCasingBlock("engineering_mechanical_casing", "工程机械方块", GTOCore.id("block/casings/engineering_mechanical_casing"));
+    // 高强度支撑主轴
+    public static final BlockEntry<Block> HIGH_STRENGTH_SUPPORT_SPINDLE = createCasingBlock("high_strength_support_spindle", "高强度支撑主轴", GTOCore.id("block/casings/high_strength_support_spindle"));
+    // 高强度支撑机械方块
+    public static final BlockEntry<Block> HIGH_STRENGTH_SUPPORT_MECHANICAL_CASING = createCasingBlock("high_strength_support_mechanical_casing", "高强度支撑机械方块", GTOCore.id("block/casings/high_strength_support_mechanical_casing"));
+    // 邪术机械方块
+    public static final BlockEntry<Block> HERETICAL_MECHANICAL_CASING = createCasingBlock("heretical_mechanical_casing", "邪术机械方块", GTOCore.id("block/casings/heretical_mechanical_casing"));
+    // 精密加工机械方块
+    public static final BlockEntry<Block> PRECISION_PROCESSING_MECHANICAL_CASING = createCasingBlock("precision_processing_mechanical_casing", "精密加工机械方块", GTOCore.id("block/casings/precision_processing_mechanical_casing"));
+    // 宇宙探测接收器物质射线吸收阵面
+    public static final BlockEntry<Block> COSMIC_DETECTION_RECEIVER_MATERIAL_RAY_ABSORBING_ARRAY = createCasingBlock("cosmic_detection_receiver_material_ray_absorbing_array", "宇宙探测接收器物质射线吸收阵面", GTOCore.id("block/casings/cosmic_detection_receiver_material_ray_absorbing_array"));
+    // 光学谐振仓
+    public static final BlockEntry<Block> OPTICAL_RESONANCE_CHAMBER = createCasingBlock("optical_resonance_chamber", "光学谐振仓", GTOCore.id("block/casings/optical_resonance_chamber"));
 }
