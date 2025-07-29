@@ -189,7 +189,7 @@ public final class ManaMultiBlock {
             .recipeModifiers(RecipeModifierFunction.HATCH_PARALLEL)
             .recipeTypes(GTORecipeTypes.MANA_CONDENSER_RECIPES)
             .block(GTOBlocks.MANASTEEL_CASING)
-            .pattern(MachineUtils.EMPTY_PATTERN)
+            .pattern(definition -> ManaCondenserMachine.getBlockPattern(0, definition))
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 0; i < 2; i++) {

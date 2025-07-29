@@ -19,10 +19,7 @@ import com.gtocore.common.machine.multiblock.electric.space.SpaceElevatorMachine
 import com.gtocore.common.machine.multiblock.electric.space.SpaceElevatorModuleMachine;
 import com.gtocore.common.machine.multiblock.electric.space.SpaceProbeSurfaceReceptionMachine;
 import com.gtocore.common.machine.multiblock.electric.voidseries.INFFluidDrillMachine;
-import com.gtocore.common.machine.multiblock.noenergy.GodForgeMachine;
-import com.gtocore.common.machine.multiblock.noenergy.HarmonyMachine;
-import com.gtocore.common.machine.multiblock.noenergy.HeatExchangerMachine;
-import com.gtocore.common.machine.multiblock.noenergy.NeutronActivatorMachine;
+import com.gtocore.common.machine.multiblock.noenergy.*;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
@@ -403,7 +400,7 @@ public final class MultiBlockD {
             .tooltipsText("使用纳米蜂群引导结构等级，金：1，山铜：2，末影素：3", "Use the nanites guidance structure level, gold: 1, orichalcum: 2, enderium: 3")
             .laserTooltips()
             .block(GTOBlocks.IRIDIUM_CASING)
-            .pattern(MachineUtils.EMPTY_PATTERN)
+            .pattern(definition -> PCBFactoryMachine.getBlockPattern(1, definition))
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 1; i < 4; i++) {
@@ -856,7 +853,7 @@ public final class MultiBlockD {
             .laserTooltips()
             .fromSourceTooltips("GTNH")
             .block(GTOBlocks.NAQUADAH_ALLOY_CASING)
-            .pattern(MachineUtils.EMPTY_PATTERN)
+            .pattern(definition -> NanoForgeMachine.getBlockPattern(1, definition))
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 1; i < 4; i++) {

@@ -131,20 +131,20 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         super(holder, maxPatternCount);
         this.caches = new boolean[maxPatternCount];
         this.shareInventory = createShareInventory();
-        this.shareTank = new NotifiableNotConsumableFluidHandler(this, 9, 64000);
+        this.shareTank = new NotifiableNotConsumableFluidHandler(this, 9, 64000).setSkipParallelComputing();
         this.circuitInventorySimulated = createCircuitInventory();
         this.internalRecipeHandler = new InternalSlotRecipeHandler(this, getInternalInventory());
     }
 
     NotifiableNotConsumableItemHandler createShareInventory() {
-        return new NotifiableNotConsumableItemHandler(this, 9, IO.NONE);
+        return new NotifiableNotConsumableItemHandler(this, 9, IO.NONE).setSkipParallelComputing();
     }
 
     NotifiableNotConsumableItemHandler createCircuitInventory() {
         NotifiableNotConsumableItemHandler handle = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE);
         handle.setFilter(IntCircuitBehaviour::isIntegratedCircuit);
         handle.shouldSearchContent(false);
-        return handle;
+        return handle.setSkipParallelComputing();
     }
 
     @Override
@@ -306,8 +306,8 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
             this.machine = machine;
             this.index = index;
             this.shareInventory = machine.createShareInventory();
-            this.shareTank = new NotifiableNotConsumableFluidHandler(machine, 9, 64000);
-            this.circuitInventory = new NotifiableNotConsumableItemHandler(machine, 1, IO.NONE);
+            this.shareTank = new NotifiableNotConsumableFluidHandler(machine, 9, 64000).setSkipParallelComputing();
+            this.circuitInventory = new NotifiableNotConsumableItemHandler(machine, 1, IO.NONE).setSkipParallelComputing();
             this.circuitInventory.setFilter(IntCircuitBehaviour::isIntegratedCircuit);
             this.circuitInventory.shouldSearchContent(false);
             this.inputSink = new InputSink(this);

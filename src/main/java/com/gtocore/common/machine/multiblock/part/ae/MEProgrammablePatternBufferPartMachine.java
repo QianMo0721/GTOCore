@@ -34,7 +34,7 @@ public final class MEProgrammablePatternBufferPartMachine extends MEPatternBuffe
     @Override
     @NotNull
     NotifiableNotConsumableItemHandler createCircuitInventory() {
-        return new NotifiableProgrammableCircuitHandler(this);
+        return new NotifiableProgrammableCircuitHandler(this).setSkipParallelComputing();
     }
 
     @Override

@@ -35,7 +35,7 @@ public class LargeSteamStorageTank extends MultiblockTankMachine {
     private static final class MyPropertyFluidFilter extends PropertyFluidFilter {
 
         private MyPropertyFluidFilter() {
-            super(666, true, true, true, true);
+            super(true, false);
         }
 
         @Override

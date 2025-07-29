@@ -7,8 +7,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 
 import appeng.api.behaviors.ExternalStorageStrategy;
@@ -43,6 +45,7 @@ import appeng.parts.PartModel;
 import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.reporting.AbstractTerminalPart;
 import appeng.util.inv.AppEngInternalInventory;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -75,6 +78,18 @@ public class SimpleCraftingTerminal extends AbstractTerminalPart
     @Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    public boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+        if (isArsSpellBook(player.getMainHandItem()) || isArsSpellBook(player.getOffhandItem())) return false;
+        return super.onPartActivate(player, hand, pos);
+    }
+
+    private boolean isArsSpellBook(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        String id = itemStack.getItem().getDescriptionId();
+        return id.contains("ars_nouveau") && id.contains("spell_book");
     }
 
     @Override
@@ -158,12 +173,7 @@ public class SimpleCraftingTerminal extends AbstractTerminalPart
     @Override
     public final void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
         if (pos.relative(getSide()).equals(neighbor)) {
-            var te = level.getBlockEntity(neighbor);
-
-            if (te == null) {
-                // In case the TE was destroyed, we have to update the target handler immediately.
-                this.updateTarget();
-            }
+            this.updateTarget();
         }
     }
 

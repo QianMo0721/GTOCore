@@ -11,7 +11,7 @@ import com.gregtechceu.gtceu.api.recipe.condition.RecipeConditionType;
 
 import net.minecraft.network.chat.Component;
 
-import earth.terrarium.adastra.api.systems.GravityApi;
+import earth.terrarium.adastra.api.planets.PlanetApi;
 import org.jetbrains.annotations.NotNull;
 
 public final class GravityCondition extends AbstractRecipeCondition {
@@ -36,12 +36,13 @@ public final class GravityCondition extends AbstractRecipeCondition {
     public boolean test(@NotNull Recipe recipe, @NotNull RecipeLogic recipeLogic) {
         MetaMachine machine = recipeLogic.getMachine();
         if (machine instanceof MultiblockControllerMachine controllerMachine) {
-            for (IMultiPart part : controllerMachine.self().getParts()) {
+            for (IMultiPart part : controllerMachine.getParts()) {
                 if (part instanceof IGravityPartMachine gravityPart) {
                     return gravityPart.getCurrentGravity() == (zero ? 0 : 100);
                 }
             }
         }
-        return GravityApi.API.getGravity(machine.getLevel(), machine.getPos()) == 0 && zero;
+        var planet = PlanetApi.API.getPlanet(machine.getLevel());
+        return planet != null && planet.isSpace() && zero;
     }
 }

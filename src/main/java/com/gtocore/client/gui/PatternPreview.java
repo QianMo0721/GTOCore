@@ -135,6 +135,7 @@ public final class PatternPreview extends WidgetGroup {
         } else {
             sceneWidget.setRenderedCore(longStream.mapToObj(BlockPos::of).filter(pos -> layer == -1 || layer + pattern.minY == pos.getY()).toList(), null);
         }
+        sceneWidget.setCenter(pattern.center.getCenter().toVector3f());
     }
 
     public static PatternPreview getPatternWidget(MultiblockMachineDefinition controllerDefinition) {
@@ -257,6 +258,24 @@ public final class PatternPreview extends WidgetGroup {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (button == 1/* right button */) {
+            dragX *= 0.1;
+            dragY *= 0.1;
+            double rotationPitch = Math.toRadians(sceneWidget.getRotationPitch());
+            double rotationYaw = Math.toRadians(sceneWidget.getRotationYaw());
+            float moveX = -(float) (dragY * Math.sin(rotationYaw) * Math.cos(rotationPitch) + dragX * Math.sin(rotationPitch));
+            float moveY = (float) (dragY * Math.cos(rotationYaw));
+            float moveZ = (float) (-dragY * Math.sin(rotationYaw) * Math.sin(rotationPitch) + dragX * Math.cos(rotationPitch));
+            sceneWidget.setCenter(sceneWidget.getCenter().add(moveX, moveY, moveZ));
+            return true;
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
     public void updateScreen() {
         super.updateScreen();
         if (!isLoaded && Minecraft.getInstance().screen instanceof RecipeScreen) {
@@ -274,21 +293,23 @@ public final class PatternPreview extends WidgetGroup {
     private static class MBPattern {
 
         @NotNull
-        final List<ItemStack> parts;
+        private final List<ItemStack> parts;
         @NotNull
-        final Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap;
+        private final Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap;
         @NotNull
-        final Long2ObjectOpenHashMap<BlockInfo> blockMap;
+        private final Long2ObjectOpenHashMap<BlockInfo> blockMap;
         @NotNull
-        final IMultiController controllerBase;
-        final int maxY;
-        final int minY;
+        private final IMultiController controllerBase;
+        private final int maxY;
+        private final int minY;
+        private final BlockPos center;
 
-        MBPattern(@NotNull Long2ObjectOpenHashMap<BlockInfo> blockMap, @NotNull List<ItemStack> parts, @NotNull Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap, @NotNull IMultiController controllerBase) {
+        private MBPattern(@NotNull Long2ObjectOpenHashMap<BlockInfo> blockMap, @NotNull List<ItemStack> parts, @NotNull Long2ObjectOpenHashMap<TraceabilityPredicate> predicateMap, @NotNull IMultiController controllerBase) {
             this.parts = parts;
             this.blockMap = blockMap;
             this.predicateMap = predicateMap;
             this.controllerBase = controllerBase;
+            this.center = controllerBase.self().getPos();
             int min = Integer.MAX_VALUE;
             int max = Integer.MIN_VALUE;
             for (ObjectIterator<Long2ObjectMap.Entry<BlockInfo>> it = blockMap.long2ObjectEntrySet().fastIterator(); it.hasNext();) {
