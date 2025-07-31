@@ -10,7 +10,7 @@
     "mc.GuiGraphicsAccessor"
   ],
   "mixins": [
-    "ae.CraftingStatusMenuAccessor",
+    "ftblibrary.FTBLibraryCommandsMixin",
     "ftbq.FTBQuestsCommandsMixin",
     "ftbq.ToggleEditingModeMessageMixin",
     "ftbu.FTBUltimineMixin",

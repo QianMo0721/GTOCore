@@ -646,6 +646,9 @@ public final class GTOMachines {
             .recipeType(GTORecipeTypes.RADIATION_HATCH_RECIPES)
             .allRotation()
             .notAllowSharedTooltips()
+            .tooltipsText("The radiation in the hatch follows the following rules:", "仓中的辐射遵循以下规则:")
+            .tooltipsText("Initial radiation = (Recipe radiation - inhibition) * (1 + count of radiation materials / 64)", "初始辐射=(配方辐射-抑制量)x(1+放射材料数量/64)")
+            .tooltipsText("When there are no radiation materials in the barn, the radioactivity gradually decreases over time", "当仓中没有放射性材料时辐射随时间逐渐衰减")
             .overlayTieredHullRenderer("radiation_hatch")
             .register();
 

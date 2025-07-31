@@ -2536,6 +2536,9 @@
   "gtocore.machine.pulsating_photovoltaic_power_station.tooltip.1": "在空间站运行时可保持最大功率，但需提供每秒功率/4mB的蒸馏水保持运行",
   "gtocore.machine.radiation_hatch.inhibition_dose": "抑制量: %s Sv",
   "gtocore.machine.radiation_hatch.time": "时间: %s / %s Tick",
+  "gtocore.machine.radiation_hatch.tooltip.0": "仓中的辐射遵循以下规则:",
+  "gtocore.machine.radiation_hatch.tooltip.1": "初始辐射=(配方辐射-抑制量)x(1+放射材料数量/64)",
+  "gtocore.machine.radiation_hatch.tooltip.2": "当仓中没有放射性材料时辐射随时间逐渐衰减",
   "gtocore.machine.recipe.run": "运行%s配方时：",
   "gtocore.machine.repeated_recipes": "并行重复配方[%s]",
   "gtocore.machine.residual_decontaminant_degasser_purification_unit.fluids": "本次循环需求:\n%s",
@@ -2639,6 +2642,9 @@
   "gtocore.me_front": "ME仓只允许正面连接",
   "gtocore.not_safe": "现在不安全",
   "gtocore.organ.using": "使用量",
+  "gtocore.part.extendae.tag_filter.blacklist.tooltip": "可放入目标，选择黑名单的标签过滤器",
+  "gtocore.part.extendae.tag_filter.tooltip": "左键将标签添加到过滤器中，右键复制标签到剪贴板",
+  "gtocore.part.extendae.tag_filter.whitelist.tooltip": "可放入目标，选择白名单的标签过滤器",
   "gtocore.pattern.blocking_mode": "容器有任何内容时阻止插入（编程电路除外）",
   "gtocore.pattern.blocking_reverse": "非同一样板时阻止插入",
   "gtocore.pattern.divide": "样板配方 ÷ %s",
@@ -4434,6 +4440,7 @@
   "planet.gtocore.titan_orbit": "土卫六轨道",
   "structure_writer.export_order": "导出顺序： C:%s  S:%s  A:%s",
   "structure_writer.structural_scale": "结构规模： X:%s  Y:%s  Z:%s",
+  "tag.item.forge.ingots.steel": "钢锭",
   "tag.item.gtceu.circuits.ev": "EV电路",
   "tag.item.gtceu.circuits.hv": "HV电路",
   "tag.item.gtceu.circuits.iv": "IV电路",
@@ -4480,5 +4487,7 @@
   "tagprefix.sensor_casing": "%s传感器外壳",
   "tagprefix.superconductor_base": "%s超导粗胚",
   "tagprefix.titan_stone": "土卫六%s矿石",
-  "tagprefix.venus_stone": "金星%s矿石"
+  "tagprefix.venus_stone": "金星%s矿石",
+  "tooltip.ad_astra.unknown_ingredient": "§c未知物品§r",
+  "tooltip.ad_astra.unknown_tag": "§c未知标签§r: %s"
 }

@@ -109,5 +109,9 @@ final class ItemLang {
                 "Right-click a machine to record its coordinates, right-click air to clear the record");
         addCNEN("gtocore.tooltip.item.machine_coordinate_card.tooltip.2", "§6记录信息：§r%s§b(%s§b, %s§b, %s§b)",
                 "§6Coordinate Info: §r%s§b(%s§b, %s§b, %s§b)");
+
+        addCNEN("tooltip.ad_astra.unknown_tag", "§c未知标签§r: %s", "§cUnknown tag§r: %s");
+        addCNEN("tooltip.ad_astra.unknown_ingredient", "§c未知物品§r", "§cUnknown item§r");
+        addCNEN("tag.item.forge.ingots.steel", "钢锭", "Steel Ingot");
     }
 }

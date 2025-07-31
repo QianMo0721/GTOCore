@@ -2536,6 +2536,9 @@
   "gtocore.machine.pulsating_photovoltaic_power_station.tooltip.1": "The space station can maintain full power operation, requires a distilled water supply of Power/4 mB per second",
   "gtocore.machine.radiation_hatch.inhibition_dose": "Inhibition Amount: %s Sv",
   "gtocore.machine.radiation_hatch.time": "Time: %s / %s Tick",
+  "gtocore.machine.radiation_hatch.tooltip.0": "The radiation in the hatch follows the following rules:",
+  "gtocore.machine.radiation_hatch.tooltip.1": "Initial radiation = (Recipe radiation - inhibition) * (1 + count of radiation materials / 64)",
+  "gtocore.machine.radiation_hatch.tooltip.2": "When there are no radiation materials in the barn, the radioactivity gradually decreases over time",
   "gtocore.machine.recipe.run": "When running the % recipe: ",
   "gtocore.machine.repeated_recipes": "Parallel repeated recipes [%s]",
   "gtocore.machine.residual_decontaminant_degasser_purification_unit.fluids": "Current cycle requirements:\n%s",
@@ -2639,6 +2642,9 @@
   "gtocore.me_front": "ME hatch only allows connection from the front side.",
   "gtocore.not_safe": "It's not safe now",
   "gtocore.organ.using": "Using",
+  "gtocore.part.extendae.tag_filter.blacklist.tooltip": "Can place target, select blacklist tag filter",
+  "gtocore.part.extendae.tag_filter.tooltip": "Left-click to add tags to the filter, right-click to copy tags to the clipboard",
+  "gtocore.part.extendae.tag_filter.whitelist.tooltip": "Can place target, select whitelist tag filter",
   "gtocore.pattern.blocking_mode": "Block insertion when the container has any content (except for programming circuits)",
   "gtocore.pattern.blocking_reverse": "Prevent insertion when not using the same pattern",
   "gtocore.pattern.divide": "Pattern Recipe ÷ %s",
@@ -4434,6 +4440,7 @@
   "planet.gtocore.titan_orbit": "Titan Orbit",
   "structure_writer.export_order": "Export Order: C:%s  S:%s  A:%s",
   "structure_writer.structural_scale": "Structural Scale: X:%s  Y:%s  Z:%s",
+  "tag.item.forge.ingots.steel": "Steel Ingot",
   "tag.item.gtceu.circuits.ev": "EV Circuit",
   "tag.item.gtceu.circuits.hv": "HV Circuit",
   "tag.item.gtceu.circuits.iv": "IV Circuit",
@@ -4480,5 +4487,7 @@
   "tagprefix.sensor_casing": "%s Sensor Casing",
   "tagprefix.superconductor_base": "%s Superconductor Base",
   "tagprefix.titan_stone": "Titan %s Ore",
-  "tagprefix.venus_stone": "Venus %s Ore"
+  "tagprefix.venus_stone": "Venus %s Ore",
+  "tooltip.ad_astra.unknown_ingredient": "§cUnknown item§r",
+  "tooltip.ad_astra.unknown_tag": "§cUnknown tag§r: %s"
 }

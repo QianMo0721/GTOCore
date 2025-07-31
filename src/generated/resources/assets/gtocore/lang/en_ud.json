@@ -2536,6 +2536,9 @@
   "gtocore.machine.pulsating_photovoltaic_power_station.tooltip.1": "puoɔǝs ɹǝd ᗺɯ ㄣ/ɹǝʍoԀ ɟo ʎןddns ɹǝʇɐʍ pǝןןıʇsıp ɐ sǝɹınbǝɹ 'uoıʇɐɹǝdo ɹǝʍod ןןnɟ uıɐʇuıɐɯ uɐɔ uoıʇɐʇs ǝɔɐds ǝɥ⟘",
   "gtocore.machine.radiation_hatch.inhibition_dose": "ʌS %s :ʇunoɯⱯ uoıʇıqıɥuI",
   "gtocore.machine.radiation_hatch.time": "ʞɔı⟘ %s / %s :ǝɯı⟘",
+  "gtocore.machine.radiation_hatch.tooltip.0": ":sǝןnɹ buıʍoןןoɟ ǝɥʇ sʍoןןoɟ ɥɔʇɐɥ ǝɥʇ uı uoıʇɐıpɐɹ ǝɥ⟘",
+  "gtocore.machine.radiation_hatch.tooltip.1": ")ㄣ9 / sןɐıɹǝʇɐɯ uoıʇɐıpɐɹ ɟo ʇunoɔ + Ɩ( * )uoıʇıqıɥuı - uoıʇɐıpɐɹ ǝdıɔǝᴚ( = uoıʇɐıpɐɹ ןɐıʇıuI",
+  "gtocore.machine.radiation_hatch.tooltip.2": "ǝɯıʇ ɹǝʌo sǝsɐǝɹɔǝp ʎןןɐnpɐɹb ʎʇıʌıʇɔɐoıpɐɹ ǝɥʇ 'uɹɐq ǝɥʇ uı sןɐıɹǝʇɐɯ uoıʇɐıpɐɹ ou ǝɹɐ ǝɹǝɥʇ uǝɥM",
   "gtocore.machine.recipe.run": " :ǝdıɔǝɹ % ǝɥʇ buıuunɹ uǝɥM",
   "gtocore.machine.repeated_recipes": "]%s[ sǝdıɔǝɹ pǝʇɐǝdǝɹ ןǝןןɐɹɐԀ",
   "gtocore.machine.residual_decontaminant_degasser_purification_unit.fluids": "%s\n:sʇuǝɯǝɹınbǝɹ ǝןɔʎɔ ʇuǝɹɹnƆ",
@@ -2639,6 +2642,9 @@
   "gtocore.me_front": "˙ǝpıs ʇuoɹɟ ǝɥʇ ɯoɹɟ uoıʇɔǝuuoɔ sʍoןןɐ ʎןuo ɥɔʇɐɥ ƎW",
   "gtocore.not_safe": "ʍou ǝɟɐs ʇou s,ʇI",
   "gtocore.organ.using": "buıs∩",
+  "gtocore.part.extendae.tag_filter.blacklist.tooltip": "ɹǝʇןıɟ bɐʇ ʇsıןʞɔɐןq ʇɔǝןǝs 'ʇǝbɹɐʇ ǝɔɐןd uɐƆ",
+  "gtocore.part.extendae.tag_filter.tooltip": "pɹɐoqdıןɔ ǝɥʇ oʇ sbɐʇ ʎdoɔ oʇ ʞɔıןɔ-ʇɥbıɹ 'ɹǝʇןıɟ ǝɥʇ oʇ sbɐʇ ppɐ oʇ ʞɔıןɔ-ʇɟǝꞀ",
+  "gtocore.part.extendae.tag_filter.whitelist.tooltip": "ɹǝʇןıɟ bɐʇ ʇsıןǝʇıɥʍ ʇɔǝןǝs 'ʇǝbɹɐʇ ǝɔɐןd uɐƆ",
   "gtocore.pattern.blocking_mode": ")sʇınɔɹıɔ buıɯɯɐɹboɹd ɹoɟ ʇdǝɔxǝ( ʇuǝʇuoɔ ʎuɐ sɐɥ ɹǝuıɐʇuoɔ ǝɥʇ uǝɥʍ uoıʇɹǝsuı ʞɔoןᗺ",
   "gtocore.pattern.blocking_reverse": "uɹǝʇʇɐd ǝɯɐs ǝɥʇ buısn ʇou uǝɥʍ uoıʇɹǝsuı ʇuǝʌǝɹԀ",
   "gtocore.pattern.divide": "%s ÷ ǝdıɔǝᴚ uɹǝʇʇɐԀ",
@@ -4434,6 +4440,7 @@
   "planet.gtocore.titan_orbit": "ʇıqɹO uɐʇı⟘",
   "structure_writer.export_order": "%s:Ɐ  %s:S  %s:Ɔ :ɹǝpɹO ʇɹodxƎ",
   "structure_writer.structural_scale": "%s:Z  %s:ʎ  %s:X :ǝןɐɔS ןɐɹnʇɔnɹʇS",
+  "tag.item.forge.ingots.steel": "ʇobuI ןǝǝʇS",
   "tag.item.gtceu.circuits.ev": "ʇınɔɹıƆ ΛƎ",
   "tag.item.gtceu.circuits.hv": "ʇınɔɹıƆ ΛH",
   "tag.item.gtceu.circuits.iv": "ʇınɔɹıƆ ΛI",
@@ -4480,5 +4487,7 @@
   "tagprefix.sensor_casing": "buısɐƆ ɹosuǝS %s",
   "tagprefix.superconductor_base": "ǝsɐᗺ ɹoʇɔnpuoɔɹǝdnS %s",
   "tagprefix.titan_stone": "ǝɹO %s uɐʇı⟘",
-  "tagprefix.venus_stone": "ǝɹO %s snuǝΛ"
+  "tagprefix.venus_stone": "ǝɹO %s snuǝΛ",
+  "tooltip.ad_astra.unknown_ingredient": "ɹ§ɯǝʇı uʍouʞu∩ɔ§",
+  "tooltip.ad_astra.unknown_tag": "%s :ɹ§bɐʇ uʍouʞu∩ɔ§"
 }
