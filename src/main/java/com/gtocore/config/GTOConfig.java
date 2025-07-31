@@ -151,10 +151,6 @@ public final class GTOConfig {
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Self Restraint Mode", cn = "自我约束模式")
     public boolean selfRestraint;
     @Configurable
-    @Configurable.Comment("Boost FPS on low-end devices")
-    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Disable Connection Texture", cn = "禁用连接纹理")
-    public boolean disableCTM = false;
-    @Configurable
     @Configurable.Comment("Remove unnecessary loading")
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Fast MultiBlock Page", cn = "快速多方块页面")
     public boolean fastMultiBlockPage = true;

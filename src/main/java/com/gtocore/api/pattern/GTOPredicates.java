@@ -118,6 +118,7 @@ public final class GTOPredicates {
             if (machine instanceof IRotorHolderMachine holder && machine.getDefinition().getTier() >= tier) {
                 return level.getBlockState(pos.relative(holder.self().getFrontFacing())).isAir();
             }
+            state.setError(new PatternStringError("gtceu.multiblock.pattern.clear_amount_3"));
             return false;
         }, () -> PartAbility.ROTOR_HOLDER.getAllBlocks().stream().filter(b -> b instanceof MetaMachineBlock metaMachineBlock && metaMachineBlock.getDefinition().getTier() >= tier).map(BlockInfo::fromBlock).toArray(BlockInfo[]::new))).addTooltips(Component.translatable("gtceu.multiblock.pattern.clear_amount_3"));
     }

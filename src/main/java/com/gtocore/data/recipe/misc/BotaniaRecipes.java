@@ -9,6 +9,7 @@ import com.gtocore.data.tag.Tags;
 
 import com.gtolib.api.data.chemical.GTOChemicalHelper;
 import com.gtolib.utils.RegistriesUtils;
+import com.gtolib.utils.TagUtils;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
@@ -545,7 +546,7 @@ public final class BotaniaRecipes {
         }
         MANA_INFUSER_RECIPES.builder("mana_powder_dust")
                 .notConsumable(BotaniaBlocks.livingrock.asItem())
-                .inputItems(Ingredient.of(Items.GUNPOWDER, Items.REDSTONE, Items.GLOWSTONE_DUST, Items.SUGAR))
+                .inputItems(TagUtils.createTGTag("dusts"))
                 .outputItems(BotaniaItems.manaPowder)
                 .duration(20)
                 .circuitMeta(1)

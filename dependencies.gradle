@@ -56,7 +56,6 @@ dependencies {
     modImplementation("curse.maven:functional-storage-556861:5650296")
     modImplementation("curse.maven:titanium-287342:5468426")
 
-    modImplementation("curse.maven:modern-ae2-additions-1028068:6785486")
     modImplementation("curse.maven:ae2wtlib-459929:5217955")
 
     modImplementation("curse.maven:deeperdarker-659011:5906086")

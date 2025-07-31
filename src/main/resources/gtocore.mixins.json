@@ -7,7 +7,6 @@
   "client": [
     "adastra.AdAstraOverlayScreenMixin",
     "adastra.PlanetsScreenMixin",
-    "ldlib.ClientProxyImplMixin",
     "mc.GuiGraphicsAccessor"
   ],
   "mixins": [
@@ -20,7 +19,6 @@
     "ftbxmodcompat.FTBXModCompatMixin",
     "gtm.AssemblyLineMachineMixin",
     "gtmt.TimeWheelMixin",
-    "mae2.EUP2PTunnelPartMixin",
     "mc.BlockBehaviourMixin",
     "mc.SharedConstantsMixin",
     "mc.mob.AbstractSkeletonMixin",
