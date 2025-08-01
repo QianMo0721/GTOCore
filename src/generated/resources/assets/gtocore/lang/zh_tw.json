@@ -51,6 +51,7 @@
   "config.gtocore.option.batchProcessingMaxDuration": "批處理模式最大時間",
   "config.gtocore.option.breakBlocksBlackList": "連鎖挖掘黑名單",
   "config.gtocore.option.dev": "開髮模式",
+  "config.gtocore.option.disableChargeBomb": "禁用爆彈",
   "config.gtocore.option.emiGlobalFavorites": "全局 EMI 書簽",
   "config.gtocore.option.fastMultiBlockPage": "快速多方塊頁面",
   "config.gtocore.option.ftbUltimineRange": "連鎖挖掘相鄰方塊檢查范圍",

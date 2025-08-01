@@ -1422,6 +1422,7 @@
   "config.gtocore.option.batchProcessingMaxDuration": "批处理模式最大时间",
   "config.gtocore.option.breakBlocksBlackList": "连锁挖掘黑名单",
   "config.gtocore.option.dev": "开发模式",
+  "config.gtocore.option.disableChargeBomb": "禁用爆弹",
   "config.gtocore.option.emiGlobalFavorites": "全局 EMI 书签",
   "config.gtocore.option.fastMultiBlockPage": "快速多方块页面",
   "config.gtocore.option.ftbUltimineRange": "连锁挖掘相邻方块检查范围",

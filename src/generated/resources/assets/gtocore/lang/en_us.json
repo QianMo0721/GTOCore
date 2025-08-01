@@ -1422,6 +1422,7 @@
   "config.gtocore.option.batchProcessingMaxDuration": "Batch Processing Mode Max Duration",
   "config.gtocore.option.breakBlocksBlackList": "Black List Of Chain Blocks",
   "config.gtocore.option.dev": "Dev mode",
+  "config.gtocore.option.disableChargeBomb": "Disable Charge Bomb",
   "config.gtocore.option.emiGlobalFavorites": "EMI Global Favorites",
   "config.gtocore.option.fastMultiBlockPage": "Fast MultiBlock Page",
   "config.gtocore.option.ftbUltimineRange": "Chain Mining Adjacent Block Check Range",

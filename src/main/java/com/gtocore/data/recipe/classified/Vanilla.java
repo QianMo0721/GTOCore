@@ -801,7 +801,7 @@ final class Vanilla {
                 "ABA",
                 "CDC",
                 "EFE",
-                'A', RegistriesUtils.getItemStack("gtceu:huge_duct_pipe"), 'B', GTItems.ELECTRIC_PUMP_HV.asStack(), 'C', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.StainlessSteel), 'D', GTBlocks.COIL_KANTHAL.asStack(), 'E', CustomTags.EV_CIRCUITS, 'F', GTMachines.HULL[GTValues.HV].getItem());
+                'A', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.VanadiumSteel), 'B', GTItems.ELECTRIC_PUMP_HV.asStack(), 'C', new MaterialEntry(TagPrefix.pipeHugeFluid, GTMaterials.StainlessSteel), 'D', GTBlocks.COIL_KANTHAL.asStack(), 'E', CustomTags.EV_CIRCUITS, 'F', GTMachines.HULL[GTValues.HV].getItem());
         VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("electric_heater"), GTOMachines.ELECTRIC_HEATER.asStack(),
                 "ABA",
                 "BCB",
