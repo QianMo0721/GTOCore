@@ -5,8 +5,11 @@ import com.gtocore.client.renderer.machine.BallHatchRenderer;
 import com.gtocore.client.renderer.machine.HeaterRenderer;
 import com.gtocore.client.renderer.machine.MonitorRenderer;
 import com.gtocore.client.renderer.machine.WindMillTurbineRenderer;
+import com.gtocore.common.blockentity.TesseractBlockEntity;
 import com.gtocore.common.data.machines.*;
+import com.gtocore.common.machine.electric.AdvancedTesseractMachine;
 import com.gtocore.common.machine.electric.ElectricHeaterMachine;
+import com.gtocore.common.machine.electric.TesseractMachine;
 import com.gtocore.common.machine.electric.VacuumPumpMachine;
 import com.gtocore.common.machine.generator.LightningRodMachine;
 import com.gtocore.common.machine.generator.WindMillTurbineMachine;
@@ -814,6 +817,18 @@ public final class GTOMachines {
             .allRotation()
             .renderer(() -> new OverlayTieredMachineRenderer(MAX, GTMThings.id("block/machine/part/energy_hatch.input")))
             .tier(MAX)
+            .register();
+
+    public static final MachineDefinition TESSERACT_GENERATOR = blockEntityMachine("tesseract_generator", "超立方体发生器", TesseractMachine::new, TesseractBlockEntity::new)
+            .allRotation()
+            .modelRenderer(() -> GTOCore.id("block/machine/tesseract_generator"))
+            .tier(HV)
+            .register();
+
+    public static final MachineDefinition ADVANCED_TESSERACT_GENERATOR = blockEntityMachine("advanced_tesseract_generator", "进阶超立方体发生器", AdvancedTesseractMachine::new, TesseractBlockEntity::new)
+            .allRotation()
+            .modelRenderer(() -> GTOCore.id("block/machine/tesseract_generator"))
+            .tier(IV)
             .register();
 
     public static final MachineDefinition BASIC_MONITOR = registerMonitor("basic_monitor", "基础监控器", BasicMonitor::new)

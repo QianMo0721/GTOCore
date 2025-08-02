@@ -917,5 +917,10 @@ final class Vanilla {
                 "ABA",
                 " A ",
                 'A', new ItemStack(Items.REDSTONE_TORCH.asItem()), 'B', RegistriesUtils.getItemStack("gtmthings:advanced_terminal"));
+        VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("tesseract_generator"), GTOMachines.TESSERACT_GENERATOR.asStack(),
+                "ABA",
+                "CDC",
+                "EBE",
+                'A', RegistriesUtils.getItemStack("botania:ender_hand"), 'B', RegistriesUtils.getItemStack("gtmthings:advanced_wireless_item_transfer_cover"), 'C', RegistriesUtils.getItemStack("gtmthings:advanced_wireless_fluid_transfer_cover"), 'D', GTOItems.ENTANGLED_SINGULARITY.asItem(), 'E', GTItems.FIELD_GENERATOR_MV.asStack());
     }
 }
