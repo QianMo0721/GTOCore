@@ -50,10 +50,13 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
     private final List<IItemHandler> itemHandlers = new ObjectArrayList<>(20);
     private final List<IFluidHandler> fluidHandlers = new ObjectArrayList<>(20);
 
+    private boolean call;
+
     public AdvancedTesseractMachine(IMachineBlockEntity holder) {
         super(holder);
         inventory = new NotifiableItemStackHandler(this, 20, IO.NONE, IO.NONE);
         inventory.storage.setOnContentsChanged(() -> {
+            call = false;
             poss.clear();
             for (int i = 0; i < 20; i++) {
                 blockEntityReference[i] = null;
@@ -91,13 +94,16 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
     @Override
     @Nullable
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (call) return null;
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
             itemHandlers.clear();
             var size = poss.size();
             for (int i = 0; i < size; i++) {
                 var c = getBlockEntity(poss.get(i), i);
                 if (c != null) {
+                    call = true;
                     var h = LazyOptionalUtil.get(c.getCapability(ForgeCapabilities.ITEM_HANDLER, side));
+                    call = false;
                     if (h != null) {
                         itemHandlers.add(h);
                     }
@@ -113,7 +119,9 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
             for (int i = 0; i < size; i++) {
                 var c = getBlockEntity(poss.get(i), i);
                 if (c != null) {
+                    call = true;
                     var h = LazyOptionalUtil.get(c.getCapability(ForgeCapabilities.FLUID_HANDLER, side));
+                    call = false;
                     if (h != null) {
                         fluidHandlers.add(h);
                     }

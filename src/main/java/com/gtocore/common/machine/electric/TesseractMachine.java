@@ -41,10 +41,13 @@ public class TesseractMachine extends MetaMachine implements IFancyUIMachine {
     @Persisted
     protected NotifiableItemStackHandler inventory;
 
+    private boolean call;
+
     public TesseractMachine(IMachineBlockEntity holder) {
         super(holder);
         inventory = new NotifiableItemStackHandler(this, 1, IO.NONE, IO.NONE);
         inventory.storage.setOnContentsChanged(() -> {
+            call = false;
             pos = null;
             blockEntityReference = null;
             ItemStack card = inventory.storage.getStackInSlot(0);
@@ -70,12 +73,15 @@ public class TesseractMachine extends MetaMachine implements IFancyUIMachine {
     @Override
     @Nullable
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (call) return null;
         if (pos != null && CAPABILITIES.contains(cap)) {
+            LazyOptional<T> result = null;
+            call = true;
             if (blockEntityReference == null) {
                 var be = getLevel().getBlockEntity(pos);
                 if (be != null) {
                     blockEntityReference = new WeakReference<>(be);
-                    return be.getCapability(cap, side);
+                    result = be.getCapability(cap, side);
                 } else {
                     pos = null;
                 }
@@ -85,14 +91,16 @@ public class TesseractMachine extends MetaMachine implements IFancyUIMachine {
                     blockEntity = getLevel().getBlockEntity(pos);
                     if (blockEntity != null) {
                         blockEntityReference = new WeakReference<>(blockEntity);
-                        return blockEntity.getCapability(cap, side);
+                        result = blockEntity.getCapability(cap, side);
                     } else {
                         pos = null;
                     }
                 } else {
-                    return blockEntity.getCapability(cap, side);
+                    result = blockEntity.getCapability(cap, side);
                 }
             }
+            call = false;
+            return result;
         }
         return null;
     }
