@@ -1,5 +1,10 @@
 package com.gtocore.common.machine.multiblock.storage;
 
+import com.gtocore.common.network.ClientMessage;
+
+import com.gtolib.GTOCore;
+import com.gtolib.utils.GTOUtils;
+
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.UITemplate;
@@ -11,11 +16,6 @@ import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 
-import com.gtocore.common.network.ClientMessage;
-import com.gtolib.GTOCore;
-import com.gtolib.utils.GTOUtils;
-import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
-import com.lowdragmc.lowdraglib.gui.widget.ButtonWidget;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +25,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
+import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
+import com.lowdragmc.lowdraglib.gui.widget.ButtonWidget;
 import com.lowdragmc.lowdraglib.gui.widget.DraggableScrollableWidgetGroup;
 import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
 import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
@@ -81,7 +83,7 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
         var innerContainer = new DraggableScrollableWidgetGroup(4, 4, xOffset + 6, 130)
                 .setYBarStyle(GuiTextures.BACKGROUND_INVERSE, GuiTextures.BUTTON).setYScrollBarWidth(4);
 
-        modularUI.widget(new ButtonWidget(176-15, 3, 14, 14,
+        modularUI.widget(new ButtonWidget(176 - 15, 3, 14, 14,
                 new ResourceTexture(GTOCore.id("textures/gui/sort.png")),
                 (press) -> ClientMessage.send("sortInventory", GTOUtils.noopConsumer())));
         int x = 0;

@@ -444,6 +444,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition ME_PATTERN_CONTENT_SORT_MACHINE = machine("me_pattern_content_sort_machine", "ME样板内容动态修改机", MEPatternContentSortMachine::new)
             .overlayTieredHullRenderer("neutron_sensor")
+            .tier(HV)
             .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME样板内容动态修改机", "ME Pattern Content Dynamic Modifier"), p -> p.addCommentLines(
                     """
                             是的，你现在可以不修改样板，就一键替换其中的内容了。
@@ -462,10 +463,12 @@ public final class GTOMachines {
             .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME无线连接机", "ME Wireless Connection Machine"), p -> p.addCommentLines(
                     """
                             多对多的ME无线网络节点
-                            可以在不同世界传输""",
+                            可以在不同世界传输
+                            可以连接GTO ME无线网络""",
                     """
                             A many-to-many ME wireless network node
-                            Can transmit across different worlds""")))
+                            Can transmit across different worlds
+                            Can connect to GTO ME wireless network""")))
             .allRotation()
             .register();
 

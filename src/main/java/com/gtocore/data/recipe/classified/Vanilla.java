@@ -119,6 +119,11 @@ final class Vanilla {
                 "B B",
                 "ABA",
                 'A', CustomTags.EV_CIRCUITS, 'B', RegistriesUtils.getItemStack("expatternprovider:wireless_connect"));
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("me_pattern_content_sort_machine"), GTOMachines.ME_PATTERN_CONTENT_SORT_MACHINE.asStack(),
+                "ABA",
+                "BCB",
+                "DBD",
+                'A', GTItems.ROBOT_ARM_HV.asStack(), 'B', CustomTags.HV_CIRCUITS, 'C', GTBlocks.MACHINE_CASING_HV.asStack(), 'D', new ItemStack(AEItems.BLANK_PATTERN.asItem()));
         VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("exchange_storage_monitor"), GTOAEParts.INSTANCE.getEXCHANGE_STORAGE_MONITOR().get().stack(1),
                 "   ",
                 "ABA",

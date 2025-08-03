@@ -153,7 +153,10 @@ class WirelessSavedData : SavedData() {
             val nbt = tag as CompoundTag
             defaultMap[nbt.getUUID("key")] = nbt.getString("value")
         }
-        gridPool.forEach { grid -> defaultMap.forEach { if (grid.owner == it.key && grid.name == it.value) grid.isDefault = true } }
+        gridPool.forEach { grid ->
+            defaultMap.forEach { if (grid.owner == it.key && grid.name == it.value) grid.isDefault = true }
+            grid.connectionPoolTable.clear()
+        }
         return this
     }
 }
