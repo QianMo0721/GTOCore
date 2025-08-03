@@ -11,6 +11,11 @@ import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 
+import com.gtocore.common.network.ClientMessage;
+import com.gtolib.GTOCore;
+import com.gtolib.utils.GTOUtils;
+import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
+import com.lowdragmc.lowdraglib.gui.widget.ButtonWidget;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -75,6 +80,10 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
 
         var innerContainer = new DraggableScrollableWidgetGroup(4, 4, xOffset + 6, 130)
                 .setYBarStyle(GuiTextures.BACKGROUND_INVERSE, GuiTextures.BUTTON).setYScrollBarWidth(4);
+
+        modularUI.widget(new ButtonWidget(176-15, 3, 14, 14,
+                new ResourceTexture(GTOCore.id("textures/gui/sort.png")),
+                (press) -> ClientMessage.send("sortInventory", GTOUtils.noopConsumer())));
         int x = 0;
         int y = 0;
         for (int slot = 0; slot < 576; slot++) {
@@ -87,6 +96,7 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
         }
         var container = new WidgetGroup(
                 3, 17, xOffset + 20, 140).addWidget(innerContainer);
+
         return modularUI.widget(container);
     }
 
