@@ -41,7 +41,7 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
     var gridCache = WirelessSyncField(
         createLogicalSide(machine.self().isRemote),
         { "machine.getGridInfoInMachine.gridConnectedName-${machine.self().pos}" },
-        WirelessSavedData.gridPool,
+        WirelessSavedData.INSTANCE.gridPool,
         onSyncCallBack = { f, old, new ->
             connectPageFreshRun.run()
             detailsPageFreshRun.run()
@@ -54,7 +54,7 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
         value = false,
         onSyncCallBack = { f, old, new ->
             if (new && !machine.self().isRemote) {
-                gridCache.updateInServer(WirelessSavedData.gridPool)
+                gridCache.updateInServer(WirelessSavedData.INSTANCE.gridPool)
             }
         },
     )
@@ -95,25 +95,25 @@ interface WirelessMachine : IGridConnectedMachine {
     @Scanned
     companion object {
         @RegisterLanguage(cn = "连接ME网络", en = "Connect to ME Grid")
-        val connectToGrid = "gtocore.integration.ae.WirelessMachine.connectToGrid"
+        const val connectToGrid = "gtocore.integration.ae.WirelessMachine.connectToGrid"
 
         @RegisterLanguage(cn = "网络节点列表", en = "Grid Node List")
-        val gridNodeList = "gtocore.integration.ae.WirelessMachine.gridNodeList"
+        const val gridNodeList = "gtocore.integration.ae.WirelessMachine.gridNodeList"
 
         @RegisterLanguage(cn = "当前连接到 %s", en = "Currently connected to %s")
-        val currentlyConnectedTo = "gtocore.integration.ae.WirelessMachine.currentlyConnectedTo"
+        const val currentlyConnectedTo = "gtocore.integration.ae.WirelessMachine.currentlyConnectedTo"
 
         @RegisterLanguage(cn = "创建网络", en = "Create Grid")
-        val createGrid = "gtocore.integration.ae.WirelessMachine.createGrid"
+        const val createGrid = "gtocore.integration.ae.WirelessMachine.createGrid"
 
         @RegisterLanguage(cn = "全球可用无线网络 : %s / %s", en = "Global available wireless grids: %s / %s")
-        val globalWirelessGrid = "gtocore.integration.ae.WirelessMachine.globalWirelessGrid"
+        const val globalWirelessGrid = "gtocore.integration.ae.WirelessMachine.globalWirelessGrid"
 
         @RegisterLanguage(cn = "删除", en = "Remove")
-        val removeGrid = "gtocore.integration.ae.WirelessMachine.removeGrid"
+        const val removeGrid = "gtocore.integration.ae.WirelessMachine.removeGrid"
 
         @RegisterLanguage(cn = "你的无线网络 : ", en = "Your wireless grids: ")
-        val yourWirelessGrid = "gtocore.integration.ae.WirelessMachine.yourWirelessGrid"
+        const val yourWirelessGrid = "gtocore.integration.ae.WirelessMachine.yourWirelessGrid"
     }
 
     // ////////////////////////////////
@@ -140,7 +140,7 @@ interface WirelessMachine : IGridConnectedMachine {
             if (self().offsetTimer > nowTick + 20) {
                 if (!wirelessMachineRunTime.isInitialized && !self().isRemote) {
                     if (!wirelessMachinePersisted.beSet) {
-                        WirelessSavedData.gridPool.firstOrNull { it.owner == getGridPermissionUUID() && it.isDefault }?.let {
+                        WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == getGridPermissionUUID() && it.isDefault }?.let {
                             joinGrid(it.name)
                         }
                     } else {
@@ -171,7 +171,7 @@ interface WirelessMachine : IGridConnectedMachine {
     fun syncDataToClientInServer() {
         if (!this.self().isRemote) {
             println("isRemote :${self().isRemote} Syncing network data for ${self().pos}")
-            wirelessMachineRunTime.gridCache.updateInServer(WirelessSavedData.gridPool)
+            wirelessMachineRunTime.gridCache.updateInServer(WirelessSavedData.INSTANCE.gridPool)
         }
     }
     fun askSyncDataFromServer() {
@@ -186,10 +186,10 @@ interface WirelessMachine : IGridConnectedMachine {
         val status = WirelessSavedData.joinToGrid(gridName, this, getGridPermissionUUID())
         when (status) {
             STATUS.SUCCESS -> {
-                wirelessMachineRunTime.gridConnected = WirelessSavedData.gridPool.first { it.name == gridName }
+                wirelessMachineRunTime.gridConnected = WirelessSavedData.INSTANCE.gridPool.first { it.name == gridName }
             }
             STATUS.ALREADY_JOINT -> {
-                wirelessMachineRunTime.gridConnected = WirelessSavedData.gridPool.first { it.name == gridName }
+                wirelessMachineRunTime.gridConnected = WirelessSavedData.INSTANCE.gridPool.first { it.name == gridName }
             }
             STATUS.NOT_FOUND_GRID -> {
                 wirelessMachineRunTime.gridConnected = null
@@ -251,7 +251,7 @@ interface WirelessMachine : IGridConnectedMachine {
                             syncDataToClientInServer()
                             println("isRemote :${self().isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
                             println("isRemote :${self().isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.value}")
-                            println("isRemote :${self().isRemote} GridSavedValue: ${WirelessSavedData.gridPool}")
+                            println("isRemote :${self().isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
                         }
                     }
                     textBlock(

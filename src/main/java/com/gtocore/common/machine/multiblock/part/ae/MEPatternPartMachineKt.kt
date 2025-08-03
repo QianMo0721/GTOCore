@@ -76,13 +76,13 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
     @Scanned
     companion object {
         @JvmStatic
-        var MANAGED_FIELD_HOLDER = ManagedFieldHolder(
+        val MANAGED_FIELD_HOLDER = ManagedFieldHolder(
             MEPatternPartMachineKt::class.java,
             MEPartMachine.MANAGED_FIELD_HOLDER,
         )
 
         @RegisterLanguage(cn = "AE显示名称:", en = "AE Name:")
-        val AE_NAME: String = "gtceu.ae.pattern_part_machine.ae_name"
+        const val AE_NAME: String = "gtceu.ae.pattern_part_machine.ae_name"
     }
 
     // ==================== 持久化属性 ====================

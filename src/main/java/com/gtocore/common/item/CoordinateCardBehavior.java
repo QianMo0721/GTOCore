@@ -44,7 +44,7 @@ public class CoordinateCardBehavior implements IInteractionItem, IAddInformation
                 if (machine instanceof WorkableTieredMachine || machine instanceof IMultiController) {
                     tag.putBoolean("machine", true);
                 }
-                return InteractionResult.SUCCESS;
+                return InteractionResult.CONSUME;
             }
         }
 

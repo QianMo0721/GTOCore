@@ -12,7 +12,6 @@ import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
-import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.saveddata.SavedData
 import net.minecraftforge.fml.LogicalSide
@@ -26,22 +25,92 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import java.util.UUID
 import java.util.function.Supplier
 
-object WirelessSavedData : SavedData() {
-    val UNKNOWN: ResourceKey<Level> = ResourceKey.create(Registries.DIMENSION, GTCEu.id("unknown"))
+class WirelessSavedData : SavedData() {
 
-    var loaded = false
+    companion object {
+        var INSTANCE: WirelessSavedData = WirelessSavedData()
+
+        val UNKNOWN: ResourceKey<Level> = ResourceKey.create(Registries.DIMENSION, GTCEu.id("unknown"))
+
+        @JvmStatic
+        fun initialize(p0: CompoundTag): WirelessSavedData {
+            val data = WirelessSavedData()
+            data.load(p0)
+            return data
+        }
+
+        // ////////////////////////////////
+        // ****** SERVER API ******//
+        // //////////////////////////////
+
+        fun joinToGrid(gridName: String, machine: WirelessMachine, requester: UUID): STATUS {
+            leaveGrid(machine)
+            val grid = INSTANCE.gridPool.firstOrNull { it.name == gridName } ?: return STATUS.NOT_FOUND_GRID
+            if (grid.owner != requester) return STATUS.NOT_PERMISSION
+            if (grid.connectionPool.any { it == machine }) return STATUS.ALREADY_JOINT
+
+            grid.connectionPoolTable.add(
+                WirelessGrid.MachineInfo().apply {
+                    level = machine.self().level?.dimension() ?: UNKNOWN
+                    pos = machine.self().pos
+                    owner = machine.self().playerOwner?.name ?: "unknown"
+                    descriptionId = machine.self().blockState.block.descriptionId
+                },
+            )
+            machine.addedToGrid(gridName) // 回调
+
+            grid.addNodeToNetwork(machine)
+
+            return STATUS.SUCCESS
+        }
+
+        fun leaveGrid(machine: WirelessMachine) {
+            INSTANCE.gridPool.find { it -> it.connectionPool.any { it == machine } }
+                ?.let { grid ->
+                    machine.removedFromGrid(grid.name)
+                    grid.connectionPoolTable.removeAll { it.pos == machine.self().pos }
+                    grid.removeNodeFromNetwork(machine)
+                }
+        }
+        fun createNewGrid(gridName: String, requester: UUID): WirelessGrid? {
+            INSTANCE.gridPool.find { grid -> grid.name == gridName }?.let { return null }
+            val newGrid = WirelessGrid(gridName, requester)
+            INSTANCE.gridPool.add(newGrid)
+            INSTANCE.setDirty()
+            return newGrid
+        }
+        fun removeGrid(gridName: String, requester: UUID): STATUS {
+            INSTANCE.gridPool.find { it.name == gridName }?.let { removed ->
+                if (removed.owner != requester) return STATUS.NOT_PERMISSION
+                removed.connectionPool.forEach { it.removedFromGrid(removed.name) }
+                removed.connectionPool.clear()
+                removed.refreshConnectionPool()
+                INSTANCE.gridPool.remove(removed)
+                INSTANCE.setDirty()
+                return STATUS.SUCCESS
+            }
+            INSTANCE.setDirty()
+            return STATUS.NOT_FOUND_GRID
+        }
+        fun setAsDefault(gridName: String, requester: UUID) {
+            INSTANCE.defaultMap[requester] = gridName
+            INSTANCE.gridPool.find { it.name == gridName && it.owner == requester }?.let { it.isDefault = true }
+            INSTANCE.gridPool.filter { it.name != gridName && it.owner == requester }.forEach { it.isDefault = false }
+            INSTANCE.setDirty()
+        }
+        fun cancelAsDefault(gridName: String, requester: UUID) {
+            INSTANCE.defaultMap.remove(requester)
+            INSTANCE.gridPool.find { it.name == gridName && it.owner == requester }?.let { it.isDefault = false }
+            INSTANCE.setDirty()
+        }
+    }
+
     val gridPool: MutableList<WirelessGrid> = mutableListOf()
     val defaultMap = mutableMapOf<UUID, String>()
 
     // ///////////////////////////////
     // ****** SavedData To SyncField ******//
     // //////////////////////////////
-    fun initialize(server: MinecraftServer) {
-        if (loaded) return
-        val overWorld = server.getLevel(Level.OVERWORLD)!!
-        overWorld.dataStorage.computeIfAbsent(::load, { this }, "wireless_saved_data")
-        loaded = true
-    }
     override fun save(p0: CompoundTag): CompoundTag {
         p0.put(
             "WirelessSavedData",
@@ -68,7 +137,8 @@ object WirelessSavedData : SavedData() {
         )
         return p0
     }
-    fun load(p0: CompoundTag): WirelessSavedData {
+
+    private fun load(p0: CompoundTag): WirelessSavedData {
         gridPool.clear()
         defaultMap.clear()
         val res = mutableListOf<WirelessGrid>()
@@ -85,70 +155,6 @@ object WirelessSavedData : SavedData() {
         }
         gridPool.forEach { grid -> defaultMap.forEach { if (grid.owner == it.key && grid.name == it.value) grid.isDefault = true } }
         return this
-    }
-
-    // ////////////////////////////////
-    // ****** SERVER API ******//
-    // //////////////////////////////
-    fun joinToGrid(gridName: String, machine: WirelessMachine, requester: UUID): STATUS {
-        leaveGrid(machine)
-        val grid = gridPool.firstOrNull { it.name == gridName } ?: return STATUS.NOT_FOUND_GRID
-        if (grid.owner != requester) return STATUS.NOT_PERMISSION
-        if (grid.connectionPool.any { it == machine }) return STATUS.ALREADY_JOINT
-
-        grid.connectionPoolTable.add(
-            WirelessGrid.MachineInfo().apply {
-                level = machine.self().level?.dimension() ?: UNKNOWN
-                pos = machine.self().pos
-                owner = machine.self().playerOwner?.name ?: "unknown"
-                descriptionId = machine.self().blockState.block.descriptionId
-            },
-        )
-        machine.addedToGrid(gridName) // 回调
-
-        grid.addNodeToNetwork(machine)
-
-        return STATUS.SUCCESS
-    }
-
-    fun leaveGrid(machine: WirelessMachine) {
-        gridPool.find { it -> it.connectionPool.any { it == machine } }
-            ?.let { grid ->
-                machine.removedFromGrid(grid.name)
-                grid.connectionPoolTable.removeAll { it.pos == machine.self().pos }
-                grid.removeNodeFromNetwork(machine)
-            }
-    }
-    fun createNewGrid(gridName: String, requester: UUID): WirelessGrid? {
-        gridPool.find { grid -> grid.name == gridName }?.let { return null }
-        val newGrid = WirelessGrid(gridName, requester)
-        gridPool.add(newGrid)
-        setDirty()
-        return newGrid
-    }
-    fun removeGrid(gridName: String, requester: UUID): STATUS {
-        gridPool.find { it.name == gridName }?.let { removed ->
-            if (removed.owner != requester) return STATUS.NOT_PERMISSION
-            removed.connectionPool.forEach { it.removedFromGrid(removed.name) }
-            removed.connectionPool.clear()
-            removed.refreshConnectionPool()
-            gridPool.remove(removed)
-            setDirty()
-            return STATUS.SUCCESS
-        }
-        setDirty()
-        return STATUS.NOT_FOUND_GRID
-    }
-    fun setAsDefault(gridName: String, requester: UUID) {
-        defaultMap[requester] = gridName
-        gridPool.find { it.name == gridName && it.owner == requester }?.let { it.isDefault = true }
-        gridPool.filter { it.name != gridName && it.owner == requester }.forEach { it.isDefault = false }
-        setDirty()
-    }
-    fun cancelAsDefault(gridName: String, requester: UUID) {
-        defaultMap.remove(requester)
-        gridPool.find { it.name == gridName && it.owner == requester }?.let { it.isDefault = false }
-        setDirty()
     }
 }
 enum class STATUS {

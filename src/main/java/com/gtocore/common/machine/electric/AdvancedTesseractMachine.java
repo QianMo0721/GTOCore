@@ -95,9 +95,9 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
             itemHandlers.clear();
             var size = poss.size();
             for (int i = 0; i < size; i++) {
-                var c = getCapability(ForgeCapabilities.ITEM_HANDLER, side, poss.get(i), i);
+                var c = getBlockEntity(poss.get(i), i);
                 if (c != null) {
-                    var h = LazyOptionalUtil.get(c);
+                    var h = LazyOptionalUtil.get(c.getCapability(ForgeCapabilities.ITEM_HANDLER, side));
                     if (h != null) {
                         itemHandlers.add(h);
                     }
@@ -111,9 +111,9 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
             fluidHandlers.clear();
             var size = poss.size();
             for (int i = 0; i < size; i++) {
-                var c = getCapability(ForgeCapabilities.FLUID_HANDLER, side, poss.get(i), i);
+                var c = getBlockEntity(poss.get(i), i);
                 if (c != null) {
-                    var h = LazyOptionalUtil.get(c);
+                    var h = LazyOptionalUtil.get(c.getCapability(ForgeCapabilities.FLUID_HANDLER, side));
                     if (h != null) {
                         fluidHandlers.add(h);
                     }
@@ -127,14 +127,14 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
         return null;
     }
 
-    private <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side, @Nullable BlockPos pos, int i) {
+    public @Nullable BlockEntity getBlockEntity(@Nullable BlockPos pos, int i) {
         if (pos == null) return null;
         var reference = blockEntityReference[i];
         if (reference == null) {
             var be = getLevel().getBlockEntity(pos);
             if (be != null) {
                 blockEntityReference[i] = new WeakReference<>(be);
-                return be.getCapability(cap, side);
+                return be;
             } else {
                 poss.set(i, null);
             }
@@ -144,12 +144,12 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
                 blockEntity = getLevel().getBlockEntity(pos);
                 if (blockEntity != null) {
                     blockEntityReference[i] = new WeakReference<>(blockEntity);
-                    return blockEntity.getCapability(cap, side);
+                    return blockEntity;
                 } else {
                     poss.set(i, null);
                 }
             } else {
-                return blockEntity.getCapability(cap, side);
+                return blockEntity;
             }
         }
         return null;
