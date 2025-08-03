@@ -69,7 +69,7 @@ sealed class OrganItemBase(properties: Properties, val organType: OrganType) :
             val resourcePath = "item/organ/part/${organType.key}/$resourceName"
             val tag = TagUtils.createTag(GTOCore.id("organ_${organType.key}"))
             val itemBuilder = item(id, "器官 $cn", { p -> itemFactory(p.stacksTo(1).setNoRepair(), organType) })
-                .lang("organ$en ")
+                .lang("organ $en ")
                 .tag(tag)
                 .model { ctx, prov -> prov.generated(ctx, GTOCore.id(resourcePath)) }
             itemBuilder.onRegister(onRegister)
