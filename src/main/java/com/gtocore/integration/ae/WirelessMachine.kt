@@ -94,8 +94,8 @@ class WirelessMachinePersisted(var machine: WirelessMachine) :
 interface WirelessMachine : IGridConnectedMachine {
     @Scanned
     companion object {
-        @RegisterLanguage(cn = "连接ME网络", en = "Connect to ME Grid")
-        const val connectToGrid = "gtocore.integration.ae.WirelessMachine.connectToGrid"
+        @RegisterLanguage(cn = "网络节点选择", en = "Grid Node Selector")
+        const val gridNodeSelector = "gtocore.integration.ae.WirelessMachine.gridNodeSelector"
 
         @RegisterLanguage(cn = "网络节点列表", en = "Grid Node List")
         const val gridNodeList = "gtocore.integration.ae.WirelessMachine.gridNodeList"
@@ -167,16 +167,11 @@ interface WirelessMachine : IGridConnectedMachine {
     // ////////////////////////////////
     // ****** 工具集 ******//
     // //////////////////////////////
-    // 客户端请求同步网络数据
+    // 同步网络数据到客户端
     fun syncDataToClientInServer() {
         if (!this.self().isRemote) {
             println("isRemote :${self().isRemote} Syncing network data for ${self().pos}")
             wirelessMachineRunTime.gridCache.updateInServer(WirelessSavedData.INSTANCE.gridPool)
-        }
-    }
-    fun askSyncDataFromServer() {
-        if (self().isRemote) {
-            wirelessMachineRunTime.updateGridPoolSignal.updateInClient(true)
         }
     }
     fun createWirelessMachinePersisted() = WirelessMachinePersisted(this)
@@ -220,7 +215,7 @@ interface WirelessMachine : IGridConnectedMachine {
     fun getSetupFancyUIProvider(): IFancyUIProvider = object : IFancyUIProvider {
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(AEItems.WIRELESS_RECEIVER.stack())
 
-        override fun getTitle(): Component? = Component.translatable(connectToGrid)
+        override fun getTitle(): Component? = Component.translatable(gridNodeSelector)
 
         override fun createMainPage(p0: FancyMachineUIWidget?) = rootFresh(176, 166) {
             hBox(height = availableHeight, { spacing = 4 }) {
