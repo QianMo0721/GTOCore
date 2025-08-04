@@ -30,7 +30,7 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
             it.setTooltips(
                 ComponentListSupplier {
                     add("此面板可以与存储设备进行交互" translatedTo "This part can interact with storage devices") { aqua() }
-                    add(("支持读取" translatedTo "Supports reading ") + ("所有" translatedTo "all ").gold() + ("类型" translatedTo "types")) { aqua() }
+                    add(("仅支持读取" translatedTo "Only supports reading ") + ("物品和流体" translatedTo "items and fluids ").gold() + ("两种类型" translatedTo "two types")) { aqua() }
                     add(("自动化中，" translatedTo "In automation, ") + ComponentSlang.RecommendedToUse("存储总线" translatedTo "Storage Bus")) { aqua() }
                     add("经过优化，自动化性能卓越" translatedTo "Throughput performance is excellent in automation") { aqua() }
                 },
