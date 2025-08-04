@@ -1,7 +1,6 @@
 package com.gtocore.client.forge;
 
 import com.gtocore.client.KeyBind;
-import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 
@@ -89,7 +88,6 @@ public class DebugScreenInspector {
     @SubscribeEvent
     public static void onKeyDown(ScreenEvent.KeyPressed.Pre event) {
         if (isSFMLoaded) return; // Skip if SFM is loaded, as it handles the hotkey itself
-        if (!GTOConfig.INSTANCE.dev) return; // Only enable in dev mode
         // Handle Ctrl+I hotkey to toggle overlay
         var toggleKey = KeyBind.debugInspectKey;
         var toggleKeyPressed = toggleKey.isActiveAndMatches(InputConstants.Type.KEYSYM.getOrCreate(event.getKeyCode()));
