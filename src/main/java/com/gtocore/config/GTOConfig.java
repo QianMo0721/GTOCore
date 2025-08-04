@@ -180,7 +180,7 @@ public final class GTOConfig {
     public boolean dev;
     @Configurable
     @Configurable.Comment("Gto Ae Log")
-    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "[Debug]AE2 Log", cn = "[调试]AE2日志")
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "[Debug]AE2 And Sync Log", cn = "[调试]AE2和同步组件日志")
     public boolean aeLog = false;
     @Configurable
     @Configurable.Comment("When disabled, the emi favorites in different saves will be independent from each other")

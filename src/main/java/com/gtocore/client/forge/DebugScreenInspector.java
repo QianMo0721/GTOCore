@@ -1,8 +1,8 @@
 package com.gtocore.client.forge;
 
 import com.gtocore.client.KeyBind;
-
 import com.gtocore.config.GTOConfig;
+
 import com.gtolib.GTOCore;
 
 import net.minecraft.ChatFormatting;

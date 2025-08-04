@@ -3,7 +3,6 @@ package com.gtocore.integration.ae
 import com.gtocore.api.gui.ktflexible.InitFancyMachineUIWidget
 
 import net.minecraft.core.Direction
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -15,7 +14,6 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder
-import com.hepdd.gtmthings.utils.TeamUtil
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted
@@ -34,7 +32,6 @@ class MeWirelessConnectMachine(holder: IMachineBlockEntity) :
     }
     val gridHolder = GridNodeHolder(this)
     var isGridOnline: Boolean = false
-    var playerUUID: UUID = UUID.randomUUID()
 
     override fun getFieldHolder() = manager
     override fun isOnline(): Boolean = isGridOnline
@@ -75,16 +72,11 @@ class MeWirelessConnectMachine(holder: IMachineBlockEntity) :
         super.clientTick()
     }
 
-    override fun getUIRequesterUUID(): UUID = TeamUtil.getTeamUUID(playerUUID)
-
-    override fun createUI(entityPlayer: Player): ModularUI {
-        playerUUID = entityPlayer.uuid
-        return (ModularUI(176, 166, this, entityPlayer)).widget(
-            InitFancyMachineUIWidget(
-                this,
-                176,
-                166,
-            ) { if (entityPlayer is ServerPlayer)syncDataToClientInServer() },
-        )
-    }
+    override fun createUI(entityPlayer: Player): ModularUI = (ModularUI(176, 166, this, entityPlayer)).widget(
+        InitFancyMachineUIWidget(
+            this,
+            176,
+            166,
+        ) { if (!isRemote)syncDataToClientInServer() },
+    )
 }

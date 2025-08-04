@@ -47,7 +47,7 @@
   "block.gtocore.leptonic_charge.tooltip": "可由重力之星激活",
   "block.gtocore.naquadria_charge.tooltip": "可由量子之星激活",
   "block.gtocore.quantum_chromodynamic_charge.tooltip": "可由易變之星激活",
-  "config.gtocore.option.aeLog": "[調試]AE2日誌",
+  "config.gtocore.option.aeLog": "[調試]AE2和同步組件日誌",
   "config.gtocore.option.batchProcessingMaxDuration": "批處理模式最大時間",
   "config.gtocore.option.breakBlocksBlackList": "連鎖挖掘黑名單",
   "config.gtocore.option.dev": "開髮模式",

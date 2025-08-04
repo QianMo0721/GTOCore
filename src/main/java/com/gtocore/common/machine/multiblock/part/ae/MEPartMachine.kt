@@ -9,7 +9,6 @@ import net.minecraft.MethodsReturnNonnullByDefault
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.LivingEntity
@@ -33,7 +32,6 @@ import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable
 import com.gregtechceu.gtceu.integration.ae2.machine.trait.GridNodeHolder
 import com.gtolib.api.machine.feature.IMEPartMachine
 import com.gtolib.api.machine.feature.multiblock.IExtendedRecipeCapabilityHolder
-import com.hepdd.gtmthings.utils.TeamUtil
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted
@@ -174,11 +172,7 @@ internal abstract class MEPartMachine(holder: IMachineBlockEntity, io: IO) :
     // ////////////////////////////////
     // ****** 无线连接设置 ******//
     // //////////////////////////////
-    var playerUUID: UUID = UUID.randomUUID()
-    override fun createUI(entityPlayer: Player?): ModularUI? {
-        playerUUID = entityPlayer?.uuid ?: UUID.randomUUID()
-        return (ModularUI(176, 166, this, entityPlayer)).widget(InitFancyMachineUIWidget(this, 176, 166) { if (entityPlayer is ServerPlayer)syncDataToClientInServer() })
-    }
+    override fun createUI(entityPlayer: Player?): ModularUI? = (ModularUI(176, 166, this, entityPlayer)).widget(InitFancyMachineUIWidget(this, 176, 166) { if (!isRemote)syncDataToClientInServer() })
 
     @Persisted
     @DescSynced
@@ -189,5 +183,4 @@ internal abstract class MEPartMachine(holder: IMachineBlockEntity, io: IO) :
         sideTabs.attachSubTab(getSetupFancyUIProvider())
         sideTabs.attachSubTab(getDetailFancyUIProvider())
     }
-    override fun getUIRequesterUUID(): UUID = TeamUtil.getTeamUUID(playerUUID)
 }

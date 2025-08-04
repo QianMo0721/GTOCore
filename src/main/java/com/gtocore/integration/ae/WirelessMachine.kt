@@ -1,12 +1,13 @@
 package com.gtocore.integration.ae
 
 import com.gtocore.api.gui.ktflexible.textBlock
-import com.gtocore.common.network.BooleanSyncField
+import com.gtocore.common.network.UUIDSyncField
 import com.gtocore.common.network.createLogicalSide
 import com.gtocore.common.saved.STATUS
 import com.gtocore.common.saved.WirelessGrid
 import com.gtocore.common.saved.WirelessSavedData
 import com.gtocore.common.saved.WirelessSyncField
+import com.gtocore.config.GTOConfig
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
@@ -23,6 +24,7 @@ import com.gtolib.api.gui.ktflexible.blank
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.field
 import com.gtolib.api.gui.ktflexible.rootFresh
+import com.hepdd.gtmthings.api.capability.IBindable
 import com.hepdd.gtmthings.utils.TeamUtil
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture
 import com.lowdragmc.lowdraglib.gui.texture.ItemStackTexture
@@ -45,17 +47,16 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
         onSyncCallBack = { f, old, new ->
             connectPageFreshRun.run()
             detailsPageFreshRun.run()
-            println("isRemote :${machine.self().isRemote} Fresh,pos:${machine.self().pos}, old:$old, new:$new,oldSize:${old.size}, newSize:${new.size}")
+            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${machine.self().isRemote} Fresh,pos:${machine.self().pos}, old:$old, new:$new,oldSize:${old.size}, newSize:${new.size}")
         },
     )
-    var updateGridPoolSignal = BooleanSyncField(
+    var teamUUID = UUIDSyncField(
         createLogicalSide(machine.self().isRemote),
-        { "machine.getGridInfoInMachine.updateGridPoolSignal-${machine.self().pos}" },
-        value = false,
+        { "machine.getGridInfoInMachine.teamUUID-${machine.self().pos}" },
+        UUID.randomUUID(),
         onSyncCallBack = { f, old, new ->
-            if (new && !machine.self().isRemote) {
-                gridCache.updateInServer(WirelessSavedData.INSTANCE.gridPool)
-            }
+            connectPageFreshRun.run()
+            detailsPageFreshRun.run()
         },
     )
 }
@@ -65,11 +66,20 @@ class WirelessMachinePersisted(var machine: WirelessMachine) :
     var onContentChanged: Runnable? = null
     var gridConnectedName: String = ""
         set(value) {
-            field = value
-            onContentChanged?.run()
-            machine.self().requestSync()
+            if (field != value) {
+                field = value
+                onContentChanged?.run()
+                machine.self().requestSync()
+            }
         }
     var beSet = false // 是否已经设置过网格连接
+        set(value) {
+            if (field != value) {
+                field = value
+                onContentChanged?.run()
+                machine.self().requestSync()
+            }
+        }
 
     override fun serializeNBT(): CompoundTag = CompoundTag().apply {
         putString("gridName", gridConnectedName)
@@ -91,7 +101,9 @@ class WirelessMachinePersisted(var machine: WirelessMachine) :
 }
 
 @Scanned
-interface WirelessMachine : IGridConnectedMachine {
+interface WirelessMachine :
+    IGridConnectedMachine,
+    IBindable {
     @Scanned
     companion object {
         @RegisterLanguage(cn = "网络节点选择", en = "Grid Node Selector")
@@ -116,6 +128,8 @@ interface WirelessMachine : IGridConnectedMachine {
         const val yourWirelessGrid = "gtocore.integration.ae.WirelessMachine.yourWirelessGrid"
     }
 
+    override fun getUUID(): UUID = getGridPermissionUUID()
+
     // ////////////////////////////////
     // ****** 机器必须实现此字段 ******//
     // //////////////////////////////
@@ -137,7 +151,7 @@ interface WirelessMachine : IGridConnectedMachine {
         if (self().isRemote) return
         val nowTick = self().offsetTimer
         self().subscribeServerTick {
-            if (self().offsetTimer > nowTick + 20) {
+            if (self().offsetTimer > nowTick + 20 && self().offsetTimer % 10 == 0L && mainNode.node != null) {
                 if (!wirelessMachineRunTime.isInitialized && !self().isRemote) {
                     if (!wirelessMachinePersisted.beSet) {
                         WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == getGridPermissionUUID() && it.isDefault }?.let {
@@ -155,6 +169,7 @@ interface WirelessMachine : IGridConnectedMachine {
     }
     fun onWirelessMachineUnLoad() {
         wirelessMachineRunTime.gridCache.unregister()
+        wirelessMachineRunTime.teamUUID.unregister()
         if (self().isRemote) return
         unLinkGrid()
     }
@@ -162,6 +177,8 @@ interface WirelessMachine : IGridConnectedMachine {
     }
     fun onWirelessMachinePlaced(player: LivingEntity?, stack: ItemStack?) {
         player?.let { self().ownerUUID = it.uuid }
+        if (!self().isRemote) wirelessMachineRunTime.teamUUID.updateInServer(TeamUtil.getTeamUUID(self().ownerUUID ?: UUID.randomUUID()))
+        self().requestSync()
     }
 
     // ////////////////////////////////
@@ -170,7 +187,7 @@ interface WirelessMachine : IGridConnectedMachine {
     // 同步网络数据到客户端
     fun syncDataToClientInServer() {
         if (!this.self().isRemote) {
-            println("isRemote :${self().isRemote} Syncing network data for ${self().pos}")
+            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${self().isRemote} Syncing network data for ${self().pos}, will send size : ${WirelessSavedData.INSTANCE.gridPool.size}")
             wirelessMachineRunTime.gridCache.updateInServer(WirelessSavedData.INSTANCE.gridPool)
         }
     }
@@ -210,8 +227,7 @@ interface WirelessMachine : IGridConnectedMachine {
         unLinkGrid()
         wirelessMachinePersisted.gridConnectedName = ""
     }
-    fun getGridPermissionUUID(): UUID = TeamUtil.getTeamUUID(self().ownerUUID ?: UUID.randomUUID())
-    fun getUIRequesterUUID(): UUID = TeamUtil.getTeamUUID(self().ownerUUID ?: UUID.randomUUID())
+    private fun getGridPermissionUUID(): UUID = wirelessMachineRunTime.teamUUID.value
     fun getSetupFancyUIProvider(): IFancyUIProvider = object : IFancyUIProvider {
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(AEItems.WIRELESS_RECEIVER.stack())
 
@@ -239,20 +255,20 @@ interface WirelessMachine : IGridConnectedMachine {
                             ) {
                                 WirelessSavedData.createNewGrid(
                                     wirelessMachineRunTime.gridWillAdded,
-                                    getUIRequesterUUID(),
+                                    getGridPermissionUUID(),
                                 )
                             }
                             println("isRemote :${self().isRemote} Ask for sync in 2")
                             syncDataToClientInServer()
                             println("isRemote :${self().isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
-                            println("isRemote :${self().isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.value}")
-                            println("isRemote :${self().isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
+                            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${self().isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.value}")
+                            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${self().isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
                         }
                     }
                     textBlock(
                         maxWidth = availableWidth - 4,
                         textSupplier = {
-                            Component.translatable(globalWirelessGrid, wirelessMachineRunTime.gridCache.value.count { it.owner == getUIRequesterUUID() }, wirelessMachineRunTime.gridCache.value.count())
+                            Component.translatable(globalWirelessGrid, wirelessMachineRunTime.gridCache.value.count { it.owner == getGridPermissionUUID() }, wirelessMachineRunTime.gridCache.value.count())
                         },
                     )
                     textBlock(
@@ -260,7 +276,7 @@ interface WirelessMachine : IGridConnectedMachine {
                         textSupplier = { Component.translatable(yourWirelessGrid) },
                     )
                     vScroll(width = availableWidth, height = 176 - 4 - 20 - 36 - 16, { spacing = 2 }) a@{
-                        wirelessMachineRunTime.gridCache.value.filter { it.owner == getUIRequesterUUID() }
+                        wirelessMachineRunTime.gridCache.value.filter { it.owner == getGridPermissionUUID() }
                             .forEach { grid ->
                                 hBox(height = 14, { spacing = 4 }) {
                                     button(
@@ -276,9 +292,8 @@ interface WirelessMachine : IGridConnectedMachine {
                                     if (!grid.isDefault) {
                                         button(height = 14, text = { "⭐" }, width = 18) {
                                             if (!self().isRemote) {
-                                                WirelessSavedData.setAsDefault(grid.name, getUIRequesterUUID())
+                                                WirelessSavedData.setAsDefault(grid.name, getGridPermissionUUID())
                                             }
-                                            println("isRemote :${self().isRemote} Ask for sync in 3")
                                             syncDataToClientInServer()
                                         }
                                     } else {
@@ -286,18 +301,16 @@ interface WirelessMachine : IGridConnectedMachine {
                                             if (!self().isRemote) {
                                                 WirelessSavedData.cancelAsDefault(
                                                     grid.name,
-                                                    getUIRequesterUUID(),
+                                                    getGridPermissionUUID(),
                                                 )
                                             }
-                                            println("isRemote :${self().isRemote} Ask for sync in 4")
                                             syncDataToClientInServer()
                                         }
                                     }
                                     button(height = 14, transKet = removeGrid, width = 36) {
                                         if (!self().isRemote) {
-                                            WirelessSavedData.removeGrid(grid.name, getUIRequesterUUID())
+                                            WirelessSavedData.removeGrid(grid.name, getGridPermissionUUID())
                                         }
-                                        println("isRemote :${self().isRemote} Ask for sync in 5")
                                         syncDataToClientInServer()
                                     }
                                 }

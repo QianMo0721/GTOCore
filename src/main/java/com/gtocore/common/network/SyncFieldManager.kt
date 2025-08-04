@@ -1,9 +1,14 @@
 package com.gtocore.common.network
 
+import com.gtocore.config.GTOConfig
+
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraftforge.fml.LogicalSide
 import net.minecraftforge.server.ServerLifecycleHooks
 
+import com.gtolib.GTOCore
+
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Supplier
 
@@ -98,6 +103,7 @@ abstract class SyncField<T>(var side: LogicalSide, val uniqueName: Supplier<Stri
     // ****** 服务器修改，客户端更新 ******//
     // //////////////////////////////
     fun updateInServer(newValue: T) {
+        if (GTOConfig.INSTANCE.aeLog) GTOCore.LOGGER.info("Update SyncField $uniqueName in server side, new value: $newValue")
         require(side == LogicalSide.SERVER) { "$errorPrefix This method can only be called in server side" }
         val oldValue = value
         value = newValue
@@ -105,6 +111,7 @@ abstract class SyncField<T>(var side: LogicalSide, val uniqueName: Supplier<Stri
         SyncFieldManager.syncToAllClients(uniqueName.get())
     }
     fun handleFromServer(buffer: FriendlyByteBuf) {
+        if (GTOConfig.INSTANCE.aeLog)GTOCore.LOGGER.info("Handle SyncField $uniqueName from server side")
         require(side == LogicalSide.CLIENT) { "$errorPrefix This method can only be called in client side" }
         val oldValue = value
         value = readFromBuffer(buffer)
@@ -115,6 +122,7 @@ abstract class SyncField<T>(var side: LogicalSide, val uniqueName: Supplier<Stri
     // ****** 客户端修改，服务器更新 ******//
     // //////////////////////////////
     fun updateInClient(newValue: T) {
+        if (GTOConfig.INSTANCE.aeLog)GTOCore.LOGGER.info("Update SyncField $uniqueName in client side, new value: $newValue")
         require(side == LogicalSide.CLIENT) { "$errorPrefix This method can only be called in client side" }
 
         val oldValue = value
@@ -124,6 +132,7 @@ abstract class SyncField<T>(var side: LogicalSide, val uniqueName: Supplier<Stri
         SyncFieldManager.syncToAllServer(uniqueName.get())
     }
     fun handleFromClient(buffer: FriendlyByteBuf) {
+        if (GTOConfig.INSTANCE.aeLog)GTOCore.LOGGER.info("Handle SyncField $uniqueName from client side")
         require(side == LogicalSide.SERVER) { "$errorPrefix This method can only be called in server side" }
         val oldValue = value
         value = readFromBuffer(buffer)
@@ -157,6 +166,14 @@ class BooleanSyncField(side: LogicalSide, uniqueName: Supplier<String>, value: B
     override fun readFromBuffer(buffer: FriendlyByteBuf): Boolean = buffer.readBoolean()
     override fun writeToBuffer(buffer: FriendlyByteBuf): FriendlyByteBuf = let {
         buffer.writeBoolean(value)
+        buffer
+    }
+}
+
+class UUIDSyncField(side: LogicalSide, uniqueName: Supplier<String>, value: UUID, onInitCallBack: (SyncField<UUID>, UUID) -> Unit = { _, _ -> }, onSyncCallBack: (SyncField<UUID>, UUID, UUID) -> Unit = { _, _, _ -> }) : SyncField<UUID>(side, uniqueName, value, onInitCallBack, onSyncCallBack) {
+    override fun readFromBuffer(buffer: FriendlyByteBuf): UUID = buffer.readUUID()
+    override fun writeToBuffer(buffer: FriendlyByteBuf): FriendlyByteBuf = let {
+        buffer.writeUUID(value)
         buffer
     }
 }

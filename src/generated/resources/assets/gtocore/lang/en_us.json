@@ -1429,7 +1429,7 @@
   "block.gtocore.zpm_wireless_output_hatch_64a": "§cZPM 64A WirelessDynamo Hatch",
   "block.gtocore.zpm_wireless_output_hatch_65536a": "§cZPM 65,536A WirelessDynamo Hatch",
   "block.gtocore.zpm_world_data_scanner": "§cElite World Data Scanner III§r",
-  "config.gtocore.option.aeLog": "[Debug]AE2 Log",
+  "config.gtocore.option.aeLog": "[Debug]AE2 And Sync Log",
   "config.gtocore.option.batchProcessingMaxDuration": "Batch Processing Mode Max Duration",
   "config.gtocore.option.breakBlocksBlackList": "Black List Of Chain Blocks",
   "config.gtocore.option.dev": "Dev mode",
