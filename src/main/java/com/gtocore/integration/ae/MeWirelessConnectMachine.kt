@@ -23,14 +23,14 @@ import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder
 
 import java.util.*
 
-class WirelessTester(holder: IMachineBlockEntity) :
+class MeWirelessConnectMachine(holder: IMachineBlockEntity) :
     MetaMachine(holder),
     WirelessMachine,
     IMachineLife,
     IFancyUIMachine {
     companion object {
         @JvmStatic
-        val manager = ManagedFieldHolder(WirelessTester::class.java, MANAGED_FIELD_HOLDER)
+        val manager = ManagedFieldHolder(MeWirelessConnectMachine::class.java, MANAGED_FIELD_HOLDER)
     }
     val gridHolder = GridNodeHolder(this)
     var isGridOnline: Boolean = false

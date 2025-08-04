@@ -5,6 +5,7 @@ import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.client.renderer.machine.ArrayMachineRenderer;
 import com.gtocore.client.renderer.machine.CustomPartRenderer;
 import com.gtocore.common.data.*;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.*;
 import com.gtocore.common.machine.multiblock.electric.adventure.BossSummonerMachine;
 import com.gtocore.common.machine.multiblock.electric.processing.ProcessingArrayMachine;
@@ -927,6 +928,7 @@ public final class MultiBlockG {
             .allRotation()
             .recipeTypes(GTORecipeTypes.DUMMY_RECIPES)
             .block(GTBlocks.STEEL_HULL)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMultiblockCrateMachineTooltips().getArray())
             .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("aaa", "aaa", "aaa")
                     .aisle("aaa", "aca", "aaa")
