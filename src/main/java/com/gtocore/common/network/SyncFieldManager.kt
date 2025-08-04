@@ -177,3 +177,10 @@ class UUIDSyncField(side: LogicalSide, uniqueName: Supplier<String>, value: UUID
         buffer
     }
 }
+class EnumSyncField<T : Enum<T>>(side: LogicalSide, uniqueName: Supplier<String>, value: T, val enumClass: Class<T>, onInitCallBack: (SyncField<T>, T) -> Unit = { _, _ -> }, onSyncCallBack: (SyncField<T>, T, T) -> Unit = { _, _, _ -> }) : SyncField<T>(side, uniqueName, value, onInitCallBack, onSyncCallBack) {
+    override fun readFromBuffer(buffer: FriendlyByteBuf): T = buffer.readEnum(enumClass)
+    override fun writeToBuffer(buffer: FriendlyByteBuf): FriendlyByteBuf = let {
+        buffer.writeEnum(value)
+        buffer
+    }
+}

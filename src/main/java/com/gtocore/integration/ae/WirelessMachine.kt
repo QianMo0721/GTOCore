@@ -1,6 +1,12 @@
 package com.gtocore.integration.ae
 
 import com.gtocore.api.gui.ktflexible.textBlock
+import com.gtocore.common.data.GTOMachines.ME_WIRELESS_CONNECTION_MACHINE
+import com.gtocore.common.data.translation.EnumTranslation.both
+import com.gtocore.common.data.translation.EnumTranslation.other
+import com.gtocore.common.data.translation.EnumTranslation.patternHatch
+import com.gtocore.common.data.translation.EnumTranslation.wirelessConnectionMachine
+import com.gtocore.common.network.EnumSyncField
 import com.gtocore.common.network.UUIDSyncField
 import com.gtocore.common.network.createLogicalSide
 import com.gtocore.common.saved.STATUS
@@ -8,9 +14,12 @@ import com.gtocore.common.saved.WirelessGrid
 import com.gtocore.common.saved.WirelessSavedData
 import com.gtocore.common.saved.WirelessSyncField
 import com.gtocore.config.GTOConfig
+import com.gtocore.utils.ComponentSupplier
 
+import net.minecraft.client.Minecraft
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
+import net.minecraft.server.TickTask
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 
@@ -33,31 +42,77 @@ import com.lowdragmc.lowdraglib.syncdata.IContentChangeAware
 import com.lowdragmc.lowdraglib.syncdata.ITagSerializable
 
 import java.util.UUID
+
+enum class FilterInMachineType(val component: ComponentSupplier) {
+    BOTH(both),
+    PATTERN_HATCH(patternHatch),
+    WIRELESS_CONNECT_MACHINE(wirelessConnectionMachine),
+    OTHER(other),
+}
 class WirelessMachineRunTime(var machine: WirelessMachine) {
     var gridWillAdded: String = ""
     var gridConnected: WirelessGrid? = null // ONLY SERVER
     var connectPageFreshRun: Runnable = Runnable {}
     var detailsPageFreshRun: Runnable = Runnable {}
-    var freshTick = 0L
     var isInitialized = false
+
     var gridCache = WirelessSyncField(
         createLogicalSide(machine.self().isRemote),
         { "machine.getGridInfoInMachine.gridConnectedName-${machine.self().pos}" },
         WirelessSavedData.INSTANCE.gridPool,
         onSyncCallBack = { f, old, new ->
-            connectPageFreshRun.run()
-            detailsPageFreshRun.run()
+            if (f.side.isServer) {
+                machine.self().level?.server?.tell(
+                    TickTask(10) {
+                        connectPageFreshRun.run()
+                        detailsPageFreshRun.run()
+                    },
+                )
+            } else {
+                connectPageFreshRun.run()
+                detailsPageFreshRun.run()
+            }
             if (GTOConfig.INSTANCE.aeLog)println("isRemote :${machine.self().isRemote} Fresh,pos:${machine.self().pos}, old:$old, new:$new,oldSize:${old.size}, newSize:${new.size}")
         },
     )
+
     var teamUUID = UUIDSyncField(
         createLogicalSide(machine.self().isRemote),
         { "machine.getGridInfoInMachine.teamUUID-${machine.self().pos}" },
         UUID.randomUUID(),
         onSyncCallBack = { f, old, new ->
-            connectPageFreshRun.run()
-            detailsPageFreshRun.run()
+            if (f.side.isServer) {
+                machine.self().level?.server?.tell(
+                    TickTask(10) {
+                        connectPageFreshRun.run()
+                        detailsPageFreshRun.run()
+                    },
+                )
+            } else {
+                connectPageFreshRun.run()
+                detailsPageFreshRun.run()
+            }
         },
+    )
+
+    var FilterInMachineTypeSyncField = EnumSyncField(
+        createLogicalSide(machine.self().isRemote),
+        { "machine.getGridInfoInMachine.FilterInMachineTypeSyncField-${machine.self().pos}" },
+        FilterInMachineType.BOTH,
+        onSyncCallBack = { f, old, new ->
+            if (f.side.isServer) {
+                machine.self().level?.server?.tell(
+                    TickTask(10) {
+                        connectPageFreshRun.run()
+                        detailsPageFreshRun.run()
+                    },
+                )
+            } else {
+                connectPageFreshRun.run()
+                detailsPageFreshRun.run()
+            }
+        },
+        enumClass = FilterInMachineType::class.java,
     )
 }
 class WirelessMachinePersisted(var machine: WirelessMachine) :
@@ -84,12 +139,14 @@ class WirelessMachinePersisted(var machine: WirelessMachine) :
     override fun serializeNBT(): CompoundTag = CompoundTag().apply {
         putString("gridName", gridConnectedName)
         putBoolean("beSet", beSet)
+        putUUID("teamUUID", machine.wirelessMachineRunTime.teamUUID.value)
     }
 
     override fun deserializeNBT(nbt: CompoundTag?) {
         nbt?.let {
             gridConnectedName = it.getString("gridName")
             beSet = it.getBoolean("beSet")
+            machine.wirelessMachineRunTime.teamUUID.value = if (it.hasUUID("teamUUID"))it.getUUID("teamUUID") else machine.self().ownerUUID ?: UUID.randomUUID()
         }
     }
 
@@ -151,7 +208,7 @@ interface WirelessMachine :
         if (self().isRemote) return
         val nowTick = self().offsetTimer
         self().subscribeServerTick {
-            if (self().offsetTimer > nowTick + 20 && self().offsetTimer % 10 == 0L && mainNode.node != null) {
+            if (self().offsetTimer > nowTick + 40 && self().offsetTimer % 10 == 0L && mainNode.node != null) {
                 if (!wirelessMachineRunTime.isInitialized && !self().isRemote) {
                     if (!wirelessMachinePersisted.beSet) {
                         WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == getGridPermissionUUID() && it.isDefault }?.let {
@@ -170,6 +227,7 @@ interface WirelessMachine :
     fun onWirelessMachineUnLoad() {
         wirelessMachineRunTime.gridCache.unregister()
         wirelessMachineRunTime.teamUUID.unregister()
+        wirelessMachineRunTime.FilterInMachineTypeSyncField.unregister()
         if (self().isRemote) return
         unLinkGrid()
     }
@@ -234,9 +292,10 @@ interface WirelessMachine :
         override fun getTitle(): Component? = Component.translatable(gridNodeSelector)
 
         override fun createMainPage(p0: FancyMachineUIWidget?) = rootFresh(176, 166) {
+            println(1)
             hBox(height = availableHeight, { spacing = 4 }) {
                 blank()
-                vBox(width = this@rootFresh.availableWidth - 4, { spacing = 4 }) {
+                vBox(width = this@rootFresh.availableWidth - 4, style = { spacing = 4 }) {
                     blank()
                     textBlock(
                         maxWidth = availableWidth - 4,
@@ -248,8 +307,8 @@ interface WirelessMachine :
                             getter = { wirelessMachineRunTime.gridWillAdded },
                             setter = { wirelessMachineRunTime.gridWillAdded = it },
                         )
-                        button(transKet = createGrid, width = this@vBox.availableWidth - 60 - 8) {
-                            if (!self().isRemote &&
+                        button(transKet = createGrid, width = this@vBox.availableWidth - 60 - 8) { ck ->
+                            if (!ck.isRemote &&
                                 wirelessMachineRunTime.gridWillAdded.isNotEmpty() &&
                                 wirelessMachineRunTime.gridCache.value.none { it.name == wirelessMachineRunTime.gridWillAdded }
                             ) {
@@ -258,11 +317,11 @@ interface WirelessMachine :
                                     getGridPermissionUUID(),
                                 )
                             }
-                            println("isRemote :${self().isRemote} Ask for sync in 2")
+                            println("isRemote :${ck.isRemote} Ask for sync in 2")
                             syncDataToClientInServer()
-                            println("isRemote :${self().isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
-                            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${self().isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.value}")
-                            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${self().isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
+                            println("isRemote :${ck.isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
+                            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${ck.isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.value}")
+                            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${ck.isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
                         }
                     }
                     textBlock(
@@ -283,36 +342,37 @@ interface WirelessMachine :
                                         height = 14,
                                         text = { "${if (grid.isDefault) "⭐" else ""}${grid.name}" },
                                         width = this@a.availableWidth - 48 - 8 + 12 - 4 - 18,
-                                    ) {
-                                        if (!self().isRemote) {
-                                            leaveGrid()
-                                            joinGrid(grid.name)
-                                        }
-                                    }
+                                        onClick = {
+                                            if (!it.isRemote) {
+                                                leaveGrid()
+                                                joinGrid(grid.name)
+                                            }
+                                        },
+                                    )
                                     if (!grid.isDefault) {
-                                        button(height = 14, text = { "⭐" }, width = 18) {
-                                            if (!self().isRemote) {
+                                        button(height = 14, text = { "⭐" }, width = 18, onClick = {
+                                            if (!it.isRemote) {
                                                 WirelessSavedData.setAsDefault(grid.name, getGridPermissionUUID())
                                             }
                                             syncDataToClientInServer()
-                                        }
+                                        })
                                     } else {
-                                        button(height = 14, text = { "⚝" }, width = 18) {
-                                            if (!self().isRemote) {
+                                        button(height = 14, text = { "⚝" }, width = 18, onClick = {
+                                            if (!it.isRemote) {
                                                 WirelessSavedData.cancelAsDefault(
                                                     grid.name,
                                                     getGridPermissionUUID(),
                                                 )
                                             }
                                             syncDataToClientInServer()
-                                        }
+                                        })
                                     }
-                                    button(height = 14, transKet = removeGrid, width = 36) {
-                                        if (!self().isRemote) {
+                                    button(height = 14, transKet = removeGrid, width = 36, onClick = {
+                                        if (!it.isRemote) {
                                             WirelessSavedData.removeGrid(grid.name, getGridPermissionUUID())
                                         }
                                         syncDataToClientInServer()
-                                    }
+                                    })
                                 }
                             }
                     }
@@ -326,6 +386,8 @@ interface WirelessMachine :
         override fun getTitle(): Component? = Component.translatable(gridNodeList)
 
         override fun createMainPage(p0: FancyMachineUIWidget?): Widget? = rootFresh(256, 166) {
+            println(2)
+
             hBox(height = availableHeight, { spacing = 4 }) {
                 blank()
                 vBox(width = this@rootFresh.availableWidth - 4, { spacing = 4 }) {
@@ -334,20 +396,47 @@ interface WirelessMachine :
                         maxWidth = availableWidth - 4,
                         textSupplier = { Component.translatable(currentlyConnectedTo, wirelessMachinePersisted.gridConnectedName.ifEmpty { "无" }) },
                     )
-                    vScroll(width = availableWidth, height = 176 - 4 - 10 - 16, { spacing = 2 }) {
-                        wirelessMachineRunTime.gridCache.value.firstOrNull { it.name == wirelessMachinePersisted.gridConnectedName }?.connectionPoolTable
-                            ?.groupBy { it.level }
-                            ?.forEach { level, line ->
-                                textBlock(maxWidth = availableWidth, textSupplier = { Component.literal("- ${level.location().path} (${line.size})") })
-                                line.groupBy { it.owner }
-                                    .forEach { owner, line1 ->
-                                        textBlock(maxWidth = availableWidth, tab = 10, textSupplier = { Component.literal("- $owner") })
-                                        line1.sortedBy { it.descriptionId }
-                                            .forEach {
-                                                textBlock(maxWidth = availableWidth, tab = 20, textSupplier = { Component.literal("- ${Component.translatable(it.descriptionId).string} (${it.pos.x},${it.pos.y},${it.pos.z})") })
-                                            }
-                                    }
+                    // filter 选择器
+                    hScroll(width = availableWidth - 4, height = 20, style = { spacing = 4 }) {
+                        val syncField: EnumSyncField<FilterInMachineType> = wirelessMachineRunTime.FilterInMachineTypeSyncField
+                        syncField.enumClass.enumConstants.forEach { select: FilterInMachineType ->
+                            button(
+                                width = if (self().isRemote) Minecraft.getInstance().font.width(select.component.get().string) + 20 else 20,
+                                height = 16,
+                                text = { select.component.get().string },
+                                onClick = { ck ->
+                                    if (!ck.isRemote) syncField.updateInServer(select)
+                                },
+                            )
+                        }
+                    }
+                    if (self().isRemote) {
+                        vScroll(width = availableWidth, height = 176 - 4 - 10 - 16 - 20, { spacing = 2 }) {
+                            // filter 应用，数据展示。
+                            val objects = wirelessMachineRunTime.gridCache.value.firstOrNull { it.name == wirelessMachinePersisted.gridConnectedName }?.connectionPoolTable
+                            val machineTypeFilter: (WirelessGrid.MachineInfo) -> Boolean = { info: WirelessGrid.MachineInfo ->
+                                when (wirelessMachineRunTime.FilterInMachineTypeSyncField.value) {
+                                    FilterInMachineType.BOTH -> true
+                                    FilterInMachineType.PATTERN_HATCH -> info.descriptionId.contains("pattern")
+                                    FilterInMachineType.WIRELESS_CONNECT_MACHINE -> info.descriptionId == ME_WIRELESS_CONNECTION_MACHINE.descriptionId
+                                    FilterInMachineType.OTHER -> !info.descriptionId.contains("pattern") && info.descriptionId != ME_WIRELESS_CONNECTION_MACHINE.descriptionId
+                                }
                             }
+                            objects
+                                ?.filter(machineTypeFilter)
+                                ?.groupBy { it.level }
+                                ?.forEach { level, line ->
+                                    textBlock(maxWidth = availableWidth, textSupplier = { Component.literal("- ${level.location().path} (${line.size})") })
+                                    line.groupBy { it.owner }
+                                        .forEach { owner, line1 ->
+                                            textBlock(maxWidth = availableWidth, tab = 10, textSupplier = { Component.literal("- $owner") })
+                                            line1.sortedBy { it.descriptionId }
+                                                .forEach {
+                                                    textBlock(maxWidth = availableWidth, tab = 20, textSupplier = { Component.literal("- ${Component.translatable(it.descriptionId).string} (${it.pos.x},${it.pos.y},${it.pos.z})") })
+                                                }
+                                        }
+                                }
+                        }
                     }
                 }
             }

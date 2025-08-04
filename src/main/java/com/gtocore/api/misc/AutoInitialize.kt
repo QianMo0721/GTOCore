@@ -1,6 +1,7 @@
 package com.gtocore.api.misc
 
 import com.gtocore.common.data.translation.ComponentSlang
+import com.gtocore.common.data.translation.EnumTranslation
 import com.gtocore.common.data.translation.GTOItemTooltips
 import com.gtocore.common.data.translation.GTOMachineTranslation
 import com.gtocore.common.data.translation.OrganTranslation
@@ -13,6 +14,7 @@ open class AutoInitialize<T> {
         OrganTranslation.init()
         GTOMachineTranslation.init()
         ComponentSlang.init()
+        EnumTranslation.init()
     }
     open fun init() {}
     init {
