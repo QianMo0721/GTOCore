@@ -381,17 +381,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition CHEMICAL_PLANT = multiblock("chemical_plant", "化工厂", CoilMultiblockMachine.createCoilMachine(false, false))
             .allRotation()
             .recipeTypes(GTORecipeTypes.CHEMICAL)
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("线圈效率加成", "Coil Efficiency Bonus", StyleBuilder::setGold),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
-                                    x -> x.addLines("线圈等级每高出白铜一级", "Each coil tier above Cupronickel", StyleBuilder::setWhite),
-                                    p -> p,
-                                    StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
-                                    x -> x.addLines("能耗与时间减少5%", "Reduces energy consumption and duration by 5%", StyleBuilder::setGreen),
-                                    p -> p,
-                                    StyleBuilder::setOneTab))))
+            .tooltips(GTOMachineTranslation.INSTANCE.getChemicalFactoryTooltips().getArray())
             .combinedRecipeTooltips()
             .parallelizableTooltips()
             .perfectOCTooltips()
@@ -421,6 +411,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition DECAY_HASTENER = multiblock("decay_hastener", "衰变加速器", ElectricMultiblockMachine::new)
             .allRotation()
             .recipeTypes(GTORecipeTypes.DECAY_HASTENER_RECIPES)
+            .tooltips(GTOMachineTranslation.INSTANCE.getDecayAcceleratorTooltips().getArray())
             .parallelizableTooltips()
             .parallelizableOverclock()
             .block(GTOBlocks.HYPER_MECHANICAL_CASING)
@@ -449,6 +440,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition RECYCLER = multiblock("recycler", "回收机", CustomParallelMultiblockMachine.createParallel(m -> 1L << Math.max(0, (2 * (m.getTier() - 4))), true))
             .allRotation()
             .recipeTypes(GTORecipeTypes.RECYCLER_RECIPES)
+            .tooltips(GTOMachineTranslation.INSTANCE.getRecyclingMachineTooltips().getArray())
             .specialParallelizableTooltips()
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(
                     h -> h.addLines("自EV起，每升一级电压，获得的并行x4", "From EV, every voltage tier increase grants x4 parallelism"),
@@ -486,6 +478,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition MASS_FABRICATOR = multiblock("mass_fabricator", "质量发生器", ElectricMultiblockMachine::new)
             .allRotation()
             .recipeTypes(GTORecipeTypes.MASS_FABRICATOR_RECIPES)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMassGeneratorTooltips().getArray())
             .parallelizableTooltips()
             .perfectOCTooltips()
             .parallelizablePerfectOverclock()
@@ -519,6 +512,7 @@ public final class MultiBlockA {
             .allRotation()
             .recipeTypes(GTORecipeTypes.MASS_FABRICATOR_RECIPES)
             .parallelizableTooltips()
+            .tooltips(GTOMachineTranslation.INSTANCE.getMassGeneratorTooltips().getArray())
             .multipleRecipesTooltips()
             .laserTooltips()
             .block(GTBlocks.MACHINE_CASING_UXV)
@@ -555,6 +549,7 @@ public final class MultiBlockA {
             .allRotation()
             .recipeTypes(GTORecipeTypes.PRECISION_ASSEMBLER_RECIPES)
             .recipeTypes(GTRecipeTypes.ASSEMBLER_RECIPES)
+            .tooltips(GTOMachineTranslation.INSTANCE.getPrecisionAssemblerTooltips().getArray())
             .tooltips(NewDataAttributes.RUNTIME_REQUIREMENT.create(
                     c -> c.addLines("外壳等级决定配方等级上限",
                             "The machine casing tier determines the upper limit of recipe tier")))
@@ -624,17 +619,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition LAVA_FURNACE = multiblock("lava_furnace", "熔岩炉", ElectricMultiblockMachine::new)
             .allRotation()
             .recipeTypes(GTORecipeTypes.LAVA_FURNACE_RECIPES)
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("熔岩生成说明", "Lava Generation Details", StyleBuilder::setGold),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
-                                    x -> x.addLines("每提供一个任意类型的圆石或石头", "Each provided piece of any type of cobblestone or stone", StyleBuilder::setWhite),
-                                    p -> p,
-                                    StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(
-                                    x -> x.addLines("可输出1B熔岩", "can output 1B of lava.", StyleBuilder::setGreen),
-                                    p -> p,
-                                    StyleBuilder::setOneTab))))
+            .tooltips(GTOMachineTranslation.INSTANCE.getLavaFurnaceTooltips().getArray())
             .overclock()
             .block(GTBlocks.CASING_BRONZE_BRICKS)
             .pattern(definition -> FactoryBlockPattern.start(definition)
@@ -653,6 +638,7 @@ public final class MultiBlockA {
 
     public static final MultiblockMachineDefinition LARGE_GAS_COLLECTOR = multiblock("large_gas_collector", "大型集气室", CustomParallelMultiblockMachine.createParallel(m -> 100000, true))
             .noneRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getAtmosphereCollectorRoomTooltips().getArray())
             .recipeTypes(GTORecipeTypes.LARGE_GAS_COLLECTOR_RECIPES)
             .overclock()
             .block(GTBlocks.CASING_STEEL_SOLID)
@@ -676,6 +662,7 @@ public final class MultiBlockA {
 
     public static final MultiblockMachineDefinition ENGRAVING_LASER_PLANT = multiblock("engraving_laser_plant", "激光蚀刻工厂", ElectricMultiblockMachine::new)
             .nonYAxisRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getLaserEtchingFactoryTooltips().getArray())
             .recipeTypes(GTORecipeTypes.PRECISION_LASER_ENGRAVER_RECIPES)
             .recipeTypes(GTRecipeTypes.LASER_ENGRAVER_RECIPES)
             .recipeTypes(GTORecipeTypes.LASER_WELDER_RECIPES)

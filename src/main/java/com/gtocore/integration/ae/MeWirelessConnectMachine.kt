@@ -32,6 +32,7 @@ class MeWirelessConnectMachine(holder: IMachineBlockEntity) :
     }
     val gridHolder = GridNodeHolder(this)
     var isGridOnline: Boolean = false
+    var isClientInit = false
 
     override fun getFieldHolder() = manager
     override fun isOnline(): Boolean = isGridOnline

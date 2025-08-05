@@ -9,7 +9,6 @@ import com.gtocore.common.item.misc.OrganItemBase.OrganItem
 import com.gtocore.common.item.misc.OrganItemBase.TierOrganItem
 import com.gtocore.common.item.misc.OrganType
 import com.gtocore.common.item.misc.TierData.Companion.tier_names
-import com.gtocore.utils.toSeconds
 
 import com.gregtechceu.gtceu.api.GTValues
 import com.gregtechceu.gtceu.api.item.ComponentItem
@@ -37,7 +36,7 @@ object GTOOrganItems {
         resourceName = "fairy_wing",
         en = "Fairy Wing",
         cn = "翅膀 妖精之翼",
-        itemFactory = { properties, organType -> OrganItem(properties.durability(4.hours.toSeconds()), organType) },
+        itemFactory = { properties, organType -> OrganItem(properties.durability(4.hours.inWholeSeconds.toInt()), organType) },
         onRegister = attach(
             TooltipBehavior(OrganTranslation.flightInfo2::apply),
         ),
@@ -48,7 +47,7 @@ object GTOOrganItems {
         resourceName = "mana_steel_wing",
         en = "Mana Steel Wing",
         cn = "翅膀 魔力钢之翼",
-        itemFactory = { properties, organType -> OrganItem(properties.durability(15.minutes.toSeconds()), organType) },
+        itemFactory = { properties, organType -> OrganItem(properties.durability(15.minutes.inWholeSeconds.toInt()), organType) },
         onRegister = attach(
             TooltipBehavior(OrganTranslation.flightInfo2::apply),
         ),
@@ -62,7 +61,7 @@ object GTOOrganItems {
         itemFactory = { properties, organType -> OrganItem(properties, organType) },
         onRegister = attach(
             ElectricStats.createElectricItem(
-                GTValues.V[GTValues.EV] * (32.hours.toSeconds()),
+                GTValues.V[GTValues.EV] * (32.hours.inWholeSeconds.toInt()),
                 GTValues.EV,
             ),
         ),

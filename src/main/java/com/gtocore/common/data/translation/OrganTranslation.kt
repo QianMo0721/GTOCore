@@ -21,6 +21,7 @@ object OrganTranslation : AutoInitialize<OrganTranslation>() {
 
     // 器官编辑器
     val organModifierDescriptions = ComponentListSupplier {
+        setTranslationPrefix("organ_modifier_item")
         add("此物品将允许你修改器官" translatedTo "This item will allow you to modify your organ") { green() }
         add(("不同的器官套装将提供" translatedTo "Different organ sets will provide ") + ("不同" translatedTo "different ").gold() + ("的效果" translatedTo "effects")) { green() }
         add("右键以打开修改界面" translatedTo "Right click to open the modification interface") { gray() }

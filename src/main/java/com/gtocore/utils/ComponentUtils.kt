@@ -8,10 +8,13 @@ import net.minecraft.network.chat.MutableComponent
 
 import com.google.common.base.Supplier
 import com.gregtechceu.gtceu.client.util.TooltipHelper
+import com.gtolib.api.annotation.NewDataAttributes
 import com.gtolib.api.annotation.component_builder.TranslationKeyProvider
 import com.gtolib.utils.StringUtils
-
 class ComponentListSupplier(var list: MutableList<ComponentSupplier> = mutableListOf()) : Supplier<List<Component>> {
+    private var translationPrefix: String = ""
+    var line: Int = 0
+
     override fun get(): List<Component> {
         val result = list.map { it.get() }
         return result
@@ -21,10 +24,27 @@ class ComponentListSupplier(var list: MutableList<ComponentSupplier> = mutableLi
     fun add(component: ComponentSupplier, style: ComponentSupplier.() -> ComponentSupplier = { this }) {
         val styledComponent = style(component)
         list.add(styledComponent)
+        line += 1
+    }
+    fun add(other: ComponentListSupplier) {
+        list.addAll(other.list)
     }
 
     fun apply(tooltips: MutableList<Component>) {
         tooltips.addAll(get())
+    }
+
+    // ////////////////////////////////
+    // ****** 翻译前缀 ******//
+    // //////////////////////////////
+    fun setTranslationPrefix(prefix: String) {
+        this.translationPrefix = prefix
+    }
+
+    infix fun String.translatedTo(other: String): ComponentSupplier {
+        val prefix = if (translationPrefix.isNotEmpty()) "${NewDataAttributes.PREFIX}.$translationPrefix.$line" else "${NewDataAttributes.PREFIX}.$line"
+        val translationKey = TranslationKeyProvider.getTranslationKey(this@translatedTo, other, prefix)
+        return Component.translatable(translationKey).toComponentSupplier()
     }
 
     // ////////////////////////////////
@@ -149,23 +169,23 @@ class ComponentSupplier(var component: Component, private val delayed: MutableLi
     // ****** 格式 ******//
     // //////////////////////////////
     fun italic(): ComponentSupplier {
-        operatorComponent { withStyle { it.withItalic(true) } }
+        operatorComponent { withStyle(ChatFormatting.ITALIC) }
         return this
     }
     fun bold(): ComponentSupplier {
-        operatorComponent { withStyle { it.withBold(true) } }
+        operatorComponent { withStyle(ChatFormatting.BOLD) }
         return this
     }
     fun underline(): ComponentSupplier {
-        operatorComponent { withStyle { it.withUnderlined(true) } }
+        operatorComponent { withStyle(ChatFormatting.UNDERLINE) }
         return this
     }
     fun strikethrough(): ComponentSupplier {
-        operatorComponent { withStyle { it.withStrikethrough(true) } }
+        operatorComponent { withStyle(ChatFormatting.STRIKETHROUGH) }
         return this
     }
     fun obfuscated(): ComponentSupplier {
-        operatorComponent { withStyle { it.withObfuscated(true) } }
+        operatorComponent { withStyle(ChatFormatting.OBFUSCATED) }
         return this
     }
     fun reset(): ComponentSupplier {

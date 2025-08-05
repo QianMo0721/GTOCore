@@ -14,6 +14,7 @@ object ComponentSlang : AutoInitialize<ComponentSlang>() {
     val Bar = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}- ".toLiteralSupplier().gold() }.initialize()
     val Tab = { tab: Int -> "  ".repeat(tab).toLiteralSupplier() }.initialize()
     val Star = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}⭐ ".toLiteralSupplier().gold() }.initialize()
+    val Warning = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}⚠️ ".toLiteralSupplier().red().bold() }.initialize()
     val OutTopic = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}# ".toLiteralSupplier().gray() }.initialize()
 
     // ****** 单位 ****** //
@@ -31,6 +32,7 @@ object ComponentSlang : AutoInitialize<ComponentSlang>() {
 
     // ****** 常用，带一级缩进，应放最底下 ****** //
     val BewareOfBurns = Star(1) + ("小心烫伤" translatedTo "Beware of burns").red().bold().initialize()
+    val CoilEfficiencyBonus = { other: ComponentSupplier -> Star(1) + ("线圈效率加成: " translatedTo "Coil Efficiency Bonus: ").green().initialize() + other.gold() }.initialize()
 
     // ****** 其他 ****** //
     val GTOCoreNormal = ("GTOCore" translatedTo "GTOCore").gold().initialize()

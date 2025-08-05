@@ -20,6 +20,7 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
         listOf(AEParts.STORAGE_BUS.asItem()).forEach {
             it.setTooltips(
                 ComponentListSupplier {
+                    setTranslationPrefix("storage_bus")
                     add("此面板可以与存储设备进行交互" translatedTo "This part can interact with storage devices") { aqua() }
                     add(("经过优化，吞吐量性能卓越" translatedTo "Throughput performance is excellent")) { aqua() }
                     add(("仅支持读取" translatedTo "Only supports reading ") + ("物品和流体" translatedTo "items and fluids ").gold() + ("两种类型" translatedTo "two types")) { aqua() }
@@ -29,6 +30,7 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
         listOf(EPPItemAndBlock.TAG_STORAGE_BUS.asItem(), EPPItemAndBlock.MOD_STORAGE_BUS.asItem()).forEach {
             it.setTooltips(
                 ComponentListSupplier {
+                    setTranslationPrefix("pattern_modifier")
                     add("此面板可以与存储设备进行交互" translatedTo "This part can interact with storage devices") { aqua() }
                     add(("仅支持读取" translatedTo "Only supports reading ") + ("物品和流体" translatedTo "items and fluids ").gold() + ("两种类型" translatedTo "two types")) { aqua() }
                     add(("自动化中，" translatedTo "In automation, ") + ComponentSlang.RecommendedToUse("存储总线" translatedTo "Storage Bus")) { aqua() }
@@ -46,6 +48,7 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
         listOf(AEItems.ITEM_CELL_256K.asItem(), AEItems.FLUID_CELL_256K.asItem()).forEach {
             it.setTooltips(
                 ComponentListSupplier {
+                    setTranslationPrefix("me_storage_cell")
                     add("你走到了单个存储元件的尽头" translatedTo "You've reached the end of a single storage cell") { aqua() }
                     add(ComponentSlang.RecommendedToUse("ME存储器 (多方块结构)" translatedTo "ME Storage (MultiBlock)")) { aqua() }
                     add("他甚至可以不限类型地最高无限存储" translatedTo "It can even store unlimited amounts of items and fluids without type limit") { aqua() }

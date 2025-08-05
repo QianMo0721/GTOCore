@@ -2,5 +2,4 @@ package com.gtocore.utils
 
 import kotlin.time.Duration
 
-fun Duration.toTicks(): Int = (this.inWholeSeconds * 20).toInt()
-fun Duration.toSeconds(): Int = (this.inWholeSeconds).toInt()
+fun Duration.toTicks(): Int = (this.inWholeMilliseconds.toDouble() / 1000 * 20).toInt()

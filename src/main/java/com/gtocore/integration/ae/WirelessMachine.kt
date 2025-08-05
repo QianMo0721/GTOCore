@@ -1,6 +1,9 @@
 package com.gtocore.integration.ae
 
 import com.gtocore.api.gui.ktflexible.textBlock
+import com.gtocore.client.forge.GTORenderData
+import com.gtocore.client.forge.GTORenderManager
+import com.gtocore.client.forge.GTORenderType
 import com.gtocore.common.data.GTOMachines.ME_WIRELESS_CONNECTION_MACHINE
 import com.gtocore.common.data.translation.EnumTranslation.both
 import com.gtocore.common.data.translation.EnumTranslation.other
@@ -15,6 +18,7 @@ import com.gtocore.common.saved.WirelessSavedData
 import com.gtocore.common.saved.WirelessSyncField
 import com.gtocore.config.GTOConfig
 import com.gtocore.utils.ComponentSupplier
+import com.gtocore.utils.toTicks
 
 import net.minecraft.client.Minecraft
 import net.minecraft.nbt.CompoundTag
@@ -42,6 +46,8 @@ import com.lowdragmc.lowdraglib.syncdata.IContentChangeAware
 import com.lowdragmc.lowdraglib.syncdata.ITagSerializable
 
 import java.util.UUID
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 enum class FilterInMachineType(val component: ComponentSupplier) {
     BOTH(both),
@@ -58,7 +64,7 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
 
     var gridCache = WirelessSyncField(
         createLogicalSide(machine.self().isRemote),
-        { "machine.getGridInfoInMachine.gridConnectedName-${machine.self().pos}" },
+        { "machine.getGridInfoInMachine.gridConnectedName-${machine.self().holder.currentPos}" },
         WirelessSavedData.INSTANCE.gridPool,
         onSyncCallBack = { f, old, new ->
             if (f.side.isServer) {
@@ -72,13 +78,13 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
                 connectPageFreshRun.run()
                 detailsPageFreshRun.run()
             }
-            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${machine.self().isRemote} Fresh,pos:${machine.self().pos}, old:$old, new:$new,oldSize:${old.size}, newSize:${new.size}")
+            if (GTOConfig.INSTANCE.aeLog)println("isRemote :${machine.self().isRemote} Fresh,pos:${machine.self().holder.currentPos}, old:$old, new:$new,oldSize:${old.size}, newSize:${new.size}")
         },
     )
 
     var teamUUID = UUIDSyncField(
         createLogicalSide(machine.self().isRemote),
-        { "machine.getGridInfoInMachine.teamUUID-${machine.self().pos}" },
+        { "machine.getGridInfoInMachine.teamUUID-${machine.self().holder.currentPos}" },
         UUID.randomUUID(),
         onSyncCallBack = { f, old, new ->
             if (f.side.isServer) {
@@ -97,7 +103,7 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
 
     var FilterInMachineTypeSyncField = EnumSyncField(
         createLogicalSide(machine.self().isRemote),
-        { "machine.getGridInfoInMachine.FilterInMachineTypeSyncField-${machine.self().pos}" },
+        { "machine.getGridInfoInMachine.FilterInMachineTypeSyncField-${machine.self().holder.currentPos}" },
         FilterInMachineType.BOTH,
         onSyncCallBack = { f, old, new ->
             if (f.side.isServer) {
@@ -183,6 +189,9 @@ interface WirelessMachine :
 
         @RegisterLanguage(cn = "你的无线网络 : ", en = "Your wireless grids: ")
         const val yourWirelessGrid = "gtocore.integration.ae.WirelessMachine.yourWirelessGrid"
+
+        @RegisterLanguage(cn = "查找机器，机器将会高亮", en = "Find Machine, machine will be highlighted")
+        const val findMachine = "gtocore.integration.ae.WirelessMachine.findMachine"
     }
 
     override fun getUUID(): UUID = getGridPermissionUUID()
@@ -412,6 +421,7 @@ interface WirelessMachine :
                     }
                     if (self().isRemote) {
                         vScroll(width = availableWidth, height = 176 - 4 - 10 - 16 - 20, { spacing = 2 }) {
+                            val availableWidth1 = availableWidth
                             // filter 应用，数据展示。
                             val objects = wirelessMachineRunTime.gridCache.value.firstOrNull { it.name == wirelessMachinePersisted.gridConnectedName }?.connectionPoolTable
                             val machineTypeFilter: (WirelessGrid.MachineInfo) -> Boolean = { info: WirelessGrid.MachineInfo ->
@@ -426,13 +436,23 @@ interface WirelessMachine :
                                 ?.filter(machineTypeFilter)
                                 ?.groupBy { it.level }
                                 ?.forEach { level, line ->
-                                    textBlock(maxWidth = availableWidth, textSupplier = { Component.literal("- ${level.location().path} (${line.size})") })
+                                    textBlock(maxWidth = availableWidth1, textSupplier = { Component.literal("- ${level.location().path} (${line.size})") })
                                     line.groupBy { it.owner }
                                         .forEach { owner, line1 ->
-                                            textBlock(maxWidth = availableWidth, tab = 10, textSupplier = { Component.literal("- $owner") })
+                                            textBlock(maxWidth = availableWidth1, tab = 10, textSupplier = { Component.literal("- $owner") })
                                             line1.sortedBy { it.descriptionId }
                                                 .forEach {
-                                                    textBlock(maxWidth = availableWidth, tab = 20, textSupplier = { Component.literal("- ${Component.translatable(it.descriptionId).string} (${it.pos.x},${it.pos.y},${it.pos.z})") })
+                                                    textBlock(maxWidth = availableWidth1, tab = 20, textSupplier = { Component.literal("- ${Component.translatable(it.descriptionId).string} (${it.pos.x},${it.pos.y},${it.pos.z})") })
+                                                    hBox(height = 99) {
+                                                        blank(width = 20)
+                                                        button(width = availableWidth1 - 20 - 4, height = 14, transKet = findMachine) { ck ->
+                                                            if (ck.isRemote) {
+                                                                GTORenderManager.tasks.push(
+                                                                    GTORenderType.BLOCK_LINE(GTORenderData.BLOCK_LINE_DATA(it.pos, self().holder.level().dimension(), 1.minutes.toTicks(), 1.seconds.toTicks())),
+                                                                )
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                         }
                                 }
