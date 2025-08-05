@@ -9,6 +9,7 @@ import com.gtocore.data.recipe.builder.ars.MeteoriteRegistryHelper;
 import com.gtolib.api.data.chemical.GTOChemicalHelper;
 import com.gtolib.utils.RegistriesUtils;
 
+import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
@@ -160,7 +161,7 @@ public final class MeteoriteRecipe {
                 new Block[] {
                         Blocks.STONE, Blocks.DEEPSLATE, Blocks.ANDESITE, Blocks.DIORITE, Blocks.GRANITE,
                         Blocks.TUFF, Blocks.COBBLESTONE, Blocks.BLACKSTONE, Blocks.BASALT, Blocks.CALCITE,
-                        Blocks.MAGMA_BLOCK, Blocks.IRON_ORE, Blocks.GOLD_ORE },
+                        Blocks.MAGMA_BLOCK, ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Iron), ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Gold) },
                 new int[] {
                         200, 180, 150, 150, 150,
                         120, 100, 80, 60, 40,
@@ -216,7 +217,7 @@ public final class MeteoriteRecipe {
                 new Block[] {
                         Blocks.NETHERRACK, Blocks.BLACKSTONE, Blocks.BASALT, Blocks.MAGMA_BLOCK,
                         Blocks.SOUL_SAND, Blocks.SOUL_SOIL, Blocks.GLOWSTONE, Blocks.SHROOMLIGHT,
-                        Blocks.NETHER_QUARTZ_ORE, Blocks.NETHER_GOLD_ORE, Blocks.GILDED_BLACKSTONE,
+                        ChemicalHelper.getBlock(TagPrefix.oreNetherrack, GTMaterials.NetherQuartz), ChemicalHelper.getBlock(TagPrefix.oreNetherrack, GTMaterials.Gold), Blocks.GILDED_BLACKSTONE,
                         Blocks.CRACKED_NETHER_BRICKS, Blocks.CHISELED_NETHER_BRICKS, Blocks.RED_NETHER_BRICKS
                 },
                 new int[] {
@@ -262,7 +263,7 @@ public final class MeteoriteRecipe {
                         Blocks.RED_TERRACOTTA, Blocks.ORANGE_TERRACOTTA, Blocks.YELLOW_TERRACOTTA,
                         Blocks.WHITE_TERRACOTTA, Blocks.BROWN_TERRACOTTA,
                         Blocks.TERRACOTTA, Blocks.RED_SAND, Blocks.RED_SANDSTONE,
-                        Blocks.CACTUS, Blocks.DEAD_BUSH, Blocks.GOLD_ORE,
+                        Blocks.CACTUS, Blocks.DEAD_BUSH, ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Gold),
                         Blocks.RAIL, Blocks.CHISELED_SANDSTONE
                 },
                 new int[] {
@@ -275,10 +276,10 @@ public final class MeteoriteRecipe {
         MeteoriteRegistryHelper.registerMeteoriteType(
                 Items.COAL, 20, 0, ItemsRegistry.SOURCE_GEM.get().asItem(),
                 new Block[] {
-                        Blocks.COAL_ORE, Blocks.DEEPSLATE_COAL_ORE, Blocks.COAL_BLOCK,
+                        ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Coal), ChemicalHelper.getBlock(TagPrefix.oreDeepslate, GTMaterials.Coal), Blocks.COAL_BLOCK,
                         Blocks.STONE, Blocks.DEEPSLATE, Blocks.TUFF,
                         Blocks.ANDESITE, Blocks.GRAVEL,
-                        Blocks.MOSSY_COBBLESTONE, Blocks.IRON_ORE
+                        Blocks.MOSSY_COBBLESTONE, ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Iron)
                 },
                 new int[] {
                         30, 25, 5,
@@ -290,11 +291,11 @@ public final class MeteoriteRecipe {
         MeteoriteRegistryHelper.registerMeteoriteType(
                 Items.IRON_INGOT, 25, 0, ItemsRegistry.SOURCE_GEM.get().asItem(),
                 new Block[] {
-                        Blocks.IRON_ORE, Blocks.DEEPSLATE_IRON_ORE, Blocks.RAW_IRON_BLOCK,
+                        ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Iron), ChemicalHelper.getBlock(TagPrefix.oreDeepslate, GTMaterials.Iron), Blocks.RAW_IRON_BLOCK,
                         Blocks.IRON_BLOCK,
                         Blocks.STONE, Blocks.DEEPSLATE, Blocks.TUFF,
                         Blocks.DIORITE, Blocks.GRANITE,
-                        Blocks.COPPER_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE
+                        ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Copper), ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Lapis), ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Emerald)
                 },
                 new int[] {
                         30, 25, 8, 5,
@@ -306,7 +307,7 @@ public final class MeteoriteRecipe {
         MeteoriteRegistryHelper.registerMeteoriteType(
                 Items.COPPER_INGOT, 20, 0, ItemsRegistry.SOURCE_GEM.get().asItem(),
                 new Block[] {
-                        Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE,
+                        ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Copper), ChemicalHelper.getBlock(TagPrefix.oreDeepslate, GTMaterials.Copper),
                         Blocks.RAW_COPPER_BLOCK, Blocks.OXIDIZED_COPPER,
                         Blocks.DRIPSTONE_BLOCK, Blocks.POINTED_DRIPSTONE,
                         Blocks.CALCITE, Blocks.TUFF,
@@ -322,11 +323,11 @@ public final class MeteoriteRecipe {
         MeteoriteRegistryHelper.registerMeteoriteType(
                 Items.GOLD_INGOT, 30, 0, ItemsRegistry.SOURCE_GEM.get().asItem(),
                 new Block[] {
-                        Blocks.GOLD_ORE, Blocks.DEEPSLATE_GOLD_ORE,
+                        ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Gold), ChemicalHelper.getBlock(TagPrefix.oreDeepslate, GTMaterials.Gold),
                         Blocks.RAW_GOLD_BLOCK, Blocks.GILDED_BLACKSTONE,
                         Blocks.NETHERRACK, Blocks.BLACKSTONE,
                         Blocks.BASALT, Blocks.MAGMA_BLOCK,
-                        Blocks.NETHER_GOLD_ORE, Blocks.ANCIENT_DEBRIS
+                        ChemicalHelper.getBlock(TagPrefix.oreNetherrack, GTMaterials.Gold), Blocks.ANCIENT_DEBRIS
                 },
                 new int[] {
                         30, 20, 8, 5,
@@ -338,7 +339,7 @@ public final class MeteoriteRecipe {
         MeteoriteRegistryHelper.registerMeteoriteType(
                 Items.DIAMOND, 50, 0, ItemsRegistry.SOURCE_GEM.get().asItem(),
                 new Block[] {
-                        Blocks.DIAMOND_ORE, Blocks.DEEPSLATE_DIAMOND_ORE,
+                        ChemicalHelper.getBlock(TagPrefix.ore, GTMaterials.Diamond), ChemicalHelper.getBlock(TagPrefix.oreDeepslate, GTMaterials.Diamond),
                         Blocks.DIAMOND_BLOCK,
                         Blocks.DEEPSLATE, Blocks.TUFF, Blocks.SCULK,
                         Blocks.OBSIDIAN, Blocks.BUDDING_AMETHYST

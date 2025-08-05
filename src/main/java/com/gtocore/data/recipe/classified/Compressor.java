@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import committee.nova.mods.avaritia.init.registry.ModBlocks;
@@ -84,6 +85,13 @@ final class Compressor {
                 .outputItems(TagPrefix.plateDense, GTMaterials.Steel)
                 .EUt(30)
                 .duration(800)
+                .save();
+
+        COMPRESSOR_RECIPES.builder("honey_block")
+                .inputItems(Items.HONEY_BOTTLE, 4)
+                .outputItems(Items.HONEY_BLOCK)
+                .EUt(30)
+                .duration(100)
                 .save();
     }
 }

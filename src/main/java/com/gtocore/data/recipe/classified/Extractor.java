@@ -109,5 +109,13 @@ final class Extractor {
                 .EUt(30)
                 .duration(100)
                 .save();
+
+        EXTRACTOR_RECIPES.recipeBuilder("honey")
+                .inputItems(Items.HONEY_BOTTLE)
+                .outputItems(Items.GLASS_BOTTLE)
+                .outputFluids(GTOMaterials.Honey.getFluid(250))
+                .EUt(30)
+                .duration(20)
+                .save();
     }
 }
