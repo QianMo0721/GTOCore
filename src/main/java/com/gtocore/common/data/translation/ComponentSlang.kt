@@ -27,6 +27,7 @@ object ComponentSlang : AutoInitialize<ComponentSlang>() {
 
     // ****** 常用话术 ****** //
     val RecommendedToUse = { other: ComponentSupplier -> (("推荐使用" translatedTo "Recommended to use ") + other.gold()).aqua() }.initialize()
+    val RecommendedUseAs = { other: ComponentSupplier -> (("推荐用于" translatedTo "Recommended use it to ") + other.gold()).aqua() }.initialize()
 
     // ****** 常用，带一级缩进，应放最底下 ****** //
     val BewareOfBurns = Star(1) + ("小心烫伤" translatedTo "Beware of burns").red().bold().initialize()

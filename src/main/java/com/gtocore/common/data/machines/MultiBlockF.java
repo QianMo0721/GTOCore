@@ -4,6 +4,7 @@ import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.common.data.GTORecipeTypes;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.processing.CompoundExtremeCoolingMachine;
 
 import com.gtolib.GTOCore;
@@ -117,6 +118,7 @@ public final class MultiBlockF {
 
     public static final MultiblockMachineDefinition COMPOUND_DISTILLATION_FRACTIONATOR = multiblock("compound_distillation_fractionator", "复合式蒸馏分馏塔", CrossRecipeMultiblockMachine::createHatchParallel)
             .nonYAxisRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getCompoundDistillationTowerTooltips().getArray())
             .parallelizableTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()

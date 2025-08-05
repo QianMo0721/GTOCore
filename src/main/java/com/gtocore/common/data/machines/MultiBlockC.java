@@ -4,6 +4,7 @@ import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.client.renderer.machine.PrimitiveDistillationRenderer;
 import com.gtocore.common.data.*;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.EnergyInjectorMachine;
 import com.gtocore.common.machine.multiblock.electric.bioengineering.BiochemicalReactionRoomMachine;
 import com.gtocore.common.machine.multiblock.electric.bioengineering.BiologicalExtractionMachine;
@@ -956,7 +957,7 @@ public final class MultiBlockC {
 
     public static final MultiblockMachineDefinition ENERGY_INJECTOR = multiblock("energy_injector", "能量注入仪", EnergyInjectorMachine::new)
             .nonYAxisRotation()
-            .tooltipsText("可为物品充电，还可消耗电力修复物品耐久", "Can to charge items, Can consume electricity to repair item durability.")
+            .tooltips(GTOMachineTranslation.INSTANCE.getEnergyInjectorTooltips().getArray())
             .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
             .laserTooltips()
             .block(GCYMBlocks.CASING_NONCONDUCTING)

@@ -5,6 +5,7 @@ import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.client.renderer.machine.*;
 import com.gtocore.common.block.FusionCasings;
 import com.gtocore.common.data.*;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.*;
 import com.gtocore.common.machine.multiblock.electric.adventure.SlaughterhouseMachine;
 import com.gtocore.common.machine.multiblock.electric.assembly.AdvancedAssemblyLineMachine;
@@ -828,18 +829,7 @@ public final class MultiBlockD {
     public static final MultiblockMachineDefinition NANO_FORGE = multiblock("nano_forge", "纳米锻炉", NanoForgeMachine::new)
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.NANO_FORGE_RECIPES)
-            .tooltips(ComponentBuilder.create().addStoryLine("""
-                    GTO寰宇格雷科技有限公司的顶尖科学家们研发出了纳米锻炉，
-                    这台神秘的机器内部结构极其复杂，连资深工程师都难以理解。
-                    董事长称其为"黑盒技术"，只需投入纳米蜂群即可运作，
-                    员工们惊叹于其强大的并行处理能力和未知的工作原理。
-                    """,
-                    """
-                            Top scientists at GTO developed the mysterious Nano Forge,
-                            a machine so complex that even senior engineers cannot understand it.
-                            The CEO calls it "black box technology" that only requires nano swarms,
-                            while employees marvel at its parallel processing and unknown principles.
-                            """).build())
+            .tooltips(GTOMachineTranslation.INSTANCE.getNanoswarmCircuitAssemblyFactoryTooltips().getArray())
             .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
                     h -> h.addLines("运行条件", "Operating Conditions", StyleBuilder::setGold),
                     c -> c.addLines(
@@ -1422,6 +1412,7 @@ public final class MultiBlockD {
 
     public static final MultiblockMachineDefinition INCUBATOR = multiblock("incubator", "培养缸", IncubatorMachine::new)
             .nonYAxisRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getCulturingTankTooltips().getArray())
             .recipeTypes(GTORecipeTypes.INCUBATOR_RECIPES)
             .overclock()
             .block(GTBlocks.PLASTCRETE)
@@ -1446,6 +1437,7 @@ public final class MultiBlockD {
 
     public static final MultiblockMachineDefinition LARGE_INCUBATOR = multiblock("large_incubator", "大型培养缸", IncubatorMachine::new)
             .nonYAxisRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getLargeCulturingTankTooltips().getArray())
             .recipeTypes(GTORecipeTypes.INCUBATOR_RECIPES)
             .parallelizableTooltips()
             .parallelizableOverclock()

@@ -8,9 +8,11 @@ import com.gtocore.client.renderer.machine.ArrayMachineRenderer;
 import com.gtocore.common.data.*;
 import com.gtocore.common.data.machines.structure.AnnihilateGeneratorA;
 import com.gtocore.common.data.machines.structure.AnnihilateGeneratorB;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.space.DysonSphereLaunchSiloMachine;
 import com.gtocore.common.machine.multiblock.electric.space.DysonSphereReceivingStationMcahine;
 import com.gtocore.common.machine.multiblock.generator.*;
+import com.gtocore.utils.ComponentListSupplier;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
@@ -56,8 +58,15 @@ public final class GeneratorMultiblock {
     public static final MultiblockMachineDefinition PHOTOVOLTAIC_POWER_STATION_VIBRANT = registerPhotovoltaicPowerStation("vibrant", "振动", 16, GTBlocks.CASING_TUNGSTENSTEEL_ROBUST, GTOBlocks.VIBRANT_PHOTOVOLTAIC_BLOCK, GTCEu.id("block/casings/solid/machine_casing_robust_tungstensteel"));
 
     private static MultiblockMachineDefinition registerPhotovoltaicPowerStation(String name, String cn, int basicRate, Supplier<? extends Block> casing, BlockEntry<?> photovoltaicBlock, ResourceLocation texture) {
+        ComponentListSupplier tooltips;
+        if (basicRate == 1) tooltips = GTOMachineTranslation.INSTANCE.getPhotovoltaicPlant11Tooltips();
+        else if (basicRate == 4) tooltips = GTOMachineTranslation.INSTANCE.getPhotovoltaicPlant12Tooltips();
+        else if (basicRate == 16) tooltips = GTOMachineTranslation.INSTANCE.getPhotovoltaicPlant13Tooltips();
+        else tooltips = GTOMachineTranslation.INSTANCE.getPhotovoltaicPlant11Tooltips();
+
         return multiblock(name + "_photovoltaic_power_station", cn + "光伏电站", holder -> new PhotovoltaicPowerStationMachine(holder, basicRate))
                 .nonYAxisRotation()
+                .tooltips(tooltips.getArray())
                 .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
                 .generator()
                 .tooltipsText("根据维度和天气输出EU或魔力", "Output EU or Mana based on dimensions and weather")

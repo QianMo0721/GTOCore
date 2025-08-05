@@ -3,6 +3,7 @@ package com.gtocore.common.data.machines;
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.common.data.*;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.FishingGroundMachine;
 import com.gtocore.common.machine.multiblock.electric.StellarForgeMachine;
 import com.gtocore.common.machine.multiblock.electric.assembly.PrecisionAssemblerMachine;
@@ -587,6 +588,7 @@ public final class MultiBlockA {
 
     public static final MultiblockMachineDefinition FISHING_GROUND = multiblock("fishing_ground", "渔场", FishingGroundMachine::new)
             .nonYAxisRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getFishingFarmTooltips().getArray())
             .recipeTypes(GTORecipeTypes.FISHING_GROUND_RECIPES)
             .parallelizableTooltips()
             .parallelizableOverclock()
@@ -1523,6 +1525,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition LARGE_PYROLYSE_OVEN = multiblock("large_pyrolyse_oven", "大型热解炉", CoilMultiblockMachine.createCoilMachine(false, false))
             .nonYAxisRotation()
             .recipeTypes(GTRecipeTypes.PYROLYSE_RECIPES)
+            .tooltips(GTOMachineTranslation.INSTANCE.getLargePyrolysisOvenTooltips().getArray())
             .parallelizableTooltips()
             .recipeModifiers(RecipeModifierFunction.HATCH_PARALLEL, RecipeModifierFunction::pyrolyseOvenOverclock)
             .block(GTBlocks.CASING_STAINLESS_CLEAN)
