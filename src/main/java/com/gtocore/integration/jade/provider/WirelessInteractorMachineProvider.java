@@ -29,8 +29,8 @@ public final class WirelessInteractorMachineProvider extends CapabilityBlockProv
 
     @Nullable
     @Override
-    protected MetaMachine getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        MetaMachine machine = MetaMachine.getMachine(level, pos);
+    protected MetaMachine getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        MetaMachine machine = MetaMachine.getMachine(blockEntity);
         if (machine instanceof IManaMachine || machine instanceof IIWirelessInteractor<?> || machine instanceof IAirScrubberInteractor) {
             return machine;
         }

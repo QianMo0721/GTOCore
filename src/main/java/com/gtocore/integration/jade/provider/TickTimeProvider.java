@@ -26,8 +26,8 @@ public class TickTimeProvider extends CapabilityBlockProvider<MetaMachine> {
 
     @Nullable
     @Override
-    protected MetaMachine getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        var machine = MetaMachine.getMachine(level, pos);
+    protected MetaMachine getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        var machine = MetaMachine.getMachine(blockEntity);
         if (machine != null) {
             machine.observe();
             return machine;

@@ -2,6 +2,8 @@ package com.gtocore.client.renderer.item;
 
 import com.gtocore.common.item.OrderItem;
 
+import com.gtolib.utils.ClientUtil;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
@@ -10,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import com.hepdd.gtmthings.client.ClientUtil;
 import com.lowdragmc.lowdraglib.client.renderer.IRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 

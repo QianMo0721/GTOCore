@@ -26,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,10 +36,13 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import com.hepdd.gtmthings.common.block.machine.electric.WirelessEnergyMonitor;
+import com.hepdd.gtmthings.data.CustomItems;
 import com.lowdragmc.lowdraglib.client.utils.RenderBufferUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+
+import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
 public final class ForgeClientEvent {
@@ -123,27 +127,11 @@ public final class ForgeClientEvent {
             if (level == null || player == null) return;
             PoseStack poseStack = event.getPoseStack();
             Camera camera = event.getCamera();
-            ItemStack held = player.getMainHandItem();
             BlockPos[] poses;
             if (highlightingTime > 0) {
                 highlightSphere(camera, poseStack, highlightingPos, highlightingRadius);
             }
-            if (GTCEu.isDev() && StructureWriteBehavior.isItem(held)) {
-                poses = StructureWriteBehavior.getPos(held);
-                if (poses != null) {
-                    highlightBlock(camera, poseStack, poses);
-                }
-            } else if (StructureDetectBehavior.isItem(held)) {
-                poses = StructureDetectBehavior.getPos(held);
-                if (poses != null && poses.length >= 1) {
-                    if (poses[0] != null) {
-                        highlightBlock(camera, poseStack, poses[0], poses[0]);
-                    }
-                    if (poses.length == 2 && poses[1] != null) {
-                        highlightBlock(camera, poseStack, poses[1], poses[1]);
-                    }
-                }
-            } else if (WirelessEnergyMonitor.p > 0) {
+            if (WirelessEnergyMonitor.p > 0) {
                 if (GTValues.CLIENT_TIME % 20L == 0L) {
                     --WirelessEnergyMonitor.p;
                 }
@@ -152,6 +140,30 @@ public final class ForgeClientEvent {
                     return;
                 }
                 highlightBlock(camera, poseStack, pose, pose);
+            }
+            ItemStack itemStack = player.getMainHandItem();
+            Item item = itemStack.getItem();
+            if (item != Items.AIR && itemStack.hasTag()) {
+                if (GTCEu.isDev() && StructureWriteBehavior.isItem(itemStack)) {
+                    poses = StructureWriteBehavior.getPos(itemStack);
+                    if (poses != null) {
+                        highlightBlock(camera, poseStack, poses);
+                    }
+                } else if (StructureDetectBehavior.isItem(itemStack)) {
+                    poses = StructureDetectBehavior.getPos(itemStack);
+                    if (poses != null && poses.length >= 1) {
+                        if (poses[0] != null) {
+                            highlightBlock(camera, poseStack, poses[0], poses[0]);
+                        }
+                        if (poses.length == 2 && poses[1] != null) {
+                            highlightBlock(camera, poseStack, poses[1], poses[1]);
+                        }
+                    }
+                } else if (Highlighting.HIGHLIGHTING_ITEM.contains(item)) {
+                    var tag = itemStack.getTag();
+                    BlockPos blockPos = new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
+                    highlightBlock(camera, poseStack, blockPos, blockPos);
+                }
             }
         }
     }
@@ -199,5 +211,14 @@ public final class ForgeClientEvent {
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
         poseStack.popPose();
+    }
+
+    private static class Highlighting {
+
+        private static final Set<Item> HIGHLIGHTING_ITEM = Set.of(
+                CustomItems.WIRELESS_ITEM_TRANSFER_COVER.asItem(),
+                CustomItems.WIRELESS_FLUID_TRANSFER_COVER.asItem(),
+                CustomItems.ADVANCED_WIRELESS_ITEM_TRANSFER_COVER.asItem(),
+                CustomItems.ADVANCED_WIRELESS_FLUID_TRANSFER_COVER.asItem());
     }
 }

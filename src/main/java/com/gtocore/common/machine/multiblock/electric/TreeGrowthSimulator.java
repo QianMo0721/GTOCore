@@ -101,6 +101,7 @@ public final class TreeGrowthSimulator extends StorageMultiblockMachine {
                 output = 2;
             }
             speed = (float) (1 + 0.5 * Math.sqrt(item.getMaterial().getProperty(PropertyKey.TOOL).getHarvestSpeed()));
+            getRecipeLogic().updateTickSubscription();
         }
     }
 

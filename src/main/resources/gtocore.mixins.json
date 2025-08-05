@@ -19,7 +19,6 @@
     "ftbu.ShapeContextMixin",
     "ftbxmodcompat.FTBXModCompatMixin",
     "gtm.AssemblyLineMachineMixin",
-    "gtmt.TimeWheelMixin",
     "mc.BlockBehaviourMixin",
     "mc.SharedConstantsMixin",
     "mc.UnbreakingMixin",

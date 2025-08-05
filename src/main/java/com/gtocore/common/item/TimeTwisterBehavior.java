@@ -57,7 +57,7 @@ public final class TimeTwisterBehavior implements IInteractionItem {
     }
 
     private static boolean tickGT(WirelessEnergyContainer container, UseOnContext context) {
-        RecipeLogic recipeLogic = GTCapabilityHelper.getRecipeLogic(context.getLevel(), context.getClickedPos(), null);
+        RecipeLogic recipeLogic = GTCapabilityHelper.getRecipeLogic(context.getLevel().getBlockEntity(context.getClickedPos()));
         if (recipeLogic != null && recipeLogic.isWorking()) {
             MetaMachine machine = recipeLogic.getMachine();
             if (machine instanceof IOverclockMachine overclockMachine) {

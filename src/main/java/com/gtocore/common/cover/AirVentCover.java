@@ -5,12 +5,14 @@ import com.gtocore.common.machine.multiblock.part.InfiniteIntakeHatchPartMachine
 import com.gregtechceu.gtceu.api.capability.ICoverable;
 import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.cover.CoverDefinition;
+import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
+import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,6 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public final class AirVentCover extends CoverBehavior {
 
     private TickableSubscription subscription;
+    private MetaMachine machine;
 
     public AirVentCover(CoverDefinition definition, ICoverable coverHolder, Direction attachedSide) {
         super(definition, coverHolder, attachedSide);
@@ -27,13 +30,18 @@ public final class AirVentCover extends CoverBehavior {
 
     @Override
     public boolean canAttach() {
-        return super.canAttach() && FluidUtil.getFluidHandler(coverHolder.getLevel(), coverHolder.getPos(), attachedSide).isPresent();
+        return super.canAttach() && (machine = MetaMachine.getMachine(coverHolder.holder())) != null && machine.getFluidHandlerCap(attachedSide, false) != null;
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        subscription = coverHolder.subscribeServerTick(subscription, this::update);
+        if (coverHolder.getLevel() instanceof ServerLevel serverLevel) {
+            serverLevel.getServer().tell(new TickTask(0, () -> {
+                machine = MetaMachine.getMachine(coverHolder.holder());
+                subscription = coverHolder.subscribeServerTick(subscription, this::update);
+            }));
+        }
     }
 
     @Override
@@ -45,13 +53,15 @@ public final class AirVentCover extends CoverBehavior {
     }
 
     private void update() {
-        if (coverHolder.getOffsetTimer() % 20 == 0 && coverHolder.getLevel().getBlockState(coverHolder.getPos().relative(attachedSide)).isAir()) {
+        if (machine != null && machine.getOffsetTimer() % 20 == 0 && machine.getNeighborBlockState(attachedSide).isAir()) {
             var fluid = InfiniteIntakeHatchPartMachine.AIR_MAP.get(coverHolder.getLevel().dimension().location());
             if (fluid == null) {
                 subscription.unsubscribe();
                 return;
             }
-            FluidUtil.getFluidHandler(coverHolder.getLevel(), coverHolder.getPos(), attachedSide).ifPresent(h -> h.fill(new FluidStack(fluid, 200), IFluidHandler.FluidAction.EXECUTE));
+            var handler = machine.getFluidHandlerCap(attachedSide, false);
+            if (handler == null) return;
+            handler.fill(new FluidStack(fluid, 200), IFluidHandler.FluidAction.EXECUTE);
         }
     }
 }

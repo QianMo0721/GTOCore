@@ -53,8 +53,8 @@ public final class RecipeOutputProvider extends CapabilityBlockProvider<RecipeLo
     }
 
     @Override
-    protected @Nullable RecipeLogic getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        return GTCapabilityHelper.getRecipeLogic(level, pos, side);
+    protected @Nullable RecipeLogic getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        return GTCapabilityHelper.getRecipeLogic(blockEntity);
     }
 
     @Override

@@ -33,7 +33,7 @@ public final class PlanetDataChipItem extends Item {
     public void appendHoverText(@NotNull ItemStack itemstack, @Nullable Level world, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         super.appendHoverText(itemstack, world, list, flag);
         CompoundTag tag = itemstack.getTag();
-        if (tag != null) {
+        if (tag != null && tag.hasUUID("uuid")) {
             list.add(Component.literal("UUID: ").append(tag.getUUID("uuid").toString()));
             list.add(Component.translatable("gtceu.jei.ore_vein_diagram.dimensions").append(tag.getString("planet")));
         }

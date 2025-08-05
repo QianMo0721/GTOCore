@@ -764,7 +764,7 @@ public final class GTOMachines {
             .allRotation()
             .abilities(PartAbility.IMPORT_ITEMS, GTOPartAbility.ITEMS_INPUT)
             .tooltipsKey("gtceu.part_sharing.enabled")
-            .renderer(() -> new OverlayTieredMachineRenderer(IV, GTMThings.id("block/machine/part/item_bus.import")))
+            .renderer(() -> new OverlayTieredMachineRenderer(IV, GTCEu.id("block/machine/part/item_bus.import")))
             .register();
 
     public static final MachineDefinition STEAM_VENT_HATCH = machine("steam_vent_hatch", "蒸汽排气仓", SteamVentHatchMachine::new)
@@ -808,7 +808,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition WIRELESS_ENERGY_INTERFACE_HATCH = machine("wireless_energy_interface_hatch", "无线能源接口仓", WirelessEnergyInterfacePartMachine::new)
             .allRotation()
-            .renderer(() -> new OverlayTieredMachineRenderer(MAX, GTMThings.id("block/machine/part/energy_hatch.input")))
+            .renderer(() -> new OverlayTieredMachineRenderer(MAX, GTCEu.id("block/machine/part/energy_hatch.input")))
             .tier(MAX)
             .register();
 

@@ -27,8 +27,8 @@ public final class TemperatureProvider extends CapabilityBlockProvider<ITemperat
 
     @Nullable
     @Override
-    protected ITemperatureMachine getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        if (MetaMachine.getMachine(level, pos) instanceof ITemperatureMachine machine) {
+    protected ITemperatureMachine getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        if (MetaMachine.getMachine(blockEntity) instanceof ITemperatureMachine machine) {
             return machine;
         }
         return null;

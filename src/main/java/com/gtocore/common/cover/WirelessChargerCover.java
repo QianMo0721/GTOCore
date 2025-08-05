@@ -11,6 +11,7 @@ import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -35,7 +36,7 @@ public final class WirelessChargerCover extends CoverBehavior implements IWirele
     @Override
     public boolean canAttach() {
         if (super.canAttach()) {
-            machine = MetaMachine.getMachine(coverHolder.getLevel(), coverHolder.getPos());
+            machine = MetaMachine.getMachine(coverHolder.holder());
             if (machine != null) {
                 for (var direction : Direction.values()) {
                     if (machine.getCoverContainer().getCoverAtSide(direction) instanceof WirelessChargerCover) return false;
@@ -50,7 +51,9 @@ public final class WirelessChargerCover extends CoverBehavior implements IWirele
     @Override
     public void onLoad() {
         super.onLoad();
-        subscription = coverHolder.subscribeServerTick(subscription, this::update);
+        if (coverHolder.getLevel() instanceof ServerLevel) {
+            subscription = coverHolder.subscribeServerTick(subscription, this::update);
+        }
     }
 
     @Override
@@ -70,7 +73,7 @@ public final class WirelessChargerCover extends CoverBehavior implements IWirele
         if (coverHolder.getOffsetTimer() % 20 == 0) {
             if (handlerModifiable == null) {
                 if (machine == null) {
-                    machine = MetaMachine.getMachine(coverHolder.getLevel(), coverHolder.getPos());
+                    machine = MetaMachine.getMachine(coverHolder.holder());
                 }
                 if (machine == null) {
                     unsubscribe();
