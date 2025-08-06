@@ -4,14 +4,12 @@ import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity
 import com.gregtechceu.gtceu.api.machine.MetaMachine
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine
 import com.gtolib.GTOCore
-import com.gtolib.api.annotation.ClientSynced
-import com.gtolib.api.capability.ISyncFromClient
+import com.gtolib.api.annotation.Synced
+import com.gtolib.api.capability.ISync
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.root
-import com.gtolib.syncdata.C2SManagedFieldHolder
+import com.gtolib.syncdata.SyncManagedFieldHolder
 import com.lowdragmc.lowdraglib.gui.widget.Widget
-import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced
-import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder
 
 /**
  * 默认情况下，机器只能从服务器同步到客户端。使用方法：
@@ -23,13 +21,14 @@ import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder
  * - `requestSync()`：将机器标记为需要同步，异步线程会在下次执行时进行同步，性能友好
  * - `syncNow()`：立即向客户端发送同步数据包，会阻塞服务器线程
  *
- * 若要实现从客户端同步到服务端，需实现 `ISyncFromClient` 接口。使用方法：
+ * 若要实现从客户端同步到服务端，需实现 `ISync` 接口。使用方法：
  * - 重写 `getSyncHolder()` 管理器
- * - 给字段添加 `@ClientSynced` 注解
+ * - 给字段添加 `@Synced` 注解，可添加监听器
  * - 无自动同步功能，需手动同步
  *
  * 手动同步方法：
- * - `sendSync()`：立即向服务器发送同步数据包
+ * - `syncToServer()`：立即向服务器发送同步数据包
+ * - `syncToClient()`：立即向客户端发送同步数据包
  *
  * 需要额外的注册方法
  * - `registerSync()`：注册到同步管理器，在机器 `onLoad()` 时调用或在方块实体 `clearRemoved()` 时调用
@@ -38,25 +37,28 @@ import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder
 class SyncTesterMachine(holder: IMachineBlockEntity) :
     MetaMachine(holder),
     IFancyUIMachine,
-    ISyncFromClient {
+    ISync {
     companion object {
-        val MANAGED_FIELD_HOLDER = ManagedFieldHolder(SyncTesterMachine::class.java, MetaMachine.MANAGED_FIELD_HOLDER)
-        var CLIENT_MANAGED_FIELD_HOLDER = C2SManagedFieldHolder(SyncTesterMachine::class.java)
+        var SYNC_MANAGED_FIELD_HOLDER = SyncManagedFieldHolder(SyncTesterMachine::class.java)
     }
 
-    override fun getFieldHolder() = MANAGED_FIELD_HOLDER
-
-    override fun getSyncHolder() = CLIENT_MANAGED_FIELD_HOLDER
+    override fun getSyncHolder() = SYNC_MANAGED_FIELD_HOLDER
 
     override fun isRemote() = super<MetaMachine>.isRemote
 
-    @ClientSynced
-    @DescSynced
+    @Synced(listener = "intListener")
     var testInt = 0
 
-    @ClientSynced
-    @DescSynced
+    @Synced(listener = "booleanListener")
     var testBoolean = false
+
+    fun intListener(o: Int, n: Int) {
+        GTOCore.LOGGER.info("intListener: $o -> $n")
+    }
+
+    fun booleanListener(o: Boolean, n: Boolean) {
+        GTOCore.LOGGER.info("intListener: $o -> $n")
+    }
 
     override fun onLoad() {
         super.onLoad()
@@ -74,13 +76,13 @@ class SyncTesterMachine(holder: IMachineBlockEntity) :
                 button(text = { "客户端Int+=1" }, onClick = { ck ->
                     if (isRemote) {
                         testInt++
-                        sendSync()
+                        syncToServer("testInt")
                     }
                 })
                 button(text = { "服务端Int-=1" }, onClick = { ck ->
                     if (!isRemote) {
                         testInt--
-                        syncNow()
+                        syncToClient("testInt")
                     }
                 })
             }
@@ -88,13 +90,13 @@ class SyncTesterMachine(holder: IMachineBlockEntity) :
                 button(text = { "客户端Boolean取反" }, onClick = { ck ->
                     if (isRemote) {
                         testBoolean = !testBoolean
-                        sendSync()
+                        syncToServer("testBoolean")
                     }
                 })
                 button(text = { "服务端Boolean取反" }, onClick = { ck ->
                     if (!isRemote) {
                         testBoolean = !testBoolean
-                        syncNow()
+                        syncToClient("testBoolean")
                     }
                 })
             }
