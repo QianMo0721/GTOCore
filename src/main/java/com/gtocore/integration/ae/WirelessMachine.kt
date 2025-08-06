@@ -447,9 +447,14 @@ interface WirelessMachine :
                                                         blank(width = 20)
                                                         button(width = availableWidth1 - 20 - 4, height = 14, transKet = findMachine) { ck ->
                                                             if (ck.isRemote) {
-                                                                GTORenderManager.tasks.push(
-                                                                    GTORenderType.BLOCK_LINE(GTORenderData.BLOCK_LINE_DATA(it.pos, self().holder.level().dimension(), 1.minutes.toTicks(), 1.seconds.toTicks())),
-                                                                )
+                                                                GTORenderManager.tasks.push(GTORenderType.BLOCK_LINE(
+                                                                    data = GTORenderData.BLOCK_LINE_DATA(
+                                                                        pos = it.pos,
+                                                                        level = self().holder.level().dimension(),
+                                                                        durationTick = 1.minutes.toTicks(),
+                                                                        flickerCycle = 1.seconds.toTicks()
+                                                                    )
+                                                                )) // 推送高亮数据
                                                             }
                                                         }
                                                     }
