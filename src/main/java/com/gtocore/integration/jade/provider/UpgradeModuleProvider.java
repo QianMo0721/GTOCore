@@ -28,8 +28,8 @@ public final class UpgradeModuleProvider extends CapabilityBlockProvider<IUpgrad
 
     @Nullable
     @Override
-    protected IUpgradeMachine getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        if (MetaMachine.getMachine(level, pos) instanceof IUpgradeMachine upgradeMachine) return upgradeMachine;
+    protected IUpgradeMachine getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        if (MetaMachine.getMachine(blockEntity) instanceof IUpgradeMachine upgradeMachine) return upgradeMachine;
         return null;
     }
 

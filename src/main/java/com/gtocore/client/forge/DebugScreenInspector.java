@@ -1,6 +1,7 @@
 package com.gtocore.client.forge;
 
 import com.gtocore.client.KeyBind;
+import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 
@@ -73,21 +74,45 @@ public class DebugScreenInspector {
                     5,
                     25,
                     0xFFFFFF,
-                    true);
+                    false);
             graphics.drawString(
                     font,
                     Component.literal(String.valueOf(inventorySlotCount)).withStyle(ChatFormatting.YELLOW),
                     5,
                     40,
                     0xFFFFFF,
-                    true);
+                    false);
             poseStack.popPose();
+
+            var mouseAbsX = event.getMouseX() + screen.getGuiLeft();
+            var mouseAbsY = event.getMouseY() + screen.getGuiTop();
+            var mouseRelX = event.getMouseX();
+            var mouseRelY = event.getMouseY();
+            // draw mouse position
+            graphics.drawString(
+                    font,
+                    Component.literal(String.format("Mouse Abs: %d, %d", mouseAbsX, mouseAbsY))
+                            .withStyle(ChatFormatting.GREEN),
+                    mouseRelX + 5,
+                    mouseRelY + 5,
+                    0xFFFFFF,
+                    false);
+            graphics.drawString(
+                    font,
+                    Component.literal(String.format("Mouse Rel: %d, %d", mouseRelX, mouseRelY))
+                            .withStyle(ChatFormatting.YELLOW),
+                    mouseRelX + 5,
+                    mouseRelY + 20,
+                    0xFFFFFF,
+                    false);
+
         }
     }
 
     @SubscribeEvent
     public static void onKeyDown(ScreenEvent.KeyPressed.Pre event) {
         if (isSFMLoaded) return; // Skip if SFM is loaded, as it handles the hotkey itself
+        if (!GTOConfig.INSTANCE.dev) return; // Only enable in dev mode
         // Handle Ctrl+I hotkey to toggle overlay
         var toggleKey = KeyBind.debugInspectKey;
         var toggleKeyPressed = toggleKey.isActiveAndMatches(InputConstants.Type.KEYSYM.getOrCreate(event.getKeyCode()));

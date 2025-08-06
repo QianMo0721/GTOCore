@@ -23,9 +23,7 @@ import com.gregtechceu.gtceu.api.pattern.predicates.SimplePredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -112,11 +110,9 @@ public final class GTOPredicates {
 
     public static TraceabilityPredicate RotorBlock(int tier) {
         return new TraceabilityPredicate(new SimplePredicate(state -> {
-            Level level = state.getWorld();
-            BlockPos pos = state.getPos();
-            MetaMachine machine = MetaMachine.getMachine(level, pos);
+            MetaMachine machine = MetaMachine.getMachine(state.getTileEntity());
             if (machine instanceof IRotorHolderMachine holder && machine.getDefinition().getTier() >= tier) {
-                return level.getBlockState(pos.relative(holder.self().getFrontFacing())).isAir();
+                return state.getWorld().getBlockState(state.getPos().relative(holder.self().getFrontFacing())).isAir();
             }
             state.setError(new PatternStringError("gtceu.multiblock.pattern.clear_amount_3"));
             return false;

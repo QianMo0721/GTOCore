@@ -32,8 +32,8 @@ public final class ComputationContainerProvider extends CapabilityBlockProvider<
 
     @Nullable
     @Override
-    protected WirelessComputationContainer getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        var machine = MetaMachine.getMachine(level, pos);
+    protected WirelessComputationContainer getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        var machine = MetaMachine.getMachine(blockEntity);
         if (machine instanceof WirelessNetworkComputationHatchMachine hatchMachine) {
             return hatchMachine.getTrait().getWirelessComputationContainer();
         }

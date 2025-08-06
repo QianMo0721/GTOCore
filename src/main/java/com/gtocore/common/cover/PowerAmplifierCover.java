@@ -74,7 +74,7 @@ public final class PowerAmplifierCover extends CoverBehavior {
 
     @Nullable
     private MetaMachine getMachine() {
-        if (machine == null) machine = MetaMachine.getMachine(coverHolder.getLevel(), coverHolder.getPos());
+        if (machine == null) machine = MetaMachine.getMachine(coverHolder.holder());
         return machine;
     }
 }

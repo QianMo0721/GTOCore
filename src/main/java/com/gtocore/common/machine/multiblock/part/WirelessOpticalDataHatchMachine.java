@@ -4,6 +4,7 @@ import com.gregtechceu.gtceu.api.capability.IDataAccessHatch;
 import com.gregtechceu.gtceu.api.capability.IOpticalDataAccessHatch;
 import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IInteractedMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import com.hepdd.gtmthings.api.capability.IGTMTJadeIF;
+import com.hepdd.gtmthings.api.misc.CleanableReferenceSupplier;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import org.jetbrains.annotations.NotNull;
@@ -51,6 +53,8 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
     private BlockPos transmitterPos;
     @Persisted
     private BlockPos receiverPos;
+
+    private final CleanableReferenceSupplier<MetaMachine> transmitterMachine = new CleanableReferenceSupplier<>(() -> MetaMachine.getMachine(getLevel(), transmitterPos), MetaMachine::isInValid);
 
     public WirelessOpticalDataHatchMachine(IMachineBlockEntity holder, boolean transmitter) {
         super(holder);
@@ -84,7 +88,7 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
             } else {
                 Level level = getLevel();
                 if (level == null || transmitterPos == null) return false;
-                if (getMachine(level, transmitterPos) instanceof WirelessOpticalDataHatchMachine machine) {
+                if (transmitterMachine.get() instanceof WirelessOpticalDataHatchMachine machine) {
                     return machine.isRecipeAvailable(recipe, seen);
                 }
             }
@@ -193,7 +197,7 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
         if (transmitterPos != null) {
             var level = getLevel();
             if (level != null) {
-                if (getMachine(level, transmitterPos) instanceof WirelessOpticalDataHatchMachine machine) {
+                if (MetaMachine.getMachine(level, transmitterPos) instanceof WirelessOpticalDataHatchMachine machine) {
                     machine.receiverPos = null;
                 }
             }
@@ -205,26 +209,12 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
         if (receiverPos != null) {
             var level = getLevel();
             if (level != null) {
-                if (getMachine(level, transmitterPos) instanceof WirelessOpticalDataHatchMachine machine) {
+                if (MetaMachine.getMachine(level, receiverPos) instanceof WirelessOpticalDataHatchMachine machine) {
                     machine.transmitterPos = null;
                 }
             }
         }
         receiverPos = pos;
-    }
-
-    @Override
-    public void removedFromController(IMultiController controller) {
-        if (getLevel() == null) return;
-        if (transmitter && receiverPos != null) {
-            if (getMachine(getLevel(), receiverPos) instanceof WirelessOpticalDataHatchMachine machine) {
-                machine.transmitterPos = null;
-            }
-        } else if (!transmitter && transmitterPos != null) {
-            if (getMachine(getLevel(), transmitterPos) instanceof WirelessOpticalDataHatchMachine machine) {
-                machine.receiverPos = null;
-            }
-        }
     }
 
     @Override
@@ -260,13 +250,5 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
             return transmitterPos.toShortString();
         }
         return "";
-    }
-
-    public BlockPos getTransmitterPos() {
-        return this.transmitterPos;
-    }
-
-    public BlockPos getReceiverPos() {
-        return this.receiverPos;
     }
 }

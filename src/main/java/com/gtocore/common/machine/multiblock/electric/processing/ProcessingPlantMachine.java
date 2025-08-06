@@ -58,6 +58,8 @@ public final class ProcessingPlantMachine extends StorageMultiblockMachine imple
             GTRecipeTypes.POLARIZER_RECIPES,
             GTORecipeTypes.CLUSTER_RECIPES,
             GTORecipeTypes.ROLLING_RECIPES,
+            GTRecipeTypes.PACKER_RECIPES,
+            GTORecipeTypes.UNPACKER_RECIPES,
             GTRecipeTypes.ASSEMBLER_RECIPES,
             GTRecipeTypes.CIRCUIT_ASSEMBLER_RECIPES,
             GTRecipeTypes.CENTRIFUGE_RECIPES,

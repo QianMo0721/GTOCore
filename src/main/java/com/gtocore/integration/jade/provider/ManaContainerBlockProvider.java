@@ -32,8 +32,8 @@ public final class ManaContainerBlockProvider extends CapabilityBlockProvider<IM
 
     @Nullable
     @Override
-    protected IManaContainer getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        MetaMachine machine = MetaMachine.getMachine(level, pos);
+    protected IManaContainer getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        MetaMachine machine = MetaMachine.getMachine(blockEntity);
         if (machine instanceof IManaMachine manaMachine) {
             return manaMachine.getManaContainer();
         }

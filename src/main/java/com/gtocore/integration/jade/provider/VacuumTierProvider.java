@@ -27,8 +27,8 @@ public final class VacuumTierProvider extends CapabilityBlockProvider<IVacuumMac
 
     @Nullable
     @Override
-    protected IVacuumMachine getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        if (MetaMachine.getMachine(level, pos) instanceof IVacuumMachine machine) {
+    protected IVacuumMachine getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
+        if (MetaMachine.getMachine(blockEntity) instanceof IVacuumMachine machine) {
             return machine;
         }
         return null;

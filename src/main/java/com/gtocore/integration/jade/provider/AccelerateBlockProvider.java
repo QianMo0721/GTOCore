@@ -28,8 +28,7 @@ public final class AccelerateBlockProvider extends CapabilityBlockProvider<Integ
 
     @Nullable
     @Override
-    protected Integer getCapability(Level level, BlockPos pos, @Nullable Direction side) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
+    protected Integer getCapability(Level level, BlockPos pos, BlockEntity blockEntity, @Nullable Direction side) {
         if (blockEntity != null && blockEntity.getPersistentData().contains("accelerate_tick")) {
             return blockEntity.getPersistentData().getInt("accelerate_tick");
         }

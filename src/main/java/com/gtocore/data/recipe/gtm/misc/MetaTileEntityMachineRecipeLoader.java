@@ -2,7 +2,6 @@ package com.gtocore.data.recipe.gtm.misc;
 
 import com.gtocore.common.data.machines.GTAEMachines;
 
-import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialEntry;
@@ -457,63 +456,60 @@ public final class MetaTileEntityMachineRecipeLoader {
 
         // ME Parts
 
-        if (GTCEu.Mods.isAE2Loaded()) {
+        ItemStack meInterface = AEParts.INTERFACE.stack(1);
+        ItemStack accelerationCard = AEItems.SPEED_CARD.stack(2);
 
-            ItemStack meInterface = AEParts.INTERFACE.stack(1);
-            ItemStack accelerationCard = AEItems.SPEED_CARD.stack(2);
+        ASSEMBLER_RECIPES.recipeBuilder("me_export_hatch")
+                .inputItems(FLUID_EXPORT_HATCH[EV])
+                .inputItems(meInterface.copy())
+                .inputItems(accelerationCard.copy())
+                .outputItems(GTAEMachines.FLUID_EXPORT_HATCH_ME)
+                .duration(300).EUt(VA[HV])
+                .save();
 
-            ASSEMBLER_RECIPES.recipeBuilder("me_export_hatch")
-                    .inputItems(FLUID_EXPORT_HATCH[EV])
-                    .inputItems(meInterface.copy())
-                    .inputItems(accelerationCard.copy())
-                    .outputItems(GTAEMachines.FLUID_EXPORT_HATCH_ME)
-                    .duration(300).EUt(VA[HV])
-                    .save();
+        ASSEMBLER_RECIPES.recipeBuilder("me_import_hatch")
+                .inputItems(FLUID_IMPORT_HATCH[EV])
+                .inputItems(meInterface.copy())
+                .inputItems(accelerationCard.copy())
+                .outputItems(GTAEMachines.FLUID_IMPORT_HATCH_ME)
+                .duration(300).EUt(VA[HV])
+                .save();
 
-            ASSEMBLER_RECIPES.recipeBuilder("me_import_hatch")
-                    .inputItems(FLUID_IMPORT_HATCH[EV])
-                    .inputItems(meInterface.copy())
-                    .inputItems(accelerationCard.copy())
-                    .outputItems(GTAEMachines.FLUID_IMPORT_HATCH_ME)
-                    .duration(300).EUt(VA[HV])
-                    .save();
+        ASSEMBLER_RECIPES.recipeBuilder("me_export_bus")
+                .inputItems(ITEM_EXPORT_BUS[EV])
+                .inputItems(meInterface.copy())
+                .inputItems(accelerationCard.copy())
+                .outputItems(GTAEMachines.ITEM_EXPORT_BUS_ME)
+                .duration(300).EUt(VA[HV])
+                .save();
 
-            ASSEMBLER_RECIPES.recipeBuilder("me_export_bus")
-                    .inputItems(ITEM_EXPORT_BUS[EV])
-                    .inputItems(meInterface.copy())
-                    .inputItems(accelerationCard.copy())
-                    .outputItems(GTAEMachines.ITEM_EXPORT_BUS_ME)
-                    .duration(300).EUt(VA[HV])
-                    .save();
+        ASSEMBLER_RECIPES.recipeBuilder("me_import_bus")
+                .inputItems(ITEM_IMPORT_BUS[EV])
+                .inputItems(meInterface.copy())
+                .inputItems(accelerationCard.copy())
+                .outputItems(GTAEMachines.ITEM_IMPORT_BUS_ME)
+                .duration(300).EUt(VA[HV])
+                .save();
 
-            ASSEMBLER_RECIPES.recipeBuilder("me_import_bus")
-                    .inputItems(ITEM_IMPORT_BUS[EV])
-                    .inputItems(meInterface.copy())
-                    .inputItems(accelerationCard.copy())
-                    .outputItems(GTAEMachines.ITEM_IMPORT_BUS_ME)
-                    .duration(300).EUt(VA[HV])
-                    .save();
+        ASSEMBLER_RECIPES.recipeBuilder("me_stocking_import_bus")
+                .inputItems(ITEM_IMPORT_BUS[IV])
+                .inputItems(meInterface.copy())
+                .inputItems(CONVEYOR_MODULE_IV)
+                .inputItems(SENSOR_IV)
+                .inputItems(accelerationCard.copyWithCount(4))
+                .outputItems(GTAEMachines.STOCKING_IMPORT_BUS_ME)
+                .duration(300).EUt(VA[IV])
+                .save();
 
-            ASSEMBLER_RECIPES.recipeBuilder("me_stocking_import_bus")
-                    .inputItems(ITEM_IMPORT_BUS[IV])
-                    .inputItems(meInterface.copy())
-                    .inputItems(CONVEYOR_MODULE_IV)
-                    .inputItems(SENSOR_IV)
-                    .inputItems(accelerationCard.copyWithCount(4))
-                    .outputItems(GTAEMachines.STOCKING_IMPORT_BUS_ME)
-                    .duration(300).EUt(VA[IV])
-                    .save();
-
-            ASSEMBLER_RECIPES.recipeBuilder("me_stocking_import_hatch")
-                    .inputItems(FLUID_IMPORT_HATCH[IV])
-                    .inputItems(meInterface.copy())
-                    .inputItems(ELECTRIC_PUMP_IV)
-                    .inputItems(SENSOR_IV)
-                    .inputItems(accelerationCard.copyWithCount(4))
-                    .outputItems(GTAEMachines.STOCKING_IMPORT_HATCH_ME)
-                    .duration(300).EUt(VA[IV])
-                    .save();
-        }
+        ASSEMBLER_RECIPES.recipeBuilder("me_stocking_import_hatch")
+                .inputItems(FLUID_IMPORT_HATCH[IV])
+                .inputItems(meInterface.copy())
+                .inputItems(ELECTRIC_PUMP_IV)
+                .inputItems(SENSOR_IV)
+                .inputItems(accelerationCard.copyWithCount(4))
+                .outputItems(GTAEMachines.STOCKING_IMPORT_HATCH_ME)
+                .duration(300).EUt(VA[IV])
+                .save();
     }
 
     private static void registerLaserRecipes() {
