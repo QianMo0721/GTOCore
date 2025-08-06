@@ -15,7 +15,6 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
-import com.gregtechceu.gtceu.api.recipe.ActionResult;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 
@@ -42,7 +41,7 @@ public class DistillationTowerMachine extends ElectricMultiblockMachine {
     }
 
     @Override
-    protected RecipeLogic createRecipeLogic(Object... args) {
+    public RecipeLogic createRecipeLogic(Object... args) {
         return new DistillationTowerLogic(this);
     }
 
@@ -112,9 +111,8 @@ public class DistillationTowerMachine extends ElectricMultiblockMachine {
         }
 
         @Override
-        protected ActionResult matchRecipe(GTRecipe recipe) {
-            if (RecipeRunner.matchTickRecipe(this.machine, (Recipe) recipe) && matchDTRecipe((Recipe) recipe)) return ActionResult.SUCCESS;
-            return ActionResult.FAIL_NO_REASON;
+        protected boolean matchRecipe(GTRecipe recipe) {
+            return RecipeRunner.matchTickRecipe(this.machine, (Recipe) recipe) && matchDTRecipe((Recipe) recipe);
         }
 
         @Override
@@ -145,10 +143,10 @@ public class DistillationTowerMachine extends ElectricMultiblockMachine {
         }
 
         @Override
-        protected ActionResult handleRecipeIO(GTRecipe recipe, IO io) {
+        protected boolean handleRecipeIO(GTRecipe recipe, IO io) {
             if (io != IO.OUT) {
                 var handleIO = super.handleRecipeIO(recipe, io);
-                if (handleIO.isSuccess()) {
+                if (handleIO) {
                     updateWorkingRecipe(recipe);
                 } else {
                     this.workingRecipe = null;
@@ -161,7 +159,7 @@ public class DistillationTowerMachine extends ElectricMultiblockMachine {
                 output((Recipe) recipe);
             }
             workingRecipe = null;
-            return ActionResult.SUCCESS;
+            return true;
         }
 
         private void output(Recipe recipe) {

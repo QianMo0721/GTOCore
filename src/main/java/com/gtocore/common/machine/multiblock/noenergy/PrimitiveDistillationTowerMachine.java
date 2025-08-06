@@ -29,7 +29,6 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
-import com.gregtechceu.gtceu.api.recipe.ActionResult;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.RecipeHelper;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
@@ -394,7 +393,7 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     }
 
     @Override
-    protected RecipeLogic createRecipeLogic(Object... args) {
+    public RecipeLogic createRecipeLogic(Object... args) {
         return new DistillationTowerLogic(this);
     }
 
@@ -459,16 +458,13 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
         }
 
         @Override
-        protected ActionResult matchRecipe(GTRecipe recipe) {
-            if (recipe.id.equals(ID)) return ActionResult.FAIL_NO_REASON;
+        protected boolean matchRecipe(GTRecipe recipe) {
+            if (recipe.id.equals(ID)) return false;
             if (RecipeHelper.getRecipeEUtTier(recipe) > 2) {
                 getMachine().setIdleReason(IdleReason.VOLTAGE_TIER_NOT_SATISFIES);
-                return ActionResult.FAIL_NO_REASON;
+                return false;
             }
-            if (matchDTRecipe((Recipe) recipe)) {
-                return ActionResult.SUCCESS;
-            }
-            return ActionResult.FAIL_NO_REASON;
+            return matchDTRecipe((Recipe) recipe);
         }
 
         @Override
@@ -499,10 +495,10 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
         }
 
         @Override
-        protected ActionResult handleRecipeIO(GTRecipe recipe, IO io) {
+        protected boolean handleRecipeIO(GTRecipe recipe, IO io) {
             if (io != IO.OUT) {
                 var handleIO = super.handleRecipeIO(recipe, io);
-                if (handleIO.isSuccess()) {
+                if (handleIO) {
                     updateWorkingRecipe(recipe);
                 } else {
                     this.workingRecipe = null;
@@ -516,9 +512,9 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
             }
             if (applyFluidOutputs(recipe, IFluidHandler.FluidAction.EXECUTE)) {
                 workingRecipe = null;
-                return ActionResult.SUCCESS;
+                return true;
             }
-            return ActionResult.FAIL_NO_REASON;
+            return false;
         }
 
         private boolean applyFluidOutputs(GTRecipe recipe, IFluidHandler.FluidAction action) {

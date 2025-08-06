@@ -182,7 +182,7 @@ public class SpaceElevatorMachine extends TierCasingMultiblockMachine implements
 
     @Override
     @NotNull
-    protected RecipeLogic createRecipeLogic(Object @NotNull... args) {
+    public RecipeLogic createRecipeLogic(Object @NotNull... args) {
         return new CustomRecipeLogic(this, this::getRecipe, true);
     }
 

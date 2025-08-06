@@ -144,7 +144,7 @@ abstract class WaterPurificationUnitMachine extends NoEnergyCustomParallelMultib
 
     @Override
     @NotNull
-    protected RecipeLogic createRecipeLogic(Object @NotNull... args) {
+    public RecipeLogic createRecipeLogic(Object @NotNull... args) {
         return new CustomLogic(this);
     }
 

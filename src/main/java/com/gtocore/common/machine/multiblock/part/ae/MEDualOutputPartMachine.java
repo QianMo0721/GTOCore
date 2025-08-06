@@ -2,11 +2,11 @@ package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtolib.api.machine.trait.InaccessibleInfiniteHandler;
 import com.gtolib.api.machine.trait.InaccessibleInfiniteTank;
-import com.gtolib.utils.KeyMap;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.integration.ae2.gui.widget.list.AEListGridWidget;
+import com.gregtechceu.gtceu.integration.ae2.utils.KeyStorage;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
@@ -33,15 +33,15 @@ public class MEDualOutputPartMachine extends MEPartMachine {
     }
 
     @Persisted
-    private final KeyMap internalBuffer;
+    private final KeyStorage internalBuffer;
     @Persisted
-    private final KeyMap internalTankBuffer;
+    private final KeyStorage internalTankBuffer;
 
     public MEDualOutputPartMachine(IMachineBlockEntity holder) {
         super(holder, IO.OUT);
-        internalBuffer = new KeyMap();
+        internalBuffer = new KeyStorage();
         new InaccessibleInfiniteHandler(this, internalBuffer);
-        internalTankBuffer = new KeyMap();
+        internalTankBuffer = new KeyStorage();
         new InaccessibleInfiniteTank(this, internalTankBuffer);
     }
 

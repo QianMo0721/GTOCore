@@ -39,7 +39,7 @@ public final class INFFluidDrillMachine extends ElectricMultiblockMachine {
     }
 
     @Override
-    protected RecipeLogic createRecipeLogic(Object... args) {
+    public RecipeLogic createRecipeLogic(Object... args) {
         return new INFFluidDrillLogic(this);
     }
 

@@ -66,7 +66,7 @@ public final class BoilWaterMachine extends SimpleNoEnergyMachine implements IRe
 
     @Override
     @NotNull
-    protected RecipeLogic createRecipeLogic() {
+    public RecipeLogic createRecipeLogic() {
         return new CustomRecipeLogic(this, this::getRecipe);
     }
 
