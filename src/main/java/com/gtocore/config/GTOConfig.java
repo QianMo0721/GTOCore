@@ -5,6 +5,7 @@ import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
 import dev.toma.configuration.Configuration;
@@ -28,6 +29,7 @@ public final class GTOConfig {
                 SparkLaunchProfiler.start("all");
             }
             GTOCore.difficulty = INSTANCE.gameDifficulty.ordinal() + 1;
+            RecipeLogic.SEARCH_MAX_INTERVAL = GTOConfig.INSTANCE.recipeSearchMaxInterval;
         }
         int difficulty = GTOCore.difficulty;
         ConfigHolder.init();

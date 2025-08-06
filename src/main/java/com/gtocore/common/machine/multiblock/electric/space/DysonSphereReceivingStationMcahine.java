@@ -85,7 +85,7 @@ public final class DysonSphereReceivingStationMcahine extends ElectricMultiblock
     }
 
     @Override
-    protected @NotNull RecipeLogic createRecipeLogic(Object @NotNull... args) {
+    public RecipeLogic createRecipeLogic(Object @NotNull... args) {
         return new CustomRecipeLogic(this, this::getRecipe);
     }
 

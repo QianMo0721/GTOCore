@@ -1,12 +1,12 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtolib.api.machine.trait.InaccessibleInfiniteHandler;
-import com.gtolib.utils.KeyMap;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.IInteractedMachine;
 import com.gregtechceu.gtceu.integration.ae2.gui.widget.list.AEListGridWidget;
+import com.gregtechceu.gtceu.integration.ae2.utils.KeyStorage;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
@@ -27,11 +27,11 @@ public final class MEOutputBusPartMachine extends MEPartMachine implements IInte
             MEOutputBusPartMachine.class, MEPartMachine.Companion.getMANAGED_FIELD_HOLDER());
 
     @Persisted
-    private final KeyMap internalBuffer;
+    private final KeyStorage internalBuffer;
 
     public MEOutputBusPartMachine(IMachineBlockEntity holder) {
         super(holder, IO.OUT);
-        internalBuffer = new KeyMap();
+        internalBuffer = new KeyStorage();
         new InaccessibleInfiniteHandler(this, internalBuffer);
     }
 

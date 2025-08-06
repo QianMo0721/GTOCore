@@ -58,7 +58,7 @@ public class ManaHeaterMachine extends SimpleManaMachine implements IHeaterMachi
 
     @Override
     @NotNull
-    protected RecipeLogic createRecipeLogic() {
+    public RecipeLogic createRecipeLogic() {
         return new CustomRecipeLogic(this, this::getRecipe);
     }
 

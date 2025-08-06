@@ -60,7 +60,7 @@ public final class AdvancedInfiniteDrillMachine extends StorageMultiblockMachine
     }
 
     @Override
-    protected RecipeLogic createRecipeLogic(Object... args) {
+    public RecipeLogic createRecipeLogic(Object... args) {
         return new AdvancedInfiniteDrillLogic(this, 5);
     }
 

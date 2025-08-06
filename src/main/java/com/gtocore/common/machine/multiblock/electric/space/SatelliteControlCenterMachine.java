@@ -119,7 +119,7 @@ public final class SatelliteControlCenterMachine extends ElectricMultiblockMachi
     }
 
     @Override
-    protected @NotNull RecipeLogic createRecipeLogic(Object @NotNull... args) {
+    public RecipeLogic createRecipeLogic(Object @NotNull... args) {
         return new CustomRecipeLogic(this, this::getRecipe, true);
     }
 

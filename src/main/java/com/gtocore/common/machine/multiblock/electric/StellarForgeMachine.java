@@ -71,7 +71,7 @@ public final class StellarForgeMachine extends TierCasingMultiblockMachine imple
     }
 
     @Override
-    public void doDamping(RecipeLogic recipeLogic) {
+    public void regressRecipe(RecipeLogic recipeLogic) {
         recipeLogic.interruptRecipe();
         doExplosion(1);
     }

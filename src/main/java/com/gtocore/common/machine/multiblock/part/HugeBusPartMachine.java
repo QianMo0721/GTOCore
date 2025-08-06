@@ -196,10 +196,12 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
 
         private HugeNotifiableItemStackHandler(MetaMachine machine) {
             super(machine, 1, IO.IN, IO.IN, i -> new HugeCustomItemStackHandler());
-            storage.setOnContentsChanged(() -> {
-                changed = true;
-                onContentsChanged();
-            });
+        }
+
+        @Override
+        public void notifyListeners() {
+            super.notifyListeners();
+            changed = true;
         }
 
         private long getCount() {

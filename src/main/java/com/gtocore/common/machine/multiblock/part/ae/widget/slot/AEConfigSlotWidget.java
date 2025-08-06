@@ -14,14 +14,11 @@ import appeng.api.stacks.GenericStack;
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
 import com.lowdragmc.lowdraglib.utils.Position;
 import com.lowdragmc.lowdraglib.utils.Size;
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.lowdragmc.lowdraglib.gui.util.DrawerHelper.drawGradientRect;
 
 public class AEConfigSlotWidget extends Widget {
 
@@ -82,16 +79,6 @@ public class AEConfigSlotWidget extends Widget {
     boolean mouseOverStock(double mouseX, double mouseY) {
         Position position = getPosition();
         return isMouseOver(position.x, position.y + 18, 18, 18, mouseX, mouseY);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    static void drawSelectionOverlay(GuiGraphics graphics, int x, int y, int width, int height) {
-        RenderSystem.disableDepthTest();
-        RenderSystem.colorMask(true, true, true, false);
-        drawGradientRect(graphics, x, y, width, height, -2130706433, -2130706433);
-        RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableBlend();
     }
 
     boolean isStackValidForSlot(GenericStack stack) {

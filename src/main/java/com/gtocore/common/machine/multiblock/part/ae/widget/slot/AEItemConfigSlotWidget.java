@@ -21,6 +21,7 @@ import com.lowdragmc.lowdraglib.utils.Position;
 import com.lowdragmc.lowdraglib.utils.Size;
 import org.jetbrains.annotations.NotNull;
 
+import static com.gregtechceu.gtceu.integration.ae2.gui.widget.list.AEListGridWidget.drawSelectionOverlay;
 import static com.lowdragmc.lowdraglib.gui.util.DrawerHelper.drawItemStack;
 import static com.lowdragmc.lowdraglib.gui.util.DrawerHelper.drawStringFixedCorner;
 

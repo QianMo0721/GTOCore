@@ -87,7 +87,7 @@ public final class PhotovoltaicPowerStationMachine extends StorageMultiblockMach
     }
 
     @Override
-    protected @NotNull RecipeLogic createRecipeLogic(Object @NotNull... args) {
+    public RecipeLogic createRecipeLogic(Object @NotNull... args) {
         return new CustomRecipeLogic(this, this::getRecipe);
     }
 }

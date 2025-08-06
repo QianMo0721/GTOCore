@@ -6,18 +6,25 @@ import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferProxyPartMac
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.client.util.TooltipHelper;
+import com.gregtechceu.gtceu.integration.jade.GTElementHelper;
+import com.gregtechceu.gtceu.utils.FormattingUtil;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
+import snownee.jade.api.fluid.JadeFluidObject;
+import snownee.jade.api.ui.IElementHelper;
 
 public class MEPatternBufferProxyProvider implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
@@ -36,7 +43,7 @@ public class MEPatternBufferProxyProvider implements IBlockComponentProvider, IS
                 iTooltip.add(Component.translatable("gtceu.top.buffer_bound_pos", pos[0], pos[1], pos[2])
                         .withStyle(TooltipHelper.RAINBOW_HSL_SLOW));
 
-                com.gregtechceu.gtceu.integration.jade.provider.MEPatternBufferProvider.readBufferTag(iTooltip, serverData);
+                readBufferTag(iTooltip, serverData);
             }
         }
     }
@@ -84,6 +91,40 @@ public class MEPatternBufferProxyProvider implements IBlockComponentProvider, IS
             fluidsTag.add(ct);
         }
         if (!fluidsTag.isEmpty()) compoundTag.put("fluids", fluidsTag);
+    }
+
+    private static void readBufferTag(ITooltip iTooltip, CompoundTag serverData) {
+        IElementHelper helper = iTooltip.getElementHelper();
+
+        ListTag itemsTag = serverData.getList("items", Tag.TAG_COMPOUND);
+        for (Tag t : itemsTag) {
+            if (!(t instanceof CompoundTag ct)) continue;
+            var stack = ItemStack.of(ct);
+            var count = ct.getLong("real");
+            if (!stack.isEmpty() && count > 0) {
+                iTooltip.add(helper.smallItem(stack));
+                Component text = Component.literal(" ")
+                        .append(Component.literal(String.valueOf(count)).withStyle(ChatFormatting.DARK_PURPLE))
+                        .append(Component.literal("× ").withStyle(ChatFormatting.WHITE))
+                        .append(stack.getHoverName().copy().withStyle(ChatFormatting.GOLD));
+                iTooltip.append(text);
+            }
+        }
+        ListTag fluidsTag = serverData.getList("fluids", Tag.TAG_COMPOUND);
+        for (Tag t : fluidsTag) {
+            if (!(t instanceof CompoundTag ct)) continue;
+            var stack = FluidStack.loadFluidStackFromNBT(ct);
+            var amount = ct.getLong("real");
+            if (!stack.isEmpty() && amount > 0) {
+                iTooltip.add(GTElementHelper.smallFluid(JadeFluidObject.of(stack.getFluid())));
+                Component text = Component.literal(" ")
+                        .append(Component.literal(FormattingUtil.formatBuckets(amount)))
+                        .withStyle(ChatFormatting.DARK_PURPLE)
+                        .append(Component.literal(" ").withStyle(ChatFormatting.WHITE))
+                        .append(stack.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA));
+                iTooltip.append(text);
+            }
+        }
     }
 
     @Override
