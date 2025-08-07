@@ -7,11 +7,14 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine
 import com.gtolib.GTOCore
 import com.gtolib.api.annotation.Synced
+import com.gtolib.api.annotation.SyncedManager
 import com.gtolib.api.capability.ISync
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.root
 import com.gtolib.syncdata.SyncManagedFieldHolder
 import com.lowdragmc.lowdraglib.gui.widget.Widget
+
+import java.util.UUID
 
 /**
  * 默认情况下，机器只能从服务器同步到客户端。使用方法：
@@ -24,6 +27,7 @@ import com.lowdragmc.lowdraglib.gui.widget.Widget
  * - `syncNow()`：立即向客户端发送同步数据包，会阻塞服务器线程
  *
  * 若要实现从客户端同步到服务端，需实现 `ISync` 接口。使用方法：
+ * - 一个方块实体只能有一个类实现ISync，如果有其他关联的类，使用@SyncedManager
  * - 重写 `getSyncHolder()` 管理器
  * - 给字段添加 `@Synced` 注解，可添加监听器，参数：LogicalSide（接收端），旧值，新值
  * - 或者使用ISyncedField相关类，无需加注解
@@ -44,7 +48,7 @@ import com.lowdragmc.lowdraglib.gui.widget.Widget
  * - `registerSync()`：注册到同步管理器，在机器 `onLoad()` 时调用或在方块实体 `clearRemoved()` 时调用
  * - `unregisterSync()`：从同步管理器中移除，在机器 `onUnload()` 时调用或在方块实体 `setRemoved()` 时调用
  *
- * 改机器演示ISync方法
+ * 该机器演示ISync方法
  */
 class SyncTesterMachine(holder: IMachineBlockEntity) :
     MetaMachine(holder),
@@ -58,8 +62,12 @@ class SyncTesterMachine(holder: IMachineBlockEntity) :
 
     override fun isRemote() = super<MetaMachine>.isRemote
 
+    // 作为子管理器,支持套娃
+    @SyncedManager
+    val a = a(this)
+
     // 使用同步字段
-    val testInt = ISync.createIntField(this, this::intListener)
+    val testInt = ISync.createIntField(this).setReceiverListener(this::intListener)
 
     // 使用注解 也可以不加监听器
     @Synced(listener = "booleanListener")
@@ -90,12 +98,14 @@ class SyncTesterMachine(holder: IMachineBlockEntity) :
                     if (isRemote) {
                         // 按是否为客户端自动指定方向
                         testInt.setAndAutoSync(testInt.get() + 1)
+                        a.tesString.setAndAutoSync("int: " + testInt.get().toString())
                     }
                 })
                 button(text = { "服务端Int-=1" }, onClick = { ck ->
                     if (!isRemote) {
                         // 指定方向
                         testInt.setAndSyncToClient(testInt.get() - 1)
+                        a.tesString.setAndSyncToClient("int: " + testInt.get().toString())
                     }
                 })
             }
@@ -125,5 +135,27 @@ class SyncTesterMachine(holder: IMachineBlockEntity) :
                 }
             }
         }
+    }
+}
+
+class a(sync: ISync) {
+
+    @SyncedManager
+    var b = b(sync)
+
+    val tesString = ISync.createStringField(sync).set("666").setSenderListener(this::stringListener)
+
+    fun stringListener(side: LogicalSide, o: String, n: String) {
+        GTOCore.LOGGER.info("stringListener: $o -> $n to $side")
+        b.tesUUID.setAndAutoSync(UUID.randomUUID())
+    }
+}
+
+class b(sync: ISync) {
+
+    val tesUUID = ISync.createUUIDField(sync).set(UUID.randomUUID()).setReceiverListener(this::UUIDListener)
+
+    fun UUIDListener(side: LogicalSide, o: UUID, n: UUID) {
+        GTOCore.LOGGER.info("UUIDListener: $o -> $n to $side")
     }
 }
