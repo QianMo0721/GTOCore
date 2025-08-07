@@ -8,7 +8,6 @@ import com.gtocore.integration.emi.EmiPersist;
 import com.gtolib.GTOCore;
 import com.gtolib.api.misc.PlanetManagement;
 import com.gtolib.mixin.BookContentResourceListenerLoaderAccessor;
-import com.gtolib.syncdata.SyncManagedFieldHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -79,8 +78,6 @@ public final class ServerMessage {
                     Manager.onClientReceived(monitorData);
                 }
             }
-            case SyncManagedFieldHolder.ALL_FIELD_SYNC -> SyncManagedFieldHolder.handleClientSync(data);
-            case SyncManagedFieldHolder.FIELD_SYNC -> SyncManagedFieldHolder.handleClientFieldSync(data);
         }
     }
 }

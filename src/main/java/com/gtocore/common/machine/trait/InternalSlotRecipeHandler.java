@@ -118,10 +118,6 @@ public final class InternalSlotRecipeHandler {
         private SlotItemRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot) {
             super(buffer);
             this.slot = slot;
-        }
-
-        @Override
-        protected void onAddListener() {
             slot.setOnContentsChanged(this::notifyListeners);
         }
 
@@ -189,10 +185,6 @@ public final class InternalSlotRecipeHandler {
         private SlotFluidRecipeHandler(MEPatternBufferPartMachine buffer, MEPatternBufferPartMachine.InternalSlot slot) {
             super(buffer);
             this.slot = slot;
-        }
-
-        @Override
-        protected void onAddListener() {
             slot.setOnContentsChanged(this::notifyListeners);
         }
 
