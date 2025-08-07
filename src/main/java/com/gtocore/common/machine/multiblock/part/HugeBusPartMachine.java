@@ -199,8 +199,8 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
         }
 
         @Override
-        public void notifyListeners() {
-            super.notifyListeners();
+        public void onContentsChanged() {
+            super.onContentsChanged();
             changed = true;
         }
 
@@ -256,7 +256,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
                     if (!simulate) {
                         ((HugeCustomItemStackHandler) storage).count -= count;
                         getStackInSlot().setCount(MathUtil.saturatedCast(((HugeCustomItemStackHandler) storage).count));
-                        changed = true;
+                        storage.onContentsChanged(0);
                     }
                     amount -= count;
                 }

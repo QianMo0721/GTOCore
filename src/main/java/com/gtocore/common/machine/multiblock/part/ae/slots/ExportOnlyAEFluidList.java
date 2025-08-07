@@ -40,19 +40,13 @@ public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfi
         for (int i = 0; i < slots; i++) {
             this.inventory[i] = slotFactory.get();
             this.storages[i] = new FluidStorageDelegate(inventory[i]);
+            this.inventory[i].setOnContentsChanged(this::onContentsChanged);
         }
     }
 
     @Override
-    protected void onAddListener() {
-        for (var i : inventory) {
-            i.setOnContentsChanged(this::notifyListeners);
-        }
-    }
-
-    @Override
-    public void notifyListeners() {
-        super.notifyListeners();
+    public void onContentsChanged() {
+        super.onContentsChanged();
         changed = true;
     }
 
