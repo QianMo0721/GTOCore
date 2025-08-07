@@ -23,9 +23,11 @@ import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
 import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.common.data.*;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.*;
 import static com.gregtechceu.gtceu.api.pattern.Predicates.*;
@@ -118,7 +120,7 @@ public final class MultiBlockF {
 
     public static final MultiblockMachineDefinition COMPOUND_DISTILLATION_FRACTIONATOR = multiblock("compound_distillation_fractionator", "复合式蒸馏分馏塔", CrossRecipeMultiblockMachine::createHatchParallel)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getCompoundDistillationTowerTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getCompoundDistillationTowerTooltips().getSupplier())
             .parallelizableTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()

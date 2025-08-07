@@ -601,7 +601,7 @@ public final class MultiBlockG {
 
     public static final MultiblockMachineDefinition SINTERING_FURNACE = multiblock("sintering_furnace", "烧结炉", CoilMultiblockMachine.createCoilMachine(false, true))
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getSinteringFurnaceTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getSinteringFurnaceTooltips().getSupplier())
             .parallelizableTooltips()
             .recipeTypes(GTORecipeTypes.SINTERING_FURNACE_RECIPES)
             .parallelizableOverclock()
@@ -632,7 +632,7 @@ public final class MultiBlockG {
 
     public static final MultiblockMachineDefinition ISOSTATIC_PRESS = multiblock("isostatic_press", "等静压成型", ElectricMultiblockMachine::new)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getIsostaticPressMachineTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getIsostaticPressMachineTooltips().getSupplier())
             .parallelizableTooltips()
             .recipeTypes(GTORecipeTypes.ISOSTATIC_PRESSING_RECIPES)
             .parallelizableOverclock()
@@ -931,7 +931,7 @@ public final class MultiBlockG {
             .allRotation()
             .recipeTypes(GTORecipeTypes.DUMMY_RECIPES)
             .block(GTBlocks.STEEL_HULL)
-            .tooltips(GTOMachineTranslation.INSTANCE.getMultiblockCrateMachineTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getMultiblockCrateMachineTooltips().getSupplier())
             .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("aaa", "aaa", "aaa")
                     .aisle("aaa", "aca", "aaa")

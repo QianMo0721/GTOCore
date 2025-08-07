@@ -8,6 +8,7 @@ import com.gtocore.utils.translatedTo
 import appeng.core.definitions.AEItems
 import appeng.core.definitions.AEParts
 import com.glodblock.github.extendedae.common.EPPItemAndBlock
+import com.gtocore.common.data.translation.ComponentSlang.Star
 
 object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
     val PatternModifierTooltips = ComponentListSupplier {
@@ -45,10 +46,19 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
 //            add(ComponentSlang.RecommendedToUse("ME连接器" translatedTo "ME Connector"))
 //            add("支持一对多连接，并支持ME舱室自动连接" translatedTo "Supports one-to-many connections and automatic connection to ME Hatch") { aqua() }
 //        })  一取消注释打开创造物品栏就崩，原理不明，等待有缘人修复
+        listOf(AEItems.ITEM_CELL_1K.asItem(),AEItems.ITEM_CELL_4K.asItem(),AEItems.ITEM_CELL_16K.asItem(),AEItems.ITEM_CELL_64K.asItem(),AEItems.FLUID_CELL_1K.asItem(),AEItems.FLUID_CELL_4K.asItem(),AEItems.FLUID_CELL_16K.asItem(),AEItems.FLUID_CELL_64K.asItem()).forEach {
+            it.setTooltips(
+                ComponentListSupplier {
+                    setTranslationPrefix("me_storage_cell")
+                    add(Star(1)+("存储容量是原来的八倍" translatedTo "Storage capacity is eight times the original")) { aqua() }
+                }.editionByGTONormal(),
+            )
+        }
         listOf(AEItems.ITEM_CELL_256K.asItem(), AEItems.FLUID_CELL_256K.asItem()).forEach {
             it.setTooltips(
                 ComponentListSupplier {
                     setTranslationPrefix("me_storage_cell")
+                    add(Star(1)+("存储容量是原来的八倍" translatedTo "Storage capacity is eight times the original")) { aqua() }
                     add("你走到了单个存储元件的尽头" translatedTo "You've reached the end of a single storage cell") { aqua() }
                     add(ComponentSlang.RecommendedToUse("ME存储器 (多方块结构)" translatedTo "ME Storage (MultiBlock)")) { aqua() }
                     add("他甚至可以不限类型地最高无限存储" translatedTo "It can even store unlimited amounts of items and fluids without type limit") { aqua() }

@@ -58,6 +58,10 @@ public final class ClientMessage {
                     }
                 }
             }
+            case "sync_field" -> {
+                SyncFieldManager.INSTANCE.handleFromClient(data);
+            }
+            case "sync_field_asking" -> SyncFieldManager.INSTANCE.handleAskFromClient(data);
             case SyncManagedFieldHolder.ALL_FIELD_SYNC -> SyncManagedFieldHolder.handleServerSync(serverPlayer.server, data);
             case SyncManagedFieldHolder.FIELD_SYNC -> SyncManagedFieldHolder.handleServerFieldSync(serverPlayer.server, data);
         }

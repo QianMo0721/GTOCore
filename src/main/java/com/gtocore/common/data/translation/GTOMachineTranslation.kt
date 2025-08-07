@@ -2,17 +2,21 @@ package com.gtocore.common.data.translation
 
 import com.gtocore.api.misc.AutoInitialize
 import com.gtocore.common.data.translation.ComponentSlang.Bar
+import com.gtocore.common.data.translation.ComponentSlang.OutTopic
 import com.gtocore.common.data.translation.ComponentSlang.Star
+import com.gtocore.common.data.translation.ComponentSlang.Tab
 import com.gtocore.common.data.translation.ComponentSlang.Warning
 import com.gtocore.common.machine.electric.ElectricHeaterMachine
 import com.gtocore.common.machine.multiblock.storage.MultiblockCrateMachine
 import com.gtocore.common.machine.noenergy.BoilWaterMachine
 import com.gtocore.common.machine.noenergy.HeaterMachine
 import com.gtocore.utils.ComponentListSupplier
+import com.gtocore.utils.initialize
 import com.gtocore.utils.toLiteralSupplier
 import com.gtocore.utils.translatedTo
 
 object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
+    val pattern = ("样板" translatedTo "Patterns").initialize()
     val BoilWaterMachineTooltips = ComponentListSupplier {
         setTranslationPrefix("boil_water_machine")
         add("需要外部热源工作" translatedTo "Requires external heat source to operate") { aqua() }
@@ -85,6 +89,102 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add(Star(1) + ("§6§l§o大批量木材加工的最佳选择" translatedTo "Best choice for large-scale wood processing")) { white() }
     }
 
+    // 催化剂仓
+    val CatalystHatchTooltips = ComponentListSupplier {
+        setTranslationPrefix("catalyst_hatch")
+        add(Star(1) + ("使用催化剂仓输入催化剂" translatedTo "Use catalyst hatch to input catalysts")) { aqua() }
+        add(Tab(1) + ("可以不消耗催化剂，让催化剂重复使用" translatedTo "Can be used without consuming catalysts, allowing catalysts to be reused")) { gray() }
+    }
+
+    // ME存储访问仓
+    val MEStorageAccessHatchTooltips = ComponentListSupplier {
+        setTranslationPrefix("me_storage_access_hatch")
+        add(Star(1) + ("访问ME存储器内的存储" translatedTo "Access storage in ME storage")) { aqua() }
+        add(Tab(1) + ("直接让ME线缆连上就好，不推荐无线连接" translatedTo "Directly let ME cable connect, not recommended to use wireless connection")) { gray() }
+    }
+
+    // ME存储访问仓代理
+    val MEStorageAccessHatchProxyTooltips = ComponentListSupplier {
+        setTranslationPrefix("me_storage_access_hatch_proxy")
+        add(Star(1) + ("是ME存储访问仓的克隆体" translatedTo "Is a clone of ME storage access hatch")) { aqua() }
+        add(Tab(1) + ("需要绑定在ME存储访问仓" translatedTo "Need to be bound to ME storage access hatch")) { gray() }
+        add(Tab(1) + ("甚至可以跨纬度绑定" translatedTo "Even can be bound across dimensions")) { gray() }
+        add(Tab(1) + ("这意味着你可以不使用量子环，来跨纬度访问ME存储器了" translatedTo "That means you can no longer use a quantum ring to cross dimensions to access ME storage")) { gray() }
+    }
+
+    // 合成样板仓
+    val MeCraftPatternHatchTooltips = ComponentListSupplier {
+        setTranslationPrefix("me_craft_pattern_part_machine")
+        add(Star(1) + ("合成样板仓用于存储合成样板" translatedTo "Synthesis template hatch is used to store synthesis templates")) { aqua() }
+        add(Star(1) + ("配合超级分子装配室使用" translatedTo "use it Combined with Super Molecular Assembly")) { aqua() }
+        add(ComponentSlang.Capacity(72.toString())) { aqua() }
+    }
+
+    // ME可编程样板总成
+    val MeProgrammablePatternAssemblyTooltips = ComponentListSupplier {
+        setTranslationPrefix("me_programmable_pattern_assembly")
+        add(Star(1) + ("可以使用虚拟物品提供器进行编程" translatedTo "Can be programmed using virtual item provider")) { aqua() }
+        add(Tab(1) + ("一台机器，一个总成搞定所有样板" translatedTo "One machine, one pattern hatch ,finished.")) { gray() }
+    }
+
+    // ME样板总成
+    val MePatternHatchTooltips = {capacity: Int-> ComponentListSupplier {
+            setTranslationPrefix("me_pattern_assembly")
+            add(Star(1) + ("可以放入样板，并进行一键发配" translatedTo "Can put patterns and distribute them one click")) { aqua() }
+            add(Tab(1) + ("样板间分别隔离，互不干扰" translatedTo "Patterns are isolated from each other, do not interfere with each other")) { gray() }
+            add(Tab(1) + ("对着样板按鼠标中键可单独设置电路或者提供特别输入" translatedTo "Press the middle mouse button on the pattern to set the circuit or provide special input")) { gray() }
+            add(OutTopic(1) + ("集成式的ME样板供应器" translatedTo "Integrated ME pattern provider")) { gold() }
+            add(ComponentSlang.Capacity(capacity.toString())) { aqua() }
+        }
+    }.initialize()
+
+    // 监控器系列
+    val monitor = { init:ComponentListSupplier.()->Unit -> ComponentListSupplier {
+        setTranslationPrefix("monitor")
+        init()
+        add(Star(1) + ("监控器系列" translatedTo "Monitor series")) { rainbowSlow() }
+    } }
+
+    // 基础监控器
+    val BasicMonitorTooltips = monitor {
+        add("是监控器的基础组成部分" translatedTo "Is the basic component of the monitor") { aqua()}
+        add("可以与其他§6多个监控器§r系列相连" translatedTo "Can be connected to other §6multiple monitors§r series") { aqua() }
+        add("多个监控器可以组成一个大屏" translatedTo "Multiple monitors can form a large screen") { aqua() }
+        add("可以使用§d喷漆§r对监控器分组" translatedTo "Can use§d paint spray§r to group monitors") { aqua() }
+        add(Star(1) + ("与§6监控器组件§r相连来显示不同信息" translatedTo "Use §6monitor components§r to display different information")) { aqua() }
+    }
+    // 监控器电网组件
+    val MonitorPowerComponentTooltips = monitor {
+        add("用于显示§6无线电网§r的数据在监控器上" translatedTo "Used to display§6 wireless energy grid data§r on the monitor") { aqua() }
+    }
+    // 监控器魔力组件
+    val MonitorManaComponentTooltips = monitor {
+        add("用于显示§6无线魔力网§r的数据在监控器上" translatedTo "Used to display§6 wireless mana grid data§r on the monitor") { aqua() }
+    }
+    // 监控器算力组件
+    val MonitorComputingComponentTooltips = monitor {
+        add("用于显示§6无线算力网§r的数据在监控器上" translatedTo "Used to display§6 wireless computing grid data§r on the monitor") { aqua() }
+    }
+    // 监控器ME吞吐量监控组件
+    val MonitorMEThroughputComponentTooltips = monitor {
+        add("用于显示ME中§6指定物品§r的吞吐量数据在监控器上" translatedTo "Used to display the throughput data of §6specified items §rin ME in the monitor") { aqua() }
+    }
+    // 监控器机器通用组件
+    val MonitorMachineComponentTooltips = monitor {
+        add("用于显示§6机器§r的通用数据在监控器上" translatedTo "Used to display the general data of §6machines§r on the monitor") { aqua() }
+        add("例如耗电，产电，输入，输出等" translatedTo "For example, power consumption, power production, input, output, etc.") { aqua() }
+        add("需要放入坐标信息卡" translatedTo "Need to put coordinate card") { aqua() }
+    }
+    // 监控器合成处理单元组件
+    val MonitorCraftingComponentTooltips = monitor {
+        add("用于显示§6ME合成处理单元§r的合成数据在监控器上" translatedTo "Used to display the synthesis data of §6crafting unit§r on the monitor") { aqua() }
+    }
+    // 监控器自定义文本组件
+    val MonitorCustomTextComponentTooltips = monitor {
+        add("用于显示§6自定义文本§r在监控器上" translatedTo "Used to display§6 custom text§r on the monitor") { aqua() }
+        add("同一块监控器大屏的多个文本组件将被顺序显示" translatedTo "Multiple text components of the same block monitor screen will be displayed in sequence") { aqua() }
+    }
+
     // 光伏电站 (PG-11)
     val PhotovoltaicPlant11Tooltips = ComponentListSupplier {
         setTranslationPrefix("photovoltaic_plant_11")
@@ -95,7 +195,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("技术人员偶然发现它能§a§l高效采集魔力" translatedTo "Technicians accidentally discovered it can §a§lefficiently collect mana") { green() }
         add("§6改进后的PMG-11§r§a以另一种身份被广泛使用" translatedTo "The §6improved PMG-11§r is widely used in another capacity") { green() }
         add(ComponentSlang.RecommendedUseAs(("生产魔力" translatedTo "mana production"))) { aqua() }
-        add(Star(1) + ("§6§l§o魔力采集的高效设备" translatedTo "Efficient equipment for mana collection")) { white() }
+        add(Star(1) + ("§6§l§o魔力采集的高效设备" translatedTo "Efficient equipment for mana collection")) { aqua() }
     }
 
     // 光伏电站 (PG-12)
@@ -108,7 +208,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("技术人员偶然发现它能§a§l高效采集魔力" translatedTo "Technicians accidentally discovered it can §a§lefficiently collect mana") { green() }
         add("§6改进后的PMG-12§r§a以另一种身份被广泛使用" translatedTo "The §6improved PMG-12§r is widely used in another capacity") { green() }
         add(ComponentSlang.RecommendedUseAs(("生产魔力" translatedTo "mana production"))) { aqua() }
-        add(Star(1) + ("§6§l§o中级魔力采集设备" translatedTo "Intermediate mana collection equipment")) { white() }
+        add(Star(1) + ("§6§l§o中级魔力采集设备" translatedTo "Intermediate mana collection equipment")) { aqua() }
     }
 
     // 光伏电站 (PG-13)
@@ -121,7 +221,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("技术人员偶然发现它能§a§l高效采集魔力" translatedTo "Technicians accidentally discovered it can §a§lefficiently collect mana") { green() }
         add("§6改进后的PMG-13§r§a以另一种身份被广泛使用" translatedTo "The §6improved PMG-13§r is widely used in another capacity") { green() }
         add(ComponentSlang.RecommendedUseAs(("生产魔力" translatedTo "mana production"))) { aqua() }
-        add(Star(1) + ("§6§l§o高级魔力采集设备" translatedTo "Advanced mana collection equipment")) { white() }
+        add(Star(1) + ("§6§l§o高级魔力采集设备" translatedTo "Advanced mana collection equipment")) { aqua() }
     }
 
     // 能量注入仪
@@ -134,8 +234,8 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("使用§e高能外壳§r§7和§e超导材料" translatedTo "Using §ehigh-energy shell§r and §esuperconducting materials") { gray() }
         add("足以使用高压能源仓为各种设备§a§l快速充能" translatedTo "Sufficient to use high-voltage energy storage for §a§lrapid charging") { green() }
         add("§6§o\"充电1秒钟，工作一整年\"" translatedTo "§6§o\"Charge for 1 second, work for a whole year\"") { white() }
-        add(Star(1) + ("快速充电的最佳选择" translatedTo "Best choice for fast charging").rainbowSlow().bold().italic()) { white() }
-        add(Star(1) + ("§6§l§o可为物品充电，还可消耗电力修复物品耐久" translatedTo "Can to charge items, Can consume electricity to repair item durability")) { white() }
+        add(Star(1) + ("快速充电的最佳选择" translatedTo "Best choice for fast charging").rainbowSlow().bold().italic()) { aqua() }
+        add(Star(1) + ("§6§l§o可为物品充电，还可消耗电力修复物品耐久" translatedTo "Can to charge items, Can consume electricity to repair item durability")) { aqua() }
     }
 
     // 渔场
@@ -148,7 +248,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("产出的各种水产品在处理后" translatedTo "Various aquatic products produced can become") { gray() }
         add("同样可以成为工业产线上的§e§l关键原料" translatedTo "key §e§lraw materials on industrial production lines") { green() }
         add("§6§o\"纯工业，零天然\"" translatedTo "§6§o\"Pure industrial, zero natural\"") { white() }
-        add(Star(1) + ("§6§l§o水产品和工业原料的双重来源" translatedTo "Dual source of aquatic products and industrial materials")) { white() }
+        add(Star(1) + ("§6§l§o水产品和工业原料的双重来源" translatedTo "Dual source of aquatic products and industrial materials")) { aqua() }
     }
 
     // 培养缸
@@ -162,7 +262,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("§6AFMS-05培养缸§r§a为培养生物细胞材料量身打造" translatedTo "§6AFMS-05 culturing tank§r is tailor-made for cultivating biological cell materials") { green() }
         add("§e§l过滤器等级§r§b决定配方等级" translatedTo "§e§lFilter tier§r determines recipe tier") { aqua() }
         add("§e§l玻璃等级§r§b决定可用电压上限" translatedTo "§e§lGlass tier§r determines  upper limit of voltage usable") { aqua() }
-        add(Star(1) + ("生物材料培养的基础设施" translatedTo "Basic infrastructure for biological material cultivation").gold().bold().italic()) { white() }
+        add(Star(1) + ("生物材料培养的基础设施" translatedTo "Basic infrastructure for biological material cultivation").gold().bold().italic()) { aqua() }
     }
 
     // 大型培养缸
@@ -176,7 +276,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("在体积没有显著提升的情况下§a§l极大提高生产效率§r" translatedTo "Without significant volume increase, §a§lgreatly improves production efficiency§r") { green() }
         add("§e§l过滤器等级§r决定配方等级" translatedTo "§e§lFilter tier§r determines recipe tier") { aqua() }
         add("§e§l玻璃等级§r决定可用电压上限" translatedTo "§e§lGlass tier§r determines maximum usable voltage") { aqua() }
-        add(Star(1) + ("§6§l§o大规模生物材料生产设施§r" translatedTo "§6§l§oLarge-scale biological material production facility§r")) { white() }
+        add(Star(1) + ("§6§l§o大规模生物材料生产设施§r" translatedTo "§6§l§oLarge-scale biological material production facility§r")) { aqua() }
     }
 
     // 复合式蒸馏分馏塔
@@ -185,21 +285,21 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("§d§l这是现代炼金术的圣殿§r" translatedTo "§d§lThis is the temple of modern alchemy§r") { lightPurple() }
         add("§6§o原油的暗夜在此裂解出光的碎片§r" translatedTo "§6§oThe crude oil's darkness cracks into fragments of light here§r") { gold() }
         add("§d§o用几何的刚毅线条书写分子世界的缱绻情书§r" translatedTo "§d§oWriting tender love letters of the molecular world with geometric rigid lines§r") { lightPurple() }
-        add("§l最炽热的交融终将成就最极致的纯粹§r" translatedTo "§lThe most intense fusion will ultimately achieve the most extreme purity§r") { rainbow() }
+        add("§l最炽热的交融终将成就最极致的纯粹§r" translatedTo "§lThe most intense fusion will ultimately achieve the most extreme purity§r") { aqua() }
         add("格雷科技§e化工设计部门§r的最新力作" translatedTo "GregTech's §echemical design department§r latest masterpiece") { aqua() }
         add("§6§lDHG-1020复合式蒸馏分馏塔§r" translatedTo "§6§lDHG-1020 compound distillation fractionation tower§r") { aqua() }
         add("设计部门为其设计了§a§l极为精巧的结构§r" translatedTo "The design department created an §a§lextremely sophisticated structure§r") { gray() }
         add("§a§l几乎完美的运行程序§r" translatedTo "§a§lNear-perfect operating procedures§r") { gray() }
-        add("能以§a§l极高效率§r同时承担蒸发和蒸馏处理工作" translatedTo "Can §a§lextremely high efficiency§r simultaneously handle evaporation and distillation") { green() }
+        add("能以§a§l极高效率§r同时承担蒸发和蒸馏处理工作" translatedTo "Can§a§l extremely high efficiency§r simultaneously handle evaporation and distillation") { green() }
         add("是§6§l最强大的蒸馏蒸发设施§r" translatedTo "It is §6§lthe most powerful distillation and evaporation facility§r") { gold() }
-        add(Star(1) + ("§6§l§o极高效率的多功能化工处理设施§r" translatedTo "§6§l§oHighly efficient multi-functional chemical processing facility§r")) { white() }
+        add(Star(1) + ("§6§l§o极高效率的多功能化工处理设施§r" translatedTo "§6§l§oHighly efficient multi-functional chemical processing facility§r")) { aqua() }
     }
 
     // 纳米蜂群电路组装工厂
     val NanoswarmCircuitAssemblyFactoryTooltips = ComponentListSupplier {
         setTranslationPrefix("nanoswarm_circuit_assembly_factory")
         add("§d§l在绝对寂静的空间里§r" translatedTo "§d§lIn absolutely silent space§r") { lightPurple() }
-        add("§o一场微观宇宙的创世仪式正在上演§r" translatedTo "§oA creation ceremony of the microscopic universe is being performed§r") { rainbow() }
+        add("§o一场微观宇宙的创世仪式正在上演§r" translatedTo "§oA creation ceremony of the microscopic universe is being performed§r") { return@add rainbow() }
         add("§6§l纳米蜂群工厂§r——这里没有熔炉的咆哮" translatedTo "§6§lNanoswarm factory§r - there is no roar of furnaces here") { aqua() }
         add("没有机械臂的挥舞" translatedTo "No waving of mechanical arms") { aqua() }
         add("只有§e§l亿万纳米机器人§r§6§o以光的语言低语§r" translatedTo "Only §e§lbillions of nanobots§r §6§owhispering in the language of light§r") { gold() }
@@ -209,7 +309,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("采用大量的§e§l纳米机器人§r完成§a§l纳米级别组装加工§r" translatedTo "Uses massive §e§lnanobots§r to complete §a§lnanoscale assembly and processing§r") { green() }
         add("它们如同§a辛勤的工人§r，在硅片中建造§a§o微观城市§r" translatedTo "They are like §adiligent workers§r, building §a§omicroscopic cities§r") { green() }
         add("为工业帝国不断输送§6§l神经§r" translatedTo "Continuously supplying §6§lnerves§r") { gold() }
-        add(Star(1) + ("§l§o最高级电路组装的终极设备§r" translatedTo "§l§oUltimate equipment for highest-grade circuit assembly§r")) { white() }
+        add(Star(1) + ("§l§o最高级电路组装的终极设备§r" translatedTo "§l§oUltimate equipment for highest-grade circuit assembly§r")) { aqua() }
     }
 
     // 化工厂

@@ -1,5 +1,6 @@
 package com.gtocore.common.data.machines;
 
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.part.ae.*;
 
 import com.gtolib.ae2.machine.MECPUMachine;
@@ -38,6 +39,7 @@ public final class GTAEMachines {
 
     public static final MachineDefinition ME_STORAGE_ACCESS_HATCH = machine("me_storage_access_hatch", "ME存储访问仓", MEStorageAccessPartMachine::new)
             .langValue("ME Storage Access Hatch")
+            .tooltips(GTOMachineTranslation.INSTANCE.getMEStorageAccessHatchTooltips().getSupplier())
             .tier(EV)
             .allRotation()
             .notAllowSharedTooltips()
@@ -46,6 +48,7 @@ public final class GTAEMachines {
 
     public static final MachineDefinition ME_STORAGE_ACCESS_PROXY = machine("me_storage_access_proxy", "ME存储访问代理", MEStorageAccessProxyartMachine::new)
             .langValue("ME Storage Access Proxy")
+            .tooltips(GTOMachineTranslation.INSTANCE.getMEStorageAccessHatchProxyTooltips().getSupplier())
             .tier(EV)
             .allRotation()
             .renderer(() -> new OverlayTieredMachineRenderer(EV, GTCEu.id("block/machine/part/me_pattern_buffer_proxy")))
@@ -75,6 +78,7 @@ public final class GTAEMachines {
 
     public static final MachineDefinition ME_CRAFT_PATTERN_PART_MACHINE = machine("me_craft_pattern_part_machine", "合成样板仓", MECraftPatternPartMachine::new)
             .langValue("ME Craft Pattern Hatch")
+            .tooltips(GTOMachineTranslation.INSTANCE.getMeCraftPatternHatchTooltips().getSupplier())
             .tier(ZPM)
             .allRotation()
             .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)
@@ -84,6 +88,8 @@ public final class GTAEMachines {
 
     public static final MachineDefinition ME_CATALYST_ME_PATTERN_BUFFER = machine("me_catalyst_pattern_buffer", "ME催化剂样板总成", MECatalystPatternBufferPartMachine::new)
             .langValue("ME Catalyst Pattern Buffer")
+            .tooltips(GTOMachineTranslation.INSTANCE.getMePatternHatchTooltips().invoke(27).getSupplier())
+            .tooltips(GTOMachineTranslation.INSTANCE.getCatalystHatchTooltips().getSupplier())
             .tier(UV)
             .allRotation()
             .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)
@@ -94,6 +100,8 @@ public final class GTAEMachines {
     public static final MachineDefinition ME_PROGRAMMABLE_PATTERN_BUFFER = machine("me_programmable_pattern_buffer", "ME可编程样板总成", MEProgrammablePatternBufferPartMachine::new)
             .langValue("ME Programmable Pattern Buffer")
             .tier(ZPM)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMePatternHatchTooltips().invoke(27).getSupplier())
+            .tooltips(GTOMachineTranslation.INSTANCE.getMeProgrammablePatternAssemblyTooltips().getSupplier())
             .allRotation()
             .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)
             .tooltipsKey("gtceu.part_sharing.enabled")
@@ -103,6 +111,7 @@ public final class GTAEMachines {
     public static final MachineDefinition ME_EXTEND_PATTERN_BUFFER = machine("me_extend_pattern_buffer", "ME扩展样板总成", h -> new MEPatternBufferPartMachineKt(h, 81))
             .langValue("ME Extend Pattern Buffer")
             .tier(UV)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMePatternHatchTooltips().invoke(81).getSupplier())
             .allRotation()
             .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)
             .tooltipsKey("gtceu.part_sharing.enabled")
@@ -111,6 +120,7 @@ public final class GTAEMachines {
 
     public static final MachineDefinition ME_EXTEND_PATTERN_BUFFER_ULTRA = machine("me_extend_pattern_buffer_ultra", "ME扩展样板总成 Ultra", h -> new MEPatternBufferPartMachineKt(h, 324))
             .langValue("ME Extend Pattern Buffer Ultra")
+            .tooltips(GTOMachineTranslation.INSTANCE.getMePatternHatchTooltips().invoke(324).getSupplier())
             .tier(UHV)
             .allRotation()
             .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)

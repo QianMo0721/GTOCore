@@ -79,6 +79,9 @@ public final class ServerMessage {
                     Manager.onClientReceived(monitorData);
                 }
             }
+            case "sync_field" -> {
+                SyncFieldManager.INSTANCE.handleFromServer(data);
+            }
             case SyncManagedFieldHolder.ALL_FIELD_SYNC -> SyncManagedFieldHolder.handleClientSync(data);
             case SyncManagedFieldHolder.FIELD_SYNC -> SyncManagedFieldHolder.handleClientFieldSync(data);
         }
