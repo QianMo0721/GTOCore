@@ -68,7 +68,7 @@ public final class WirelessEnergySubstationMachine extends NoRecipeLogicMultiblo
         }
         container.setLoss(i == 0 ? 0 : loss / i);
         container.setCapacity(capacity.multiply(BigInteger.valueOf(Math.max(1, i / 2))));
-        container.getDimension().put(level.dimension().location(), 15);
+        container.setDimension(level.dimension().location(), true);
     }
 
     private void unloadContainer() {
@@ -79,7 +79,7 @@ public final class WirelessEnergySubstationMachine extends NoRecipeLogicMultiblo
         if (container == null) return;
         container.setCapacity(BigInteger.ZERO);
         container.setLoss(0);
-        container.getDimension().put(level.dimension().location(), 0);
+        container.setDimension(level.dimension().location(), false);
     }
 
     @Override

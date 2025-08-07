@@ -1,4 +1,4 @@
-package com.gtocore.common.forge.render
+package com.gtocore.client.forge
 
 import com.gtocore.api.gui.graphic.impl.GTOProgressClientComponent
 import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent

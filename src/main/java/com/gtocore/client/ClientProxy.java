@@ -2,11 +2,11 @@ package com.gtocore.client;
 
 import com.gtocore.client.forge.ForgeClientEvent;
 import com.gtocore.client.forge.GTOComponentHandler;
+import com.gtocore.client.forge.GTOComponentRegistry;
 import com.gtocore.client.forge.GTORender;
 import com.gtocore.client.renderer.item.MonitorItemDecorations;
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOFluids;
-import com.gtocore.common.forge.render.GTOComponentRegistry;
 import com.gtocore.common.machine.monitor.MonitorBlockItem;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
