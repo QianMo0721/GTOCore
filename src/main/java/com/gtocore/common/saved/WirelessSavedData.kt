@@ -1,6 +1,5 @@
 package com.gtocore.common.saved
 
-import com.gtocore.common.network.SyncField
 import com.gtocore.common.network.WirelessNetworkTopologyManager
 import com.gtocore.integration.ae.WirelessMachine
 
@@ -10,20 +9,18 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.NbtOps
-import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.saveddata.SavedData
-import net.minecraftforge.fml.LogicalSide
 
 import appeng.api.networking.GridHelper
 import appeng.api.networking.IGridConnection
 import com.gregtechceu.gtceu.GTCEu
+import com.gtolib.api.capability.ISync
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 
 import java.util.UUID
-import java.util.function.Supplier
 
 class WirelessSavedData : SavedData() {
 
@@ -280,22 +277,21 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
         }
     }
 }
-class WirelessSyncField(side: LogicalSide, uniqueName: Supplier<String>, value: MutableList<WirelessGrid>, onInitCallBack: (SyncField<MutableList<WirelessGrid>>, MutableList<WirelessGrid>) -> Unit = { _, _ -> }, onSyncCallBack: (SyncField<MutableList<WirelessGrid>>, MutableList<WirelessGrid>, MutableList<WirelessGrid>) -> Unit = { _, _, _ -> }) : SyncField<MutableList<WirelessGrid>>(side, uniqueName, value, onInitCallBack, onSyncCallBack) {
-    override fun readFromBuffer(buffer: FriendlyByteBuf): MutableList<WirelessGrid> {
-        val size = buffer.readInt()
+
+fun createWirelessSyncedField(sync: ISync): ISync.ObjectSyncedField<MutableList<WirelessGrid>> = ISync.createObjectField(
+    sync,
+    {
+        val size = it.readInt()
         val list = mutableListOf<WirelessGrid>()
         for (i in 0 until size) {
-            list.add(WirelessGrid.deserializer(buffer.readNbt() as CompoundTag)!!)
+            list.add(WirelessGrid.deserializer(it.readNbt() as CompoundTag)!!)
         }
-        return list
-    }
-
-    override fun writeToBuffer(buffer: FriendlyByteBuf): FriendlyByteBuf {
+        list
+    },
+    { buffer, value ->
         buffer.writeInt(value.size)
         for (grid in value) {
             buffer.writeNbt(grid.serializer())
         }
-
-        return buffer
-    }
-}
+    },
+)

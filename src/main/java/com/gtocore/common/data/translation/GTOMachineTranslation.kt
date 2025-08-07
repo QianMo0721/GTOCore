@@ -128,7 +128,8 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
     }
 
     // ME样板总成
-    val MePatternHatchTooltips = {capacity: Int-> ComponentListSupplier {
+    val MePatternHatchTooltips = { capacity: Int ->
+        ComponentListSupplier {
             setTranslationPrefix("me_pattern_assembly")
             add(Star(1) + ("可以放入样板，并进行一键发配" translatedTo "Can put patterns and distribute them one click")) { aqua() }
             add(Tab(1) + ("样板间分别隔离，互不干扰" translatedTo "Patterns are isolated from each other, do not interfere with each other")) { gray() }
@@ -139,46 +140,55 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
     }.initialize()
 
     // 监控器系列
-    val monitor = { init:ComponentListSupplier.()->Unit -> ComponentListSupplier {
-        setTranslationPrefix("monitor")
-        init()
-        add(Star(1) + ("监控器系列" translatedTo "Monitor series")) { rainbowSlow() }
-    } }
+    val monitor = { init: ComponentListSupplier.() -> Unit ->
+        ComponentListSupplier {
+            setTranslationPrefix("monitor")
+            init()
+            add(Star(1) + ("监控器系列" translatedTo "Monitor series")) { rainbowSlow() }
+        }
+    }
 
     // 基础监控器
     val BasicMonitorTooltips = monitor {
-        add("是监控器的基础组成部分" translatedTo "Is the basic component of the monitor") { aqua()}
+        add("是监控器的基础组成部分" translatedTo "Is the basic component of the monitor") { aqua() }
         add("可以与其他§6多个监控器§r系列相连" translatedTo "Can be connected to other §6multiple monitors§r series") { aqua() }
         add("多个监控器可以组成一个大屏" translatedTo "Multiple monitors can form a large screen") { aqua() }
         add("可以使用§d喷漆§r对监控器分组" translatedTo "Can use§d paint spray§r to group monitors") { aqua() }
         add(Star(1) + ("与§6监控器组件§r相连来显示不同信息" translatedTo "Use §6monitor components§r to display different information")) { aqua() }
     }
+
     // 监控器电网组件
     val MonitorPowerComponentTooltips = monitor {
         add("用于显示§6无线电网§r的数据在监控器上" translatedTo "Used to display§6 wireless energy grid data§r on the monitor") { aqua() }
     }
+
     // 监控器魔力组件
     val MonitorManaComponentTooltips = monitor {
         add("用于显示§6无线魔力网§r的数据在监控器上" translatedTo "Used to display§6 wireless mana grid data§r on the monitor") { aqua() }
     }
+
     // 监控器算力组件
     val MonitorComputingComponentTooltips = monitor {
         add("用于显示§6无线算力网§r的数据在监控器上" translatedTo "Used to display§6 wireless computing grid data§r on the monitor") { aqua() }
     }
+
     // 监控器ME吞吐量监控组件
     val MonitorMEThroughputComponentTooltips = monitor {
         add("用于显示ME中§6指定物品§r的吞吐量数据在监控器上" translatedTo "Used to display the throughput data of §6specified items §rin ME in the monitor") { aqua() }
     }
+
     // 监控器机器通用组件
     val MonitorMachineComponentTooltips = monitor {
         add("用于显示§6机器§r的通用数据在监控器上" translatedTo "Used to display the general data of §6machines§r on the monitor") { aqua() }
         add("例如耗电，产电，输入，输出等" translatedTo "For example, power consumption, power production, input, output, etc.") { aqua() }
         add("需要放入坐标信息卡" translatedTo "Need to put coordinate card") { aqua() }
     }
+
     // 监控器合成处理单元组件
     val MonitorCraftingComponentTooltips = monitor {
         add("用于显示§6ME合成处理单元§r的合成数据在监控器上" translatedTo "Used to display the synthesis data of §6crafting unit§r on the monitor") { aqua() }
     }
+
     // 监控器自定义文本组件
     val MonitorCustomTextComponentTooltips = monitor {
         add("用于显示§6自定义文本§r在监控器上" translatedTo "Used to display§6 custom text§r on the monitor") { aqua() }
