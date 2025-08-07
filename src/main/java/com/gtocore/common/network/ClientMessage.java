@@ -4,7 +4,7 @@ import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 
 import com.gtolib.api.misc.PlanetManagement;
 import com.gtolib.api.player.IEnhancedPlayer;
-import com.gtolib.syncdata.C2SManagedFieldHolder;
+import com.gtolib.syncdata.SyncManagedFieldHolder;
 import com.gtolib.utils.SortUtils;
 
 import com.gregtechceu.gtceu.api.gui.fancy.FancyMachineUIWidget;
@@ -58,7 +58,8 @@ public final class ClientMessage {
                     }
                 }
             }
-            case C2SManagedFieldHolder.SYNC_FIELD -> C2SManagedFieldHolder.handleSync(serverPlayer.server, data);
+            case SyncManagedFieldHolder.ALL_FIELD_SYNC -> SyncManagedFieldHolder.handleServerSync(serverPlayer.server, data);
+            case SyncManagedFieldHolder.FIELD_SYNC -> SyncManagedFieldHolder.handleServerFieldSync(serverPlayer.server, data);
         }
     }
 }
