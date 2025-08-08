@@ -71,7 +71,7 @@ public final class DataAnalysisRecipeBuilder {
         build
                 .notConsumable(catalyst)
                 .inputItems(getEmptyCrystal(crystalTire))
-                .chancedInput(getScanningData(inputData), 50, 0);
+                .notConsumable(getScanningData(inputData));
         for (int i = 0; i < outputData.length; i++)
             build.chancedOutput(getAnalyzeData(outputData[i]), chance[i], 0);
         build

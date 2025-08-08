@@ -15,6 +15,7 @@ import com.gregtechceu.gtceu.api.machine.feature.IUIMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
+import com.gregtechceu.gtceu.api.transfer.item.LockableItemStackHandler;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +23,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.EmptyHandler;
 
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
 import com.lowdragmc.lowdraglib.gui.texture.ResourceTexture;
@@ -47,11 +47,13 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
     }
 
     @Persisted
-    public final NotifiableItemStackHandler inventory;
+    private final NotifiableItemStackHandler inventory;
+    private final LockableItemStackHandler itemStackHandler;
 
     public MultiblockCrateMachine(IMachineBlockEntity holder) {
         super(holder);
         this.inventory = new NotifiableItemStackHandler(this, Capacity, IO.BOTH);
+        itemStackHandler = new LockableItemStackHandler(inventory).setLock(true);
     }
 
     @Override
@@ -62,13 +64,25 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
     @Override
     @Nullable
     public IItemHandlerModifiable getItemHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
-        return isFormed ? super.getItemHandlerCap(side, useCoverCapability) : (IItemHandlerModifiable) EmptyHandler.INSTANCE;
+        return itemStackHandler;
     }
 
     @Override
     @Nullable
     public IFluidHandlerModifiable getFluidHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
         return null;
+    }
+
+    @Override
+    public void onStructureFormed() {
+        super.onStructureFormed();
+        itemStackHandler.setLock(false);
+    }
+
+    @Override
+    public void onStructureInvalid() {
+        super.onStructureInvalid();
+        itemStackHandler.setLock(true);
     }
 
     @Override

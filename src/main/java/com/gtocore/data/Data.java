@@ -134,7 +134,7 @@ public final class Data {
         if (GTCEu.isDev()) {
             ScanningRecipes.init();
             AnalyzeData.init();
-            // AnalyzeRecipes.init();
+            AnalyzeRecipes.init();
             DataGenerateRecipe.init();
         }
         if (GTCEu.isDev() || GTOCore.isSimple()) {
@@ -188,6 +188,7 @@ public final class Data {
                 GTOCore.LOGGER.info("Pre initialization EMI GTRecipe took {}ms", System.currentTimeMillis() - time);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             CommonProxy.setException(e);
         }
     }

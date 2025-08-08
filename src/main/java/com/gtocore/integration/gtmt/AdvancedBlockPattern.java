@@ -1,7 +1,7 @@
 package com.gtocore.integration.gtmt;
 
-import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
-import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
+import com.gregtechceu.gtceu.api.item.MetaMachineItem;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.pattern.BlockPattern;
@@ -20,10 +20,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -35,10 +34,9 @@ import appeng.api.networking.IGrid;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.items.tools.powered.WirelessTerminalItem;
-import com.lowdragmc.lowdraglib.utils.BlockInfo;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIntPair;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +44,6 @@ import org.jetbrains.annotations.Nullable;
 import oshi.util.tuples.Triplet;
 
 import java.util.List;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 
 class AdvancedBlockPattern extends BlockPattern {
 
@@ -71,9 +67,8 @@ class AdvancedBlockPattern extends BlockPattern {
         boolean isFlipped = autoBuildSetting.isFlip == 1;
         var cacheGlobal = worldState.getGlobalCount();
         var cacheLayer = worldState.getLayerCount();
-        Long2ObjectOpenHashMap<Object> blocks = new Long2ObjectOpenHashMap<>();
-        LongOpenHashSet placeBlockPos = new LongOpenHashSet();
-        blocks.put(centerPos.asLong(), controller);
+        Object2ObjectOpenHashMap<BlockPos, MetaMachine> machines = new Object2ObjectOpenHashMap<>();
+        Long2ObjectOpenHashMap<Block> blocks = new Long2ObjectOpenHashMap<>();
 
         int[] repeat = new int[this.fingerLength];
         for (int h = 0; h < this.fingerLength; h++) {
@@ -95,15 +90,16 @@ class AdvancedBlockPattern extends BlockPattern {
                         if (predicate == null) continue;
                         if (predicate.isAir()) continue;
                         BlockPos pos = setActualRelativeOffset(x, y, z, facing, upwardsFacing, isFlipped).offset(centerPos.getX(), centerPos.getY(), centerPos.getZ());
-                        long posLong = pos.asLong();
                         worldState.update(pos, predicate);
+                        long posLong = pos.asLong();
                         ItemStack coilItemStack = null;
                         BlockState blockState = world.getBlockState(pos);
-                        if (!blockState.isAir()) {
-                            if (autoBuildSetting.isReplaceCoilMode() && blockState.getBlock() instanceof CoilBlock coilBlock) {
+                        Block block = blockState.getBlock();
+                        if (block != Blocks.AIR) {
+                            if (block instanceof CoilBlock coilBlock && autoBuildSetting.isReplaceCoilMode()) {
                                 coilItemStack = coilBlock.asItem().getDefaultInstance();
                             } else {
-                                blocks.put(posLong, blockState);
+                                blocks.put(posLong, block);
                                 for (SimplePredicate limit : predicate.limited) {
                                     limit.testLimited(worldState);
                                 }
@@ -112,9 +108,10 @@ class AdvancedBlockPattern extends BlockPattern {
                         }
 
                         boolean find = false;
-                        BlockInfo[] infos = new BlockInfo[0];
+                        Block[] infos = new Block[0];
                         for (SimplePredicate limit : predicate.limited) {
-                            if (limit.minLayerCount > 0 && autoBuildSetting.isPlaceHatch(limit.candidates.get())) {
+                            var candidates = limit.candidates == null ? null : limit.candidates.get();
+                            if (candidates != null && limit.minLayerCount > 0 && autoBuildSetting.isPlaceHatch(candidates)) {
                                 int curr = cacheLayer.getInt(limit);
                                 if (curr < limit.minLayerCount &&
                                         (limit.maxLayerCount == -1 || curr < limit.maxLayerCount)) {
@@ -125,13 +122,14 @@ class AdvancedBlockPattern extends BlockPattern {
                             } else {
                                 continue;
                             }
-                            infos = limit.candidates == null ? null : limit.candidates.get();
+                            infos = candidates;
                             find = true;
                             break;
                         }
                         if (!find) {
                             for (SimplePredicate limit : predicate.limited) {
-                                if (limit.minCount > 0 && autoBuildSetting.isPlaceHatch(limit.candidates.get())) {
+                                var candidates = limit.candidates == null ? null : limit.candidates.get();
+                                if (candidates != null && limit.minCount > 0 && autoBuildSetting.isPlaceHatch(candidates)) {
                                     int curr = cacheGlobal.getInt(limit);
                                     if (curr < limit.minCount && (limit.maxCount == -1 || curr < limit.maxCount)) {
                                         cacheGlobal.addTo(limit, 1);
@@ -141,14 +139,16 @@ class AdvancedBlockPattern extends BlockPattern {
                                 } else {
                                     continue;
                                 }
-                                infos = limit.candidates == null ? null : limit.candidates.get();
+                                infos = candidates;
                                 find = true;
                                 break;
                             }
                         }
                         if (!find) { // no limited
                             for (SimplePredicate limit : predicate.limited) {
-                                if (!autoBuildSetting.isPlaceHatch(limit.candidates.get())) {
+                                var candidates = limit.candidates == null ? null : limit.candidates.get();
+                                if (candidates == null) continue;
+                                if (!autoBuildSetting.isPlaceHatch(candidates)) {
                                     continue;
                                 }
                                 if (limit.maxLayerCount != -1 &&
@@ -161,15 +161,15 @@ class AdvancedBlockPattern extends BlockPattern {
                                 }
                                 cacheLayer.addTo(limit, 1);
                                 cacheGlobal.addTo(limit, 1);
-                                infos = ArrayUtils.addAll(infos,
-                                        limit.candidates == null ? null : limit.candidates.get());
+                                infos = ArrayUtils.addAll(infos, candidates);
                             }
                             for (SimplePredicate common : predicate.common) {
-                                if (common.candidates != null && predicate.common.size() > 1 && !autoBuildSetting.isPlaceHatch(common.candidates.get())) {
+                                var candidates = common.candidates == null ? null : common.candidates.get();
+                                if (candidates == null) continue;
+                                if (predicate.common.size() > 1 && !autoBuildSetting.isPlaceHatch(candidates)) {
                                     continue;
                                 }
-                                infos = ArrayUtils.addAll(infos,
-                                        common.candidates == null ? null : common.candidates.get());
+                                infos = ArrayUtils.addAll(infos, candidates);
                             }
                         }
 
@@ -204,19 +204,17 @@ class AdvancedBlockPattern extends BlockPattern {
                         }
 
                         BlockItem itemBlock = (BlockItem) found.getItem();
-                        BlockPlaceContext context = new BlockPlaceContext(world, player, InteractionHand.MAIN_HAND,
-                                found, BlockHitResult.miss(player.getEyePosition(0), Direction.UP, pos));
+                        BlockPlaceContext context = new BlockPlaceContext(world, player, InteractionHand.MAIN_HAND, found, BlockHitResult.miss(player.getEyePosition(0), Direction.UP, pos));
                         InteractionResult interactionResult = itemBlock.place(context);
                         if (interactionResult != InteractionResult.FAIL) {
-                            placeBlockPos.add(posLong);
                             if (handler != null) {
                                 handler.extractItem(foundSlot, 1, false);
                             }
-                        }
-                        if (blockState.getBlock() instanceof MetaMachineBlock && world.getBlockEntity(pos) instanceof IMachineBlockEntity machineBlockEntity) {
-                            blocks.put(posLong, machineBlockEntity.getMetaMachine());
-                        } else {
-                            blocks.put(posLong, blockState);
+                            if (itemBlock instanceof MetaMachineItem && world.getBlockEntity(pos) instanceof MetaMachineBlockEntity machineBlockEntity) {
+                                machines.put(pos, machineBlockEntity.metaMachine);
+                            } else {
+                                blocks.put(posLong, itemBlock.getBlock());
+                            }
                         }
 
                     }
@@ -225,26 +223,16 @@ class AdvancedBlockPattern extends BlockPattern {
             }
         }
         Direction frontFacing = controller.self().getFrontFacing();
-        for (var e : blocks.long2ObjectEntrySet()) {
-            var block = e.getValue();
-            var pos = e.getLongKey();
-            if (!(block instanceof IMultiController)) {
-                var blockPos = BlockPos.of(pos);
-                if (block instanceof BlockState && placeBlockPos.contains(pos)) {
-                    resetFacing(blockPos, (BlockState) block, frontFacing, (p, f) -> {
-                        Object object = blocks.get(p.relative(f).asLong());
-                        return object == null || (object instanceof BlockState && ((BlockState) object).getBlock() == Blocks.AIR);
-                    }, state -> world.setBlock(blockPos, state, 3));
-                } else if (block instanceof MetaMachine machine) {
-                    resetFacing(blockPos, machine.getBlockState(), frontFacing, (p, f) -> {
-                        Object object = blocks.get(p.relative(f).asLong());
-                        if (object == null || (object instanceof BlockState blockState && blockState.isAir())) {
-                            return machine.isFacingValid(f);
-                        }
-                        return false;
-                    }, state -> world.setBlock(blockPos, state, 3));
+        for (var entry : machines.object2ObjectEntrySet()) {
+            MetaMachine machine = entry.getValue();
+            var pos = entry.getKey();
+            resetFacing(pos, machine.getBlockState(), frontFacing, (p, f) -> {
+                Object object = blocks.get(p.relative(f).asLong());
+                if (object == null) {
+                    return machine.isFacingValid(f);
                 }
-            }
+                return false;
+            }, state -> world.setBlock(pos, state, 3));
         }
     }
 
@@ -292,88 +280,6 @@ class AdvancedBlockPattern extends BlockPattern {
         return ObjectIntPair.of(handler, foundSlot);
     }
 
-    private BlockPos setActualRelativeOffset(int x, int y, int z, Direction facing, Direction upwardsFacing, boolean isFlipped) {
-        int[] c0 = new int[] { x, y, z }, c1 = new int[3];
-        if (facing == Direction.UP || facing == Direction.DOWN) {
-            Direction of = facing == Direction.DOWN ? upwardsFacing : upwardsFacing.getOpposite();
-            for (int i = 0; i < 3; i++) {
-                switch (structureDir[i].getActualDirection(of)) {
-                    case UP -> c1[1] = c0[i];
-                    case DOWN -> c1[1] = -c0[i];
-                    case WEST -> c1[0] = -c0[i];
-                    case EAST -> c1[0] = c0[i];
-                    case NORTH -> c1[2] = -c0[i];
-                    case SOUTH -> c1[2] = c0[i];
-                }
-            }
-            int xOffset = upwardsFacing.getStepX();
-            int zOffset = upwardsFacing.getStepZ();
-            int tmp;
-            if (xOffset == 0) {
-                tmp = c1[2];
-                c1[2] = zOffset > 0 ? c1[1] : -c1[1];
-                c1[1] = zOffset > 0 ? -tmp : tmp;
-            } else {
-                tmp = c1[0];
-                c1[0] = xOffset > 0 ? c1[1] : -c1[1];
-                c1[1] = xOffset > 0 ? -tmp : tmp;
-            }
-            if (isFlipped) {
-                if (upwardsFacing == Direction.NORTH || upwardsFacing == Direction.SOUTH) {
-                    c1[0] = -c1[0]; // flip X-axis
-                } else {
-                    c1[2] = -c1[2]; // flip Z-axis
-                }
-            }
-        } else {
-            for (int i = 0; i < 3; i++) {
-                switch (structureDir[i].getActualDirection(facing)) {
-                    case UP -> c1[1] = c0[i];
-                    case DOWN -> c1[1] = -c0[i];
-                    case WEST -> c1[0] = -c0[i];
-                    case EAST -> c1[0] = c0[i];
-                    case NORTH -> c1[2] = -c0[i];
-                    case SOUTH -> c1[2] = c0[i];
-                }
-            }
-            if (upwardsFacing == Direction.WEST || upwardsFacing == Direction.EAST) {
-                int xOffset = upwardsFacing == Direction.EAST ? facing.getClockWise().getStepX() :
-                        facing.getClockWise().getOpposite().getStepX();
-                int zOffset = upwardsFacing == Direction.EAST ? facing.getClockWise().getStepZ() :
-                        facing.getClockWise().getOpposite().getStepZ();
-                int tmp;
-                if (xOffset == 0) {
-                    tmp = c1[2];
-                    c1[2] = zOffset > 0 ? -c1[1] : c1[1];
-                    c1[1] = zOffset > 0 ? tmp : -tmp;
-                } else {
-                    tmp = c1[0];
-                    c1[0] = xOffset > 0 ? -c1[1] : c1[1];
-                    c1[1] = xOffset > 0 ? tmp : -tmp;
-                }
-            } else if (upwardsFacing == Direction.SOUTH) {
-                c1[1] = -c1[1];
-                if (facing.getStepX() == 0) {
-                    c1[0] = -c1[0];
-                } else {
-                    c1[2] = -c1[2];
-                }
-            }
-            if (isFlipped) {
-                if (upwardsFacing == Direction.NORTH || upwardsFacing == Direction.SOUTH) {
-                    if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-                        c1[0] = -c1[0]; // flip X-axis
-                    } else {
-                        c1[2] = -c1[2]; // flip Z-axis
-                    }
-                } else {
-                    c1[1] = -c1[1]; // flip Y-axis
-                }
-            }
-        }
-        return new BlockPos(c1[0], c1[1], c1[2]);
-    }
-
     @Nullable
     private static IntObjectPair<IItemHandler> getMatchStackWithHandler(List<ItemStack> candidates, LazyOptional<IItemHandler> cap, Player player, int isUseAE) {
         IItemHandler handler = cap.resolve().orElse(null);
@@ -411,31 +317,5 @@ class AdvancedBlockPattern extends BlockPattern {
                     }
         }
         return null;
-    }
-
-    private static void resetFacing(BlockPos pos, BlockState blockState, Direction facing, BiPredicate<BlockPos, Direction> checker, Consumer<BlockState> consumer) {
-        if (blockState.hasProperty(BlockStateProperties.FACING)) {
-            tryFacings(blockState, pos, checker, consumer, BlockStateProperties.FACING,
-                    facing == null ? FACINGS : ArrayUtils.addAll(new Direction[] { facing }, FACINGS));
-        } else if (blockState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
-            tryFacings(blockState, pos, checker, consumer, BlockStateProperties.HORIZONTAL_FACING,
-                    facing == null || facing.getAxis() == Direction.Axis.Y ? FACINGS_H :
-                            ArrayUtils.addAll(new Direction[] { facing }, FACINGS_H));
-        }
-    }
-
-    private static void tryFacings(BlockState blockState, BlockPos pos, BiPredicate<BlockPos, Direction> checker,
-                                   Consumer<BlockState> consumer, Property<Direction> property, Direction[] facings) {
-        Direction found = null;
-        for (Direction facing : facings) {
-            if (checker.test(pos, facing)) {
-                found = facing;
-                break;
-            }
-        }
-        if (found == null) {
-            found = Direction.NORTH;
-        }
-        consumer.accept(blockState.setValue(property, found));
     }
 }

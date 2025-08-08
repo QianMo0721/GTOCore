@@ -322,6 +322,7 @@ public final class GTOMaterials {
     public static Material Abs;
     public static Material AdamantineCompounds;
     public static Material RawTengam;
+    public static Material Honey;
     public static Material CleanRawTengam;
     public static Material PurifiedTengam;
     public static Material AttunedTengam;

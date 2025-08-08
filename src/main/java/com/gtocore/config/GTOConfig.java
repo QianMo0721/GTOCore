@@ -12,6 +12,8 @@ import dev.toma.configuration.Configuration;
 import dev.toma.configuration.config.Config;
 import dev.toma.configuration.config.Configurable;
 import dev.toma.configuration.config.format.ConfigFormats;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.embeddedt.modernfix.spark.SparkLaunchProfiler;
 
 @Scanned
@@ -30,6 +32,7 @@ public final class GTOConfig {
             }
             GTOCore.difficulty = INSTANCE.gameDifficulty.ordinal() + 1;
             RecipeLogic.SEARCH_MAX_INTERVAL = GTOConfig.INSTANCE.recipeSearchMaxInterval;
+            if (GTOConfig.INSTANCE.dev) Configurator.setRootLevel(Level.INFO);
         }
         int difficulty = GTOCore.difficulty;
         ConfigHolder.init();

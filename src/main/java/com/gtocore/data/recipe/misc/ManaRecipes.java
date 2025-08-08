@@ -3,6 +3,7 @@ package com.gtocore.data.recipe.misc;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTOMaterials;
+import com.gtocore.common.data.machines.GCYMMachines;
 import com.gtocore.common.data.machines.ManaMachine;
 import com.gtocore.common.data.machines.ManaMultiBlock;
 
@@ -289,7 +290,7 @@ public final class ManaRecipes {
                     .outputItems(ManaMultiBlock.MANA_INFUSER.asStack())
                     .inputFluids(GTOMaterials.Mana, 288)
                     .duration(200)
-                    .MANAt(16)
+                    .MANAt(32)
                     .save();
 
             ASSEMBLER_RECIPES.builder("mana_condenser")
@@ -305,7 +306,7 @@ public final class ManaRecipes {
                     .outputItems(ManaMultiBlock.MANA_CONDENSER.asStack())
                     .inputFluids(Gaiasteel, 288)
                     .duration(200)
-                    .MANAt(64)
+                    .MANAt(128)
                     .save();
 
             ASSEMBLER_RECIPES.builder("elf_exchange")
@@ -321,7 +322,7 @@ public final class ManaRecipes {
                     .outputItems(ManaMultiBlock.ELF_EXCHANGE.asStack())
                     .inputFluids(GTOMaterials.Alfsteel, 288)
                     .duration(200)
-                    .MANAt(64)
+                    .MANAt(128)
                     .save();
 
             ASSEMBLER_RECIPES.builder("industrial_altar")
@@ -337,7 +338,7 @@ public final class ManaRecipes {
                     .outputItems(ManaMultiBlock.INDUSTRIAL_ALTAR.asStack())
                     .inputFluids(GTOMaterials.Elementium, 288)
                     .duration(200)
-                    .MANAt(64)
+                    .MANAt(128)
                     .save();
 
             ASSEMBLER_RECIPES.builder("mana_garden")
@@ -352,7 +353,7 @@ public final class ManaRecipes {
                     .inputItems(TagPrefix.plateDouble, GTOMaterials.Terrasteel, 8)
                     .outputItems(ManaMultiBlock.MANA_GARDEN.asStack())
                     .duration(1600)
-                    .MANAt(128)
+                    .MANAt(256)
                     .save();
 
             ASSEMBLER_RECIPES.builder("mana_greenhouse")
@@ -368,7 +369,23 @@ public final class ManaRecipes {
                     .outputItems(ManaMultiBlock.MANA_GREENHOUSE.asStack())
                     .inputFluids(GTOMaterials.Mana, 4608)
                     .duration(1200)
-                    .MANAt(64)
+                    .MANAt(128)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("mana_alloy_blast_smelter")
+                    .inputItems(ManaMachine.MANA_HULL[GTValues.EV].asStack())
+                    .inputItems(GTItems.FIELD_GENERATOR_IV.asStack(16))
+                    .inputItems(CustomTags.IV_CIRCUITS, 16)
+                    .inputItems(GCYMMachines.BLAST_ALLOY_SMELTER.asStack(4))
+                    .inputItems("botania:exoflame", 32)
+                    .inputItems("mythicbotany:exoblaze", 32)
+                    .inputItems("botania:rune_pride", 8)
+                    .inputItems("mythicbotany:nidavellir_rune", 8)
+                    .inputItems(TagPrefix.gear, GTOMaterials.Orichalcos, 8)
+                    .inputFluids(GTOMaterials.Aerialite, L * 16)
+                    .outputItems(ManaMultiBlock.MANA_ALLOY_BLAST_SMELTER.asStack())
+                    .duration(1200)
+                    .MANAt(512)
                     .save();
 
             ASSEMBLER_RECIPES.builder("base_mana_distributor")
@@ -595,13 +612,13 @@ public final class ManaRecipes {
         // 工具配方
         {
             VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("livingwood_mallet"), RegistriesUtils.getItemStack("gtocore:livingwood_mallet"),
-                    "AA ", "AAB", "AA ",
+                    " AA", "BAA", " AA",
                     'A', RegistriesUtils.getItemStack("botania:livingwood_planks"), 'B', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));
             VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("dreamwood_mallet"), RegistriesUtils.getItemStack("gtocore:dreamwood_mallet"),
-                    "AA ", "AAB", "AA ",
+                    " AA", "BAA", " AA",
                     'A', RegistriesUtils.getItemStack("botania:dreamwood_planks"), 'B', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));
             VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("shimmerwood_mallet"), RegistriesUtils.getItemStack("gtocore:shimmerwood_mallet"),
-                    "AA ", "AAB", "AA ",
+                    " AA", "BAA", " AA",
                     'A', new MaterialEntry(TagPrefix.block, GTOMaterials.Shimmerwood), 'B', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));
             VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("livingrock_mortar"), RegistriesUtils.getItemStack("gtocore:livingrock_mortar"),
                     " A ", "BAB", "BBB",

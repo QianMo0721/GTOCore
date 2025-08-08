@@ -9,7 +9,7 @@ import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.item.component.IItemUIFactory;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
-import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
+import com.gregtechceu.gtceu.api.pattern.predicates.SimplePredicate;
 import com.gregtechceu.gtceu.common.block.CoilBlock;
 
 import net.minecraft.core.BlockPos;
@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import com.hepdd.gtmthings.api.gui.widget.TerminalInputWidget;
@@ -31,10 +32,8 @@ import com.lowdragmc.lowdraglib.gui.widget.DraggableScrollableWidgetGroup;
 import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
 import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
-import com.lowdragmc.lowdraglib.utils.BlockInfo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -56,10 +55,9 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                 if (!controller.isFormed()) {
                     AdvancedBlockPattern.getAdvancedBlockPattern(controller.getPattern()).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
-                } else if (MetaMachine.getMachine(level, blockPos) instanceof WorkableMultiblockMachine workableMultiblockMachine && autoBuildSetting.isReplaceCoilMode()) {
+                } else if (autoBuildSetting.isReplaceCoilMode()) {
                     AdvancedBlockPattern.getAdvancedBlockPattern(controller.getPattern()).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
-                    workableMultiblockMachine.onPartUnload();
                 }
 
             }
@@ -242,32 +240,26 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
             this.isFlip = 0;
         }
 
-        public List<ItemStack> apply(BlockInfo[] blockInfos) {
+        public List<ItemStack> apply(Block[] blocks) {
             List<ItemStack> candidates = new ArrayList<>();
-            if (blockInfos != null) {
-                if (Arrays.stream(blockInfos).anyMatch(info -> info.getBlockState().getBlock() instanceof CoilBlock)) {
-                    var tier = Math.min(coilTier - 1, blockInfos.length - 1);
-                    if (tier == -1) {
-                        for (int i = 0; i < blockInfos.length - 1; i++) {
-                            candidates.add(blockInfos[i].getItemStackForm());
-                        }
-                    } else {
-                        candidates.add(blockInfos[tier].getItemStackForm());
+            if (blocks != null) {
+                for (Block block : blocks) {
+                    if (block instanceof CoilBlock && coilTier > 0) {
+                        candidates.add(blocks[coilTier - 1].asItem().getDefaultInstance());
+                        return candidates;
+                    } else if (block != Blocks.AIR) {
+                        candidates.add(SimplePredicate.toItem(block).getDefaultInstance());
                     }
-                    return candidates;
-                }
-                for (BlockInfo info : blockInfos) {
-                    if (info.getBlockState().getBlock() != Blocks.AIR) candidates.add(info.getItemStackForm());
                 }
             }
             return candidates;
         }
 
-        boolean isPlaceHatch(BlockInfo[] blockInfos) {
+        boolean isPlaceHatch(Block[] blocks) {
             if (this.noHatchMode == 0) return true;
-            if (blockInfos != null && blockInfos.length > 0) {
-                var blockInfo = blockInfos[0];
-                return !(blockInfo.getBlockState().getBlock() instanceof MetaMachineBlock machineBlock) || !Hatch.Set.contains(machineBlock);
+            if (blocks != null && blocks.length > 0) {
+                var block = blocks[0];
+                return !(block instanceof MetaMachineBlock machineBlock) || !Hatch.Set.contains(machineBlock);
             }
             return true;
         }

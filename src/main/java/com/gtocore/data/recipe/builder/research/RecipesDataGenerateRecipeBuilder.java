@@ -110,7 +110,7 @@ public final class RecipesDataGenerateRecipeBuilder {
                 .notConsumable(catalyst1)
                 .notConsumable(catalyst2)
                 .inputItems(DataItem);
-        for (int inputAnalyzeDatum : inputAnalyzeData) build.chancedInput(getAnalyzeData(inputAnalyzeDatum), 50, 0);
+        for (int inputAnalyzeDatum : inputAnalyzeData) build.notConsumable(getAnalyzeData(inputAnalyzeDatum));
         build
                 .chancedOutput(dataStack, chance, 0)
                 .EUt(eut)
