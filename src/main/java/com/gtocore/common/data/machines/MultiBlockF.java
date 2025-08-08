@@ -118,7 +118,7 @@ public final class MultiBlockF {
 
     public static final MultiblockMachineDefinition COMPOUND_DISTILLATION_FRACTIONATOR = multiblock("compound_distillation_fractionator", "复合式蒸馏分馏塔", CrossRecipeMultiblockMachine::createHatchParallel)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getCompoundDistillationTowerTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getCompoundDistillationTowerTooltips().getSupplier())
             .parallelizableTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()

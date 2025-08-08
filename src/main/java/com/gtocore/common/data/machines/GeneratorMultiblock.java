@@ -66,7 +66,7 @@ public final class GeneratorMultiblock {
 
         return multiblock(name + "_photovoltaic_power_station", cn + "光伏电站", holder -> new PhotovoltaicPowerStationMachine(holder, basicRate))
                 .nonYAxisRotation()
-                .tooltips(tooltips.getArray())
+                .tooltips(tooltips.getSupplier())
                 .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
                 .generator()
                 .tooltipsText("根据维度和天气输出EU或魔力", "Output EU or Mana based on dimensions and weather")

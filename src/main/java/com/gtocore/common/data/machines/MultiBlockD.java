@@ -829,7 +829,7 @@ public final class MultiBlockD {
     public static final MultiblockMachineDefinition NANO_FORGE = multiblock("nano_forge", "纳米锻炉", NanoForgeMachine::new)
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.NANO_FORGE_RECIPES)
-            .tooltips(GTOMachineTranslation.INSTANCE.getNanoswarmCircuitAssemblyFactoryTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getNanoswarmCircuitAssemblyFactoryTooltips().getSupplier())
             .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
                     h -> h.addLines("运行条件", "Operating Conditions", StyleBuilder::setGold),
                     c -> c.addLines(
@@ -1081,7 +1081,7 @@ public final class MultiBlockD {
     public static final MultiblockMachineDefinition FISSION_REACTOR = multiblock("fission_reactor", "裂变反应堆", FissionReactorMachine::new)
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.FISSION_REACTOR_RECIPES)
-            .tooltips(GTOMachineTranslation.INSTANCE.getFissionReactorTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getFissionReactorTooltips().getSupplier())
             // .tooltipsText("冷却组件必须贴着燃料组件才算有效", "The cooling component must be adjacent to the fuel component to be
             // effective")
             // .tooltipsText("反应堆在运行过程中会根据条件升温，每秒升温值(K)=配方产热x(1+相邻燃料棒数量)", "The reactor will heat up based on conditions
@@ -1417,7 +1417,7 @@ public final class MultiBlockD {
 
     public static final MultiblockMachineDefinition INCUBATOR = multiblock("incubator", "培养缸", IncubatorMachine::new)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getCulturingTankTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getCulturingTankTooltips().getSupplier())
             .recipeTypes(GTORecipeTypes.INCUBATOR_RECIPES)
             .overclock()
             .block(GTBlocks.PLASTCRETE)
@@ -1442,7 +1442,7 @@ public final class MultiBlockD {
 
     public static final MultiblockMachineDefinition LARGE_INCUBATOR = multiblock("large_incubator", "大型培养缸", IncubatorMachine::new)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getLargeCulturingTankTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getLargeCulturingTankTooltips().getSupplier())
             .recipeTypes(GTORecipeTypes.INCUBATOR_RECIPES)
             .parallelizableTooltips()
             .parallelizableOverclock()

@@ -19,6 +19,7 @@ class ComponentListSupplier(var list: MutableList<ComponentSupplier> = mutableLi
         val result = list.map { it.get() }
         return result
     }
+    fun getSupplier(): Supplier<List<Component>> = this
     fun getArray(): Array<Component> = get().toTypedArray()
 
     fun add(component: ComponentSupplier, style: ComponentSupplier.() -> ComponentSupplier = { this }) {
@@ -211,6 +212,9 @@ fun ((Float) -> ComponentSupplier).initialize(): (Float) -> ComponentSupplier = 
 
 @JvmName("initializeInt")
 fun ((Int) -> ComponentSupplier).initialize(): (Int) -> ComponentSupplier = this.also { it(0) }
+
+@JvmName("initializeListInt")
+fun ((Int) -> ComponentListSupplier).initialize(): (Int) -> ComponentListSupplier = this.also { it(0) }
 
 @JvmName("initializeBoolean")
 fun ((Boolean) -> ComponentSupplier).initialize(): (Boolean) -> ComponentSupplier = this.also { it(false) }

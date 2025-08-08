@@ -33,6 +33,7 @@ import com.gtolib.api.machine.SimpleNoEnergyMachine;
 import com.gtolib.api.machine.feature.multiblock.IParallelMachine;
 import com.gtolib.api.machine.part.DroneHatchPartMachine;
 import com.gtolib.api.machine.part.ItemHatchPartMachine;
+import com.gtolib.api.registries.GTOMachineBuilder;
 import com.gtolib.api.registries.GTORegistration;
 import com.gtolib.utils.register.BlockRegisterUtils;
 
@@ -49,7 +50,6 @@ import com.gregtechceu.gtceu.api.machine.SimpleTieredMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.machine.steam.SimpleSteamMachine;
-import com.gregtechceu.gtceu.api.registry.registrate.MachineBuilder;
 import com.gregtechceu.gtceu.client.renderer.machine.*;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
@@ -206,7 +206,7 @@ public final class GTOMachines {
             .recipeType(GTRecipeTypes.DUMMY_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getHeaterMachineTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getHeaterMachineTooltips().getSupplier())
             .renderer(() -> new HeaterRenderer(ULV))
             .register();
 
@@ -216,7 +216,7 @@ public final class GTOMachines {
             .recipeType(GTRecipeTypes.DUMMY_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getBoilWaterMachineTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getBoilWaterMachineTooltips().getSupplier())
             .tooltips(Component.translatable("gtocore.machine.boiler.tooltip.warning"))
             .tooltipsKey("gtceu.universal.tooltip.produces_fluid", 48)
             .tooltipsKey("gtceu.fluid_pipe.max_temperature", 600)
@@ -225,7 +225,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition PERFORMANCE_MONITOR = machine("performance_monitor", "性能监控器", PerformanceMonitorMachine::new)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getPerformanceMonitorMachineTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getPerformanceMonitorMachineTooltips().getSupplier())
             .workableTieredHullRenderer(GTMThings.id("block/machines/wireless_energy_monitor"))
             .tier(LV)
             .register();
@@ -236,7 +236,7 @@ public final class GTOMachines {
             .recipeType(GTORecipeTypes.MANA_HEATER_RECIPES)
             .noRecipeModifier()
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getElectricHeaterMachineTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getElectricHeaterMachineTooltips().getSupplier())
             .renderer(() -> new HeaterRenderer(LV))
             .register();
 
@@ -698,7 +698,9 @@ public final class GTOMachines {
 
     public static final MachineDefinition CATALYST_HATCH = machine("catalyst_hatch", "催化剂仓", h -> new CatalystHatchPartMachine(h, 2))
             .tier(MV)
+            .tooltips(GTOMachineTranslation.INSTANCE.getCatalystHatchTooltips().getSupplier())
             .allRotation()
+            .tooltips()
             .notAllowSharedTooltips()
             .overlayTieredHullRenderer("catalyst_hatch")
             .abilities(GTOPartAbility.CATALYST_HATCH)
@@ -706,6 +708,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition ADVANCED_CATALYST_HATCH = machine("advanced_catalyst_hatch", "进阶催化剂仓", h -> new CatalystHatchPartMachine(h, 7))
             .tier(IV)
+            .tooltips(GTOMachineTranslation.INSTANCE.getCatalystHatchTooltips().getSupplier())
             .allRotation()
             .notAllowSharedTooltips()
             .overlayTieredHullRenderer("catalyst_hatch")
@@ -825,29 +828,34 @@ public final class GTOMachines {
             .register();
 
     public static final MachineDefinition BASIC_MONITOR = registerMonitor("basic_monitor", "基础监控器", BasicMonitor::new)
-            .tooltips(Component.translatable("gtocore.machine.basic_monitor.tooltip.1"),
-                    Component.translatable("gtocore.machine.basic_monitor.tooltip.2"))
+            .tooltips(GTOMachineTranslation.INSTANCE.getBasicMonitorTooltips().getSupplier())
             .register();
     public static final MachineDefinition MONITOR_MACHINE_ELECTRICITY = registerMonitor("monitor_electricity", "监控器电网组件", MonitorEU::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorPowerComponentTooltips().getSupplier())
             .register();
     public static final MachineDefinition MONITOR_MACHINE_MANA = registerMonitor("monitor_mana", "监控器魔力网络组件", MonitorMana::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorManaComponentTooltips().getSupplier())
             .register();
     public static final MachineDefinition MONITOR_MACHINE_CWU = registerMonitor("monitor_cwu", "监控器算力网络组件", MonitorCWU::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorComputingComponentTooltips().getSupplier())
             .register();
     public static final MachineDefinition MONITOR_MACHINE_CUSTOM = registerMonitor("monitor_custom", "监控器自定义文本组件", MonitorCustomInfo::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorCustomTextComponentTooltips().getSupplier())
             .register();
     public static final MachineDefinition MONITOR_AE_THROUGHPUT = registerMonitor("monitor_ae_throughput", "监控器ME网络吞吐量组件", MonitorAEThroughput::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorMEThroughputComponentTooltips().getSupplier())
             .register();
     public static final MachineDefinition MONITOR_AE_CPU = registerMonitor("monitor_ae_cpu", "监控器ME合成处理单元组件", MonitorAECPU::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorCraftingComponentTooltips().getSupplier())
             .register();
-
     public static final MachineDefinition MONITOR_MACHINE = registerMonitor("monitor_machine", "监控器通用机器组件", MonitorMachine::new)
+            .tooltips(GTOMachineTranslation.INSTANCE.getMonitorMachineComponentTooltips().getSupplier())
             .register();
 
-    private static MachineBuilder<MachineDefinition> registerMonitor(String id, String cn, Function<IMachineBlockEntity, MetaMachine> monitorConstructor) {
+    private static GTOMachineBuilder registerMonitor(String id, String cn, Function<IMachineBlockEntity, MetaMachine> monitorConstructor) {
         BlockRegisterUtils.addLang(id, cn);
         MonitorBlockItem.addItem(GTOCore.id(id));
-        return MachineBuilder.create(
+        return (GTOMachineBuilder) new GTOMachineBuilder(
                 GTORegistration.GTO,
                 id,
                 MachineDefinition::createDefinition,

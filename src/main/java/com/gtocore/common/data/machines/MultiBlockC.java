@@ -957,7 +957,7 @@ public final class MultiBlockC {
 
     public static final MultiblockMachineDefinition ENERGY_INJECTOR = multiblock("energy_injector", "能量注入仪", EnergyInjectorMachine::new)
             .nonYAxisRotation()
-            .tooltips(GTOMachineTranslation.INSTANCE.getEnergyInjectorTooltips().getArray())
+            .tooltips(GTOMachineTranslation.INSTANCE.getEnergyInjectorTooltips().getSupplier())
             .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
             .laserTooltips()
             .block(GCYMBlocks.CASING_NONCONDUCTING)
