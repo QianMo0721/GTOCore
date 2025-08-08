@@ -273,7 +273,7 @@ interface WirelessMachine :
         override fun getTitle(): Component? = Component.translatable(gridNodeSelector)
 
         override fun createMainPage(p0: FancyMachineUIWidget?) = rootFresh(176, 166) {
-            println(1)
+            if (GTOConfig.INSTANCE.aeLog) println(1)
             hBox(height = availableHeight, { spacing = 4 }) {
                 blank()
                 vBox(width = this@rootFresh.availableWidth - 4, style = { spacing = 4 }) {
@@ -305,9 +305,9 @@ interface WirelessMachine :
                                     getGridPermissionUUID(),
                                 )
                             }
-                            println("isRemote :${ck.isRemote} Ask for sync in 2")
+                            if (GTOConfig.INSTANCE.aeLog) println("isRemote :${ck.isRemote} Ask for sync in 2")
                             syncDataToClientInServer()
-                            println("isRemote :${ck.isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
+                            if (GTOConfig.INSTANCE.aeLog) println("isRemote :${ck.isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
                             if (GTOConfig.INSTANCE.aeLog)println("isRemote :${ck.isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.get()}")
                             if (GTOConfig.INSTANCE.aeLog)println("isRemote :${ck.isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
                         }
@@ -374,7 +374,7 @@ interface WirelessMachine :
         override fun getTitle(): Component? = Component.translatable(gridNodeList)
 
         override fun createMainPage(p0: FancyMachineUIWidget?): Widget? = rootFresh(256, 166) {
-            println(2)
+            if (GTOConfig.INSTANCE.aeLog) println(2)
 
             hBox(height = availableHeight, { spacing = 4 }) {
                 blank()

@@ -1,5 +1,6 @@
 package com.gtocore.common.network
 
+import com.gtocore.config.GTOConfig
 import com.gtocore.integration.ae.WirelessMachine
 
 import appeng.api.networking.GridHelper
@@ -241,7 +242,7 @@ class WirelessNetworkTopologyManager {
             if (!isNodeValid(node1) || !isNodeValid(node2)) return null
             GridHelper.createConnection(node1.mainNode.node, node2.mainNode.node)
         } catch (e: Exception) {
-            println("Failed to create connection between ${node1.self().pos} and ${node2.self().pos}: ${e.message}")
+            if (GTOConfig.INSTANCE.aeLog) println("Failed to create connection between ${node1.self().pos} and ${node2.self().pos}: ${e.message}")
             null
         }
     }

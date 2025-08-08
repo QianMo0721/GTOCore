@@ -142,7 +142,6 @@ public final class GTOConfig {
         ConfigHolder.INSTANCE.gameplay.environmentalHazardDecayRate = 0.001F;
         if (GTOCore.isSimple()) {
             ConfigHolder.INSTANCE.gameplay.hazardsEnabled = false;
-            ConfigHolder.INSTANCE.gameplay.universalHazards = false;
         }
         ConfigHolder.INSTANCE.dev.debug = GTCEu.isDev();
     }
