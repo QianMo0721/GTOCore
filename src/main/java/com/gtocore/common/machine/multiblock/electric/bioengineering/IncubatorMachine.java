@@ -46,6 +46,7 @@ public final class IncubatorMachine extends TierCasingMultiblockMachine {
     @Override
     public void onStructureFormed() {
         super.onStructureFormed();
+        tier = Math.min(getCasingTier(GLASS_TIER), tier);
         IFilterType filterType = getMultiblockState().getMatchContext().get("FilterType");
         if (filterType != null) {
             switch (filterType.getCleanroomType().getName()) {

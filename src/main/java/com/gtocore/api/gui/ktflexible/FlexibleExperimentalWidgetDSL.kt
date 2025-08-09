@@ -3,6 +3,7 @@ package com.gtocore.api.gui.ktflexible
 import com.gtocore.api.gui.helper.ProgressBarColorStyle
 import com.gtocore.api.gui.helper.ProgressBarHelper
 import com.gtocore.api.gui.helper.TextBlockHelper
+import com.gtocore.config.GTOConfig
 
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -124,12 +125,12 @@ fun LayoutBuilder<*>.multiPageAdvanced(width: Int, height: Int, style: (Style.()
         val pageSuppliers: MutableList<Supplier<VBoxBuilder.() -> Unit>> = mutableListOf()
         init {
             currentPage.setReceiverListener { side, old, newV ->
-                println("Page changed from $old to $newV on $side")
+                if (GTOConfig.INSTANCE.aeLog) println("Page changed from $old to $newV on $side")
                 runOnUpdate.run()
                 refresh()
             }
             currentPage.setSenderListener { side, old, newV ->
-                println("Page changed from $old to $newV on $side")
+                if (GTOConfig.INSTANCE.aeLog) println("Page changed from $old to $newV on $side")
                 runOnUpdate.run()
                 refresh()
             }

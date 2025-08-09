@@ -15,6 +15,12 @@ import static com.gtolib.utils.register.MaterialsRegisterUtils.material;
 public final class MaterialB {
 
     public static void init() {
+        Honey = material("honey", "蜂蜜")
+                .liquid()
+                .color(0xfcd12c)
+                .iconSet(DULL)
+                .buildAndRegister().setFormula("C6H12O6");
+
         RawTengam = material("raw_tengam", "生镃")
                 .dust()
                 .color(0x819a4e)

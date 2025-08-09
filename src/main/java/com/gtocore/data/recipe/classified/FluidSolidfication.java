@@ -15,6 +15,7 @@ import com.gregtechceu.gtceu.data.recipe.CustomTags;
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import java.util.Map;
 
@@ -78,6 +79,14 @@ final class FluidSolidfication {
                 .inputFluids(GTOMaterials.SuperheavyMix.getFluid(144))
                 .EUt(122880)
                 .duration(800)
+                .save();
+
+        FLUID_SOLIDFICATION_RECIPES.recipeBuilder("honey_block")
+                .notConsumable(GTItems.SHAPE_MOLD_BLOCK.asItem())
+                .inputFluids(GTOMaterials.Honey.getFluid(1000))
+                .outputItems(Items.HONEY_BLOCK)
+                .EUt(30)
+                .duration(20)
                 .save();
 
         Map<Item, TagKey<Item>> toolToMoldMap = Map.of(

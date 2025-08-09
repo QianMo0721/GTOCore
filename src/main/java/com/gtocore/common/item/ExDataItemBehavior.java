@@ -70,7 +70,6 @@ public class ExDataItemBehavior implements IAddInformation, IExDataItem {
             int serial = analyzeTag.getInt(ANALYZE_SERIAL_NBT_TAG);
             String analyzeId = analyzeTag.getString(ANALYZE_ID_NBT_TAG);
 
-            tooltip.add(Component.empty());
             tooltip.add(Component.translatable("gtocore.tooltip.item.analyze_data")
                     .withStyle(ChatFormatting.LIGHT_PURPLE));
 
@@ -80,6 +79,10 @@ public class ExDataItemBehavior implements IAddInformation, IExDataItem {
 
             tooltip.add(Component.translatable("gtocore.tooltip.item.analyze_serial",
                     Component.literal(String.format("%08X", serial)).withStyle(ChatFormatting.YELLOW)));
+
+            String tooltipKey = "data." + analyzeId + ".tooltip";
+            String localized = I18n.get(tooltipKey);
+            if (!localized.equals(tooltipKey)) tooltip.add(Component.translatable("- " + localized));
 
         }
     }

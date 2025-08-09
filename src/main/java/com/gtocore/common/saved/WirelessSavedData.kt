@@ -1,6 +1,7 @@
 package com.gtocore.common.saved
 
 import com.gtocore.common.network.WirelessNetworkTopologyManager
+import com.gtocore.config.GTOConfig
 import com.gtocore.integration.ae.WirelessMachine
 
 import net.minecraft.core.BlockPos
@@ -112,7 +113,7 @@ class WirelessSavedData : SavedData() {
         p0.put(
             "WirelessSavedData",
             ListTag().apply {
-                println("${GTCEu.isClientSide()} Saving WirelessSavedData with ${gridPool.size} grids")
+                if (GTOConfig.INSTANCE.aeLog) println("${GTCEu.isClientSide()} Saving WirelessSavedData with ${gridPool.size} grids")
                 for (grid in gridPool) {
                     add(grid.serializer())
                 }
@@ -121,7 +122,7 @@ class WirelessSavedData : SavedData() {
         p0.put(
             "defaultMap",
             ListTag().apply {
-                println("${GTCEu.isClientSide()} Saving defaultMap with ${defaultMap.size} entries")
+                if (GTOConfig.INSTANCE.aeLog) println("${GTCEu.isClientSide()} Saving defaultMap with ${defaultMap.size} entries")
                 for ((key, value) in defaultMap) {
                     add(
                         CompoundTag().apply {
@@ -143,7 +144,7 @@ class WirelessSavedData : SavedData() {
         for (tag in list) {
             res.add(WirelessGrid.deserializer(tag as CompoundTag).takeIf { n -> gridPool.none { it.name == n?.name } } ?: continue)
         }
-        println("${GTCEu.isClientSide()} Loading WirelessSavedData with ${res.size} grids")
+        if (GTOConfig.INSTANCE.aeLog) println("${GTCEu.isClientSide()} Loading WirelessSavedData with ${res.size} grids")
         gridPool.addAll(res)
         val defaultList = p0.getList("defaultMap", 10)
         for (tag in defaultList) {
@@ -184,9 +185,9 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
                 WirelessGrid(name, owner, isDefault, connectionPoolTable.toMutableList())
             }
         }
-        fun deserializer(nbt: CompoundTag): WirelessGrid? = CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial({ println("[WirelessGrid] deserializer error $it") }).orElse(null)
+        fun deserializer(nbt: CompoundTag): WirelessGrid? = CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial({ if (GTOConfig.INSTANCE.aeLog) println("[WirelessGrid] deserializer error $it") }).orElse(null)
     }
-    fun serializer(): CompoundTag = CODEC.encodeStart(NbtOps.INSTANCE, this).resultOrPartial({ println("[WirelessGrid] serializer error $it") }).orElse(CompoundTag()) as CompoundTag
+    fun serializer(): CompoundTag = CODEC.encodeStart(NbtOps.INSTANCE, this).resultOrPartial({ if (GTOConfig.INSTANCE.aeLog)println("[WirelessGrid] serializer error $it") }).orElse(CompoundTag()) as CompoundTag
 
     // ///////////////////////////////
     // ****** RUN TIME ******//
@@ -219,11 +220,13 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
             connectionHolderPool.addAll(newConnections)
 
             val stats = topologyManager.getNetworkStats()
-            println(
-                "Grid '$name' topology rebuilt: ${stats.totalNodes} nodes, " +
-                    "${stats.totalClusters} clusters, ${stats.totalConnections} connections, " +
-                    "efficiency: ${String.format("%.2f", stats.connectionEfficiency * 100)}%",
-            )
+            if (GTOConfig.INSTANCE.aeLog) {
+                println(
+                    "Grid '$name' topology rebuilt: ${stats.totalNodes} nodes, " +
+                        "${stats.totalClusters} clusters, ${stats.totalConnections} connections, " +
+                        "efficiency: ${String.format("%.2f", stats.connectionEfficiency * 100)}%",
+                )
+            }
         } catch (e: Exception) {
             fallbackToSimpleConnections()
         }
@@ -237,9 +240,9 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
             val newConnections = topologyManager.addNode(machine)
             connectionHolderPool.addAll(newConnections)
 
-            println("Added node ${machine.self().pos} to grid '$name', ${newConnections.size} new connections")
+            if (GTOConfig.INSTANCE.aeLog) println("Added node ${machine.self().pos} to grid '$name', ${newConnections.size} new connections")
         } catch (e: Exception) {
-            println("Failed to add node to topology: ${e.message}")
+            if (GTOConfig.INSTANCE.aeLog) println("Failed to add node to topology: ${e.message}")
             refreshConnectionPool()
         }
     }
@@ -251,9 +254,9 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
                     affectedConnections.contains(connection)
                 }
 
-                println("Removed node ${machine.self().pos} from grid '$name'")
+                if (GTOConfig.INSTANCE.aeLog) println("Removed node ${machine.self().pos} from grid '$name'")
             } catch (e: Exception) {
-                println("Failed to remove node from topology: ${e.message}")
+                if (GTOConfig.INSTANCE.aeLog) println("Failed to remove node from topology: ${e.message}")
                 refreshConnectionPool()
             }
         }
@@ -261,7 +264,7 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
 
     // 网络降级
     private fun fallbackToSimpleConnections() {
-        println("Grid '$name' topology rebuild failed, falling back to simple connections")
+        if (GTOConfig.INSTANCE.aeLog) println("Grid '$name' topology rebuild failed, falling back to simple connections")
         connectionPool.windowed(2).forEach { windowedNodes ->
             try {
                 val first = windowedNodes[0]

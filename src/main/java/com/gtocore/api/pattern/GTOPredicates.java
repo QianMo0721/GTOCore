@@ -22,6 +22,7 @@ import com.gregtechceu.gtceu.api.pattern.error.PatternStringError;
 import com.gregtechceu.gtceu.api.pattern.predicates.SimplePredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
+import com.gregtechceu.gtceu.common.data.GTMachines;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
@@ -33,6 +34,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -84,11 +86,12 @@ public final class GTOPredicates {
     }
 
     public static TraceabilityPredicate tierBlock(Int2ObjectMap<Supplier<?>> map, String tierType) {
-        BlockInfo[] blockInfos = new BlockInfo[map.size()];
+        Block[] blocks = new Block[map.size()];
         int index = 0;
-        for (Supplier<?> blockSupplier : map.values()) {
-            Block block = (Block) blockSupplier.get();
-            blockInfos[index] = BlockInfo.fromBlockState(block.defaultBlockState());
+        var list = new ArrayList<>(map.int2ObjectEntrySet());
+        list.sort(Comparator.comparingInt(Int2ObjectMap.Entry::getIntKey));
+        for (Int2ObjectMap.Entry<Supplier<?>> entry : list) {
+            blocks[index] = (Block) entry.getValue().get();
             index++;
         }
         return new TraceabilityPredicate(state -> {
@@ -105,7 +108,7 @@ public final class GTOPredicates {
                 }
             }
             return false;
-        }, () -> blockInfos).addTooltips(Component.translatable("gtocore.machine.pattern.error.tier"));
+        }, () -> BlockInfo.fromBlock(blocks[0]), () -> blocks).addTooltips(Component.translatable("gtocore.machine.pattern.error.tier"));
     }
 
     public static TraceabilityPredicate RotorBlock(int tier) {
@@ -116,7 +119,7 @@ public final class GTOPredicates {
             }
             state.setError(new PatternStringError("gtceu.multiblock.pattern.clear_amount_3"));
             return false;
-        }, () -> PartAbility.ROTOR_HOLDER.getAllBlocks().stream().filter(b -> b instanceof MetaMachineBlock metaMachineBlock && metaMachineBlock.getDefinition().getTier() >= tier).map(BlockInfo::fromBlock).toArray(BlockInfo[]::new))).addTooltips(Component.translatable("gtceu.multiblock.pattern.clear_amount_3"));
+        }, () -> BlockInfo.fromBlockState(GTMachines.ROTOR_HOLDER[tier].defaultBlockState()), () -> PartAbility.ROTOR_HOLDER.getAllBlocks().stream().filter(b -> b instanceof MetaMachineBlock metaMachineBlock && metaMachineBlock.getDefinition().getTier() >= tier).toArray(Block[]::new))).addTooltips(Component.translatable("gtceu.multiblock.pattern.clear_amount_3"));
     }
 
     public static TraceabilityPredicate MEStorageCore() {
@@ -183,7 +186,7 @@ public final class GTOPredicates {
                 return true;
             }
             return false;
-        }, () -> predicate.common.stream().map(p -> p.candidates).filter(Objects::nonNull).map(Supplier::get).flatMap(Arrays::stream).toArray(BlockInfo[]::new)));
+        }, () -> BlockInfo.fromBlock(blocks[0]), () -> predicate.common.stream().map(p -> p.candidates).filter(Objects::nonNull).map(Supplier::get).flatMap(Arrays::stream).toArray(Block[]::new)));
     }
 
     public static TraceabilityPredicate light() {
