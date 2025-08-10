@@ -1778,6 +1778,7 @@
   "gtocore.integration.ae.WirelessMachine.globalWirelessGrid": "全球可用无线网络 : %s / %s",
   "gtocore.integration.ae.WirelessMachine.gridNodeList": "网络节点列表",
   "gtocore.integration.ae.WirelessMachine.gridNodeSelector": "网络节点选择",
+  "gtocore.integration.ae.WirelessMachine.player": "绑定到玩家 : %s",
   "gtocore.integration.ae.WirelessMachine.removeGrid": "删除",
   "gtocore.integration.ae.WirelessMachine.yourWirelessGrid": "你的无线网络 : ",
   "gtocore.lang.-1018476018": "768 个ME存储核心",

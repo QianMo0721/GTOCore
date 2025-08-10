@@ -33,13 +33,11 @@ import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.capability.ISync
 import com.gtolib.api.capability.ISync.createEnumField
-import com.gtolib.api.capability.ISync.createUUIDField
 import com.gtolib.api.gui.ktflexible.blank
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.field
 import com.gtolib.api.gui.ktflexible.rootFresh
 import com.hepdd.gtmthings.api.capability.IBindable
-import com.hepdd.gtmthings.utils.TeamUtil
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture
 import com.lowdragmc.lowdraglib.gui.texture.ItemStackTexture
 import com.lowdragmc.lowdraglib.gui.widget.Widget
@@ -63,7 +61,6 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
     var detailsPageFreshRun: Runnable = Runnable {}
     var isInitialized = false
     var gridCache = createWirelessSyncedField(machine).set(mutableListOf())
-    var teamUUID = createUUIDField(machine).set(machine.self().ownerUUID ?: UUID.randomUUID())
     var FilterInMachineTypeSyncField: ISync.EnumSyncedField<FilterInMachineType> = createEnumField(machine)
     init {
         fun <T> refreshFunction(): (LogicalSide, T, T) -> Unit = { f, old, new ->
@@ -81,8 +78,6 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
         }
         gridCache.setReceiverListener(refreshFunction())
         gridCache.setSenderListener(refreshFunction())
-        teamUUID.setReceiverListener(refreshFunction())
-        teamUUID.setSenderListener(refreshFunction())
         FilterInMachineTypeSyncField.setSenderListener(refreshFunction())
         FilterInMachineTypeSyncField.setReceiverListener(refreshFunction())
         FilterInMachineTypeSyncField.set(FilterInMachineType.BOTH)
@@ -108,18 +103,15 @@ class WirelessMachinePersisted(var machine: WirelessMachine) :
                 machine.self().requestSync()
             }
         }
-    var teamUUID: UUID = machine.self().ownerUUID ?: UUID.randomUUID()
     override fun serializeNBT(): CompoundTag = CompoundTag().apply {
         putString("gridName", gridConnectedName)
         putBoolean("beSet", beSet)
-        putUUID("teamUUID", teamUUID)
     }
 
     override fun deserializeNBT(nbt: CompoundTag?) {
         nbt?.let {
             gridConnectedName = it.getString("gridName")
             beSet = it.getBoolean("beSet")
-            teamUUID = if (it.hasUUID("teamUUID"))it.getUUID("teamUUID") else machine.self().ownerUUID ?: UUID.randomUUID()
         }
     }
 
@@ -143,6 +135,9 @@ interface WirelessMachine :
         @RegisterLanguage(cn = "网络节点列表", en = "Grid Node List")
         const val gridNodeList = "gtocore.integration.ae.WirelessMachine.gridNodeList"
 
+        @RegisterLanguage(cn = "绑定到玩家 : %s", en = "Bind to player: %s")
+        const val player = "gtocore.integration.ae.WirelessMachine.player"
+
         @RegisterLanguage(cn = "当前连接到 %s", en = "Currently connected to %s")
         const val currentlyConnectedTo = "gtocore.integration.ae.WirelessMachine.currentlyConnectedTo"
 
@@ -165,13 +160,11 @@ interface WirelessMachine :
         const val banned = "gtocore.integration.ae.WirelessMachine.banned"
     }
 
-    override fun getUUID(): UUID = getGridPermissionUUID()
-
     // ////////////////////////////////
     // ****** 机器必须实现此字段 ******//
     // //////////////////////////////
-    var wirelessMachinePersisted: WirelessMachinePersisted // Persisted + DescSync
-    var wirelessMachineRunTime: WirelessMachineRunTime // SyncedManager
+    var wirelessMachinePersisted: WirelessMachinePersisted // @Persisted + @DescSync
+    var wirelessMachineRunTime: WirelessMachineRunTime // @SyncedManager
 
     // ////////////////////////////////
     // ****** WirelessSavedData的回调，可通过重写自定义，服务端方法 ******//
@@ -191,9 +184,8 @@ interface WirelessMachine :
         self().subscribeServerTick {
             if (self().offsetTimer > nowTick + 40 && self().offsetTimer % 10 == 0L && mainNode.node != null) {
                 if (!wirelessMachineRunTime.isInitialized && !self().isRemote) {
-                    wirelessMachineRunTime.teamUUID.setAndSyncToClient(wirelessMachinePersisted.teamUUID)
                     if (!wirelessMachinePersisted.beSet) {
-                        WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == getGridPermissionUUID() && it.isDefault }?.let {
+                        WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == uuid && it.isDefault }?.let {
                             joinGrid(it.name)
                         }
                     } else {
@@ -214,9 +206,10 @@ interface WirelessMachine :
     }
     fun onWirelessMachinePlaced(player: LivingEntity?, stack: ItemStack?) {
         player?.let { self().ownerUUID = it.uuid }
-        if (!self().isRemote) wirelessMachinePersisted.teamUUID = (TeamUtil.getTeamUUID(self().ownerUUID ?: UUID.randomUUID()))
         self().requestSync()
     }
+
+    override fun getUUID(): UUID = self().ownerUUID ?: UUID.randomUUID()
 
     // ////////////////////////////////
     // ****** 工具集 ******//
@@ -233,7 +226,7 @@ interface WirelessMachine :
     fun linkGrid(gridName: String) { // 连接网格，例如机器加载
         if (!allowThisMachineConnectToWirelessGrid()) return
         if (self().isRemote) return
-        val status = WirelessSavedData.joinToGrid(gridName, this, getGridPermissionUUID())
+        val status = WirelessSavedData.joinToGrid(gridName, this, uuid)
         when (status) {
             STATUS.SUCCESS -> {
                 wirelessMachineRunTime.gridConnected = WirelessSavedData.INSTANCE.gridPool.first { it.name == gridName }
@@ -266,7 +259,6 @@ interface WirelessMachine :
         unLinkGrid()
         wirelessMachinePersisted.gridConnectedName = ""
     }
-    private fun getGridPermissionUUID(): UUID = wirelessMachineRunTime.teamUUID.get()
     fun getSetupFancyUIProvider(): IFancyUIProvider = object : IFancyUIProvider {
         override fun getTabIcon(): IGuiTexture? = ItemStackTexture(AEItems.WIRELESS_RECEIVER.stack())
 
@@ -287,6 +279,10 @@ interface WirelessMachine :
                     }
                     textBlock(
                         maxWidth = availableWidth - 4,
+                        textSupplier = { Component.translatable(player, self().playerOwner?.name ?: "无") },
+                    )
+                    textBlock(
+                        maxWidth = availableWidth - 4,
                         textSupplier = { Component.translatable(currentlyConnectedTo, wirelessMachinePersisted.gridConnectedName.ifEmpty { "无" }) },
                     )
                     hBox(height = 16, { spacing = 4 }) {
@@ -302,7 +298,7 @@ interface WirelessMachine :
                             ) {
                                 WirelessSavedData.createNewGrid(
                                     wirelessMachineRunTime.gridWillAdded,
-                                    getGridPermissionUUID(),
+                                    uuid,
                                 )
                             }
                             if (GTOConfig.INSTANCE.aeLog) println("isRemote :${ck.isRemote} Ask for sync in 2")
@@ -315,7 +311,7 @@ interface WirelessMachine :
                     textBlock(
                         maxWidth = availableWidth - 4,
                         textSupplier = {
-                            Component.translatable(globalWirelessGrid, wirelessMachineRunTime.gridCache.get().count { it.owner == getGridPermissionUUID() }, wirelessMachineRunTime.gridCache.get().count())
+                            Component.translatable(globalWirelessGrid, wirelessMachineRunTime.gridCache.get().count { it.owner == uuid }, wirelessMachineRunTime.gridCache.get().count())
                         },
                     )
                     textBlock(
@@ -323,7 +319,7 @@ interface WirelessMachine :
                         textSupplier = { Component.translatable(yourWirelessGrid) },
                     )
                     vScroll(width = availableWidth, height = 176 - 4 - 20 - 36 - 16, { spacing = 2 }) a@{
-                        wirelessMachineRunTime.gridCache.get().filter { it.owner == getGridPermissionUUID() }
+                        wirelessMachineRunTime.gridCache.get().filter { it.owner == uuid }
                             .forEach { grid ->
                                 hBox(height = 14, { spacing = 4 }) {
                                     button(
@@ -340,7 +336,7 @@ interface WirelessMachine :
                                     if (!grid.isDefault) {
                                         button(height = 14, text = { "⭐" }, width = 18, onClick = {
                                             if (!it.isRemote) {
-                                                WirelessSavedData.setAsDefault(grid.name, getGridPermissionUUID())
+                                                WirelessSavedData.setAsDefault(grid.name, uuid)
                                             }
                                             syncDataToClientInServer()
                                         })
@@ -349,7 +345,7 @@ interface WirelessMachine :
                                             if (!it.isRemote) {
                                                 WirelessSavedData.cancelAsDefault(
                                                     grid.name,
-                                                    getGridPermissionUUID(),
+                                                    uuid,
                                                 )
                                             }
                                             syncDataToClientInServer()
@@ -357,7 +353,7 @@ interface WirelessMachine :
                                     }
                                     button(height = 14, transKet = removeGrid, width = 36, onClick = {
                                         if (!it.isRemote) {
-                                            WirelessSavedData.removeGrid(grid.name, getGridPermissionUUID())
+                                            WirelessSavedData.removeGrid(grid.name, uuid)
                                         }
                                         syncDataToClientInServer()
                                     })

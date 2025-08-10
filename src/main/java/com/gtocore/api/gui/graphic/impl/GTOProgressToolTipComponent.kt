@@ -9,7 +9,7 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
-class GTOProgressToolTipComponent(val percentage: Float, val text: String = "", val progressColorStyle: ProgressBarColorStyle = ProgressBarColorStyle.DEFAULT_GREEN) : GTOToolTipComponent()
+class GTOProgressToolTipComponent(val percentage: Float, val text: String = "", val progressColorStyle: ProgressBarColorStyle = ProgressBarColorStyle.DEFAULT_GREEN) : GTOToolTipComponent(height = 15, width = 150)
 class GTOProgressClientComponent(data: GTOProgressToolTipComponent) : GTOClientTooltipComponent<GTOProgressToolTipComponent>(data) {
     override fun renderImage(font: Font, x: Int, y: Int, guiGraphics: GuiGraphics) {
         guiGraphics.pose().pushPose()

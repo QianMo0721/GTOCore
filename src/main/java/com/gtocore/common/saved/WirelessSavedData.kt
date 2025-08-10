@@ -18,6 +18,7 @@ import appeng.api.networking.GridHelper
 import appeng.api.networking.IGridConnection
 import com.gregtechceu.gtceu.GTCEu
 import com.gtolib.api.capability.ISync
+import com.hepdd.gtmthings.utils.TeamUtil
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 
@@ -26,6 +27,10 @@ import java.util.UUID
 class WirelessSavedData : SavedData() {
 
     companion object {
+        fun checkPermission(requiredUUID: UUID, requester: UUID): Boolean = requiredUUID == requester ||
+            TeamUtil.getTeamUUID(requiredUUID) == requester ||
+            TeamUtil.getTeamUUID(requester) == requiredUUID ||
+            TeamUtil.getTeamUUID(requester) == TeamUtil.getTeamUUID(requiredUUID)
         var INSTANCE: WirelessSavedData = WirelessSavedData()
 
         val UNKNOWN: ResourceKey<Level> = ResourceKey.create(Registries.DIMENSION, GTCEu.id("unknown"))
@@ -44,7 +49,7 @@ class WirelessSavedData : SavedData() {
         fun joinToGrid(gridName: String, machine: WirelessMachine, requester: UUID): STATUS {
             leaveGrid(machine)
             val grid = INSTANCE.gridPool.firstOrNull { it.name == gridName } ?: return STATUS.NOT_FOUND_GRID
-            if (grid.owner != requester) return STATUS.NOT_PERMISSION
+            if (!checkPermission(grid.owner, requester)) return STATUS.NOT_PERMISSION
             if (grid.connectionPool.any { it == machine }) return STATUS.ALREADY_JOINT
 
             grid.connectionPoolTable.add(
@@ -79,7 +84,7 @@ class WirelessSavedData : SavedData() {
         }
         fun removeGrid(gridName: String, requester: UUID): STATUS {
             INSTANCE.gridPool.find { it.name == gridName }?.let { removed ->
-                if (removed.owner != requester) return STATUS.NOT_PERMISSION
+                if (!checkPermission(removed.owner, requester)) return STATUS.NOT_PERMISSION
                 removed.connectionPool.forEach { it.removedFromGrid(removed.name) }
                 removed.connectionPool.clear()
                 removed.refreshConnectionPool()
@@ -92,13 +97,13 @@ class WirelessSavedData : SavedData() {
         }
         fun setAsDefault(gridName: String, requester: UUID) {
             INSTANCE.defaultMap[requester] = gridName
-            INSTANCE.gridPool.find { it.name == gridName && it.owner == requester }?.let { it.isDefault = true }
-            INSTANCE.gridPool.filter { it.name != gridName && it.owner == requester }.forEach { it.isDefault = false }
+            INSTANCE.gridPool.find { it.name == gridName && checkPermission(it.owner, requester) }?.let { it.isDefault = true }
+            INSTANCE.gridPool.filter { it.name != gridName && checkPermission(it.owner, requester) }.forEach { it.isDefault = false }
             INSTANCE.setDirty()
         }
         fun cancelAsDefault(gridName: String, requester: UUID) {
             INSTANCE.defaultMap.remove(requester)
-            INSTANCE.gridPool.find { it.name == gridName && it.owner == requester }?.let { it.isDefault = false }
+            INSTANCE.gridPool.find { it.name == gridName && checkPermission(it.owner, requester) }?.let { it.isDefault = false }
             INSTANCE.setDirty()
         }
     }
@@ -152,7 +157,7 @@ class WirelessSavedData : SavedData() {
             defaultMap[nbt.getUUID("key")] = nbt.getString("value")
         }
         gridPool.forEach { grid ->
-            defaultMap.forEach { if (grid.owner == it.key && grid.name == it.value) grid.isDefault = true }
+            defaultMap.forEach { if (checkPermission(grid.owner, it.key) && grid.name == it.value) grid.isDefault = true }
             grid.connectionPoolTable.clear()
         }
         return this

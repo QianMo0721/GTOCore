@@ -6,6 +6,7 @@ import com.gtocore.api.gui.graphic.impl.GTOComponentTooltipComponent
 import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent
 import com.gtocore.api.gui.graphic.impl.toPercentageWith
 import com.gtocore.config.GTOConfig
+import com.gtocore.utils.ComponentSupplier
 import com.gtocore.utils.toLiteralSupplier
 
 import net.minecraft.client.Minecraft
@@ -22,6 +23,9 @@ import appeng.api.storage.StorageCells
 import appeng.api.storage.cells.IBasicCellItem
 import appeng.me.cells.BasicCellHandler
 import com.google.common.collect.Lists
+import com.gregtechceu.gtceu.api.item.GTBucketItem
+import com.gregtechceu.gtceu.api.item.TagPrefixItem
+import com.gregtechceu.gtceu.api.item.tool.GTToolItem
 import com.gtolib.GTOCore
 import com.mojang.datafixers.util.Either
 
@@ -81,7 +85,28 @@ object GTOComponentHandler {
             if (!GTOConfig.INSTANCE.showEnglishName) return@run
             val englishName = englishLanguage?.getOrDefault(itemStack.descriptionId) ?: return@run
             if (I18n.get(itemStack.descriptionId) == englishName) return@run
-            val componentSupplier = englishName.toLiteralSupplier().gray()
+            val componentSupplier: ComponentSupplier = when {
+                item is TagPrefixItem -> {
+                    val tagPrefix = item.tagPrefix
+                    val material = item.material
+                    val format = englishLanguage?.getOrDefault(tagPrefix.unlocalizedName)?.format(englishLanguage?.getOrDefault(material.unlocalizedName))
+                    if (format?.contains("%s") == true) return@run
+                    format.toLiteralSupplier()
+                }
+                item is GTToolItem -> {
+                    val toolType = item.toolType
+                    val material = item.material
+                    if (toolType == null || material == null) return@run
+                    val format = englishLanguage?.getOrDefault(toolType.unlocalizedName)?.format(englishLanguage?.getOrDefault(material.unlocalizedName))
+                    if (format?.contains("%s") == true) return@run
+                    format.toLiteralSupplier()
+                }
+                item is GTBucketItem -> {
+                    return@run
+                }
+                else -> englishLanguage?.getOrDefault(itemStack.descriptionId).toLiteralSupplier()
+            }.gray()
+            if (componentSupplier.get().string.contains("%s")) return@run
             components.add(
                 GTOComponentTooltipComponent(componentSupplier.get()),
             )

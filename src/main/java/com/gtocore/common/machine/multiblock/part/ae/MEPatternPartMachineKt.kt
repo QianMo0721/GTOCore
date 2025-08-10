@@ -165,7 +165,7 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
     open fun addWidget(group: WidgetGroup) {}
 
     // ==================== 生命周期方法 ====================
-    val newPageField = ISync.createIntField(this)
+    val newPageField = ISync.createIntField(this).set(0)
     override fun onLoad() {
         super.onLoad()
         when (val level = getLevel()) {
@@ -179,7 +179,6 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
                             }
                         }
                         updatePatterns()
-                        newPageField.setAndSyncToClient(0)
                     },
                 )
             }
@@ -392,7 +391,6 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
         return slot
     }
     open fun VBoxBuilder.buildToolBoxContent() {}
-
     override fun createMainPage(widget: FancyMachineUIWidget?): Widget? = super.createMainPage(widget)
 
     // ==================== 内部类 ====================

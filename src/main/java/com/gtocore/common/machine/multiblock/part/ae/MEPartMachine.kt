@@ -182,7 +182,13 @@ internal abstract class MEPartMachine(holder: IMachineBlockEntity, io: IO) :
     // ****** 无线连接设置 ******//
     // //////////////////////////////
     override fun createUI(entityPlayer: Player?): ModularUI? = (ModularUI(176, 166, this, entityPlayer))
-        .widget(InitFancyMachineUIWidget(this, 176, 166) { if (!isRemote) syncDataToClientInServer() })
+        .widget(
+            InitFancyMachineUIWidget(this, 176, 166) {
+                if (!isRemote) {
+                    syncDataToClientInServer()
+                }
+            },
+        )
 
     @Persisted
     @DescSynced
