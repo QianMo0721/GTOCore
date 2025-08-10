@@ -86,6 +86,7 @@ object GTOComponentHandler {
             val englishName = englishLanguage?.getOrDefault(itemStack.descriptionId) ?: return@run
             if (I18n.get(itemStack.descriptionId) == englishName) return@run
             val componentSupplier: ComponentSupplier = when {
+                itemStack.isEmpty -> return@run
                 item is TagPrefixItem -> {
                     val tagPrefix = item.tagPrefix
                     val material = item.material

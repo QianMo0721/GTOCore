@@ -201,7 +201,7 @@ public final class GTOConfig {
     @Configurable
     @Configurable.Comment("在物品下方显示英文名称")
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Show Item English Name", cn = "显示物品英文名称")
-    public boolean showEnglishName = true;
+    public boolean showEnglishName = false;
 
     // 开发和调试设置
     @Configurable
