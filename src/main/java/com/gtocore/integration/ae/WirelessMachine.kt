@@ -22,6 +22,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.server.TickTask
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraftforge.fml.LogicalSide
 
@@ -37,6 +38,7 @@ import com.gtolib.api.gui.ktflexible.blank
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.field
 import com.gtolib.api.gui.ktflexible.rootFresh
+import com.gtolib.api.player.IEnhancedPlayer
 import com.hepdd.gtmthings.api.capability.IBindable
 import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture
 import com.lowdragmc.lowdraglib.gui.texture.ItemStackTexture
@@ -60,6 +62,7 @@ class WirelessMachineRunTime(var machine: WirelessMachine) {
     var connectPageFreshRun: Runnable = Runnable {}
     var detailsPageFreshRun: Runnable = Runnable {}
     var isInitialized = false
+    var shouldAutoConnect = true
     var gridCache = createWirelessSyncedField(machine).set(mutableListOf())
     var FilterInMachineTypeSyncField: ISync.EnumSyncedField<FilterInMachineType> = createEnumField(machine)
     init {
@@ -184,7 +187,7 @@ interface WirelessMachine :
         self().subscribeServerTick {
             if (self().offsetTimer > nowTick + 40 && self().offsetTimer % 10 == 0L && mainNode.node != null) {
                 if (!wirelessMachineRunTime.isInitialized && !self().isRemote) {
-                    if (!wirelessMachinePersisted.beSet) {
+                    if (!wirelessMachinePersisted.beSet && wirelessMachineRunTime.shouldAutoConnect) {
                         WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == uuid && it.isDefault }?.let {
                             joinGrid(it.name)
                         }
@@ -194,6 +197,7 @@ interface WirelessMachine :
                         }
                     }
                     wirelessMachineRunTime.isInitialized = true
+                    wirelessMachinePersisted.beSet = true
                 }
             }
         }
@@ -205,7 +209,12 @@ interface WirelessMachine :
     fun onWirelessMachineClientTick() {
     }
     fun onWirelessMachinePlaced(player: LivingEntity?, stack: ItemStack?) {
-        player?.let { self().ownerUUID = it.uuid }
+        player?.let {
+            self().ownerUUID = it.uuid
+            if (player is Player) {
+                if (IEnhancedPlayer.of(player).playerData.shiftState) wirelessMachineRunTime.shouldAutoConnect = false
+            }
+        }
         self().requestSync()
     }
 
@@ -247,7 +256,6 @@ interface WirelessMachine :
         if (!allowThisMachineConnectToWirelessGrid()) return
         if (self().isRemote) return
         wirelessMachinePersisted.gridConnectedName = gridName
-        wirelessMachinePersisted.beSet = true
         linkGrid(gridName)
     }
     fun unLinkGrid() { // 机器下线但不退出

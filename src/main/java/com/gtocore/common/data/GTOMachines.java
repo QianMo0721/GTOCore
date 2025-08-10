@@ -439,12 +439,12 @@ public final class GTOMachines {
                             是的，你现在可以不修改样板，就一键替换其中的内容了。
                             只需要将此机器连入ME网络，然后样板在被调用时，
                             其内容就会按照你配置的优先级被同一行匹配替换。
-                            同一行的某个物品的物品数越多，其优先级越高。""",
+                            支持物品和流体""",
                     """
-                            Yes, you can now replace the content of the pattern without modifying it.
+                            Yes, you can now replace the content of a pattern without modifying it.
                             Just connect this machine to the ME network, and when the pattern is called,
-                            its content will be replaced by the same line according to your priority.
-                            The more items in a row, the higher its priority.""")))
+                            its content will be replaced according to the priority you configured.
+                            Supports both items and fluids""")))
             .register();
 
     public static final MachineDefinition ME_WIRELESS_CONNECTION_MACHINE = machine("me_wireless_connection_machine", "ME无线连接机", MeWirelessConnectMachine::new)

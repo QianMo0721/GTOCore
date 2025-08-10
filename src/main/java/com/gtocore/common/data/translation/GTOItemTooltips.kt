@@ -50,7 +50,7 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
             it.setTooltips(
                 ComponentListSupplier {
                     setTranslationPrefix("me_storage_cell")
-                    add(Star(1) + ("存储容量是原来的八倍" translatedTo "Storage capacity is eight times the original")) { aqua() }
+                    add(Star(1) + ("存储容量最高是原来的二倍" translatedTo "Storage capacity is doubled compared to the original")) { aqua() }
                 }.editionByGTONormal(),
             )
         }
@@ -58,7 +58,7 @@ object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
             it.setTooltips(
                 ComponentListSupplier {
                     setTranslationPrefix("me_storage_cell")
-                    add(Star(1) + ("存储容量是原来的八倍" translatedTo "Storage capacity is eight times the original")) { aqua() }
+                    add(Star(1) + ("存储容量最高是原来的二倍" translatedTo "Storage capacity is doubled compared to the original")) { aqua() }
                     add("你走到了单个存储元件的尽头" translatedTo "You've reached the end of a single storage cell") { aqua() }
                     add(ComponentSlang.RecommendedToUse("ME存储器 (多方块结构)" translatedTo "ME Storage (MultiBlock)")) { aqua() }
                     add("他甚至可以不限类型地最高无限存储" translatedTo "It can even store unlimited amounts of items and fluids without type limit") { aqua() }

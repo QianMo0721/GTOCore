@@ -31,6 +31,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.items.tools.powered.WirelessTerminalItem;
@@ -303,7 +304,7 @@ class AdvancedBlockPattern extends BlockPattern {
                 if (grid != null) {
                     MEStorage storage = grid.getStorageService().getInventory();
                     for (ItemStack candidate : candidates) {
-                        if (storage.extract(AEItemKey.of(candidate), 1, Actionable.MODULATE, null) > 0) {
+                        if (storage.extract(AEItemKey.of(candidate), 1, Actionable.MODULATE, IActionSource.ofPlayer(player)) > 0) {
                             NonNullList<ItemStack> stacks = NonNullList.withSize(1, candidate);
                             IItemHandler handler1 = new ItemStackHandler(stacks);
                             return IntObjectPair.of(0, handler1);
