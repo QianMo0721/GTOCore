@@ -4,6 +4,7 @@ import com.gtocore.common.data.translation.ComponentSlang
 import com.gtocore.common.data.translation.EnumTranslation
 import com.gtocore.common.data.translation.GTOItemTooltips
 import com.gtocore.common.data.translation.GTOMachineTranslation
+import com.gtocore.common.data.translation.MachineSlang
 import com.gtocore.common.data.translation.OrganTranslation
 
 import kotlin.reflect.KProperty1
@@ -15,6 +16,7 @@ open class AutoInitialize<T> {
         GTOMachineTranslation.init()
         ComponentSlang.init()
         EnumTranslation.init()
+        MachineSlang.init()
     }
     open fun init() {}
     init {

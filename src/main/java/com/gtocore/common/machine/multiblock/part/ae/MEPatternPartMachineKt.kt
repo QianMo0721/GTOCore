@@ -304,27 +304,29 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
                             }
                         }
                     }
-                hBox(height = 13, style = { spacing = 2 }) {
-                    val wid = this@vBox.availableWidth - 2 * 2
-                    button(
-                        width = 30,
-                        height = 13,
-                        onClick = { ck ->
-                            onPagePrev()
-                            if (!isRemote)newPageField.setAndSyncToClient((newPageField.get() - 1).coerceAtLeast(0))
-                        },
-                        text = { "<<" },
-                    )
-                    text(height = 13, width = wid - 60, text = { Component.literal("${newPageField.get() + 1} / ${pageWidget.getMaxPageSize()}") })
-                    button(
-                        height = 13,
-                        width = 30,
-                        onClick = { ck ->
-                            onPageNext()
-                            if (!isRemote)newPageField.setAndSyncToClient((newPageField.get() + 1).coerceAtMost(pageWidget.getMaxPageSize() - 1))
-                        },
-                        text = { ">>" },
-                    )
+                if (pageWidget.getMaxPageSize() > 1) {
+                    hBox(height = 13, style = { spacing = 2 }) {
+                        val wid = this@vBox.availableWidth - 2 * 2
+                        button(
+                            width = 30,
+                            height = 13,
+                            onClick = { ck ->
+                                onPagePrev()
+                                if (!isRemote)newPageField.setAndSyncToClient((newPageField.get() - 1).coerceAtLeast(0))
+                            },
+                            text = { "<<" },
+                        )
+                        text(height = 13, width = wid - 60, text = { Component.literal("${newPageField.get() + 1} / ${pageWidget.getMaxPageSize()}") })
+                        button(
+                            height = 13,
+                            width = 30,
+                            onClick = { ck ->
+                                onPageNext()
+                                if (!isRemote)newPageField.setAndSyncToClient((newPageField.get() + 1).coerceAtMost(pageWidget.getMaxPageSize() - 1))
+                            },
+                            text = { ">>" },
+                        )
+                    }
                 }
                 pageWidget.refresh()
             }

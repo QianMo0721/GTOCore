@@ -14,8 +14,14 @@ object ComponentSlang : AutoInitialize<ComponentSlang>() {
     val Bar = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}- ".toLiteralSupplier().gold() }.initialize()
     val Tab = { tab: Int -> "  ".repeat(tab).toLiteralSupplier() }.initialize()
     val Star = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}⭐ ".toLiteralSupplier().gold() }.initialize()
-    val Warning = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}⚠️ ".toLiteralSupplier().red().bold() }.initialize()
+    val Warning = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}⚠ ".toLiteralSupplier().red().bold() }.initialize()
     val OutTopic = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}# ".toLiteralSupplier().gray() }.initialize()
+    val LegendSignalWrapper = { other: ComponentSupplier -> "111".toLiteralSupplier().obfuscated().scrollFullColor().underline() + " ".toLiteralSupplier() + other + " ".toLiteralSupplier() + "111".toLiteralSupplier().obfuscated().scrollFullColor().underline() }
+
+    // 操作提示
+    val OperationHint = { text: ComponentSupplier -> text.white() }
+    val RightClick = ("右键" translatedTo "Right Click").white()
+    val ShiftClick = ("Shift+点击" translatedTo "Shift+Click").white()
 
     // ****** 单位 ****** //
     val TemperatureMax = { temp: Int -> (("最高温度: " translatedTo "Max Temperature: ") + (temp.toLiteralSupplier().red().bold())).gold() }.initialize()
@@ -35,8 +41,10 @@ object ComponentSlang : AutoInitialize<ComponentSlang>() {
     val CoilEfficiencyBonus = { other: ComponentSupplier -> Star(1) + ("线圈效率加成: " translatedTo "Coil Efficiency Bonus: ").green().initialize() + other.gold() }.initialize()
 
     // ****** 其他 ****** //
-    val GTOCoreNormal = ("GTOCore" translatedTo "GTOCore").gold().initialize()
-    val GTOCoreRemix = ("GTOCore" translatedTo "GTOCore").scrollFullColor().initialize()
-    val EditionByGTONormal = OutTopic(1) + (("经 " translatedTo "By ") + GTOCoreNormal + (" 修改" translatedTo " Edition")).gray().italic().initialize()
-    val EditionByGTORemix = OutTopic(1) + (("经 " translatedTo "By ") + GTOCoreRemix + (" 修改" translatedTo " Edition")).gray().italic().initialize()
+    val GTOSignal_LOGO_GTOCoreNormal = ("GTOCore" translatedTo "GTOCore").gold().initialize()
+    val GTOSignal_LOGO_GTOCoreRemix = ("GTOCore" translatedTo "GTOCore").scrollFullColor().initialize()
+    val GTOSignal_Edition_ByGTONormal = OutTopic(1) + (("经 " translatedTo "By ") + GTOSignal_LOGO_GTOCoreNormal + (" 修改" translatedTo " Edition")).gray().italic().initialize()
+    val GTOSignal_Edition_ByGTORemix = OutTopic(1) + (("经 " translatedTo "By ") + GTOSignal_LOGO_GTOCoreRemix + (" 修改" translatedTo " Edition")).gray().italic().initialize()
+    val GTOSignal_Machine_MilestoneByGTORemix = OutTopic(1) + LegendSignalWrapper(GTOSignal_LOGO_GTOCoreRemix) + ("里程碑建筑" translatedTo "Milestone Building")
+    val GTOSignal_Machine_MiracleByGTORemix = OutTopic(1) + LegendSignalWrapper(GTOSignal_LOGO_GTOCoreRemix) + ("奇迹工程" translatedTo "Miracle Project")
 }

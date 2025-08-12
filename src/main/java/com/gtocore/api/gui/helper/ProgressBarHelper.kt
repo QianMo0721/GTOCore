@@ -1,11 +1,16 @@
 package com.gtocore.api.gui.helper
 
+import com.gtocore.api.misc.codec.CodecAbleCompanion
+import com.gtocore.api.misc.codec.CodecAbleTyped
+
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 
 import com.lowdragmc.lowdraglib.gui.util.DrawerHelper
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.roundToInt
@@ -135,24 +140,9 @@ object ProgressBarHelper {
 /**
  * 进度条颜色样式
  */
-sealed class ProgressBarColorStyle {
-    data class Solid(val color: Int) : ProgressBarColorStyle()
-    data class Segmented(val segments: List<Pair<Float, Int>>) : ProgressBarColorStyle() {
-        init {
-            require(segments.isNotEmpty()) { "Segments cannot be empty" }
-            require(segments.all { it.first in 0f..1f }) { "All thresholds must be in range [0, 1]" }
-            require(segments.sortedBy { it.first } == segments) { "Segments must be sorted by threshold" }
-        }
-    }
-    data class Gradient(val startColor: Int, val endColor: Int) : ProgressBarColorStyle()
-    data class MultiGradient(val colors: List<Pair<Float, Int>>) : ProgressBarColorStyle() {
-        init {
-            require(colors.size >= 2) { "At least 2 colors required for gradient" }
-            require(colors.all { it.first in 0f..1f }) { "All positions must be in range [0, 1]" }
-            require(colors.sortedBy { it.first } == colors) { "Colors must be sorted by position" }
-        }
-    }
-    companion object {
+sealed class ProgressBarColorStyle : CodecAbleTyped<ProgressBarColorStyle, ProgressBarColorStyle.Companion> {
+    companion object : CodecAbleCompanion<ProgressBarColorStyle> {
+        override fun getCodec(): Codec<ProgressBarColorStyle> = throw NotImplementedError("请在对应子类实现")
         val HEALTH_GRADIENT = MultiGradient(
             listOf(
                 0f to 0xFF33AA33.toInt(),
@@ -180,5 +170,62 @@ sealed class ProgressBarColorStyle {
                 1f to DEFAULT_GREEN.color,
             ),
         )
+    }
+    data class Solid(val color: Int) : ProgressBarColorStyle() {
+        companion object : CodecAbleCompanion<Solid> {
+            override fun getCodec(): Codec<Solid> = Codec.INT.xmap(::Solid, Solid::color)
+        }
+    }
+    data class Segmented(val segments: List<Pair<Float, Int>>) : ProgressBarColorStyle() {
+        companion object : CodecAbleCompanion<Segmented> {
+            override fun getCodec(): Codec<Segmented> = RecordCodecBuilder.create { instance ->
+                instance.group(
+                    Codec.list(
+                        RecordCodecBuilder.create<Pair<Float, Int>> { pairInstance ->
+                            pairInstance.group(
+                                Codec.FLOAT.fieldOf("threshold").forGetter(Pair<Float, Int>::first),
+                                Codec.INT.fieldOf("color").forGetter(Pair<Float, Int>::second),
+                            ).apply(pairInstance, ::Pair)
+                        },
+                    ).fieldOf("segments").forGetter(Segmented::segments),
+                ).apply(instance, ::Segmented)
+            }
+        }
+        init {
+            require(segments.isNotEmpty()) { "Segments cannot be empty" }
+            require(segments.all { it.first in 0f..1f }) { "All thresholds must be in range [0, 1]" }
+            require(segments.sortedBy { it.first } == segments) { "Segments must be sorted by threshold" }
+        }
+    }
+    data class Gradient(val startColor: Int, val endColor: Int) : ProgressBarColorStyle() {
+        companion object : CodecAbleCompanion<Gradient> {
+            override fun getCodec(): Codec<Gradient> = RecordCodecBuilder.create { instance ->
+                instance.group(
+                    Codec.INT.fieldOf("startColor").forGetter(Gradient::startColor),
+                    Codec.INT.fieldOf("endColor").forGetter(Gradient::endColor),
+                ).apply(instance, ::Gradient)
+            }
+        }
+    }
+    data class MultiGradient(val colors: List<Pair<Float, Int>>) : ProgressBarColorStyle() {
+        companion object : CodecAbleCompanion<MultiGradient> {
+            override fun getCodec(): Codec<MultiGradient> = RecordCodecBuilder.create { instance ->
+                instance.group(
+                    Codec.list(
+                        RecordCodecBuilder.create<Pair<Float, Int>> { pairInstance ->
+                            pairInstance.group(
+                                Codec.FLOAT.fieldOf("position").forGetter(Pair<Float, Int>::first),
+                                Codec.INT.fieldOf("color").forGetter(Pair<Float, Int>::second),
+                            ).apply(pairInstance, ::Pair)
+                        },
+                    ).fieldOf("colors").forGetter(MultiGradient::colors),
+                ).apply(instance, ::MultiGradient)
+            }
+        }
+        init {
+            require(colors.size >= 2) { "At least 2 colors required for gradient" }
+            require(colors.all { it.first in 0f..1f }) { "All positions must be in range [0, 1]" }
+            require(colors.sortedBy { it.first } == colors) { "Colors must be sorted by position" }
+        }
     }
 }

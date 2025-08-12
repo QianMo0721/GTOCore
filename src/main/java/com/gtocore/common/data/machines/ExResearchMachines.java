@@ -7,6 +7,7 @@ import com.gtocore.common.block.BlockMap;
 import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTOMaterials;
+import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.AnalysisAndResearchCenterMachine;
 import com.gtocore.common.machine.multiblock.electric.ScanningStationMachine;
 import com.gtocore.common.machine.multiblock.electric.SupercomputingCenterMachine;
@@ -22,8 +23,6 @@ import com.gtocore.common.machine.multiblock.part.research.ExResearchEmptyPartMa
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
-import com.gtolib.api.annotation.NewDataAttributes;
-import com.gtolib.api.annotation.component_builder.StyleBuilder;
 import com.gtolib.api.registries.GTOMachineBuilder;
 
 import com.gregtechceu.gtceu.GTCEu;
@@ -74,52 +73,7 @@ public final class ExResearchMachines {
 
     public static final MultiblockMachineDefinition SUPERCOMPUTING_CENTER = multiblock("supercomputing_center", "运算中心", SupercomputingCenterMachine::new)
             // 基本功能描述 - 使用更保守的样式
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("计算机超级计算中心", "Computer Supercomputing Center", StyleBuilder::setGold),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("将计算机放置在一起提供大量算力", "Putting computers together to provide lots of computing power", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("采用先进的冷却方案使其能够输出更多的算力", "The use of advanced cooling solutions enables it to output more computing power", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("机器有三个等级，通过在主机内放置物品切换", "The machine has three levels, switched by placing items in the mainframe", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("每个等级的机器结构方块需要与机器等级匹配", "The structure blocks of each level of the machine need to match the machine level", StyleBuilder::setRed), p -> p, StyleBuilder::setOneTab))))
-
-            // 算力系统 - 合并算力修正系数和衰减机制
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("算力系统", "Computing Power System", StyleBuilder::setWhite),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("机器算力受到算力修正系数的影响", "The machine's computing power is affected by the correction factor", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("最大输出算力 = 计算组件的算力和 * 算力修正系数", "Maximum output = computing components power * correction factor", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("当等级为2或3时，算力修正系数会随时间衰减", "At levels 2 or 3, the correction factor will decay over time", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("衰减公式: ((系数-0.4)²/5000)*(0.8/log(系数+6))", "Decay: ((factor-0.4)²/5000)*(0.8/log(factor+6))", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("算力修正系数最低不会小于0.8", "Correction factor will not fall below 0.8", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab))))
-
-            // 导热剂系统 - 合并导热剂系统和效率表
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("导热剂系统", "Thermal Conductivity System", StyleBuilder::setWhite),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("可通过导热剂仓输入导热剂增加算力修正系数", "Thermal conductivity can be input to increase the correction factor", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("导热剂使用后会失效", "Thermal conductivity will become invalid after use", StyleBuilder::setRed), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("等级2时提升上限为4，等级3时提升上限为16", "Level 2 max is 4, Level 3 max is 16", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("MFPC / Cascade-MFPC 效率: 块(0.18/0.54) 条(0.02/0.06) 粒(0.0022/0.0066)", "MFPC/Cascade-MFPC: Block(0.18/0.54) Ingot(0.02/0.06) Nugget(0.0022/0.0066)", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("寒冰碎片: 0.0001 (极低效率)", "Ice Shards: 0.0001 (extremely inefficient)", StyleBuilder::setRed), p -> p, StyleBuilder::setOneTab))))
-
-            // 保持原有的三个Tier信息样式，放在最下面
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("Tier 1 : 支持 HPCA系列组件", "Tier 1 : Allow HPCA series components", StyleBuilder::setAqua),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("不需要安装任何物品", "No Any Slot Requirement", StyleBuilder::setGray), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要 钨强化硼玻璃 + 计算机外壳 + 计算机散热口", "Require Tungsten Borosilicate Glass + Computer Casing + Computer Heat Vent", StyleBuilder::setMixedRedPurple), p -> p, StyleBuilder::setOneTab))))
-
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("Tier 2 : 支持 NICH系列组件", "Tier 2 : Allow NICH series components", StyleBuilder::setAqua),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要 放入生物主机", "Slot Requirement : Place biological host", StyleBuilder::setGreen), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要 安普洛强化硼玻璃 + 生物计算机外壳 + 相变计算机散热口", "Require Neutronium Borosilicate Glass + Biocomputer Casing + Phase Change Biocomputer Cooling Vents", StyleBuilder::setMixedRedPurple), p -> p, StyleBuilder::setOneTab))))
-
-            .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
-                    h -> h.addLines("Tier 3 : 支持 GWCA系列组件 (自带桥接)", "Tier 3 : Allow GWCA series components (with built-in bridge)", StyleBuilder::setAqua),
-                    c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要 放入超因果主机", "Slot Requirement : Place the Hyper-Causal Host", StyleBuilder::setRainbow), p -> p, StyleBuilder::setOneTab),
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("需要 塔兰强化硼玻璃 + 引力子计算机外壳 + 逆熵计算机冷凝矩阵", "Require Taranium Borosilicate Glass + Graviton Computer Casing + Anti Entropy Computer Condensation Matrix", StyleBuilder::setMixedRedPurple), p -> p, StyleBuilder::setOneTab))))
+            .tooltips(GTOMachineTranslation.INSTANCE.getComputerSupercomputingCenterTooltips().getSupplier())
             .nonYAxisRotation()
             .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
             .block(GTOBlocks.OXIDATION_RESISTANT_HASTELLOY_N_MECHANICAL_CASING)

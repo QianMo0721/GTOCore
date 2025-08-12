@@ -1039,6 +1039,7 @@ public final class MultiBlockC {
 
     public static final MultiblockMachineDefinition NANITES_CIRCUIT_ASSEMBLY_FACTORY = multiblock("nanites_circuit_assembly_factory", "纳米蜂群电路组装厂", CrossRecipeMultiblockMachine::createHatchParallel)
             .nonYAxisRotation()
+            .tooltips(GTOMachineTranslation.INSTANCE.getNanoswarmCircuitAssemblyFactoryTooltips().getSupplier())
             .parallelizableTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()

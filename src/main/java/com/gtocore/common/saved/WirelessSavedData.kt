@@ -1,5 +1,7 @@
 package com.gtocore.common.saved
 
+import com.gtocore.api.misc.codec.CodecAbleCompanion
+import com.gtocore.api.misc.codec.CodecAbleTyped
 import com.gtocore.common.network.WirelessNetworkTopologyManager
 import com.gtocore.config.GTOConfig
 import com.gtocore.integration.ae.WirelessMachine
@@ -9,7 +11,6 @@ import net.minecraft.core.UUIDUtil
 import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
-import net.minecraft.nbt.NbtOps
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.saveddata.SavedData
@@ -120,7 +121,7 @@ class WirelessSavedData : SavedData() {
             ListTag().apply {
                 if (GTOConfig.INSTANCE.aeLog) println("${GTCEu.isClientSide()} Saving WirelessSavedData with ${gridPool.size} grids")
                 for (grid in gridPool) {
-                    add(grid.serializer())
+                    add(grid.encodeToNbt())
                 }
             },
         )
@@ -147,7 +148,7 @@ class WirelessSavedData : SavedData() {
         val res = mutableListOf<WirelessGrid>()
         val list = p0.getList("WirelessSavedData", 10)
         for (tag in list) {
-            res.add(WirelessGrid.deserializer(tag as CompoundTag).takeIf { n -> gridPool.none { it.name == n?.name } } ?: continue)
+            res.add(WirelessGrid.decodeFromNbt(tag as CompoundTag).takeIf { n -> gridPool.none { it.name == n.name } } ?: continue)
         }
         if (GTOConfig.INSTANCE.aeLog) println("${GTCEu.isClientSide()} Loading WirelessSavedData with ${res.size} grids")
         gridPool.addAll(res)
@@ -169,7 +170,7 @@ enum class STATUS {
     NOT_FOUND_GRID,
     NOT_PERMISSION,
 }
-class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = false, var connectionPoolTable: MutableList<MachineInfo> = mutableListOf()) {
+class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = false, var connectionPoolTable: MutableList<MachineInfo> = mutableListOf()) : CodecAbleTyped<WirelessGrid, WirelessGrid.Companion> {
 
     // ///////////////////////////////
     // ****** RUN TIME ******//
@@ -179,27 +180,25 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
 
     private val topologyManager = WirelessNetworkTopologyManager()
 
-    companion object {
-        val CODEC: Codec<WirelessGrid> = RecordCodecBuilder.create { b ->
+    companion object : CodecAbleCompanion<WirelessGrid> {
+        override fun getCodec(): Codec<WirelessGrid> = RecordCodecBuilder.create { b ->
             b.group(
                 Codec.STRING.fieldOf("name").forGetter { it.name },
                 UUIDUtil.CODEC.fieldOf("owner").forGetter { it.owner },
                 Codec.BOOL.fieldOf("isDefault").forGetter { it.isDefault },
-                MachineInfo.CODEC.listOf().fieldOf("connectionPoolTable").forGetter { it.connectionPoolTable.toList() },
+                MachineInfo.getCodec().listOf().fieldOf("connectionPoolTable").forGetter { it.connectionPoolTable.toList() },
             ).apply(b) { name, owner, isDefault, connectionPoolTable ->
                 WirelessGrid(name, owner, isDefault, connectionPoolTable.toMutableList())
             }
         }
-        fun deserializer(nbt: CompoundTag): WirelessGrid? = CODEC.parse(NbtOps.INSTANCE, nbt).resultOrPartial({ if (GTOConfig.INSTANCE.aeLog) println("[WirelessGrid] deserializer error $it") }).orElse(null)
     }
-    fun serializer(): CompoundTag = CODEC.encodeStart(NbtOps.INSTANCE, this).resultOrPartial({ if (GTOConfig.INSTANCE.aeLog)println("[WirelessGrid] serializer error $it") }).orElse(CompoundTag()) as CompoundTag
 
     // ///////////////////////////////
     // ****** RUN TIME ******//
     // //////////////////////////////
-    class MachineInfo(var pos: BlockPos = BlockPos.ZERO, var owner: String = "", var descriptionId: String = "", var level: ResourceKey<Level> = WirelessSavedData.UNKNOWN) {
-        companion object {
-            val CODEC: Codec<MachineInfo> = RecordCodecBuilder.create { b ->
+    class MachineInfo(var pos: BlockPos = BlockPos.ZERO, var owner: String = "", var descriptionId: String = "", var level: ResourceKey<Level> = WirelessSavedData.UNKNOWN) : CodecAbleTyped<MachineInfo, MachineInfo.Companion> {
+        companion object : CodecAbleCompanion<MachineInfo> {
+            override fun getCodec(): Codec<MachineInfo> = RecordCodecBuilder.create { b ->
                 b.group(
                     BlockPos.CODEC.optionalFieldOf("pos", BlockPos.ZERO).forGetter { it.pos },
                     Codec.STRING.optionalFieldOf("owner", "").forGetter { it.owner },
@@ -292,14 +291,14 @@ fun createWirelessSyncedField(sync: ISync): ISync.ObjectSyncedField<MutableList<
         val size = it.readInt()
         val list = mutableListOf<WirelessGrid>()
         for (i in 0 until size) {
-            list.add(WirelessGrid.deserializer(it.readNbt() as CompoundTag)!!)
+            list.add(WirelessGrid.decodeFromNbt(it.readNbt() as CompoundTag))
         }
         list
     },
     { buffer, value ->
         buffer.writeInt(value.size)
         for (grid in value) {
-            buffer.writeNbt(grid.serializer())
+            buffer.writeNbt(grid.encodeToNbt())
         }
     },
 )

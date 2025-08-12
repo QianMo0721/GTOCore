@@ -1,7 +1,6 @@
 package com.gtocore.common.data.translation
 
 import com.gtocore.api.misc.AutoInitialize
-import com.gtocore.common.data.translation.ComponentSlang.Bar
 import com.gtocore.common.data.translation.ComponentSlang.OutTopic
 import com.gtocore.common.data.translation.ComponentSlang.Star
 import com.gtocore.common.data.translation.ComponentSlang.Tab
@@ -27,6 +26,25 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         setTranslationPrefix("performance_monitor_machine")
         add("能监测全部机器2秒内的平均延迟" translatedTo "Can monitor all machines' average delay within 2 seconds and support highlighting") { aqua() }
         add("右键点击机器以打开性能监测界面" translatedTo "Right click on the machine to open performance monitoring interface") { gray() }
+    }
+
+    // 超立方体
+    val HyperCubeMachineTooltips = ComponentListSupplier {
+        setTranslationPrefix("hyper_cube_machine")
+        add(Star(1) + ("可以代理一个流体或物品存储器" translatedTo "Can proxy a fluid or item or both storage")) { InfoFunctionPrimary() }
+        add("绑定某方块后，对此机器进行物品或流体操作视同对被绑定的方块操作" translatedTo "Bind a storage to this machine to operate it as if it were the bound storage") { InfoFunction() }
+        add("此方块有升级版本" translatedTo "Has upgrade version") { InfoSupport() }
+        add("右键点击以打开界面" translatedTo "Right click to open the interface") { InfoOperationKey() }
+    }
+
+    // 超立方体Advanced
+    val AdvancedHyperCubeMachineTooltips = ComponentListSupplier {
+        setTranslationPrefix("hyper_cube_machine")
+        add(Star(1) + ("可以代理多个流体或物品存储器" translatedTo "Can proxy (a or multi) (fluid or item or both)storage")) { InfoFunctionPrimary() }
+        add("绑定某方块后，对此机器进行物品或流体操作视同对被绑定的方块操作" translatedTo "Bind a storage to this machine to operate it as if it were the bound storage") { InfoFunction() }
+        add("若绑定多个方块，则依序对他们操作" translatedTo "Operate them in order if bind multiple storages") { InfoFunction() }
+        add("对装配线自动化很好用" translatedTo "Good for assembly line automation") { InfoSupport() }
+        add("右键点击以打开界面" translatedTo "Right click to open the interface") { InfoOperationKey() }
     }
 
     val HeaterMachineTooltips = ComponentListSupplier {
@@ -138,6 +156,13 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
             add(ComponentSlang.Capacity(capacity.toString())) { aqua() }
         }
     }.initialize()
+
+    val AutoConnectMETooltips = ComponentListSupplier {
+        setTranslationPrefix("auto_connect_me")
+        add(Star(1) + ("此机器可以自动连接ME无线网络" translatedTo "This machine can automatically connect to the ME Wireless network")) { aqua() }
+        add(Tab(1) + ("按下Shift防止以禁用首次自动连接" translatedTo "Press Shift to prevent the first automatic connection from being disabled")) { gray() }
+        add(Tab(1) + ("小心塞爆矿处！" translatedTo "Be careful to explode the ae storage! ")) { gray() }
+    }
 
     // 监控器系列
     val monitor = { init: ComponentListSupplier.() -> Unit ->
@@ -412,28 +437,95 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
     // 裂变反应堆
     val FissionReactorTooltips = ComponentListSupplier {
         setTranslationPrefix("fission_reactor")
-        add(Star(1) + ("反应堆结构" translatedTo "Reactor structure")) { lightPurple() }
-        add(Bar(2) + ("§b燃料组件: §r提供最大并行数量" translatedTo "§bFuel component: §rprovides maximum parallel number")) { gold() }
-        add(Bar(2) + ("升温系数为燃料组件相邻数之和加一" translatedTo "Heating coefficient is the sum of adjacent numbers plus one")) { gold() }
-        add(Bar(2) + ("§9冷却组件: §r提供最大冷却能力" translatedTo "§9Cooling component: §rprovides maximum cooling capability")) { aqua() }
-        add(Bar(2) + ("有效冷却组件必须与燃料组件相邻" translatedTo "Effective cooling component must be adjacent to the fuel component")) { aqua() }
-        add(Star(1) + ("温度变化" translatedTo "Temperature change")) { lightPurple() }
-        add(Bar(2) + ("§e初始温度为: §c298K§r，每秒增加配方产热 × 升温系数" translatedTo "§eInitial temperature is: §c298K§r, increase the heat produced by the recipe × heating coefficient per second")) { white() }
-        add(Bar(2) + ("§e温度上限为: §c1500K§r，抵达后机器开始损坏" translatedTo "§eTemperature limit is: §c1500K§r, after reaching, the machine starts to damage")) { aqua() }
-        add(Bar(2) + ("停止工作每秒降低1K" translatedTo "Stops working every second decreases 1K")) { aqua() }
-        add(Bar(2) + ("完全损坏时" translatedTo "When completely damaged,the machine will") + ComponentSlang.Explosion) { aqua() }
-        add(Star(1) + ("冷却你的反应堆，供给量 ≥ 需求量反应堆温度下降" translatedTo "Cool your reactor, supply ≥ demand, the temperature drops")) { lightPurple() }
-        add(Bar(2) + ("§9冷却液类型: §r蒸馏水或钠钾合金" translatedTo "§9Cooling liquid type: §rDistilled water or sodium-potassium alloy")) { aqua() }
-        add(Bar(2) + ("§9冷却参数: §r需求量 × 冷却液系数" translatedTo "§9Cooling parameters: §rConsumption × Cooling liquid coefficient per second")) { aqua() }
-        add(Bar(2) + ("§9消耗量: §r需求量 × 冷却液系数" translatedTo "§9Consumption: §rDemand × Cooling liquid coefficient per second")) { aqua() }
-        add(Bar(2) + ("§9最低需求量: §r配方产热 × 冷却参数 × 实际并行 × 当前温度 / 1500" translatedTo "§9Minimum demand: §rHeat produced by the recipe × Cooling parameters × Actual parallel × Current temperature / 1500")) { aqua() }
-        add(Bar(2) + ("§9最高供给量: §r(冷却组件 - 相邻数/3) × 8" translatedTo "§9Maximum supply: §r(Cooling component - adjacent numbers / 3) × 8")) { aqua() }
-        add(Star(1) + ("超频反应堆~！" translatedTo "Overclocking your Fission Reactor~!")) { lightPurple() }
-        add(Bar(2) + ("§e超频机制: §r触发条件：供给量 >= n × 需求量 (n>1)" translatedTo "§9Overclocking mechanism: §rTrigger condition: Supply >= n × Demand (n>1)")) { white() }
-        add(Bar(2) + ("§e超频效果: §r减少n秒配方时间" translatedTo "§9Overclocking effect: §rReduce n seconds of recipe time")) { white() }
-        add(Star(1) + ("产出物" translatedTo "Output")) { lightPurple() }
-        add(Bar(2) + ("§6蒸馏水冷却: §r产出蒸汽，产量：消耗量 × min(160, 160/(1.4^(373-温度)))" translatedTo "§9Distilled water cooling: §rProduces steam, output: Consumption × min(160, 160/(1.4^(373-Temperature)))")) { green() }
-        add(Bar(2) + ("§6钠钾合金冷却: §r温度≤825K：热钠钾合金，温度>825K：超临界钠钾合金" translatedTo "§9Sodium-potassium alloy cooling: §rTemperature≤825K：Hot sodium-potassium alloy, Temperature>825K：Supercritical sodium-potassium alloy")) { green() }
+
+        // 核心功能描述
+        add(("核聚变反应堆，通过燃料组件和冷却组件协同工作产生能量" translatedTo "Nuclear fission reactor that generates energy through fuel and cooling components working together").InfoFunctionPrimary())
+
+        // 反应堆结构
+        add(Star(1) + ("反应堆结构组成" translatedTo "Reactor structure components").InfoFunction())
+        add(Tab(2) + ("燃料组件: " translatedTo "Fuel component: ").InfoFunction() + ("提供最大并行数量" translatedTo "provides maximum parallel number").InfoData())
+        add(Tab(2) + ("升温系数 = 燃料组件相邻数 + 1" translatedTo "Heating coefficient = adjacent fuel components + 1").InfoSupport())
+        add(Tab(2) + ("冷却组件: " translatedTo "Cooling component: ").InfoFunction() + ("提供最大冷却能力" translatedTo "provides maximum cooling capability").InfoData())
+        add(Tab(2) + ("冷却组件必须与燃料组件相邻才有效" translatedTo "Cooling components must be adjacent to fuel components to be effective").InfoSupport())
+
+        // 温度系统
+        add(Star(1) + ("温度管理系统" translatedTo "Temperature management system").InfoFunction())
+        add(Tab(2) + ("初始温度: " translatedTo "Initial temperature: ").InfoFunction() + ("298K" translatedTo "298K").InfoData())
+        add(Tab(2) + ("温度上限: " translatedTo "Temperature limit: ").InfoWarning() + ("1500K" translatedTo "1500K").InfoCritical())
+        add(Tab(2) + ("升温速率: 配方产热 × 升温系数/秒" translatedTo "Heating rate: recipe heat × heating coefficient/sec").InfoSupport())
+        add(Tab(2) + ("自然降温: 停止工作时1K/秒" translatedTo "Natural cooling: 1K/sec when stopped").InfoSupport())
+        add(Warning(1) + ("超过温度上限机器开始损坏，完全损坏时" translatedTo "Exceeding temperature limit damages machine, when fully damaged ") + ComponentSlang.Explosion.InfoCritical())
+
+        // 冷却系统
+        add(Star(1) + ("冷却系统运作" translatedTo "Cooling system operation").InfoFunction())
+        add(Tab(2) + ("冷却液类型: " translatedTo "Cooling liquid types: ").InfoFunction() + ("蒸馏水或钠钾合金" translatedTo "Distilled water or sodium-potassium alloy").InfoData())
+        add(Tab(2) + ("冷却条件: " translatedTo "Cooling condition: ").InfoSafe() + ("供给量 ≥ 需求量" translatedTo "supply ≥ demand").InfoRecommend())
+        add(Tab(2) + ("最低需求量 = 配方产热 × 冷却参数 × 实际并行 × 当前温度 / 1500" translatedTo "Min demand = recipe heat × cooling param × actual parallel × current temp / 1500").InfoSupport())
+        add(Tab(2) + ("最高供给量 = (冷却组件 - 相邻数/3) × 8" translatedTo "Max supply = (cooling components - adjacent/3) × 8").InfoSupport())
+        add(Tab(2) + ("消耗量 = 需求量 × 冷却液系数" translatedTo "Consumption = demand × cooling liquid coefficient").InfoSupport())
+
+        // 超频机制
+        add(Star(1) + ("超频机制" translatedTo "Overclocking mechanism").InfoSafe())
+        add(Tab(2) + ("触发条件: " translatedTo "Trigger condition: ").InfoFunction() + ("供给量 ≥ n × 需求量 (n>1)" translatedTo "supply ≥ n × demand (n>1)").InfoData())
+        add(Tab(2) + ("超频效果: " translatedTo "Overclocking effect: ").InfoRecommend() + ("减少n秒配方时间" translatedTo "reduce n seconds recipe time").InfoSafe())
+
+        // 产出系统
+        add(Star(1) + ("冷却液产出" translatedTo "Cooling liquid output").InfoFunction())
+        add(Tab(2) + ("蒸馏水冷却: " translatedTo "Distilled water cooling: ").InfoFunction() + ("产出蒸汽" translatedTo "produces steam").InfoSafe())
+        add(Tab(3) + ("产量 = 消耗量 × min(160, 160/(1.4^(373-温度)))" translatedTo "Output = consumption × min(160, 160/(1.4^(373-temperature)))").InfoSupport())
+        add(Tab(2) + ("钠钾合金冷却产出:" translatedTo "Sodium-potassium alloy cooling output:").InfoFunction())
+        add(Tab(3) + ("≤825K: " translatedTo "≤825K: ").InfoData() + ("热钠钾合金" translatedTo "Hot sodium-potassium alloy").InfoSafe())
+        add(Tab(3) + (">825K: " translatedTo ">825K: ").InfoData() + ("超临界钠钾合金" translatedTo "Supercritical sodium-potassium alloy").InfoSafe())
+
+        add(ComponentSlang.BewareOfBurns)
+        add(ComponentSlang.GTOSignal_Machine_MilestoneByGTORemix)
+    }
+
+    val ComputerSupercomputingCenterTooltips = ComponentListSupplier {
+        setTranslationPrefix("computer_supercomputing_center")
+
+        // 核心功能描述
+        add(("计算机超级计算中心" translatedTo "Computer Supercomputing Center").InfoFunctionPrimary())
+        add(("将多台计算机集成在一起，提供大规模并行计算能力" translatedTo "Integrates multiple computers together to provide massive parallel computing power").InfoFunction())
+
+        // 基本特性
+        add(Star(1) + ("先进冷却系统" translatedTo "Advanced cooling system").InfoSafe())
+        add(Tab(2) + ("采用先进冷却方案提供更高算力输出" translatedTo "Uses advanced cooling solutions for higher computing power output").InfoSupport())
+
+        add(Star(1) + ("三级架构设计" translatedTo "Three-tier architecture design").InfoFunction())
+        add(Tab(2) + ("通过在主机内放置特定物品切换等级" translatedTo "Switch tiers by placing specific items in the mainframe").InfoOperation())
+        add(Tab(2) + ("结构方块等级必须与机器等级匹配" translatedTo "Structure block tiers must match machine tier").InfoWarning())
+
+        // 算力系统
+        add(Star(1) + ("算力计算系统" translatedTo "Computing power calculation system").InfoFunction())
+        add(Tab(2) + ("最大输出算力 = 计算组件算力和 × 算力修正系数" translatedTo "Max output = sum of component power × correction factor").InfoData())
+        add(Tab(2) + ("等级2/3时修正系数会随时间衰减" translatedTo "At levels 2/3, correction factor decays over time").InfoWarning())
+        add(Tab(3) + ("衰减公式: ((系数-0.4)²/5000)×(0.8/log(系数+6))" translatedTo "Decay: ((factor-0.4)²/5000)×(0.8/log(factor+6))").InfoSupport())
+        add(Tab(2) + ("算力修正系数最低值: " translatedTo "Minimum correction factor: ").InfoFunction() + ("0.8" translatedTo "0.8").InfoData())
+
+        // 导热剂系统
+        add(Star(1) + ("导热剂冷却增效" translatedTo "Thermal conductivity cooling enhancement").InfoSafe())
+        add(Tab(2) + ("通过导热剂仓输入导热剂提升算力修正系数" translatedTo "Input thermal conductivity via hatch to boost correction factor").InfoRecommend())
+        add(Tab(2) + ("提升上限: " translatedTo "Enhancement limits: ").InfoFunction() + ("等级2(4) / 等级3(16)" translatedTo "Tier 2(4) / Tier 3(16)").InfoDataImportant())
+        add(Warning(1) + ("导热剂使用后会失效" translatedTo "Thermal conductivity becomes invalid after use").InfoWarning())
+        add(Tab(2) + ("MFPC效率: " translatedTo "MFPC efficiency: ").InfoFunction() + ("块(0.18) 条(0.02) 粒(0.0022)" translatedTo "Block(0.18) Ingot(0.02) Nugget(0.0022)").InfoData())
+        add(Tab(2) + ("Cascade-MFPC效率: " translatedTo "Cascade-MFPC efficiency: ").InfoFunction() + ("块(0.54) 条(0.06) 粒(0.0066)" translatedTo "Block(0.54) Ingot(0.06) Nugget(0.0066)").InfoData())
+        add(Tab(2) + ("寒冰碎片: " translatedTo "Ice Shards: ").InfoDanger() + ("0.0001 (极低效率)" translatedTo "0.0001 (extremely low efficiency)").InfoDanger())
+        // 槽位
+        add(("Tier 1 : 支持HPCA系列组件" translatedTo "Tier 1 : Supports HPCA series components").InfoFunctionPrimary())
+        add(Star(1) + ("槽位需求: " translatedTo "Slot requirement: ").InfoFunction() + ("无需安装任何物品" translatedTo "No items required").InfoSafe())
+        add(Star(1) + ("结构材料需求:" translatedTo "Structure material requirements:").InfoFunction())
+        add(Tab(2) + ("钨强化硼玻璃 + 计算机外壳 + 计算机散热口" translatedTo "Tungsten Borosilicate Glass + Computer Casing + Computer Heat Vent").InfoData())
+        add(("Tier 2 : 支持NICH系列组件" translatedTo "Tier 2 : Supports NICH series components").InfoFunctionPrimary())
+        add(Star(1) + ("槽位需求: " translatedTo "Slot requirement: ").InfoFunction() + ("放入生物主机" translatedTo "Place biological host").InfoDataImportant())
+        add(Star(1) + ("结构材料需求:" translatedTo "Structure material requirements:").InfoFunction())
+        add(Tab(2) + ("安普洛强化硼玻璃 + 生物计算机外壳 + 相变计算机散热口" translatedTo "Neutronium Borosilicate Glass + Biocomputer Casing + Phase Change Biocomputer Cooling Vents").InfoData())
+        add(("Tier 3 : 支持GWCA系列组件 (自带桥接)" translatedTo "Tier 3 : Supports GWCA series components (with built-in bridge)").InfoFunctionPrimary())
+        add(Star(1) + ("槽位需求: " translatedTo "Slot requirement: ").InfoFunction() + ("放入超因果主机" translatedTo "Place Hyper-Causal Host").InfoDataImportant())
+        add(Star(1) + ("结构材料需求:" translatedTo "Structure material requirements:").InfoFunction())
+        add(Tab(2) + ("塔兰强化硼玻璃 + 引力子计算机外壳 + 逆熵计算机冷凝矩阵" translatedTo "Taranium Borosilicate Glass + Graviton Computer Casing + Anti Entropy Computer Condensation Matrix").InfoData())
+        add(Star(1) + ("自带跨维度桥接功能" translatedTo "Built-in cross-dimensional bridging capability").InfoSafe())
+        add(ComponentSlang.GTOSignal_Machine_MiracleByGTORemix)
     }
 
     // （请AI帮我攥写好笑幽默的小故事，诙谐或者幽默的故事，类似SCP风格，但不要出现SCP元素，用语亲切，关键词汇使用较淡的颜色代码）长度：中 科技程度：高

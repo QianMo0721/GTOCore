@@ -30,6 +30,11 @@ class ComponentListSupplier(var list: MutableList<ComponentSupplier> = mutableLi
     fun add(other: ComponentListSupplier) {
         list.addAll(other.list)
     }
+    fun add(other: ComponentListSupplier, style: ComponentSupplier.() -> ComponentSupplier = { this }) {
+        for (supplier in other.list) {
+            add(supplier, style)
+        }
+    }
 
     fun apply(tooltips: MutableList<Component>) {
         tooltips.addAll(get())
@@ -43,19 +48,29 @@ class ComponentListSupplier(var list: MutableList<ComponentSupplier> = mutableLi
     }
 
     infix fun String.translatedTo(other: String): ComponentSupplier {
+        if (this@translatedTo == other) return this.toLiteralSupplier()
         val prefix = if (translationPrefix.isNotEmpty()) "${NewDataAttributes.PREFIX}.$translationPrefix.$line" else "${NewDataAttributes.PREFIX}.$line"
         val translationKey = TranslationKeyProvider.getTranslationKey(this@translatedTo, other, prefix)
         return Component.translatable(translationKey).toComponentSupplier()
+    }
+
+    infix fun String.multiTranslatedToGray(other: String) = ComponentListSupplier {
+        val cns = this@multiTranslatedToGray.lines()
+        val ens = other.lines()
+        require(cns.size == ens.size) { "翻译错误: 中文和英文数量不一致,于 $translationPrefix - $line 行" }
+        for (i in cns.indices) {
+            add(cns[i].translatedTo(ens[i])) { gray() }
+        }
     }
 
     // ////////////////////////////////
     // ****** 便捷指令 ******//
     // //////////////////////////////
     fun editionByGTONormal(): ComponentListSupplier = this.apply {
-        add(ComponentSlang.EditionByGTONormal)
+        add(ComponentSlang.GTOSignal_Edition_ByGTONormal)
     }
     fun editionByGTORemix(): ComponentListSupplier = this.apply {
-        add(ComponentSlang.EditionByGTORemix)
+        add(ComponentSlang.GTOSignal_Edition_ByGTORemix)
     }
 }
 fun ComponentListSupplier(op: ComponentListSupplier.() -> Unit): ComponentListSupplier {
@@ -156,6 +171,34 @@ class ComponentSupplier(var component: Component, private val delayed: MutableLi
         withStyle { it.withColor(TooltipHelper.RAINBOW_SLOW.current) }
     }
 
+    // 数据类 - 统一金色系
+    fun InfoData() = transformComponent { text: ComponentSupplier -> text.gold() }
+    fun InfoDataImportant() = transformComponent { text: ComponentSupplier -> text.gold().bold() }
+
+    // 功能类 - 青色系
+    fun InfoFunction() = transformComponent { text: ComponentSupplier -> text.aqua() }
+    fun InfoFunctionPrimary() = transformComponent { text: ComponentSupplier -> text.aqua().bold() }
+
+    // 安全类 - 绿色系
+    fun InfoSafe() = transformComponent { text: ComponentSupplier -> text.green() }
+    fun InfoRecommend() = transformComponent { text: ComponentSupplier -> text.green().bold() }
+
+    // 警告类 - 黄色系
+    fun InfoWarning() = transformComponent { text: ComponentSupplier -> text.yellow() }
+    fun InfoCaution() = transformComponent { text: ComponentSupplier -> text.yellow().bold() }
+
+    // 危险类 - 红色系
+    fun InfoDanger() = transformComponent { text: ComponentSupplier -> text.red() }
+    fun InfoCritical() = transformComponent { text: ComponentSupplier -> text.red().bold() }
+
+    // 交互类 - 白色系
+    fun InfoOperation() = transformComponent { text: ComponentSupplier -> text.white() }
+    fun InfoOperationKey() = transformComponent { text: ComponentSupplier -> text.white().bold() }
+
+    // 辅助类 - 灰色系
+    fun InfoSupport() = transformComponent { text: ComponentSupplier -> text.gray() }
+    fun InfoBrand() = transformComponent { text: ComponentSupplier -> text.gray().italic() }
+
     // ////////////////////////////////
     // ****** 滚动 ******//
     // //////////////////////////////
@@ -227,3 +270,6 @@ fun ((Long) -> ComponentSupplier).initialize(): (Long) -> ComponentSupplier = th
 
 @JvmName("initializeItem")
 fun ((ComponentSupplier) -> ComponentSupplier).initialize(): (ComponentSupplier) -> ComponentSupplier = this.also { it("".toLiteralSupplier()) }
+
+@JvmName("initializeListItem")
+fun ((ComponentSupplier) -> ComponentListSupplier).initialize(): (ComponentSupplier) -> ComponentListSupplier = this.also { it("".toLiteralSupplier()) }

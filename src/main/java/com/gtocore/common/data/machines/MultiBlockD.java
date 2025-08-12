@@ -829,7 +829,6 @@ public final class MultiBlockD {
     public static final MultiblockMachineDefinition NANO_FORGE = multiblock("nano_forge", "纳米锻炉", NanoForgeMachine::new)
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.NANO_FORGE_RECIPES)
-            .tooltips(GTOMachineTranslation.INSTANCE.getNanoswarmCircuitAssemblyFactoryTooltips().getSupplier())
             .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
                     h -> h.addLines("运行条件", "Operating Conditions", StyleBuilder::setGold),
                     c -> c.addLines(
