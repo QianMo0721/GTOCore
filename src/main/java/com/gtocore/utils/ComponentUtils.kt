@@ -1,6 +1,7 @@
 package com.gtocore.utils
 
 import com.gtocore.common.data.translation.ComponentSlang
+import com.gtocore.config.GTOConfig
 
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
@@ -273,3 +274,5 @@ fun ((ComponentSupplier) -> ComponentSupplier).initialize(): (ComponentSupplier)
 
 @JvmName("initializeListItem")
 fun ((ComponentSupplier) -> ComponentListSupplier).initialize(): (ComponentSupplier) -> ComponentListSupplier = this.also { it("".toLiteralSupplier()) }
+
+fun Any.wirelessDebug() = if (GTOConfig.INSTANCE.aeWirelessLog) println("DEBUG: $this") else Unit

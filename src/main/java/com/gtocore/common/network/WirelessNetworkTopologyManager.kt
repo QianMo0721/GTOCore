@@ -1,6 +1,5 @@
 package com.gtocore.common.network
 
-import com.gtocore.config.GTOConfig
 import com.gtocore.integration.ae.WirelessMachine
 
 import appeng.api.networking.GridHelper
@@ -33,31 +32,16 @@ class WirelessNetworkTopologyManager {
     private val clusters = mutableListOf<NodeCluster>()
     private val hubConnections = mutableListOf<IGridConnection>()
 
-    fun rebuildTopology(nodes: List<WirelessMachine>): List<IGridConnection> {
-        destroyAllConnections()
-
-        if (nodes.isEmpty()) return emptyList()
-        if (nodes.size == 1) return emptyList()
-
-        val validNodes = nodes.filter { isNodeValid(it) }
-        if (validNodes.isEmpty()) return emptyList()
-
-        buildClusters(validNodes)
-
-        val allConnections = mutableListOf<IGridConnection>()
-        allConnections.addAll(createIntraClusterConnections())
-        allConnections.addAll(createInterClusterConnections())
-
-        return allConnections
-    }
-
     fun addNode(node: WirelessMachine): List<IGridConnection> {
         if (!isNodeValid(node)) return emptyList()
 
         val targetCluster = findBestClusterForNode(node)
 
         return if (targetCluster != null && targetCluster.addLeafNode(node)) {
-            listOfNotNull(createConnection(targetCluster.hubNode, node))
+            createConnection(targetCluster.hubNode, node)?.let { conn ->
+                targetCluster.connections.add(conn) // ← 关键修复：添加到cluster.connections
+                listOf(conn)
+            } ?: emptyList()
         } else {
             rebalanceAndAddNode(node)
         }
@@ -70,20 +54,121 @@ class WirelessNetworkTopologyManager {
         cluster?.let {
             if (it.hubNode == node) {
                 affectedConnections.addAll(handleHubRemoval(it))
+                rebuildHubConnections()
             } else {
                 it.removeLeafNode(node)
-                it.connections.removeAll { conn ->
-                    try {
-                        conn.destroy()
-                        true
-                    } catch (e: Exception) {
-                        false
-                    }
-                }
+                cleanupNodeConnections(node, it)
+                cleanupHubConnections(node)
             }
         }
 
         return affectedConnections
+    }
+
+    private fun cleanupNodeConnections(node: WirelessMachine, cluster: NodeCluster) {
+        cluster.connections.removeIf { conn ->
+            try {
+                if (isConnectionInvolving(conn, node)) {
+                    conn.destroy()
+                    true
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                true
+            }
+        }
+    }
+
+    private fun createIntraClusterConnections(): List<IGridConnection> {
+        val connections = mutableListOf<IGridConnection>()
+
+        clusters.forEach { cluster ->
+            cluster.leafNodes.forEach { leafNode ->
+                createConnection(cluster.hubNode, leafNode)?.let { conn ->
+                    connections.add(conn)
+                    cluster.connections.add(conn)
+                }
+            }
+        }
+
+        return connections
+    }
+
+    private fun createInterClusterConnections(): List<IGridConnection> {
+        val connections = mutableListOf<IGridConnection>()
+
+        if (clusters.size <= 1) {
+            return connections
+        }
+
+        for (i in clusters.indices) {
+            val currentHub = clusters[i].hubNode
+            val nextHub = clusters[(i + 1) % clusters.size].hubNode
+
+            createConnection(currentHub, nextHub)?.let { conn ->
+                connections.add(conn)
+                hubConnections.add(conn)
+            }
+        }
+
+        return connections
+    }
+
+    fun rebuildTopology(nodes: List<WirelessMachine>): List<IGridConnection> {
+        destroyAllConnections()
+
+        if (nodes.isEmpty()) return emptyList()
+        if (nodes.size == 1) return emptyList()
+
+        val validNodes = nodes.filter { isNodeValid(it) }
+
+        if (validNodes.isEmpty()) return emptyList()
+
+        buildClusters(validNodes)
+
+        val allConnections = mutableListOf<IGridConnection>()
+        allConnections.addAll(createIntraClusterConnections())
+        allConnections.addAll(createInterClusterConnections())
+
+        return allConnections
+    }
+
+    private fun cleanupHubConnections(node: WirelessMachine) {
+        hubConnections.removeIf { conn ->
+            try {
+                if (isConnectionInvolving(conn, node)) {
+                    conn.destroy()
+                    true
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                true
+            }
+        }
+    }
+
+    private fun isConnectionInvolving(connection: IGridConnection, node: WirelessMachine): Boolean = try {
+        val nodeA = connection.a()
+        val nodeB = connection.b()
+        val targetNode = node.mainNode.node
+        nodeA == targetNode || nodeB == targetNode
+    } catch (e: Exception) {
+        true // 安全起见返回true
+    }
+
+    private fun rebuildHubConnections() {
+        // 清理所有现有hub连接
+        hubConnections.forEach {
+            try {
+                it.destroy()
+            } catch (e: Exception) { /* ignore */ }
+        }
+        hubConnections.clear()
+
+        // 重新创建hub间连接
+        hubConnections.addAll(createInterClusterConnections())
     }
 
     fun getNetworkStats(): NetworkStats {
@@ -105,7 +190,7 @@ class WirelessNetworkTopologyManager {
     }
 
     // ////////////////////////////////
-    // ****** TOOLS，禁止外部调用！！！！！！！ ******//
+    // ****** TOOLS，禁止外部���用！！！！！！！ ******//
     // //////////////////////////////
     private fun destroyAllConnections() {
         clusters.forEach { cluster ->
@@ -167,40 +252,6 @@ class WirelessNetworkTopologyManager {
             .map { it.first }
     }
 
-    // 主节点群
-    private fun createIntraClusterConnections(): List<IGridConnection> {
-        val connections = mutableListOf<IGridConnection>()
-
-        clusters.forEach { cluster ->
-            cluster.leafNodes.forEach { leafNode ->
-                createConnection(cluster.hubNode, leafNode)?.let { conn ->
-                    connections.add(conn)
-                    cluster.connections.add(conn)
-                }
-            }
-        }
-
-        return connections
-    }
-
-    // 主节点环形总线
-    private fun createInterClusterConnections(): List<IGridConnection> {
-        val connections = mutableListOf<IGridConnection>()
-
-        if (clusters.size <= 1) return connections
-
-        for (i in clusters.indices) {
-            val currentHub = clusters[i].hubNode
-            val nextHub = clusters[(i + 1) % clusters.size].hubNode
-            createConnection(currentHub, nextHub)?.let { conn ->
-                connections.add(conn)
-                hubConnections.add(conn)
-            }
-        }
-
-        return connections
-    }
-
     private fun findBestClusterForNode(node: WirelessMachine): NodeCluster? {
         if (clusters.isEmpty()) return null
         // 寻找负载最低主节点
@@ -242,7 +293,6 @@ class WirelessNetworkTopologyManager {
             if (!isNodeValid(node1) || !isNodeValid(node2)) return null
             GridHelper.createConnection(node1.mainNode.node, node2.mainNode.node)
         } catch (e: Exception) {
-            if (GTOConfig.INSTANCE.aeLog) println("Failed to create connection between ${node1.self().pos} and ${node2.self().pos}: ${e.message}")
             null
         }
     }

@@ -161,6 +161,9 @@ interface WirelessMachine :
 
         @RegisterLanguage(cn = "此机器被禁止连接ME无线网络", en = "This machine is banned from connecting to ME wireless network")
         const val banned = "gtocore.integration.ae.WirelessMachine.banned"
+
+        @RegisterLanguage(cn = "断开无线网络", en = "Leave Wireless Grid")
+        const val leave = "gtocore.integration.ae.WirelessMachine.leave"
     }
 
     // ////////////////////////////////
@@ -191,13 +194,13 @@ interface WirelessMachine :
                         WirelessSavedData.INSTANCE.gridPool.firstOrNull { it.owner == uuid && it.isDefault }?.let {
                             joinGrid(it.name)
                         }
+                        wirelessMachinePersisted.beSet = true
                     } else {
                         if (wirelessMachinePersisted.gridConnectedName.isNotEmpty()) {
                             linkGrid(wirelessMachinePersisted.gridConnectedName)
                         }
                     }
                     wirelessMachineRunTime.isInitialized = true
-                    wirelessMachinePersisted.beSet = true
                 }
             }
         }
@@ -314,6 +317,13 @@ interface WirelessMachine :
                             if (GTOConfig.INSTANCE.aeLog) println("isRemote :${ck.isRemote} Create Grid: ${wirelessMachineRunTime.gridWillAdded}")
                             if (GTOConfig.INSTANCE.aeLog)println("isRemote :${ck.isRemote} GridCacheValue: ${wirelessMachineRunTime.gridCache.get()}")
                             if (GTOConfig.INSTANCE.aeLog)println("isRemote :${ck.isRemote} GridSavedValue: ${WirelessSavedData.INSTANCE.gridPool}")
+                        }
+                    }
+                    if (wirelessMachinePersisted.gridConnectedName.isNotEmpty()) {
+                        button(width = availableWidth - 4, transKet = leave) { ck ->
+                            if (!ck.isRemote) {
+                                leaveGrid()
+                            }
                         }
                     }
                     textBlock(

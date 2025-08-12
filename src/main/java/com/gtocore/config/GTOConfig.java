@@ -220,6 +220,11 @@ public final class GTOConfig {
     public boolean aeLog = false;
 
     @Configurable
+    @Configurable.Comment("启用 AE2 无线网络调试日志")
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "[Debug] AE2 & Sync Logging", cn = "[调试] AE2 无线网络调试日志")
+    public boolean aeWirelessLog = false;
+
+    @Configurable
     @Configurable.Comment("Spark 性能分析器的启动阶段")
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Spark Profiler Start Phase", cn = "Spark 分析器启动阶段")
     public SparkRange startSpark = SparkRange.NONE;
