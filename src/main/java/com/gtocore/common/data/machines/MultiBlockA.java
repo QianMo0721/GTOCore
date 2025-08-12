@@ -261,7 +261,7 @@ public final class MultiBlockA {
     public static final MultiblockMachineDefinition VOID_FLUID_DRILLING_RIG = multiblock("void_fluid_drilling_rig", "虚空流体钻机", VoidFluidDrillingRigMachine::new)
             .nonYAxisRotation()
             .tooltipsText("需要最低30720EU/t的功率", "Requires a minimum power of 30,720EU/t")
-            .tooltipsText("按维度和电路值输出流体", "Outputs fluids based on the dimension and circuit value")
+            .tooltips(GTOMachineTranslation.INSTANCE.getVoidFluidDrillTooltips().getSupplier())
             .recipeTypes(GTORecipeTypes.DUMMY_RECIPES)
             .block(GTBlocks.CASING_HSSE_STURDY)
             .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT)

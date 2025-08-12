@@ -1,14 +1,18 @@
 package com.gtocore.common.data.translation
 
+import com.gtocore.api.lang.ComponentSupplier
+import com.gtocore.api.lang.initialize
+import com.gtocore.api.lang.toLiteralSupplier
+import com.gtocore.api.lang.translatedTo
 import com.gtocore.api.misc.AutoInitialize
-import com.gtocore.utils.ComponentSupplier
-import com.gtocore.utils.initialize
-import com.gtocore.utils.toLiteralSupplier
-import com.gtocore.utils.translatedTo
 
 object ComponentSlang : AutoInitialize<ComponentSlang>() {
     // ****** 量词 ****** //
     val Infinite = ("无限" translatedTo "Infinite").rainbow().initialize()
+
+    // ****** 符号 ****** //
+    val right = "✔".toLiteralSupplier()
+    val wrong = "✘".toLiteralSupplier()
 
     // ****** 格式 ****** //
     val Bar = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}- ".toLiteralSupplier().gold() }.initialize()
@@ -17,11 +21,6 @@ object ComponentSlang : AutoInitialize<ComponentSlang>() {
     val Warning = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}⚠ ".toLiteralSupplier().red().bold() }.initialize()
     val OutTopic = { tab: Int -> "${"  ".repeat((tab - 1).coerceAtLeast(0))}# ".toLiteralSupplier().gray() }.initialize()
     val LegendSignalWrapper = { other: ComponentSupplier -> "111".toLiteralSupplier().obfuscated().scrollFullColor().underline() + " ".toLiteralSupplier() + other + " ".toLiteralSupplier() + "111".toLiteralSupplier().obfuscated().scrollFullColor().underline() }
-
-    // 操作提示
-    val OperationHint = { text: ComponentSupplier -> text.white() }
-    val RightClick = ("右键" translatedTo "Right Click").white()
-    val ShiftClick = ("Shift+点击" translatedTo "Shift+Click").white()
 
     // ****** 单位 ****** //
     val TemperatureMax = { temp: Int -> (("最高温度: " translatedTo "Max Temperature: ") + (temp.toLiteralSupplier().red().bold())).gold() }.initialize()

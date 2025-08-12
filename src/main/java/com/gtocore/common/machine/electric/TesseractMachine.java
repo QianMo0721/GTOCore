@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IMachineModifyDrops;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 
 import net.minecraft.core.BlockPos;
@@ -24,14 +25,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Set;
 
-public class TesseractMachine extends MetaMachine implements IFancyUIMachine {
+public class TesseractMachine extends MetaMachine implements IFancyUIMachine, IMachineModifyDrops {
 
     private static final Set<Capability<?>> CAPABILITIES = Set.of(ForgeCapabilities.ITEM_HANDLER, ForgeCapabilities.FLUID_HANDLER);
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
             TesseractMachine.class, MetaMachine.MANAGED_FIELD_HOLDER);
+
+    @Override
+    public void onDrops(List<ItemStack> list) {
+        clearInventory(inventory.storage);
+    }
 
     private WeakReference<BlockEntity> blockEntityReference;
 

@@ -1,5 +1,6 @@
 package com.gtocore.common.data.machines;
 
+import com.gtocore.api.lang.ComponentListSupplier;
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.client.renderer.machine.AdvancedHyperRenderer;
@@ -12,7 +13,6 @@ import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.space.DysonSphereLaunchSiloMachine;
 import com.gtocore.common.machine.multiblock.electric.space.DysonSphereReceivingStationMcahine;
 import com.gtocore.common.machine.multiblock.generator.*;
-import com.gtocore.utils.ComponentListSupplier;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;

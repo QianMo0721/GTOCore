@@ -1,4 +1,4 @@
-package com.gtocore.utils
+package com.gtocore.api.lang
 
 import com.gtocore.common.data.translation.ComponentSlang
 import com.gtocore.config.GTOConfig
@@ -13,7 +13,8 @@ import com.gtolib.api.annotation.NewDataAttributes
 import com.gtolib.api.annotation.component_builder.TranslationKeyProvider
 import com.gtolib.utils.StringUtils
 class ComponentListSupplier(var list: MutableList<ComponentSupplier> = mutableListOf()) : Supplier<List<Component>> {
-    private var translationPrefix: String = ""
+    var translationPrefix: String = ""
+        private set
     var line: Int = 0
 
     override fun get(): List<Component> {

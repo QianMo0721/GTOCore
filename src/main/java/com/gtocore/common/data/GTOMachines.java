@@ -86,9 +86,8 @@ public final class GTOMachines {
         MultiBlockG.init();
         MultiBlockH.init();
 
-        if (GTCEu.isDev() || GTCEu.isDataGen() || GTOCore.isSimple()) {
-            SimpleModeMachine.init();
-        }
+        SimpleModeMachine.init(); // 限制模式不注册会出现多方块预览错误
+
         if (GTCEu.isDev() || GTCEu.isDataGen()) {
             final MachineDefinition SYNC_TESTER_MACHINE = machine("sync_tester_machine", "同步测试机", SyncTesterMachine::new)
                     .allRotation()
@@ -449,6 +448,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition ME_WIRELESS_CONNECTION_MACHINE = machine("me_wireless_connection_machine", "ME无线连接机", MeWirelessConnectMachine::new)
             .overlayTieredHullRenderer("neutron_sensor")
+            .tooltips(GTOMachineTranslation.INSTANCE.getAutoConnectMETooltips().getSupplier())
             .tooltips(NewDataAttributes.MIRACULOUS_TOOLS.create(new CNEN("ME无线连接机", "ME Wireless Connection Machine"), p -> p.addCommentLines(
                     """
                             多对多的ME无线网络节点

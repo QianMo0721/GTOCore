@@ -1,10 +1,10 @@
 package com.gtocore.common.data.translation
 
+import com.gtocore.api.lang.ComponentListSupplier
+import com.gtocore.api.lang.initialize
+import com.gtocore.api.lang.toLiteralSupplier
+import com.gtocore.api.lang.translatedTo
 import com.gtocore.api.misc.AutoInitialize
-import com.gtocore.utils.ComponentListSupplier
-import com.gtocore.utils.initialize
-import com.gtocore.utils.toLiteralSupplier
-import com.gtocore.utils.translatedTo
 
 object OrganTranslation : AutoInitialize<OrganTranslation>() {
     // 器官效果描述

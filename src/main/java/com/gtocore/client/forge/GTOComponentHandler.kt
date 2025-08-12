@@ -5,9 +5,9 @@ import com.gtocore.api.gui.graphic.GTOTooltipComponentItem
 import com.gtocore.api.gui.graphic.impl.GTOComponentTooltipComponent
 import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent
 import com.gtocore.api.gui.graphic.impl.toPercentageWith
+import com.gtocore.api.lang.ComponentSupplier
+import com.gtocore.api.lang.toLiteralSupplier
 import com.gtocore.config.GTOConfig
-import com.gtocore.utils.ComponentSupplier
-import com.gtocore.utils.toLiteralSupplier
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.language.ClientLanguage

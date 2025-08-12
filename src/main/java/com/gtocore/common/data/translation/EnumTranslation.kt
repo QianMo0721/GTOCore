@@ -1,7 +1,7 @@
 package com.gtocore.common.data.translation
 
+import com.gtocore.api.lang.translatedTo
 import com.gtocore.api.misc.AutoInitialize
-import com.gtocore.utils.translatedTo
 
 object EnumTranslation : AutoInitialize<EnumTranslation>() {
     val both = ("全部" translatedTo "All").gold()

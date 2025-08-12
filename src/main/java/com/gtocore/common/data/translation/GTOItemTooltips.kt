@@ -1,10 +1,9 @@
 package com.gtocore.common.data.translation
 
+import com.gtocore.api.lang.ComponentListSupplier
 import com.gtocore.api.misc.AutoInitialize
 import com.gtocore.common.data.translation.ComponentSlang.Star
-import com.gtocore.utils.ComponentListSupplier
 import com.gtocore.utils.setTooltips
-import com.gtocore.utils.translatedTo
 
 import appeng.core.definitions.AEItems
 import appeng.core.definitions.AEParts

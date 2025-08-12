@@ -9,6 +9,7 @@ import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
+import com.gregtechceu.gtceu.api.machine.feature.IMachineModifyDrops;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.utils.LazyOptionalUtil;
 
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMachine {
+public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMachine, IMachineModifyDrops {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
             AdvancedTesseractMachine.class, MetaMachine.MANAGED_FIELD_HOLDER);
@@ -161,5 +162,10 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
             }
         }
         return null;
+    }
+
+    @Override
+    public void onDrops(List<ItemStack> list) {
+        clearInventory(inventory.storage);
     }
 }

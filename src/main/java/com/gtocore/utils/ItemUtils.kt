@@ -1,5 +1,7 @@
 package com.gtocore.utils
 
+import com.gtocore.api.lang.ComponentListSupplier
+
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 

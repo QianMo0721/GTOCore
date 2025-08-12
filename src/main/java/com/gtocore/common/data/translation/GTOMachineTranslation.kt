@@ -1,5 +1,9 @@
 package com.gtocore.common.data.translation
 
+import com.gtocore.api.lang.ComponentListSupplier
+import com.gtocore.api.lang.initialize
+import com.gtocore.api.lang.toLiteralSupplier
+import com.gtocore.api.lang.translatedTo
 import com.gtocore.api.misc.AutoInitialize
 import com.gtocore.common.data.translation.ComponentSlang.OutTopic
 import com.gtocore.common.data.translation.ComponentSlang.Star
@@ -9,10 +13,6 @@ import com.gtocore.common.machine.electric.ElectricHeaterMachine
 import com.gtocore.common.machine.multiblock.storage.MultiblockCrateMachine
 import com.gtocore.common.machine.noenergy.BoilWaterMachine
 import com.gtocore.common.machine.noenergy.HeaterMachine
-import com.gtocore.utils.ComponentListSupplier
-import com.gtocore.utils.initialize
-import com.gtocore.utils.toLiteralSupplier
-import com.gtocore.utils.translatedTo
 
 object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
     val pattern = ("样板" translatedTo "Patterns").initialize()
@@ -257,6 +257,14 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add("§6改进后的PMG-13§r§a以另一种身份被广泛使用" translatedTo "The §6improved PMG-13§r is widely used in another capacity") { green() }
         add(ComponentSlang.RecommendedUseAs(("生产魔力" translatedTo "mana production"))) { aqua() }
         add(Star(1) + ("§6§l§o高级魔力采集设备" translatedTo "Advanced mana collection equipment")) { aqua() }
+    }
+
+    // 虚空流体钻机
+    val VoidFluidDrillTooltips = ComponentListSupplier {
+        setTranslationPrefix("void_fluid_drill")
+        add(("§6§l虚空流体钻机§r§b是格雷科技在虚空领域的又一力作" translatedTo "§6§lVoid Fluid Drill§r is another masterpiece of GregTech in the void field").InfoBrand())
+        add(("它可以在虚空中钻取流体" translatedTo "It can drill fluids in the void").InfoBrand())
+        add(Star(1) + ("放入维度数据，设置电路后即可获取钻出对应世界流体矿床的流体" translatedTo "Insert dimension data and set the circuit to obtain fluids from corresponding world fluid deposits").InfoFunctionPrimary()) { aqua() }
     }
 
     // 能量注入仪
