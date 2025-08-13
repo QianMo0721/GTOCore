@@ -1393,28 +1393,6 @@ public final class MultiBlockD {
                     .register(),
             GTValues.LuV, GTValues.ZPM, GTValues.UV, GTValues.UHV, GTValues.UEV);
 
-    public static final MultiblockMachineDefinition CREATE_COMPUTATION = multiblock("create_computation", "创造计算机", (holder) -> new ComputationProviderMachine(holder, true))
-            .allRotation()
-            .recipeTypes(GTRecipeTypes.DUMMY_RECIPES)
-            .tooltipsKey("gtceu.universal.tooltip.voltage_in", Integer.MAX_VALUE, GTValues.VNF[GTValues.MAX])
-            .overclock()
-            .block(GTBlocks.ADVANCED_COMPUTER_CASING)
-            .pattern(definition -> FactoryBlockPattern.start(definition)
-                    .aisle("aa", "bb", "bb", "bb", "aa")
-                    .aisle("aa", "cc", "cc", "cc", "aa")
-                    .aisle("aa", "cc", "cc", "cc", "aa")
-                    .aisle("aa", "cc", "cc", "cc", "aa")
-                    .aisle("~a", "bb", "bb", "bb", "aa")
-                    .where('~', controller(blocks(definition.get())))
-                    .where('b', blocks(GTBlocks.ADVANCED_COMPUTER_CASING.get())
-                            .or(abilities(COMPUTATION_DATA_TRANSMISSION).setExactLimit(1))
-                            .or(abilities(INPUT_ENERGY).setMaxGlobalLimited(1)))
-                    .where('a', blocks(GTBlocks.ADVANCED_COMPUTER_CASING.get()))
-                    .where('c', blocks(GTOBlocks.CREATE_HPCA_COMPONENT.get()))
-                    .build())
-            .workableCasingRenderer(GTCEu.id("block/casings/hpca/advanced_computer_casing/back"), GTCEu.id("block/multiblock/hpca"))
-            .register();
-
     public static final MultiblockMachineDefinition INCUBATOR = multiblock("incubator", "培养缸", IncubatorMachine::new)
             .nonYAxisRotation()
             .tooltips(NewDataAttributes.RUNTIME_REQUIREMENT.create(

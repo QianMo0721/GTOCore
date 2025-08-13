@@ -44,7 +44,6 @@ import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
-import com.gregtechceu.gtceu.core.mixins.TagValueAccessor;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.gregtechceu.gtceu.integration.ae2.gui.widget.AETextInputButtonWidget;
 
@@ -52,7 +51,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -151,8 +149,7 @@ public final class RecipeEditorBehavior implements IItemUIFactory, IFancyUIProvi
                                             break a;
                                         }
                                     } else if (value instanceof Ingredient.TagValue tagValue) {
-                                        TagKey<Item> tag = ((TagValueAccessor) tagValue).getTag();
-                                        input.add(tag.location().toString());
+                                        input.add(tagValue.tag.location().toString());
                                         break;
                                     }
                                 }

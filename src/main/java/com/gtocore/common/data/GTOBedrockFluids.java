@@ -361,8 +361,6 @@ public final class GTOBedrockFluids {
                     .depletedYield(40)
                     .dimensions(getDimensionKeys(BARNARDA_C)));
 
-    public static void init() {}
-
     private static BedrockFluidDefinition create(ResourceLocation id, String cn, Consumer<BedrockFluidDefinition.Builder> consumer) {
         if (LANG != null) {
             String name = id.getPath();

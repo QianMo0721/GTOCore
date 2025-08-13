@@ -34,8 +34,9 @@ public final class MultiBlockH {
 
     public static void init() {}
 
-    public static final MultiblockMachineDefinition LHC = multiblock("lhc", "LHC", NoRecipeLogicMultiblockMachine::new)
+    public static final MultiblockMachineDefinition LHC = multiblock("lhc", "大型强子对撞机", NoRecipeLogicMultiblockMachine::new)
             .nonYAxisRotation()
+            .langValue("Large Hadron Collider")
             .recipeTypes(GTORecipeTypes.DUMMY_RECIPES)
             .block(GTOBlocks.IRIDIUM_CASING)
             .pattern(definition -> MultiBlockFileReader.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT)

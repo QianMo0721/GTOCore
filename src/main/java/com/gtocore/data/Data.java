@@ -2,6 +2,7 @@ package com.gtocore.data;
 
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOLoots;
+import com.gtocore.common.data.GTOOres;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.data.recipe.*;
 import com.gtocore.data.recipe.classified.$ClassifiedRecipe;
@@ -65,6 +66,7 @@ public final class Data {
 
     public static void init() {
         long time = System.currentTimeMillis();
+        GTOOres.init();
         MeteoriteRecipe.init();
 
         ItemMaterialData.reinitializeMaterialData();

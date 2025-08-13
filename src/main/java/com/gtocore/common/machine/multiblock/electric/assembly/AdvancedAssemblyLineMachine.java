@@ -5,12 +5,18 @@ import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
+import com.gtolib.utils.ItemUtils;
 
+import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
+import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
+import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
@@ -23,10 +29,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine {
 
@@ -108,6 +111,11 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
     }
 
     @Override
+    public RecipeLogic createRecipeLogic(Object... args) {
+        return new AssemblyLineLogic(this);
+    }
+
+    @Override
     public Comparator<IMultiPart> getPartSorter() {
         return Comparator.comparing(p -> p.self().getPos(), RelativeDirection.RIGHT.getSorter(getFrontFacing(), getUpwardsFacing(), isFlipped()));
     }
@@ -128,6 +136,50 @@ public final class AdvancedAssemblyLineMachine extends ElectricMultiblockMachine
             } else if (part instanceof HugeBusPartMachine hugeBusPartMachine) {
                 itemStackTransfers.add(hugeBusPartMachine.getInventory().storage);
             }
+        }
+    }
+
+    private static class AssemblyLineLogic extends RecipeLogic {
+
+        private AssemblyLineLogic(IRecipeLogicMachine machine) {
+            super(machine);
+        }
+
+        @NotNull
+        @Override
+        public AdvancedAssemblyLineMachine getMachine() {
+            return (AdvancedAssemblyLineMachine) super.getMachine();
+        }
+
+        @Override
+        protected boolean handleRecipeIO(GTRecipe recipe, IO io) {
+            if (io == IO.IN) {
+                if (!consumeOrderedItemInputs(recipe)) {
+                    return false;
+                }
+                return RecipeRunner.handleRecipe(this.machine, (Recipe) recipe, io, Map.of(FluidRecipeCapability.CAP, recipe.getInputContents(FluidRecipeCapability.CAP)), chanceCaches, false);
+            } else {
+                return super.handleRecipeIO(recipe, io);
+            }
+        }
+
+        private boolean consumeOrderedItemInputs(GTRecipe recipe) {
+            var itemInputs = recipe.inputs.getOrDefault(ItemRecipeCapability.CAP, Collections.emptyList());
+            if (itemInputs.isEmpty()) return true;
+
+            var machineInputs = getMachine().itemStackTransfers;
+            if (machineInputs.size() < itemInputs.size()) return false;
+
+            for (int i = 0; i < itemInputs.size(); i++) {
+                var inputSlot = machineInputs.get(i);
+                var recipeInput = ItemRecipeCapability.CAP.of(itemInputs.get(i).content);
+                var stack = inputSlot.getStackInSlot(0);
+                if (stack.isEmpty() || !recipeInput.test(stack)) {
+                    return false;
+                }
+                inputSlot.extractItem(0, (int) ItemUtils.getSizedAmount(recipeInput), false);
+            }
+            return true;
         }
     }
 }

@@ -58,6 +58,7 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                 } else if (autoBuildSetting.isReplaceCoilMode()) {
                     AdvancedBlockPattern.getAdvancedBlockPattern(controller.getPattern()).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
+                    controller.requestCheck();
                 }
 
             }

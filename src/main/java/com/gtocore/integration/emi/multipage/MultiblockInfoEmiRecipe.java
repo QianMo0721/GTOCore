@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.integration.emi.multipage.MultiblockInfoEmiCategory
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import com.lowdragmc.lowdraglib.emi.ModularEmiRecipe;
@@ -17,6 +18,7 @@ import com.lowdragmc.lowdraglib.emi.ModularForegroundRenderWidget;
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
 import com.lowdragmc.lowdraglib.jei.ModularWrapper;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.stack.ListEmiIngredient;
 import dev.emi.emi.api.widget.WidgetHolder;
@@ -33,11 +35,12 @@ public final class MultiblockInfoEmiRecipe extends ModularEmiRecipe<Widget> {
     private static final Widget MULTIBLOCK = new Widget(0, 0, 160, 160);
 
     private final MultiblockMachineDefinition definition;
+    public List<ItemStack> itemList = null;
 
     public MultiblockInfoEmiRecipe(MultiblockMachineDefinition definition) {
         super(() -> MULTIBLOCK);
         this.definition = definition;
-        widget = () -> PatternPreview.getPatternWidget(definition);
+        widget = () -> PatternPreview.getPatternWidget(this, definition);
         var pattern = definition.getPatternFactory().get();
         if (pattern != null && pattern.predicates != null) {
             Set<Set<Item>> parts = new ObjectOpenHashSet<>();
@@ -58,6 +61,15 @@ public final class MultiblockInfoEmiRecipe extends ModularEmiRecipe<Widget> {
             parts.forEach(p -> inputs.add(new ListEmiIngredient(p.stream().map(EmiStack::of).toList(), 1)));
         }
         MultiblockDefinition.of(definition).getPatterns()[0].parts().forEach(i -> super.inputs.add(EmiStack.of(i)));
+    }
+
+    @Override
+    public List<EmiIngredient> getInputs() {
+        if (itemList != null) {
+            return itemList.stream().map(EmiStack::of).map(s -> (EmiIngredient) s).toList();
+        } else {
+            return super.getInputs();
+        }
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.gtolib.adastra.IAdDisplayTagName;
 import com.gtolib.api.misc.PlanetManagement;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.core.mixins.IngredientAccessor;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -123,7 +122,7 @@ public abstract class PlanetsScreenMixin extends AbstractContainerScreen<Planets
                 var gameTime = this.menu.player().level().getGameTime();
                 for (IAdDisplayTagName.a ingredient : ingredients) {
                     MutableComponent need = Component.empty();
-                    Ingredient.Value[] values = ((IngredientAccessor) ingredient.a()).getValues();
+                    Ingredient.Value[] values = ingredient.a().values;
                     int displayWhich = Math.toIntExact((gameTime / 100) % values.length);
                     if (values[displayWhich] instanceof Ingredient.TagValue tagValue) {
                         String tagTranslationKey = gtocore$getTagTranslationKey(ResourceLocation.parse(tagValue.serialize().get("tag").getAsString()));

@@ -119,8 +119,8 @@ public final class UpgradeModuleItem extends Item implements GTOTooltipComponent
                     tooltips.add(new GTOComponentTooltipComponent(component));
                 }
             }
-        }else{
-            for (Component component : GTOItemTooltips.INSTANCE.getEnergy_upgrade_module().invoke("-","-").getArray()) {
+        } else {
+            for (Component component : GTOItemTooltips.INSTANCE.getEnergy_upgrade_module().invoke("-", "-").getArray()) {
                 tooltips.add(new GTOComponentTooltipComponent(component));
             }
         }

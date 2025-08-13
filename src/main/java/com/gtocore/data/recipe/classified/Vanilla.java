@@ -525,7 +525,7 @@ final class Vanilla {
                 "CDC",
                 "EFE",
                 'A', GTItems.ROBOT_ARM_HV.asStack(), 'B', GTItems.EMITTER_HV.asStack(), 'C', new ItemStack(Blocks.REDSTONE_TORCH.asItem()), 'D', RegistriesUtils.getItemStack("avaritia:compressed_crafting_table"), 'E', new MaterialEntry(TagPrefix.plateDouble, GTMaterials.Steel), 'F', new MaterialEntry(TagPrefix.block, GTMaterials.Steel));
-        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("flint_axe"), RegistriesUtils.getItemStack("gtceu:flint_axe", 1, "{DisallowContainerItem:0b,GT.Behaviours:{DisableShields:1b},GT.Tool:{AttackDamage:6.0f,AttackSpeed:-3.2f,Damage:0,HarvestLevel:2,MaxDamage:16,ToolSpeed:3.5f},HideFlags:2}"),
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("flint_axe"), RegistriesUtils.getItemStack("gtceu:flint_axe", 1, "{DisallowContainerItem:0b,GT.Behaviours:{DisableShields:1b},GT.Tool:{AttackDamage:6.0f,AttackSpeed:-3.2f,Damage:0,HarvestLevel:2,MaxDamage:64,ToolSpeed:3.5f},HideFlags:2}"),
                 "AA",
                 "BC",
                 'A', new MaterialEntry(TagPrefix.gem, GTMaterials.Flint), 'B', GTOItems.PLANT_FIBER.asStack(), 'C', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));

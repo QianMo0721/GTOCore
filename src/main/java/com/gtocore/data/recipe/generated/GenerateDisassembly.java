@@ -13,7 +13,6 @@ import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.recipe.chance.logic.ChanceLogic;
 import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
-import com.gregtechceu.gtceu.core.mixins.TagValueAccessor;
 import com.gregtechceu.gtceu.data.recipe.builder.GTRecipeBuilder;
 
 import net.minecraft.resources.ResourceLocation;
@@ -94,7 +93,7 @@ public final class GenerateDisassembly {
                                 }
                             }
                         } else if (value instanceof Ingredient.TagValue tagValue) {
-                            Integer i = Tags.CIRCUITS_ARRAY.get(((TagValueAccessor) tagValue).getTag());
+                            Integer i = Tags.CIRCUITS_ARRAY.get(tagValue.tag);
                             if (i != null) {
                                 builder.outputItems(GTOItems.UNIVERSAL_CIRCUIT[i].get(), sizedIngredient.getSaturatedAmount());
                                 break;

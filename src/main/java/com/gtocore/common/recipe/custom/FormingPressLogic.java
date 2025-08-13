@@ -65,15 +65,15 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
         if (h instanceof IRecipeLogicMachine recipeLogicMachine) {
             RecipeData data = new RecipeData(IEnhancedRecipeLogic.of(recipeLogicMachine.getRecipeLogic()).gtolib$getRecipeBuilder());
             if (h instanceof IExtendedRecipeCapabilityHolder holder) {
-                return collect(data, holder.gtolib$getInput());
+                return collect(data, holder.gtolib$getInput(), holder);
             } else {
-                return collect(data, recipeLogicMachine.getCapabilitiesForIO(IO.IN));
+                return collect(data, recipeLogicMachine.getCapabilitiesForIO(IO.IN), null);
             }
         }
         return null;
     }
 
-    private static Recipe collect(RecipeData data, List<RecipeHandlerList> rhls) {
+    private static Recipe collect(RecipeData data, List<RecipeHandlerList> rhls, IExtendedRecipeCapabilityHolder h) {
         for (var rhl : rhls) {
             data.mold = ItemStack.EMPTY;
             data.item = ItemStack.EMPTY;
@@ -89,7 +89,13 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
                         } else if (!isMold && data.item.isEmpty() && !stack.hasCustomHoverName()) {
                             data.item = stack;
                         }
-                        if (data.found()) return data.buildRecipe();
+                        if (data.found()) {
+                            var recipe = data.buildRecipe();
+                            if (recipe != null) {
+                                if (h != null) h.gtolib$setCurrentHandlerList(rhl, recipe);
+                                return recipe;
+                            }
+                        }
                     }
                 }
             }

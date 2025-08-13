@@ -3,12 +3,13 @@ package com.gtocore.integration.emi;
 import com.gtocore.integration.emi.multipage.MultiblockInfoEmiRecipe;
 
 import com.gregtechceu.gtceu.api.item.MetaMachineItem;
+import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 
 import appeng.api.stacks.AEFluidKey;
@@ -17,6 +18,8 @@ import appeng.api.stacks.GenericStack;
 import appeng.integration.modules.jeirei.EncodingHelper;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.hepdd.gtmthings.api.misc.Hatch;
+import com.hepdd.gtmthings.common.item.VirtualItemProviderBehavior;
+import com.hepdd.gtmthings.data.CustomItems;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
@@ -80,15 +83,23 @@ final class Ae2PatternTerminalHandler<T extends PatternEncodingTermMenu> impleme
                     .map(Ae2PatternTerminalHandler::intoGenericStack)
                     .toList();
         }
-        return emiRecipe.getInputs()
+        var list = new ArrayList<List<GenericStack>>();
+        if (GTUtil.isShiftDown() || GTUtil.isCtrlDown()) {
+            emiRecipe.getCatalysts()
+                    .stream()
+                    .map(s -> intoGenericStack(s, GTUtil.isCtrlDown()))
+                    .forEach(list::add);
+        }
+        emiRecipe.getInputs()
                 .stream()
                 .map(Ae2PatternTerminalHandler::intoGenericStack)
-                .toList();
+                .forEach(list::add);
+        return list;
     }
 
     private static boolean isNotHatch(EmiIngredient ingredient) {
         if (ingredient instanceof EmiStack stack) {
-            return !(stack.getKey() instanceof MetaMachineItem meta) || !Hatch.Set.contains(meta.getBlock());
+            return GTUtil.isShiftDown() || !(stack.getKey() instanceof MetaMachineItem meta) || !Hatch.Set.contains(meta.getBlock());
         }
         return false;
     }
@@ -101,18 +112,25 @@ final class Ae2PatternTerminalHandler<T extends PatternEncodingTermMenu> impleme
     }
 
     private static List<GenericStack> intoGenericStack(EmiIngredient ingredient) {
+        return intoGenericStack(ingredient, false);
+    }
+
+    private static List<GenericStack> intoGenericStack(EmiIngredient ingredient, boolean virtual) {
         if (ingredient.isEmpty()) {
             return new ArrayList<>();
         }
-        return ingredient.getEmiStacks().stream().map(stack -> fromEmiStack(stack, ingredient.getAmount())).toList();
+        return ingredient.getEmiStacks().stream().map(stack -> fromEmiStack(stack, ingredient.getAmount(), virtual)).toList();
     }
 
-    private static GenericStack fromEmiStack(EmiStack stack, long amount) {
-        if (stack.getKey() instanceof Item item) {
-            return new GenericStack(AEItemKey.of(item.getDefaultInstance()), amount);
+    private static GenericStack fromEmiStack(EmiStack stack, long amount, boolean virtual) {
+        if (stack.getKey() instanceof Item) {
+            if (virtual) {
+                return new GenericStack(AEItemKey.of(VirtualItemProviderBehavior.setVirtualItem(CustomItems.VIRTUAL_ITEM_PROVIDER.asStack(), stack.getItemStack())), amount);
+            }
+            return new GenericStack(AEItemKey.of(stack.getItemStack()), amount);
         } else if (stack.getKey() instanceof Fluid fluid) {
             return new GenericStack(AEFluidKey.of(fluid), amount);
         }
-        return new GenericStack(AEItemKey.of(ItemStack.EMPTY), 0);
+        return new GenericStack(AEItemKey.of(Items.STICK), 0);
     }
 }

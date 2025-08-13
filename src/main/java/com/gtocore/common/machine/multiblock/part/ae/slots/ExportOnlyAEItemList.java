@@ -137,7 +137,7 @@ public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements 
                 }
             }
             if (!simulate && changed) {
-                notifyListeners();
+                onContentsChanged();
             }
         }
         return left.isEmpty() ? null : left;

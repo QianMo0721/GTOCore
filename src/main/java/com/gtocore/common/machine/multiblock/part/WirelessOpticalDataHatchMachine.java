@@ -1,16 +1,11 @@
 package com.gtocore.common.machine.multiblock.part;
 
 import com.gregtechceu.gtceu.api.capability.IDataAccessHatch;
-import com.gregtechceu.gtceu.api.capability.IOpticalDataAccessHatch;
-import com.gregtechceu.gtceu.api.capability.IWorkable;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IInteractedMachine;
-import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
-import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
-import com.gregtechceu.gtceu.api.machine.multiblock.part.MultiblockPartMachine;
-import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.common.data.GTItems;
+import com.gregtechceu.gtceu.common.machine.multiblock.part.OpticalDataHatchMachine;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -21,7 +16,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -29,26 +23,22 @@ import com.hepdd.gtmthings.api.capability.IGTMTJadeIF;
 import com.hepdd.gtmthings.api.misc.CleanableReferenceSupplier;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine implements IOpticalDataAccessHatch, IInteractedMachine, IGTMTJadeIF {
+public final class WirelessOpticalDataHatchMachine extends OpticalDataHatchMachine implements IInteractedMachine, IGTMTJadeIF {
 
-    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(WirelessOpticalDataHatchMachine.class, MultiblockPartMachine.MANAGED_FIELD_HOLDER);
+    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
+            WirelessOpticalDataHatchMachine.class, OpticalDataHatchMachine.MANAGED_FIELD_HOLDER);
 
     @Override
     public ManagedFieldHolder getFieldHolder() {
         return MANAGED_FIELD_HOLDER;
     }
 
-    private final boolean transmitter;
     @Persisted
     private BlockPos transmitterPos;
     @Persisted
@@ -57,53 +47,17 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
     private final CleanableReferenceSupplier<MetaMachine> transmitterMachine = new CleanableReferenceSupplier<>(() -> MetaMachine.getMachine(getLevel(), transmitterPos), MetaMachine::isInValid);
 
     public WirelessOpticalDataHatchMachine(IMachineBlockEntity holder, boolean transmitter) {
-        super(holder);
-        this.transmitter = transmitter;
+        super(holder, transmitter);
     }
 
     @Override
-    public boolean isTransmitter() {
-        return transmitter;
-    }
-
-    @Override
-    public boolean isRecipeAvailable(GTRecipe recipe, Collection<IDataAccessHatch> seen) {
-        seen.add(this);
-        if (!getControllers().isEmpty()) {
-            if (transmitter) {
-                IMultiController controller = getControllers().first();
-                if (!(controller instanceof IWorkable workable) || !workable.isActive()) return false;
-                List<IDataAccessHatch> dataAccesses = new ArrayList<>();
-                List<IDataAccessHatch> transmitters = new ArrayList<>();
-                for (var part : controller.getParts()) {
-                    Block block = part.self().getBlockState().getBlock();
-                    if (part instanceof IDataAccessHatch hatch && PartAbility.DATA_ACCESS.isApplicable(block)) {
-                        dataAccesses.add(hatch);
-                    }
-                    if (part instanceof IDataAccessHatch hatch && PartAbility.OPTICAL_DATA_RECEPTION.isApplicable(block)) {
-                        transmitters.add(hatch);
-                    }
-                }
-                return isRecipeAvailable(dataAccesses, seen, recipe) || isRecipeAvailable(transmitters, seen, recipe);
-            } else {
-                Level level = getLevel();
-                if (level == null || transmitterPos == null) return false;
-                if (transmitterMachine.get() instanceof WirelessOpticalDataHatchMachine machine) {
-                    return machine.isRecipeAvailable(recipe, seen);
-                }
-            }
+    protected @Nullable IDataAccessHatch getAccessHatch() {
+        Level level = getLevel();
+        if (level == null || transmitterPos == null) return null;
+        if (transmitterMachine.get() instanceof WirelessOpticalDataHatchMachine machine) {
+            return machine;
         }
-        return false;
-    }
-
-    private static boolean isRecipeAvailable(@NotNull Iterable<? extends IDataAccessHatch> hatches, @NotNull Collection<IDataAccessHatch> seen, @NotNull GTRecipe recipe) {
-        for (IDataAccessHatch hatch : hatches) {
-            if (seen.contains(hatch)) continue;
-            if (hatch.isRecipeAvailable(recipe, seen)) {
-                return true;
-            }
-        }
-        return false;
+        return null;
     }
 
     private static CompoundTag createPos(BlockPos pos) {
@@ -125,7 +79,7 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
         if (is.is(GTItems.TOOL_DATA_STICK.asItem())) {
             Level level = getLevel();
             if (level == null) return InteractionResult.PASS;
-            if (transmitter) {
+            if (isTransmitter()) {
                 var tag = is.getTag();
                 if (transmitterPos == null) transmitterPos = pos;
                 if (tag != null) {
@@ -133,7 +87,7 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
                     var bindPos = (CompoundTag) tag.get("receiverPos");
                     if (bindPos != null) {
                         BlockPos recPos = getPos(bindPos);
-                        if (getMachine(level, recPos) instanceof WirelessOpticalDataHatchMachine wod && !wod.transmitter) {
+                        if (getMachine(level, recPos) instanceof WirelessOpticalDataHatchMachine wod && !wod.isTransmitter()) {
                             wod.setTransmitterPos(transmitterPos);
                             receiverPos = pos;
                             tag.remove("transmitterPos");
@@ -164,7 +118,7 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
                     var bindPos = (CompoundTag) tag.get("transmitterPos");
                     if (bindPos != null) {
                         BlockPos tranPos = new BlockPos(bindPos.getInt("x"), bindPos.getInt("y"), bindPos.getInt("z"));
-                        if (getMachine(level, tranPos) instanceof WirelessOpticalDataHatchMachine wod && wod.transmitter) {
+                        if (getMachine(level, tranPos) instanceof WirelessOpticalDataHatchMachine wod && wod.isTransmitter()) {
                             wod.setReceiverPos(receiverPos);
                             transmitterPos = tranPos;
                             tag.remove("transmitterPos");
@@ -218,35 +172,15 @@ public final class WirelessOpticalDataHatchMachine extends MultiblockPartMachine
     }
 
     @Override
-    public boolean isCreative() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldOpenUI(Player player, InteractionHand hand, BlockHitResult hit) {
-        return false;
-    }
-
-    @Override
-    public boolean canShared() {
-        return false;
-    }
-
-    @Override
-    public GTRecipe modifyRecipe(GTRecipe recipe) {
-        return IOpticalDataAccessHatch.super.modifyRecipe(recipe);
-    }
-
-    @Override
     public boolean isbinded() {
         return transmitterPos != null || receiverPos != null;
     }
 
     @Override
     public String getBindPos() {
-        if (transmitter && receiverPos != null) {
+        if (isTransmitter() && receiverPos != null) {
             return receiverPos.toShortString();
-        } else if (!transmitter && transmitterPos != null) {
+        } else if (!isTransmitter() && transmitterPos != null) {
             return transmitterPos.toShortString();
         }
         return "";

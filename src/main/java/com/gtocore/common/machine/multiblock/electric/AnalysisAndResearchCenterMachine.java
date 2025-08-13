@@ -7,9 +7,6 @@ import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.Recipe;
 
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.capability.IOpticalComputationProvider;
-import com.gregtechceu.gtceu.api.capability.IOpticalComputationReceiver;
-import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -27,14 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class AnalysisAndResearchCenterMachine extends ElectricMultiblockMachine implements IOpticalComputationReceiver {
+public class AnalysisAndResearchCenterMachine extends ElectricMultiblockMachine {
 
-    @Override
-    public IOpticalComputationProvider getComputationProvider() {
-        return computationProvider;
-    }
-
-    private IOpticalComputationProvider computationProvider;
     private AnalyzeHolderMachine AnalyzeHolder;
     private ResearchHolderMachine ResearchHolder;
 
@@ -68,15 +59,10 @@ public class AnalysisAndResearchCenterMachine extends ElectricMultiblockMachine 
                 addHandlerList(RecipeHandlerList.of(IO.IN, researchHolder.getAsHandler()));
                 mode = 2;
             }
-
-            // 获取计算提供者
-            part.self().holder.self()
-                    .getCapability(GTCapability.CAPABILITY_COMPUTATION_PROVIDER)
-                    .ifPresent(provider -> this.computationProvider = provider);
         }
 
         // 必须同时有扫描部件和计算提供者
-        if (computationProvider == null || mode == 0) {
+        if (mode == 0) {
             onStructureInvalid();
         }
     }
@@ -92,7 +78,6 @@ public class AnalysisAndResearchCenterMachine extends ElectricMultiblockMachine 
 
     @Override
     public void onStructureInvalid() {
-        computationProvider = null;
         // 重置扫描部件状态
         if (AnalyzeHolder != null && mode == 1) {
             AnalyzeHolder.setLocked(false);

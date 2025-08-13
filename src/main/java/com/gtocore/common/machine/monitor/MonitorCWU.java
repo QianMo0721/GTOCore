@@ -19,9 +19,9 @@ public class MonitorCWU extends AbstractInfoProviderMonitor implements ITeamInfo
 
     private final WirelessComputationContainerTrait trait;
     @DescSynced
-    private int cwtTotal = 0;
+    private long cwtTotal = 0;
     @DescSynced
-    private int cwtUnused = 0;
+    private long cwtUnused = 0;
     @DescSynced
     boolean hasContainer = false;
 
@@ -44,7 +44,7 @@ public class MonitorCWU extends AbstractInfoProviderMonitor implements ITeamInfo
     public DisplayComponentList provideInformation() {
         var infoList = ITeamInformationProvider.super.provideInformation();
         if (hasContainer) {
-            int cwtUsed = cwtTotal - cwtUnused;
+            long cwtUsed = cwtTotal - cwtUnused;
             infoList.addIfAbsent(
                     DisplayRegistry.COMPUTATION_WORK.id(),
                     Component.translatable("gtocore.machine.monitor.cwu.capacity",

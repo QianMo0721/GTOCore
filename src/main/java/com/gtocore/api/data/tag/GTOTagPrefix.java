@@ -5,7 +5,6 @@ import com.gtocore.common.data.GTOBlocks;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.data.chemical.material.GTOMaterialBuilder;
-import com.gtolib.mixin.MaterialPropertiesAccessor;
 import com.gtolib.utils.RLUtils;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -40,7 +39,7 @@ public final class GTOTagPrefix extends TagPrefix {
     }
 
     private static boolean needSmall(Material material) {
-        var properties = ((MaterialPropertiesAccessor) GTOMaterialBuilder.getProperties(material)).getPropertyMap();
+        var properties = GTOMaterialBuilder.getProperties(material).propertyMap;
         int size = 0;
         for (var propertie : properties.keySet()) {
             if (propertie == PropertyKey.EMPTY || propertie == PropertyKey.HAZARD) continue;

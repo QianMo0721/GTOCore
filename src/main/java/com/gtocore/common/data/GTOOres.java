@@ -14,30 +14,20 @@ import com.gregtechceu.gtceu.api.data.worldgen.generator.VeinGenerator;
 import com.gregtechceu.gtceu.api.data.worldgen.generator.indicators.SurfaceIndicatorGenerator;
 import com.gregtechceu.gtceu.api.data.worldgen.generator.veins.DikeVeinGenerator;
 import com.gregtechceu.gtceu.api.data.worldgen.generator.veins.VeinedVeinGenerator;
-import com.gregtechceu.gtceu.api.registry.GTRegistries;
+import com.gregtechceu.gtceu.common.data.GTBedrockFluids;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.data.GTOres;
 
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-import java.io.BufferedWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static com.gregtechceu.gtceu.common.data.GTMaterials.*;
 import static com.gtocore.common.data.GTOMaterials.*;
@@ -49,10 +39,9 @@ public final class GTOOres {
 
     private static final Map<ResourceLocation, MaterialSelector> RANDOM_ORES = new Object2ObjectOpenHashMap<>();
     public static final Map<ResourceLocation, Object2IntOpenHashMap<Material>> ALL_ORES = new Object2ObjectOpenHashMap<>();
-    public static final Map<ResourceLocation, BedrockOre> BEDROCK_ORES = new Object2ObjectOpenHashMap<>();
-    public static final Map<ResourceLocation, BedrockOreDefinition> BEDROCK_ORES_DEFINITION = new Object2ObjectOpenHashMap<>();
 
     public static void init() {
+        GTBedrockFluids.init();
         if (false) {
             Map<ResourceLocation, Set<String>> ORE_MAP = new Object2ObjectOpenHashMap<>();
             ORE_MAP.put(THE_NETHER, Set.of("TagPrefix.oreNetherrack"));
@@ -84,174 +73,6 @@ public final class GTOOres {
                 stringBuilder.append(sb).append(");");
             });
             GTOCore.LOGGER.error(stringBuilder.toString());
-        }
-
-        if (false) {
-            Map<Material, String> materialFieldMap = getMaterialStringMap();
-
-            Dimension[] ALL_DIM = { Dimension.OVERWORLD, Dimension.ANCIENT_WORLD, Dimension.THE_NETHER, Dimension.MOON, Dimension.MARS, Dimension.VENUS, Dimension.MERCURY, Dimension.GLACIO, Dimension.TITAN, Dimension.PLUTO, Dimension.IO, Dimension.GANYMEDE, Dimension.ENCELADUS, Dimension.CERES, Dimension.BARNARDA_C, Dimension.OTHERSIDE };
-            Map<ResourceLocation, DimensionOreInfo> dimensionOreInfoMap = new HashMap<>();
-            Map<ResourceLocation, Map<Material, Double>> normalizedOreWeights = new HashMap<>();
-
-            // 计算每个矿脉的均衡权重
-            for (Map.Entry<ResourceLocation, BedrockOre> entry : BEDROCK_ORES.entrySet()) {
-                ResourceLocation veinId = entry.getKey();
-                BedrockOre bedrockOre = entry.getValue();
-
-                int totalOreWeightInVein = bedrockOre.materials().stream()
-                        .mapToInt(WeightedMaterial::weight)
-                        .sum();
-
-                Map<Material, Double> weights = new HashMap<>();
-                for (WeightedMaterial wm : bedrockOre.materials()) {
-                    double normalizedWeight = (double) wm.weight() / totalOreWeightInVein * 100.0;
-                    weights.put(wm.material(), normalizedWeight);
-                }
-                normalizedOreWeights.put(veinId, weights);
-            }
-
-            // 处理所有矿脉定义
-            for (Map.Entry<ResourceLocation, BedrockOre> entry : BEDROCK_ORES.entrySet()) {
-                ResourceLocation veinId = entry.getKey();
-                BedrockOre bedrockOre = entry.getValue();
-                int veinWeight = bedrockOre.weight();
-
-                Map<Material, Double> normalizedWeights = normalizedOreWeights.get(veinId);
-
-                float density;
-                GTOreDefinition oreDefinition = GTRegistries.ORE_VEINS.get(veinId);
-                if (oreDefinition != null) {
-                    density = oreDefinition.density();
-                } else {
-                    density = 1.0f;
-                }
-
-                for (ResourceKey<Level> dimensionKey : bedrockOre.dimensions()) {
-                    ResourceLocation dimensionId = dimensionKey.location();
-
-                    Dimension dim = Arrays.stream(ALL_DIM).filter(d -> d.getLocation().equals(dimensionId)).findFirst().orElse(null);
-                    DimensionOreInfo oreInfo = dimensionOreInfoMap.computeIfAbsent(dimensionId, k -> new DimensionOreInfo(dim));
-
-                    oreInfo.totalVeinWeight += veinWeight;
-
-                    for (WeightedMaterial wm : bedrockOre.materials()) {
-                        Material material = wm.material();
-                        double oreWeight = normalizedWeights.getOrDefault(material, 0.0);
-                        int combinedWeight = (int) (oreWeight * veinWeight * density);
-                        oreInfo.ores.compute(material, (k, v) -> {
-                            if (v == null) {
-                                return new OreData(oreWeight, veinWeight, combinedWeight, density);
-                            }
-                            // 更新现有矿石数据
-                            v.totalOreWeight += oreWeight;
-                            v.totalVeinWeight += veinWeight;
-                            v.combinedWeight += combinedWeight;
-                            return v;
-                        });
-                    }
-                }
-            }
-
-            // 输出矿石信息
-            StringBuilder report = new StringBuilder("\n# ***维度矿石统计报告***");
-            StringBuilder report_arrays = new StringBuilder("***维度矿石统计输出(数组形式)***");
-            StringBuilder report_table = new StringBuilder("***维度矿石统计输出(表格形式)***");
-            for (Map.Entry<ResourceLocation, DimensionOreInfo> entry : dimensionOreInfoMap.entrySet()) {
-                ResourceLocation dimId = entry.getKey();
-                DimensionOreInfo info = entry.getValue();
-                Dimension dim = info.dimension;
-
-                String dimName = dim != null ? String.format("%s (%s)", dim.getEn(), dim.getCn()) : dimId.toString();
-
-                report.append("\n\n## **维度**: ").append(dimName).append("  ");
-                report.append("\n**ID**: ").append(dimId).append("  ");
-
-                if (dim != null) {
-                    report.append("\n**层级**: ").append(dim.getTier()).append("  ");
-                    report.append("\n**星系**: ").append(dim.getGalaxy()).append("  ");
-                    report.append("\n**轨道**: ").append(dim.getOrbit()).append("  ");
-                }
-                report.append("\n**总矿脉权重**: ").append(info.totalVeinWeight).append("  ");
-
-                report.append("\n\n### **矿石列表**:  ");
-                report.append("\n|序号|矿石名称|  |矿石权重|矿脉权重|矿脉密度|联合权重|");
-                report.append("\n|-----|----------|--------------------|------|------|------|------|");
-                AtomicInteger index = new AtomicInteger(1);
-                info.ores.entrySet().stream()
-                        .sorted((e1, e2) -> Integer.compare(e2.getValue().combinedWeight, e1.getValue().combinedWeight))
-                        .forEach(e -> {
-                            Material material = e.getKey();
-                            OreData data = e.getValue();
-                            int currentIndex = index.getAndIncrement();
-                            String fieldName = materialFieldMap.getOrDefault(material, material.getName());
-                            report.append(String.format(
-                                    "\n| %d | %s | %s | %s | %d | %s | %d |",
-                                    currentIndex,
-                                    I18n.get(material.getUnlocalizedName()),
-                                    fieldName,
-                                    String.format("%.1f", data.totalOreWeight),
-                                    data.totalVeinWeight,
-                                    String.format("%.0f%%", data.density * 100),
-                                    data.combinedWeight));
-                        });
-
-                // 为当前维度创建矿石组合权重映射
-                Object2IntMap<Material> oreMap = new Object2IntOpenHashMap<>();
-                info.ores.forEach((material, oreData) -> oreMap.put(material, oreData.combinedWeight));
-
-                // 数组形式输出
-                report_arrays.append("\n\n维度: ").append(dimName);
-                report_arrays.append("\nID: ").append(dimId);
-                List<String> materialNames = new ArrayList<>();
-                List<Integer> weights = new ArrayList<>();
-                List<String> localizationKeys = new ArrayList<>();
-                for (var entry2 : oreMap.object2IntEntrySet()) {
-                    Material material = entry2.getKey();
-                    materialNames.add(materialFieldMap.getOrDefault(material, material.getName()));
-                    weights.add(entry2.getIntValue());
-                    localizationKeys.add(I18n.get(material.getUnlocalizedName()));
-                }
-                String materialNamesStr = materialNames.stream().collect(Collectors.joining(", ", "new Material[] { ", " }"));
-                String weightsStr = weights.stream().map(Object::toString).collect(Collectors.joining(", ", "new int[] { ", " }"));
-                String localizationKeysStr = localizationKeys.stream().collect(Collectors.joining(", ", "{ ", " }"));
-                report_arrays.append("\n材料名称数组: \n").append(materialNamesStr);
-                report_arrays.append("\n权重数组: \n").append(weightsStr);
-                report_arrays.append("\n本地化键数组: \n").append(localizationKeysStr);
-
-                // 表格形式输出
-                report_table.append("\n\n维度: ").append(dimName);
-                report_table.append("\nID: ").append(dimId);
-                report_table.append("\n材料名称,权重,本地化键");
-                for (var entry3 : oreMap.object2IntEntrySet()) {
-                    Material material = entry3.getKey();
-                    String fieldName = materialFieldMap.getOrDefault(material, material.getName());
-                    report_table.append(String.format("\n%s,%d,%s",
-                            fieldName,
-                            entry3.getIntValue(),
-                            I18n.get(material.getUnlocalizedName())));
-                }
-            }
-            report.append("\n\n****报告结束****");
-            try {
-                Path logDir = Paths.get("logs", "report");
-                if (!Files.exists(logDir)) Files.createDirectories(logDir);
-                Path reportPath = logDir.resolve("ore_report.md");
-                Path reportPath_arrays = logDir.resolve("ore_report_arrays.txt");
-                Path reportPath_table = logDir.resolve("ore_report_table.csv");
-                try (BufferedWriter writer = Files.newBufferedWriter(reportPath)) {
-                    writer.write(report.toString());
-                }
-                try (BufferedWriter writer = Files.newBufferedWriter(reportPath_arrays)) {
-                    writer.write(report_arrays.toString());
-                }
-                try (BufferedWriter writer = Files.newBufferedWriter(reportPath_table, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-                    writer.write('\uFEFF');
-                    writer.write(report_table.toString());
-                }
-                GTOCore.LOGGER.info("矿石统计报告已生成: {}", reportPath.toAbsolutePath());
-            } catch (Exception e) {
-                GTOCore.LOGGER.error("生成矿石统计报告失败", e);
-            }
         }
     }
 
@@ -992,11 +813,9 @@ public final class GTOOres {
             materialMap.forEach((material, amount) -> materialIntegerMap.mergeInt(material, amount, Math::max));
             ALL_ORES.put(dimension.location(), materialIntegerMap);
         }
-        BEDROCK_ORES.put(id, new BedrockOre(definition.dimensionFilter(), definition.weight(), materials));
+        BedrockOreDefinition.builder(id).size(9).dimensions(definition.dimensionFilter()).weight(definition.weight()).materials(materials).yield(2, 8).depletedYield(1).depletionAmount(1).depletionChance(100).register();
         return definition;
     }
-
-    public record BedrockOre(Set<ResourceKey<Level>> dimensions, int weight, List<WeightedMaterial> materials) {}
 
     public static Material selectMaterial(ResourceLocation dimension) {
         MaterialSelector selector = RANDOM_ORES.computeIfAbsent(dimension, k -> {

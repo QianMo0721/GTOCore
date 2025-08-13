@@ -12,6 +12,7 @@ import com.gregtechceu.gtceu.api.data.chemical.material.properties.OreProperty;
 import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
 import com.gregtechceu.gtceu.api.data.chemical.material.stack.MaterialStack;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.api.item.tool.ToolHelper;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.data.GTRecipeCategories;
 import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
@@ -79,7 +80,7 @@ public final class GTOOreRecipeHandler {
         forge_builder.outputItems(out);
         forge_builder.save();
 
-        GTOCore.HAMMER_DROP.put(tag, out);
+        ToolHelper.HAMMER_DROP.put(tag, out);
 
         Material byproductMaterial = property.getOreByProduct(0, material);
         ItemStack byproductStack = ChemicalHelper.get(gem, byproductMaterial).isEmpty() ?
@@ -365,7 +366,7 @@ public final class GTOOreRecipeHandler {
         builder.outputItems(out);
         builder.save();
 
-        GTOCore.HAMMER_DROP.put(ChemicalHelper.getTag(TagPrefix.rawOre, material), out);
+        ToolHelper.HAMMER_DROP.put(ChemicalHelper.getTag(TagPrefix.rawOre, material), out);
 
         RecipeBuilder builder2 = CRUSHER_RECIPES.recipeBuilder(TagPrefix.rawOre.name + "_" + material.getName() + "_ore_to_crushed_ore")
                 .inputItems(stack)

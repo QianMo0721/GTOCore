@@ -46,14 +46,6 @@ public final class GTAEMachines {
             .renderer(() -> new OverlayTieredMachineRenderer(EV, GTCEu.id("block/machine/part/me_pattern_buffer")))
             .register();
 
-    public static final MachineDefinition ME_STORAGE_ACCESS_PROXY = machine("me_storage_access_proxy", "ME存储访问代理", MEStorageAccessProxyartMachine::new)
-            .langValue("ME Storage Access Proxy")
-            .tooltips(GTOMachineTranslation.INSTANCE.getMEStorageAccessHatchProxyTooltips().getSupplier())
-            .tier(EV)
-            .allRotation()
-            .renderer(() -> new OverlayTieredMachineRenderer(EV, GTCEu.id("block/machine/part/me_pattern_buffer_proxy")))
-            .register();
-
     public static final MachineDefinition ME_TAG_FILTER_STOCK_BUS = machine("me_tag_filter_stock_bus", "ME标签过滤库存输入总线", METagFilterStockBusPartMachine::new)
             .tier(LuV)
             .abilities(PartAbility.IMPORT_ITEMS)

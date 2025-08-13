@@ -88,7 +88,7 @@ public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfi
                 }
             }
             if (!simulate && changed) {
-                notifyListeners();
+                onContentsChanged();
             }
         }
         return left.isEmpty() ? null : left;

@@ -138,8 +138,6 @@ public final class GTOConfig {
         ConfigHolder.INSTANCE.tools.nanoSaber.nanoSaberBaseDamage = 1;
         ConfigHolder.INSTANCE.tools.nanoSaber.zombieSpawnWithSabers = true;
         ConfigHolder.INSTANCE.tools.nanoSaber.energyConsumption = 64;
-        ConfigHolder.INSTANCE.gameplay.environmentalHazards = false;
-        ConfigHolder.INSTANCE.gameplay.environmentalHazardDecayRate = 0.001F;
         if (GTOCore.isSimple()) {
             ConfigHolder.INSTANCE.gameplay.hazardsEnabled = false;
         }

@@ -4264,17 +4264,6 @@ final class Assembler {
                 .duration(400)
                 .save();
 
-        ASSEMBLER_RECIPES.builder("me_storage_access_proxy")
-                .inputItems("gtceu:data_access_hatch")
-                .inputItems(AEBlocks.QUANTUM_LINK.asItem())
-                .inputItems(CustomTags.IV_CIRCUITS, 4)
-                .inputItems(GTItems.SENSOR_EV.asStack(4))
-                .outputItems(GTAEMachines.ME_STORAGE_ACCESS_PROXY.asStack())
-                .inputFluids(GTMaterials.SolderingAlloy, 1000)
-                .EUt(1920)
-                .duration(400)
-                .save();
-
         ASSEMBLER_RECIPES.builder("quantum_glass")
                 .inputItems(GTBlocks.CASING_LAMINATED_GLASS.asStack())
                 .inputItems(GTOBlocks.MOLECULAR_CASING.asStack())

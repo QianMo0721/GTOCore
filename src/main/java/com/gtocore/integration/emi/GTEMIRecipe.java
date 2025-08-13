@@ -9,13 +9,11 @@ import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
-import com.gregtechceu.gtceu.core.mixins.TagValueAccessor;
 import com.gregtechceu.gtceu.integration.xei.widgets.GTRecipeWidget;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -84,9 +82,8 @@ public final class GTEMIRecipe extends ModularEmiRecipe<Widget> {
             amount = itemStack.getCount();
         }
         for (Ingredient.Value value : inner.values) {
-            if (input && value instanceof TagValueAccessor tagValue) {
-                TagKey<Item> tagKey = tagValue.getTag();
-                return new TagEmiIngredient(tagKey, amount);
+            if (input && value instanceof Ingredient.TagValue tagValue) {
+                return new TagEmiIngredient(tagValue.tag, amount);
             } else {
                 Item item = itemStack.getItem();
                 CompoundTag nbt = itemStack.getTag();

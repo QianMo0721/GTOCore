@@ -30,8 +30,6 @@ public final class PowerAmplifierCover extends CoverBehavior {
         return 1 + tier * 0.5;
     }
 
-    private MetaMachine machine;
-
     @Override
     public boolean canAttach() {
         return super.canAttach() && getMachine() instanceof IPowerAmplifierMachine powerAmplifierMachine && powerAmplifierMachine.gtolib$noPowerAmplifier();
@@ -57,7 +55,6 @@ public final class PowerAmplifierCover extends CoverBehavior {
             amplifierMachine.gtolib$setHasPowerAmplifier(false);
             amplifierMachine.gtolib$setPowerAmplifier(1);
         }
-        this.machine = null;
     }
 
     private void updateCoverSub() {
@@ -74,7 +71,6 @@ public final class PowerAmplifierCover extends CoverBehavior {
 
     @Nullable
     private MetaMachine getMachine() {
-        if (machine == null) machine = MetaMachine.getMachine(coverHolder.holder());
-        return machine;
+        return MetaMachine.getMachine(coverHolder.holder());
     }
 }

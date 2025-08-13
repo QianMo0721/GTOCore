@@ -121,15 +121,6 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add(Tab(1) + ("直接让ME线缆连上就好，不推荐无线连接" translatedTo "Directly let ME cable connect, not recommended to use wireless connection")) { gray() }
     }
 
-    // ME存储访问仓代理
-    val MEStorageAccessHatchProxyTooltips = ComponentListSupplier {
-        setTranslationPrefix("me_storage_access_hatch_proxy")
-        add(Star(1) + ("是ME存储访问仓的克隆体" translatedTo "Is a clone of ME storage access hatch")) { aqua() }
-        add(Tab(1) + ("需要绑定在ME存储访问仓" translatedTo "Need to be bound to ME storage access hatch")) { gray() }
-        add(Tab(1) + ("甚至可以跨纬度绑定" translatedTo "Even can be bound across dimensions")) { gray() }
-        add(Tab(1) + ("这意味着你可以不使用量子环，来跨纬度访问ME存储器了" translatedTo "That means you can no longer use a quantum ring to cross dimensions to access ME storage")) { gray() }
-    }
-
     // 合成样板仓
     val MeCraftPatternHatchTooltips = ComponentListSupplier {
         setTranslationPrefix("me_craft_pattern_part_machine")

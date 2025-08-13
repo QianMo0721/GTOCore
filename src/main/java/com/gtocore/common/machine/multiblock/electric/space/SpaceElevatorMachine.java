@@ -75,6 +75,7 @@ public class SpaceElevatorMachine extends TierCasingMultiblockMachine implements
         return MANAGED_FIELD_HOLDER;
     }
 
+    @DescSynced
     private double high;
     @Persisted
     @DescSynced

@@ -38,7 +38,6 @@ import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import earth.terrarium.adastra.common.registry.ModItems;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -85,7 +84,7 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
     private int maxCWUt;
     private int coolingAmount;
     private int maxCoolingAmount;
-    private int allocatedCWUt;
+    private long allocatedCWUt;
     private long maxEUt;
     private Recipe runRecipe;
 
@@ -226,10 +225,10 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
         super.afterWorking();
     }
 
-    private int requestCWUt(boolean simulate, int cwut) {
-        int maxCWUt = getMaxCWUt() * maxCWUtModification / 10000;
-        int availableCWUt = maxCWUt - this.allocatedCWUt;
-        int toAllocate = Math.min(cwut, availableCWUt);
+    private long requestCWUt(boolean simulate, long cwu) {
+        long maxCWUt = getMaxCWUt() * maxCWUtModification / 10000;
+        long availableCWUt = maxCWUt - this.allocatedCWUt;
+        long toAllocate = Math.min(cwu, availableCWUt);
         if (!simulate) {
             this.allocatedCWUt += toAllocate;
         }
@@ -237,17 +236,16 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
     }
 
     @Override
-    public int requestCWUt(int cwut, boolean simulate, @NotNull Collection<IOpticalComputationProvider> seen) {
-        seen.add(this);
+    public long requestCWU(long cwu, boolean simulate) {
         if (incompatible) return 0;
         if (runRecipe != null) {
-            if (simulate) return requestCWUt(true, cwut);
+            if (simulate) return requestCWUt(true, cwu);
             if (getRecipeLogic().isWorking()) {
-                return requestCWUt(false, cwut);
+                return requestCWUt(false, cwu);
             } else if (RecipeRunner.matchTickRecipe(this, runRecipe) && RecipeRunner.matchRecipe(this, runRecipe)) {
                 getRecipeLogic().setupRecipe(runRecipe);
                 if (getRecipeLogic().isWorking()) {
-                    return requestCWUt(false, cwut);
+                    return requestCWUt(false, cwu);
                 }
             }
         }
@@ -296,16 +294,13 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
         maxCWUtModificationSubs.updateSubscription();
     }
 
-    @Override
-    public int getMaxCWUt(@NotNull Collection<IOpticalComputationProvider> seen) {
-        seen.add(this);
+    public long getMaxCWUt() {
         if (incompatible) return 0;
         return maxCWUt;
     }
 
     @Override
-    public boolean canBridge(@NotNull Collection<IOpticalComputationProvider> seen) {
-        seen.add(this);
+    public boolean canBridge() {
         if (incompatible) return false;
         return canBridge;
     }

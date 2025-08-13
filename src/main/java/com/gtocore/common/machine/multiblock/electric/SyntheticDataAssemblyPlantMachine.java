@@ -7,9 +7,6 @@ import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.utils.ItemUtils;
 
-import com.gregtechceu.gtceu.api.capability.IOpticalComputationProvider;
-import com.gregtechceu.gtceu.api.capability.IOpticalComputationReceiver;
-import com.gregtechceu.gtceu.api.capability.forge.GTCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
@@ -28,14 +25,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SyntheticDataAssemblyPlantMachine extends ElectricMultiblockMachine implements IOpticalComputationReceiver {
+public class SyntheticDataAssemblyPlantMachine extends ElectricMultiblockMachine {
 
-    @Override
-    public IOpticalComputationProvider getComputationProvider() {
-        return computationProvider;
-    }
-
-    private IOpticalComputationProvider computationProvider;
     private DataGenerateHolderMachine objectHolder;
 
     public SyntheticDataAssemblyPlantMachine(IMachineBlockEntity holder) {
@@ -55,15 +46,10 @@ public class SyntheticDataAssemblyPlantMachine extends ElectricMultiblockMachine
                 // 添加物品处理器（包含扫描槽、催化剂槽和数据槽）
                 addHandlerList(RecipeHandlerList.of(IO.IN, scanningHolder.getAsHandler()));
             }
-
-            // 获取计算提供者
-            part.self().holder.self()
-                    .getCapability(GTCapability.CAPABILITY_COMPUTATION_PROVIDER)
-                    .ifPresent(provider -> this.computationProvider = provider);
         }
 
         // 必须同时有扫描部件和计算提供者
-        if (computationProvider == null || objectHolder == null) {
+        if (objectHolder == null) {
             onStructureInvalid();
         }
     }
@@ -79,8 +65,6 @@ public class SyntheticDataAssemblyPlantMachine extends ElectricMultiblockMachine
 
     @Override
     public void onStructureInvalid() {
-        computationProvider = null;
-        // 重置扫描部件状态
         if (objectHolder != null) {
             objectHolder.setLocked(false);
             objectHolder = null;

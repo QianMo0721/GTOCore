@@ -38,11 +38,9 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class MEStorageAccessPartMachine extends MultiblockPartMachine implements IMachineLife, MEStorage, IGridConnectedMachine, IDataStickInteractable, IStorageAccess, IStorageProvider {
@@ -62,7 +60,6 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
     private boolean isOnline;
     @Persisted
     UUID uuid;
-    private final Set<MEStorageAccessPartMachine> proxyMachines = new ReferenceOpenHashSet<>();
     private final ConditionalSubscriptionHandler tickSubs;
 
     private boolean dirty = false;
@@ -83,25 +80,16 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
     @Override
     public void setCapacity(double capacity) {
         this.capacity = capacity;
-        for (var machine : proxyMachines) {
-            machine.setCapacity(capacity);
-        }
     }
 
     @Override
     public void setInfinite(boolean isInfinite) {
         this.isInfinite = isInfinite;
-        for (var machine : proxyMachines) {
-            machine.setInfinite(isInfinite);
-        }
     }
 
     @Override
     public void setUUID(UUID uuid) {
         this.uuid = uuid;
-        for (var machine : proxyMachines) {
-            machine.setUUID(uuid);
-        }
         unmount();
     }
 
@@ -117,18 +105,7 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
         return dataStorage.getBytes();
     }
 
-    void addProxy(MEStorageAccessProxyartMachine proxy) {
-        proxyMachines.add(proxy);
-    }
-
-    void removeProxy(MEStorageAccessProxyartMachine proxy) {
-        proxyMachines.remove(proxy);
-    }
-
     boolean contains(List<MEStorage> list) {
-        for (var machine : proxyMachines) {
-            if (list.contains(machine)) return true;
-        }
         return list.contains(this);
     }
 
@@ -137,9 +114,6 @@ public class MEStorageAccessPartMachine extends MultiblockPartMachine implements
         IGrid grid = getMainNode().getGrid();
         if (grid == null) return;
         ((NetworkStorage) grid.getStorageService().getInventory()).unmount(this);
-        for (var machine : proxyMachines) {
-            machine.unmount();
-        }
     }
 
     private void tickUpdate() {
