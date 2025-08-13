@@ -276,4 +276,13 @@ fun ((ComponentSupplier) -> ComponentSupplier).initialize(): (ComponentSupplier)
 @JvmName("initializeListItem")
 fun ((ComponentSupplier) -> ComponentListSupplier).initialize(): (ComponentSupplier) -> ComponentListSupplier = this.also { it("".toLiteralSupplier()) }
 
+@JvmName("initializeListFloat")
+fun ((Float) -> ComponentListSupplier).initialize(): (Float) -> ComponentListSupplier = this.also { it(0f) }
+
+@JvmName("initializeListString")
+fun ((String) -> ComponentListSupplier).initialize(): (String) -> ComponentListSupplier = this.also { it("") }
+
+@JvmName("initializeListString2")
+fun ((String, String) -> ComponentListSupplier).initialize(): (String, String) -> ComponentListSupplier = this.also { it("", "") }
+
 fun Any.wirelessDebug() = if (GTOConfig.INSTANCE.aeWirelessLog) println("DEBUG: $this") else Unit

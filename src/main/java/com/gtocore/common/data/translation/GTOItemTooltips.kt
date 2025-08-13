@@ -1,6 +1,8 @@
 package com.gtocore.common.data.translation
 
 import com.gtocore.api.lang.ComponentListSupplier
+import com.gtocore.api.lang.initialize
+import com.gtocore.api.lang.toLiteralSupplier
 import com.gtocore.api.misc.AutoInitialize
 import com.gtocore.common.data.translation.ComponentSlang.Star
 import com.gtocore.utils.setTooltips
@@ -10,6 +12,22 @@ import appeng.core.definitions.AEParts
 import com.glodblock.github.extendedae.common.EPPItemAndBlock
 
 object GTOItemTooltips : AutoInitialize<GTOItemTooltips>() {
+    val speed_upgrade_module = { value: String, value2: String ->
+        ComponentListSupplier {
+            setTranslationPrefix("upgrade_module")
+            add(Star(1) + ("提升机器运作速度" translatedTo "Speed up machine operation"))
+            add(("直接应用系数(越低越好): " translatedTo "Direct application coefficient (the lower, the better): ") + ("${value}x".toLiteralSupplier())) { aqua() }
+            add(("重复应用博弈系数(越低越好): " translatedTo "Repeated application of the gambling coefficient (the lower, the better):") + ("${value2}x".toLiteralSupplier())) { aqua() }
+        }
+    }.initialize()
+    val energy_upgrade_module = { value: String, value2: String ->
+        ComponentListSupplier {
+            setTranslationPrefix("upgrade_module")
+            add(Star(1) + ("降低机器功耗" translatedTo "Reduce machine power consumption"))
+            add(("直接应用系数(越低越好): " translatedTo "Direct application coefficient (the lower, the better): ") + ("${value}x".toLiteralSupplier())) { aqua() }
+            add(("重复应用博弈系数(越低越好): " translatedTo "Repeated application of the gambling coefficient (the lower, the better):") + ("${value2}x".toLiteralSupplier())) { aqua() }
+        }
+    }.initialize()
     val PatternModifierTooltips = ComponentListSupplier {
         add("可以便捷地修改样板" translatedTo "Can modify patterns easily") { aqua() }
         add("PRO版本可以批量应用" translatedTo "PRO version can apply in batch") { aqua() }

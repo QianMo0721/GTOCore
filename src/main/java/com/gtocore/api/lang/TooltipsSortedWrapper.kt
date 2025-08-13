@@ -11,7 +11,7 @@ import java.util.function.Supplier
 
 class TooltipsSortedWrapper {
 
-    private val tooltips = mutableListOf<Supplier<List<Component>>>()
+    private val tooltips = mutableListOf<Supplier<List<Component?>?>>()
     var isInitialized = false // 被引用
 
     companion object {
@@ -24,21 +24,21 @@ class TooltipsSortedWrapper {
         }
     }
 
-    fun addTooltipSupplier(supplier: Supplier<List<Component>>): TooltipsSortedWrapper {
+    fun addTooltipSupplier(supplier: Supplier<List<Component?>?>): TooltipsSortedWrapper {
         tooltips.add(supplier)
 
-        val conditions = arrayOf<(Supplier<List<Component>>) -> Boolean>(
-            { s -> s.get().any { it.string.contains(DynamicInitialData.PREFIX_DYNAMIC_VALUE) } },
-            { s -> s.get().any { it.string.contains(NewDataAttributes.PREFIX_TEMPLATE) } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_PARALLEL_SPECIAL.key}") } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_PARALLEL.key}") } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_PARALLEL_NUMBER.key}") } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.LASER_ENERGY_HATCH.key}") } },
-            { s -> s.get().any { it.string.contains(MultiblockSlang.not_allow_standard_energy_hatch.translationPrefix) } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.PREFECT_OVERCLOCK.key}") } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_MULTI_RECIPE_PARALLEL.key}") } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.NOT_ALLOW_SHARED.key}") } },
-            { s -> s.get().any { it.string.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.RECIPES_TYPE.key}") } },
+        val conditions = arrayOf<(Supplier<List<Component?>?>) -> Boolean>(
+            { s -> s.get()?.any { it?.string?.contains(DynamicInitialData.PREFIX_DYNAMIC_VALUE) ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains(NewDataAttributes.PREFIX_TEMPLATE) ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_PARALLEL_SPECIAL.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_PARALLEL.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_PARALLEL_NUMBER.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.LASER_ENERGY_HATCH.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains(MultiblockSlang.not_allow_standard_energy_hatch.translationPrefix) ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.PREFECT_OVERCLOCK.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.ALLOW_MULTI_RECIPE_PARALLEL.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.NOT_ALLOW_SHARED.key}") ?: false } ?: false },
+            { s -> s.get()?.any { it?.string?.contains("${NewDataAttributes.PREFIX_TEMPLATE}.${NewDataAttributes.RECIPES_TYPE.key}") ?: false } ?: false },
         )
 
         tooltips.sortByConditions(*conditions)
@@ -49,5 +49,5 @@ class TooltipsSortedWrapper {
 
     fun addTooltip(component: Component): TooltipsSortedWrapper = addTooltipSupplier(listOf(component))
 
-    fun getTooltips(): List<Supplier<List<Component>>> = tooltips
+    fun getTooltips(): List<Supplier<List<Component?>?>> = tooltips
 }

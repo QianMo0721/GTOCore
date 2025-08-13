@@ -1,7 +1,13 @@
 package com.gtocore.common.item;
 
+import com.gtocore.api.gui.graphic.GTOToolTipComponent;
+import com.gtocore.api.gui.graphic.GTOTooltipComponentItem;
+import com.gtocore.api.gui.graphic.impl.GTOComponentTooltipComponent;
 import com.gtocore.common.data.GTOItems;
+import com.gtocore.common.data.translation.GTOItemTooltips;
 
+import com.gtolib.api.annotation.Scanned;
+import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.machine.feature.IUpgradeMachine;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -14,17 +20,17 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
+@Scanned
+public final class UpgradeModuleItem extends Item implements GTOTooltipComponentItem {
 
-public final class UpgradeModuleItem extends Item {
+    @RegisterLanguage(cn = "需要10级经验", en = "Requires 10 levels of experience")
+    public static final String experience_not_enough = "gtocore.machine.upgrade.experience_not_enough";
 
     public UpgradeModuleItem(Properties properties) {
         super(properties);
@@ -90,6 +96,9 @@ public final class UpgradeModuleItem extends Item {
                     player.experienceLevel = 0;
                     player.totalExperience = 0;
                     context.getLevel().addFreshEntity(new ItemEntity(context.getLevel(), player.getX(), player.getY(), player.getZ(), itemStack));
+                } else {
+                    player.sendSystemMessage(Component.translatable(experience_not_enough));
+                    return InteractionResult.PASS;
                 }
             }
         }
@@ -97,14 +106,22 @@ public final class UpgradeModuleItem extends Item {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack itemstack, @Nullable Level world, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
-        var tag = itemstack.getTag();
+    public void attachGTOTooltip(ItemStack itemStack, List<GTOToolTipComponent> tooltips) {
+        var tag = itemStack.getTag();
         if (tag != null) {
             if (tag.contains("speed")) {
-                list.add(Component.translatable("gtocore.machine.duration_multiplier.tooltip", FormattingUtil.formatNumbers(tag.getDouble("speed"))));
-            } else if (tag.contains("energy")) {
-                list.add(Component.translatable("gtocore.machine.eut_multiplier.tooltip", FormattingUtil.formatNumbers(tag.getDouble("energy"))));
+                for (Component component : GTOItemTooltips.INSTANCE.getSpeed_upgrade_module().invoke(FormattingUtil.formatNumbers(Math.max(0.5, tag.getDouble("speed"))), FormattingUtil.formatNumbers(tag.getDouble("speed"))).getArray()) {
+                    tooltips.add(new GTOComponentTooltipComponent(component));
+                }
+            }
+            if (tag.contains("energy")) {
+                for (Component component : GTOItemTooltips.INSTANCE.getEnergy_upgrade_module().invoke(FormattingUtil.formatNumbers(Math.max(0.5, tag.getDouble("energy"))), FormattingUtil.formatNumbers(tag.getDouble("energy"))).getArray()) {
+                    tooltips.add(new GTOComponentTooltipComponent(component));
+                }
+            }
+        }else{
+            for (Component component : GTOItemTooltips.INSTANCE.getEnergy_upgrade_module().invoke("-","-").getArray()) {
+                tooltips.add(new GTOComponentTooltipComponent(component));
             }
         }
     }
