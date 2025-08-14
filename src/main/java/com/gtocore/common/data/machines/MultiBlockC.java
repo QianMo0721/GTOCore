@@ -24,10 +24,10 @@ import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.lang.CNEN;
+import com.gtolib.api.machine.MultiblockDefinition;
 import com.gtolib.api.machine.feature.multiblock.ITierCasingMachine;
 import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
-import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.MultiBlockFileReader;
 
 import com.gregtechceu.gtceu.GTCEu;
@@ -1002,7 +1002,7 @@ public final class MultiBlockC {
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 0; i < 2; i++) {
-                    shapeInfos.addAll(MachineUtils.getMatchingShapes(false, NeutronVortexMachine.getBlockPattern(i, definition)));
+                    shapeInfos.addAll(MultiblockDefinition.getMatchingShapes(false, NeutronVortexMachine.getBlockPattern(i, definition)));
                 }
                 return shapeInfos;
             })

@@ -128,7 +128,7 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
                     }
                 }
             }
-            var s = itemHandlers.size();
+            var s = fluidHandlers.size();
             if (s > 0) {
                 return ForgeCapabilities.FLUID_HANDLER.orEmpty(cap, LazyOptional.of(() -> s > 1 ? new FluidHandlerList(fluidHandlers.toArray(new IFluidHandler[0])) : fluidHandlers.get(0)));
             }

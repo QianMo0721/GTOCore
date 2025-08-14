@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.item.component.IItemUIFactory;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
+import com.gregtechceu.gtceu.api.pattern.BlockPattern;
 import com.gregtechceu.gtceu.api.pattern.predicates.SimplePredicate;
 
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,9 @@ import java.util.stream.Stream;
 @DataGeneratorScanned
 public class AdvancedTerminalBehavior implements IItemUIFactory {
 
+    @RegisterLanguage(cn = "模块搭建", en = "Module Build")
+    private static final String MODULE = "gtocore.auto_build.module";
+
     @RegisterLanguage(cn = "镜像搭建", en = "Mirror Build")
     private static final String FLIP = "gtocore.auto_build.flip";
 
@@ -56,15 +60,20 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
         if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
             Level level = context.getLevel();
             BlockPos blockPos = context.getClickedPos();
-            if (context.getPlayer() != null && !level.isClientSide() &&
-                    MetaMachine.getMachine(level, blockPos) instanceof IMultiController controller) {
+            if (context.getPlayer() != null && !level.isClientSide() && MetaMachine.getMachine(level, blockPos) instanceof IMultiController controller) {
                 AutoBuildSetting autoBuildSetting = getAutoBuildSetting(context.getPlayer().getMainHandItem());
-
+                BlockPattern pattern;
+                var subPattern = controller.getSubPattern();
+                if (autoBuildSetting.module > 0 && subPattern != null) {
+                    pattern = subPattern[Math.min(subPattern.length, autoBuildSetting.module) - 1].get();
+                } else {
+                    pattern = controller.getPattern();
+                }
                 if (!controller.isFormed()) {
-                    AdvancedBlockPattern.getAdvancedBlockPattern(controller.getPattern()).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
+                    AdvancedBlockPattern.getAdvancedBlockPattern(pattern).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
                 } else if (autoBuildSetting.isReplaceMode()) {
-                    AdvancedBlockPattern.getAdvancedBlockPattern(controller.getPattern()).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
+                    AdvancedBlockPattern.getAdvancedBlockPattern(pattern).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
                     controller.requestCheck();
                 }
@@ -82,10 +91,10 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
 
     private static Widget createWidget(Player entityPlayer) {
         ItemStack handItem = entityPlayer.getMainHandItem();
-        var group = new WidgetGroup(0, 0, 182 + 8, 117 + 8);
+        var group = new WidgetGroup(0, 0, 190, 142);
         int rowIndex = 1;
         group.addWidget(
-                new DraggableScrollableWidgetGroup(4, 4, 182, 117).setUseScissor(false)
+                new DraggableScrollableWidgetGroup(4, 4, 182, 134).setUseScissor(false)
                         .setBackground(GuiTextures.DISPLAY)
                         .setYScrollBarWidth(2)
                         .setYBarStyle(null, ColorPattern.T_WHITE.rectTexture().setRadius(1))
@@ -144,7 +153,10 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                                 (v) -> setIsUseAE(v, handItem)).setMin(0).setMax(1))
                         .addWidget(new LabelWidget(4, 5 + 16 * rowIndex, FLIP))
                         .addWidget(new TerminalInputWidget(140, 5 + 16 * rowIndex++, 20, 16, () -> getIsFlip(handItem),
-                                (v) -> setIsFlip(v, handItem)).setMin(0).setMax(1)));
+                                (v) -> setIsFlip(v, handItem)).setMin(0).setMax(1))
+                        .addWidget(new LabelWidget(4, 5 + 16 * rowIndex, MODULE))
+                        .addWidget(new TerminalInputWidget(140, 5 + 16 * rowIndex++, 20, 16, () -> getModule(handItem),
+                                (v) -> setModule(v, handItem)).setMin(0).setMax(1)));
 
         group.setBackground(GuiTextures.BACKGROUND_INVERSE);
         return group;
@@ -160,6 +172,7 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
             autoBuildSetting.replaceMode = tag.getInt("replaceMode");
             autoBuildSetting.isUseAE = tag.getInt("isUseAE");
             autoBuildSetting.isFlip = tag.getInt("isFlip");
+            autoBuildSetting.module = tag.getInt("module");
             var block = tag.getString("block");
             if (!block.isEmpty()) {
                 autoBuildSetting.tierBlock = BlockMap.MAP.get(block);
@@ -265,12 +278,28 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
         itemStack.setTag(tag);
     }
 
+    private static int getModule(ItemStack itemStack) {
+        var tag = itemStack.getTag();
+        if (tag != null && !tag.isEmpty()) {
+            return tag.getInt("module");
+        } else {
+            return 0;
+        }
+    }
+
+    private static void setModule(int isFlip, ItemStack itemStack) {
+        var tag = itemStack.getTag();
+        if (tag == null) tag = new CompoundTag();
+        tag.putInt("module", isFlip);
+        itemStack.setTag(tag);
+    }
+
     static class AutoBuildSetting {
 
         Block[] tierBlock;
         Set<Block> blocks = Collections.emptySet();
 
-        int tier, repeatCount, noHatchMode, replaceMode, isUseAE, isFlip;
+        int tier, repeatCount, noHatchMode, replaceMode, isUseAE, isFlip, module;
 
         private AutoBuildSetting() {
             this.tier = 0;
@@ -279,6 +308,7 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
             this.replaceMode = 0;
             this.isUseAE = 0;
             this.isFlip = 0;
+            this.module = 0;
         }
 
         public List<ItemStack> apply(Block[] blocks) {

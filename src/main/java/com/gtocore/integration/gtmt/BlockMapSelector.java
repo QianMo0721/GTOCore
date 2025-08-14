@@ -15,7 +15,7 @@ import com.lowdragmc.lowdraglib.gui.widget.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
-public class BlockMapSelector extends WidgetGroup {
+class BlockMapSelector extends WidgetGroup {
 
     static int blockMapSize;
     static int blockMapValuesMaxSize;

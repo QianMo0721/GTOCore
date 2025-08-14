@@ -27,6 +27,7 @@ import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
 import com.gtolib.api.lang.CNEN;
+import com.gtolib.api.machine.MultiblockDefinition;
 import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.*;
@@ -404,7 +405,7 @@ public final class MultiBlockD {
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 1; i < 4; i++) {
-                    shapeInfos.addAll(MachineUtils.getMatchingShapes(false, PCBFactoryMachine.getBlockPattern(i, definition)));
+                    shapeInfos.addAll(MultiblockDefinition.getMatchingShapes(false, PCBFactoryMachine.getBlockPattern(i, definition)));
                 }
                 return shapeInfos;
             })
@@ -844,7 +845,7 @@ public final class MultiBlockD {
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 1; i < 4; i++) {
-                    shapeInfos.addAll(MachineUtils.getMatchingShapes(false, NanoForgeMachine.getBlockPattern(i, definition)));
+                    shapeInfos.addAll(MultiblockDefinition.getMatchingShapes(false, NanoForgeMachine.getBlockPattern(i, definition)));
                 }
                 return shapeInfos;
             })

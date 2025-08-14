@@ -8,12 +8,12 @@ import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.processing.CompoundExtremeCoolingMachine;
 
 import com.gtolib.GTOCore;
+import com.gtolib.api.machine.MultiblockDefinition;
 import com.gtolib.api.machine.multiblock.CoilCrossRecipeMultiblockMachine;
 import com.gtolib.api.machine.multiblock.CrossRecipeMultiblockMachine;
 import com.gtolib.api.machine.multiblock.CustomParallelMultiblockMachine;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
-import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.MultiBlockFileReader;
 
 import com.gregtechceu.gtceu.GTCEu;
@@ -109,7 +109,7 @@ public final class MultiBlockF {
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 0; i < 2; i++) {
-                    shapeInfos.addAll(MachineUtils.getMatchingShapes(false, CompoundExtremeCoolingMachine.getBlockPattern(i, definition)));
+                    shapeInfos.addAll(MultiblockDefinition.getMatchingShapes(false, CompoundExtremeCoolingMachine.getBlockPattern(i, definition)));
                 }
                 return shapeInfos;
             })

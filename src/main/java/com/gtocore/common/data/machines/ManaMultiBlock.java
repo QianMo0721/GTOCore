@@ -10,8 +10,8 @@ import com.gtocore.common.machine.mana.multiblock.*;
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.machine.ManaDistributorMachine;
+import com.gtolib.api.machine.MultiblockDefinition;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
-import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.RLUtils;
 import com.gtolib.utils.RegistriesUtils;
 
@@ -193,7 +193,7 @@ public final class ManaMultiBlock {
             .shapeInfos(definition -> {
                 List<MultiblockShapeInfo> shapeInfos = new ArrayList<>();
                 for (int i = 0; i < 2; i++) {
-                    shapeInfos.addAll(MachineUtils.getMatchingShapes(false, ManaCondenserMachine.getBlockPattern(i, definition)));
+                    shapeInfos.addAll(MultiblockDefinition.getMatchingShapes(false, ManaCondenserMachine.getBlockPattern(i, definition)));
                 }
                 return shapeInfos;
             })

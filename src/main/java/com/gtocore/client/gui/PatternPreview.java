@@ -226,13 +226,19 @@ public final class PatternPreview extends WidgetGroup {
         if (controllerBase instanceof IMultiStructureMachine machine) {
             pattern = machine.getMultiPattern().get(index);
         } else {
-            pattern = controllerBase.getPattern();
+            var subPattern = controllerBase.getSubPattern();
+            if (subPattern != null && index > 0) {
+                pattern = subPattern[index - 1].get();
+            } else {
+                pattern = controllerBase.getPattern();
+            }
         }
-        if (pattern != null && pattern.checkPatternAt(controllerBase.getMultiblockState(), true)) {
+        var state = controllerBase.getMultiblockState();
+        if (pattern != null && pattern.checkPatternAt(state, true)) {
             controllerBase.onStructureFormed();
         }
         if (controllerBase.isFormed()) {
-            LongSet set = controllerBase.getMultiblockState().getMatchContext().getOrDefault("renderMask", LongSets.EMPTY_SET);
+            LongSet set = state.getMatchContext().getOrDefault("renderMask", LongSets.EMPTY_SET);
             if (!set.isEmpty()) {
                 sceneWidget.setRenderedCore(poses.longStream().filter(pos -> !set.contains(pos)).mapToObj(BlockPos::of).toList(), null);
             } else {
