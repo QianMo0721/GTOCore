@@ -3,6 +3,10 @@ package com.gtocore.integration.emi;
 import com.gtocore.integration.chisel.ChiselRecipe;
 import com.gtocore.integration.emi.oreprocessing.OreProcessingEmiCategory;
 
+import com.gtolib.ae2.me2in1.Me2in1Menu;
+import com.gtolib.ae2.me2in1.UtilsMiscs;
+import com.gtolib.ae2.me2in1.Wireless;
+
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
@@ -25,26 +29,58 @@ import appeng.api.stacks.GenericStack;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.arsmeteorites.arsmeteorites.ArsMeteorites;
 import com.arsmeteorites.arsmeteorites.emi.MeteoritesEmiPlugin;
+import com.enderio.base.common.integrations.jei.EnderIOJEI;
+import com.enderio.machines.common.integrations.jei.MachinesJEI;
+import com.hepdd.ae2emicraftingforge.Ae2EmiCraftingMod;
+import com.hepdd.ae2emicraftingforge.client.Ae2EmiPlugin;
+import com.hepdd.ae2emicraftingforge.client.handler.Ae2CraftingHandler;
+import com.hollingsworth.arsnouveau.client.jei.JEIArsNouveauPlugin;
 import com.lowdragmc.lowdraglib.LDLib;
 import com.lowdragmc.lowdraglib.emi.EMIPlugin;
 import com.lowdragmc.lowdraglib.gui.modular.ModularUIContainer;
 import committee.nova.mods.avaritia.Static;
 import committee.nova.mods.avaritia.init.compat.emi.AvaritiaEmiPlugin;
+import de.mari_023.ae2wtlib.wct.WCTMenu;
 import de.mari_023.ae2wtlib.wet.WETMenu;
 import dev.emi.emi.VanillaPlugin;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.stack.*;
+import dev.emi.emi.jemi.JemiPlugin;
 import dev.emi.emi.registry.EmiPluginContainer;
+import dev.shadowsoffire.apotheosis.ench.compat.EnchJEIPlugin;
+import dev.shadowsoffire.apotheosis.potion.compat.PotionJEIPlugin;
+import dev.shadowsoffire.apotheosis.village.compat.VillageJEIPlugin;
 import io.github.lounode.extrabotany.api.ExtraBotanyAPI;
 import io.github.lounode.extrabotany.client.integration.emi.EmiExtrabotanyPlugin;
 import io.github.prismwork.emitrades.EMITradesPlugin;
+import jeresources.jei.JEIConfig;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.library.plugins.jei.JeiInternalPlugin;
+import mythicbotany.jei.MythicJei;
+import umpaz.farmersrespite.integration.jei.JEIFRPlugin;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.client.integration.emi.BotaniaEmiPlugin;
 
 import java.util.List;
 
 public final class GTEMIPlugin implements EmiPlugin {
+
+    public static void addJEIPlugin(List<IModPlugin> list) {
+        list.add(new mezz.jei.library.plugins.vanilla.VanillaPlugin());
+        list.add(new JeiInternalPlugin());
+        list.add(new EnderIOJEI());
+        list.add(new MachinesJEI());
+        list.add(new JemiPlugin());
+        list.add(new EnchJEIPlugin());
+        list.add(new PotionJEIPlugin());
+        list.add(new VillageJEIPlugin());
+        list.add(new JEIConfig());
+        list.add(new MythicJei());
+        list.add(new JEIFRPlugin());
+        list.add(new JEIArsNouveauPlugin());
+        list.add(new vectorwing.farmersdelight.integration.jei.JEIPlugin());
+    }
 
     public static void addEMIPlugin(List<EmiPluginContainer> list) {
         list.add(new EmiPluginContainer(new VanillaPlugin(), "emi"));
@@ -58,6 +94,7 @@ public final class GTEMIPlugin implements EmiPlugin {
         list.add(new EmiPluginContainer(new EMIPlugin(), LDLib.MOD_ID));
         list.add(new EmiPluginContainer(new GTEMIPlugin(), GTCEu.MOD_ID));
         list.add(new EmiPluginContainer(new MeteoritesEmiPlugin(), ArsMeteorites.MOD_ID));
+        list.add(new EmiPluginContainer(new Ae2EmiPlugin(), Ae2EmiCraftingMod.MOD_ID));
     }
 
     public static EmiIngredient genericStackToEmiIngredient(GenericStack stack) {
@@ -84,8 +121,12 @@ public final class GTEMIPlugin implements EmiPlugin {
             }
         }
         registry.addRecipeHandler(ModularUIContainer.MENUTYPE, new GTEmiRecipeHandler());
+        registry.addRecipeHandler(Me2in1Menu.TYPE, UtilsMiscs.createEMI2in1());
+        registry.addRecipeHandler(Wireless.TYPE, UtilsMiscs.createEMIWireless());
         registry.addRecipeHandler(PatternEncodingTermMenu.TYPE, new Ae2PatternTerminalHandler<>());
         registry.addRecipeHandler(WETMenu.TYPE, new Ae2PatternTerminalHandler<>());
+        registry.addRecipeHandler(WCTMenu.TYPE, new Ae2CraftingHandler<>(WCTMenu.class));
+        registry.addRecipeHandler(WETMenu.TYPE, new com.hepdd.ae2emicraftingforge.client.handler.Ae2PatternTerminalHandler<>(WETMenu.class));
         registry.addCategory(GTProgrammedCircuitCategory.CATEGORY);
 
         GTRecipeEMICategory.registerDisplays(registry);
