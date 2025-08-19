@@ -162,10 +162,10 @@ public class MonitorMachine extends AbstractInfoProviderMonitor {
                 return new Component[0];
             }
             CompoundTag posTags = card.getTag();
-            if (posTags == null || !posTags.contains("posX") || !posTags.contains("posY") || !posTags.contains("posZ")) {
+            if (posTags == null || !posTags.contains("x") || !posTags.contains("y") || !posTags.contains("z")) {
                 return new Component[0];
             }
-            pos = new BlockPos(posTags.getInt("posX"), posTags.getInt("posY"), posTags.getInt("posZ"));
+            pos = new BlockPos(posTags.getInt("x"), posTags.getInt("y"), posTags.getInt("z"));
             isCardChange = false;
         }
         if (pos == null) {

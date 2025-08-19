@@ -60,8 +60,8 @@ public class TesseractMachine extends MetaMachine implements IFancyUIMachine, IM
             ItemStack card = inventory.storage.getStackInSlot(0);
             if (card.isEmpty()) return;
             CompoundTag posTags = card.getTag();
-            if (posTags == null || !posTags.contains("posX") || !posTags.contains("posY") || !posTags.contains("posZ")) return;
-            var pos = new BlockPos(posTags.getInt("posX"), posTags.getInt("posY"), posTags.getInt("posZ"));
+            if (posTags == null || !posTags.contains("x") || !posTags.contains("y") || !posTags.contains("z")) return;
+            var pos = new BlockPos(posTags.getInt("x"), posTags.getInt("y"), posTags.getInt("z"));
             if (pos.equals(getPos())) return;
             this.pos = pos;
         });

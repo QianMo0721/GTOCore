@@ -71,8 +71,8 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
                 ItemStack card = inventory.storage.getStackInSlot(i);
                 if (card.isEmpty()) continue;
                 CompoundTag posTags = card.getTag();
-                if (posTags == null || !posTags.contains("posX") || !posTags.contains("posY") || !posTags.contains("posZ")) continue;
-                var pos = new BlockPos(posTags.getInt("posX"), posTags.getInt("posY"), posTags.getInt("posZ"));
+                if (posTags == null || !posTags.contains("x") || !posTags.contains("y") || !posTags.contains("z")) continue;
+                var pos = new BlockPos(posTags.getInt("x"), posTags.getInt("y"), posTags.getInt("z"));
                 if (pos.equals(getPos())) continue;
                 poss.add(pos);
             }

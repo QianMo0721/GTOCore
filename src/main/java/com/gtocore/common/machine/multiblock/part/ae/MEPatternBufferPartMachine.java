@@ -259,12 +259,26 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     }
 
     @Override
-    public void onMachineRemoved() {
-        super.onMachineRemoved();
-        clearInventory(shareInventory);
-        for (var inv : getInternalInventory()) {
-            clearInventory(inv.shareInventory);
+    public void saveToItem(CompoundTag tag) {
+        super.saveToItem(tag);
+        tag.put("si", shareInventory.storage.serializeNBT());
+        ListTag tanks = new ListTag();
+        for (var tank : shareTank.getStorages()) {
+            tanks.add(tank.serializeNBT());
         }
+        tag.put("st", tanks);
+        tag.put("ci", circuitInventorySimulated.storage.serializeNBT());
+    }
+
+    @Override
+    public void loadFromItem(CompoundTag tag) {
+        super.loadFromItem(tag);
+        shareInventory.storage.deserializeNBT(tag.getCompound("si"));
+        ListTag tanks = tag.getList("st", Tag.TAG_COMPOUND);
+        for (int i = 0; i < tanks.size(); i++) {
+            shareTank.getStorages()[i].deserializeNBT(tanks.getCompound(i));
+        }
+        circuitInventorySimulated.storage.deserializeNBT(tag.getCompound("ci"));
     }
 
     @Override

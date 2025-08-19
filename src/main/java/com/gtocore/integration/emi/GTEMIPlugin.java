@@ -20,7 +20,6 @@ import com.gregtechceu.gtceu.integration.emi.orevein.GTBedrockFluidEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.orevein.GTOreVeinEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.recipe.GTRecipeEMICategory;
 
-import com.hepdd.ae2emicraftingforge.client.handler.Ae2PatternTerminalHandler;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.p3pp3rf1y.sophisticatedbackpacks.compat.recipeviewers.emi.BackpackEmiPlugin;
 
@@ -32,6 +31,7 @@ import com.enderio.machines.common.integrations.jei.MachinesJEI;
 import com.hepdd.ae2emicraftingforge.Ae2EmiCraftingMod;
 import com.hepdd.ae2emicraftingforge.client.Ae2EmiPlugin;
 import com.hepdd.ae2emicraftingforge.client.handler.Ae2CraftingHandler;
+import com.hepdd.ae2emicraftingforge.client.handler.Ae2PatternTerminalHandler;
 import com.hollingsworth.arsnouveau.client.jei.JEIArsNouveauPlugin;
 import com.lowdragmc.lowdraglib.LDLib;
 import com.lowdragmc.lowdraglib.emi.EMIPlugin;

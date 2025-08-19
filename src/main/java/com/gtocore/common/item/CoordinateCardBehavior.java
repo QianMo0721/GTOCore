@@ -36,10 +36,9 @@ public class CoordinateCardBehavior implements IInteractionItem, IAddInformation
             if (blockState.hasBlockEntity()) {
                 card.setTag(new CompoundTag());
                 CompoundTag tag = card.getOrCreateTag();
-                tag.putInt("posX", blockPos.getX());
-                tag.putInt("posY", blockPos.getY());
-                tag.putInt("posZ", blockPos.getZ());
-                tag.putString("name", Component.Serializer.toJson(blockState.getBlock().getName()));
+                tag.putInt("x", blockPos.getX());
+                tag.putInt("y", blockPos.getY());
+                tag.putInt("z", blockPos.getZ());
                 MetaMachine machine = MetaMachine.getMachine(level, blockPos);
                 if (machine instanceof WorkableTieredMachine || machine instanceof IMultiController) {
                     tag.putBoolean("machine", true);
@@ -65,7 +64,7 @@ public class CoordinateCardBehavior implements IInteractionItem, IAddInformation
         list.add(Component.translatable("gtocore.tooltip.item.machine_coordinate_card.tooltip.1"));
         CompoundTag tag = itemStack.getTag();
         if (tag != null) {
-            list.add(Component.translatable("gtocore.tooltip.item.machine_coordinate_card.tooltip.2", Component.Serializer.fromJson(tag.getString("name")), "§5" + tag.getInt("posX"), "§d" + tag.getInt("posY"), "§e" + tag.getInt("posZ")));
+            list.add(Component.translatable("gtocore.tooltip.item.machine_coordinate_card.tooltip.2", Component.translatable("config.jade.plugin_jade.coordinates"), "§5" + tag.getInt("x"), "§d" + tag.getInt("y"), "§e" + tag.getInt("z")));
         }
     }
 }

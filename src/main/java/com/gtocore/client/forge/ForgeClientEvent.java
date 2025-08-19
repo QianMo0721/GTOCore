@@ -2,6 +2,7 @@ package com.gtocore.client.forge;
 
 import com.gtocore.client.ClientCache;
 import com.gtocore.client.Tooltips;
+import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.item.StructureDetectBehavior;
 import com.gtocore.common.item.StructureWriteBehavior;
 import com.gtocore.common.network.ClientMessage;
@@ -219,6 +220,7 @@ public final class ForgeClientEvent {
                 CustomItems.WIRELESS_ITEM_TRANSFER_COVER.asItem(),
                 CustomItems.WIRELESS_FLUID_TRANSFER_COVER.asItem(),
                 CustomItems.ADVANCED_WIRELESS_ITEM_TRANSFER_COVER.asItem(),
-                CustomItems.ADVANCED_WIRELESS_FLUID_TRANSFER_COVER.asItem());
+                CustomItems.ADVANCED_WIRELESS_FLUID_TRANSFER_COVER.asItem(),
+                GTOItems.COORDINATE_CARD.asItem());
     }
 }

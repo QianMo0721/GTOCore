@@ -99,6 +99,8 @@ public final class TurbineMachine extends ElectricMultiblockMachine {
                     full = false;
                     part.setRotorStack(rotorHatchPartMachine.getInventory().getStackInSlot(0));
                     rotorHatchPartMachine.getInventory().setStackInSlot(0, ItemStack.EMPTY);
+                    getRecipeLogic().updateTickSubscription();
+                    break;
                 }
             }
             if (full) {
