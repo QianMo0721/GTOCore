@@ -1128,28 +1128,28 @@ public final class MachineRecipeLoader {
     private static void registerNBTRemoval(Consumer<FinishedRecipe> provider) {
         for (MachineDefinition chest : GTMachines.SUPER_CHEST) {
             if (chest != null) {
-                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "super_chest_nbt_" + chest.getTier(),
+                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "super_chest_nbt_removal_" + chest.getTier(),
                         chest.asStack(), chest.asStack());
             }
         }
 
         for (MachineDefinition tank : GTMachines.SUPER_TANK) {
             if (tank != null) {
-                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "super_tank_nbt_" + tank.getTier(),
+                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "super_tank_nbt_removal_" + tank.getTier(),
                         tank.asStack(), tank.asStack());
             }
         }
 
         for (MachineDefinition chest : GTMachines.QUANTUM_CHEST) {
             if (chest != null) {
-                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "quantum_chest_nbt_" + chest.getTier(),
+                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "quantum_chest_nbt_removal_" + chest.getTier(),
                         chest.asStack(), chest.asStack());
             }
         }
 
         for (MachineDefinition tank : GTMachines.QUANTUM_TANK) {
             if (tank != null) {
-                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "quantum_tank_nbt_" + tank.getTier(),
+                VanillaRecipeHelper.addShapelessNBTClearingRecipe(provider, "quantum_tank_nbt_removal_" + tank.getTier(),
                         tank.asStack(), tank.asStack());
             }
         }

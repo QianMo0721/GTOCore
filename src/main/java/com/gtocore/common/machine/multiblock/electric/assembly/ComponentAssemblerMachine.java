@@ -31,7 +31,7 @@ public final class ComponentAssemblerMachine extends TierCasingMultiblockMachine
 
     @Override
     protected Recipe getRealRecipe(Recipe recipe) {
-        if (recipe.data.getInt(COMPONENT_ASSEMBLY_CASING_TIER) >= maxCasingTier) {
+        if (recipe.data.getInt(COMPONENT_ASSEMBLY_CASING_TIER) > maxCasingTier) {
             setIdleReason(IdleReason.VOLTAGE_TIER_NOT_SATISFIES);
             return null;
         }

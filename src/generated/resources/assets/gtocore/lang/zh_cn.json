@@ -3012,7 +3012,7 @@
   "gtocore.part.extendae.tag_filter.blacklist.tooltip": "可放入目标，选择黑名单的标签过滤器",
   "gtocore.part.extendae.tag_filter.tooltip": "左键将标签添加到过滤器中，右键复制标签到剪贴板",
   "gtocore.part.extendae.tag_filter.whitelist.tooltip": "可放入目标，选择白名单的标签过滤器",
-  "gtocore.pattern.blocking_mode": "容器有任何内容时阻止插入（编程电路除外）",
+  "gtocore.pattern.blocking_mode": "容器有任何内容时阻止插入",
   "gtocore.pattern.blocking_reverse": "非同一样板时阻止插入",
   "gtocore.pattern.divide": "样板配方 ÷ %s",
   "gtocore.pattern.multiply": "样板配方 x %s",

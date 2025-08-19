@@ -93,7 +93,7 @@ public final class LangHandler {
         addCNEN("structure_writer.export_order", "导出顺序： C:%s  S:%s  A:%s", "Export Order: C:%s  S:%s  A:%s");
         addCNEN("structure_writer.structural_scale", "结构规模： X:%s  Y:%s  Z:%s", "Structural Scale: X:%s  Y:%s  Z:%s");
 
-        addCNEN("gtocore.pattern.blocking_mode", "容器有任何内容时阻止插入（编程电路除外）", "Block insertion when the container has any content (except for programming circuits)");
+        addCNEN("gtocore.pattern.blocking_mode", "容器有任何内容时阻止插入", "Block insertion when the container has any content");
         addCNEN("gtocore.pattern.blocking_reverse", "非同一样板时阻止插入", "Prevent insertion when not using the same pattern");
         addCNEN("gtocore.pattern.multiply", "样板配方 x %s", "Pattern Recipe x %s");
         addCNEN("gtocore.pattern.tooltip.multiply", "将样板材料数量 x %s", "Multiply Pattern materials amount by %s");

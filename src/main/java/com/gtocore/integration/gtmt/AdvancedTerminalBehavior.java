@@ -156,7 +156,7 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                                 (v) -> setIsFlip(v, handItem)).setMin(0).setMax(1))
                         .addWidget(new LabelWidget(4, 5 + 16 * rowIndex, MODULE))
                         .addWidget(new TerminalInputWidget(140, 5 + 16 * rowIndex++, 20, 16, () -> getModule(handItem),
-                                (v) -> setModule(v, handItem)).setMin(0).setMax(1)));
+                                (v) -> setModule(v, handItem)).setMin(0).setMax(100)));
 
         group.setBackground(GuiTextures.BACKGROUND_INVERSE);
         return group;

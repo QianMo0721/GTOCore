@@ -1630,7 +1630,7 @@
   "gtocore.part.extendae.tag_filter.blacklist.tooltip": "可放入目標，選擇黑名單的標簽過濾器",
   "gtocore.part.extendae.tag_filter.tooltip": "左鍵將標簽添加到過濾器中，右鍵複製標簽到剪貼板",
   "gtocore.part.extendae.tag_filter.whitelist.tooltip": "可放入目標，選擇白名單的標簽過濾器",
-  "gtocore.pattern.blocking_mode": "容器有任何內容時阻止插入（編程電路除外）",
+  "gtocore.pattern.blocking_mode": "容器有任何內容時阻止插入",
   "gtocore.pattern.blocking_reverse": "非同一樣板時阻止插入",
   "gtocore.pattern.divide": "樣板配方 ÷ %s",
   "gtocore.pattern.multiply": "樣板配方 x %s",

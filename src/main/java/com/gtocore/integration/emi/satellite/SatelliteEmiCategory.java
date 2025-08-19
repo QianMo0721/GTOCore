@@ -28,12 +28,12 @@ public class SatelliteEmiCategory extends EmiRecipeCategory {
     public static final EmiRecipeCategory CATEGORY = new SatelliteEmiCategory();
 
     public SatelliteEmiCategory() {
-        super(GTOCore.id("gtocoresatellite"), EmiStack.of(GTOItems.PLANET_DATA_CHIP));
+        super(GTOCore.id("satellite"), EmiStack.of(GTOItems.PLANET_DATA_CHIP));
     }
 
     @Override
     public Component getName() {
-        return Component.translatable("gtocoresatellite_control_center.emi.launch_satellite");
+        return Component.translatable("gtocore.satellite_control_center.emi.launch_satellite");
     }
 
     public static void register(EmiRegistry registry) {
