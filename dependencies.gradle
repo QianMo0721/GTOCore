@@ -9,7 +9,7 @@ dependencies {
     api(annotationProcessor("io.github.llamalad7:mixinextras-common:$project.mixinextras_version"))
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 
-    modImplementation("curse.maven:ldlib-626676:6792104")
+    modImplementation("curse.maven:ldlib-626676:6899193")
 
     modImplementation("com.tterrag.registrate:Registrate:$project.registrate_version")
 
@@ -52,7 +52,7 @@ dependencies {
     modImplementation("curse.maven:ars-meteorites-1278083:6714970")
 
     modImplementation("curse.maven:glodium-957920:5006780")
-    modImplementation("curse.maven:ex-pattern-provider-892005:6505265")
+    modImplementation("curse.maven:ex-pattern-provider-892005:6870350")
 
     modImplementation("curse.maven:functional-storage-556861:5650296")
     modImplementation("curse.maven:titanium-287342:5468426")

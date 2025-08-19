@@ -1,8 +1,5 @@
 package com.gtocore.common.machine.electric;
 
-import com.gtocore.api.capability.FluidHandlerList;
-import com.gtocore.api.capability.ItemHandlerList;
-
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
@@ -11,13 +8,20 @@ import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineModifyDrops;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
+import com.gregtechceu.gtceu.api.transfer.fluid.FluidHandlerList;
+import com.gregtechceu.gtceu.api.transfer.item.ItemHandlerList;
 import com.gregtechceu.gtceu.utils.LazyOptionalUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -48,6 +52,9 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
     @Persisted
     protected NotifiableItemStackHandler inventory;
 
+    @Persisted
+    public boolean roundRobin;
+
     private final List<IItemHandler> itemHandlers = new ObjectArrayList<>(20);
     private final List<IFluidHandler> fluidHandlers = new ObjectArrayList<>(20);
 
@@ -75,6 +82,16 @@ public class AdvancedTesseractMachine extends MetaMachine implements IFancyUIMac
     @Override
     public @NotNull ManagedFieldHolder getFieldHolder() {
         return MANAGED_FIELD_HOLDER;
+    }
+
+    @Override
+    protected InteractionResult onScrewdriverClick(Player playerIn, InteractionHand hand, Direction gridSide, BlockHitResult hitResult) {
+        if (!super.onScrewdriverClick(playerIn, hand, gridSide, hitResult).shouldSwing()) {
+            roundRobin = !roundRobin;
+            playerIn.displayClientMessage(Component.translatable(roundRobin ? "tooltip.ad_astra.distribution_mode.round_robin" : "tooltip.ad_astra.distribution_mode.sequential"), true);
+            return InteractionResult.sidedSuccess(playerIn.level().isClientSide);
+        }
+        return InteractionResult.SUCCESS;
     }
 
     @Override

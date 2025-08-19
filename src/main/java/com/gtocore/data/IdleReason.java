@@ -14,6 +14,8 @@ public final class IdleReason extends com.gtolib.api.recipe.IdleReason {
 
     public static final IdleReason FELLING_TOOL = new IdleReason("gtocore.idle_reason.felling_tool", "需要伐木工具", "Need to felling tool");
 
+    public static final IdleReason RADIATION = new IdleReason("gtocore.idle_reason.radiation", "未处在要求辐射范围内", "Not in required radiation range");
+
     public IdleReason(String key, String cn, String en) {
         super(key, en, cn);
     }

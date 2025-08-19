@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.part;
 
-import com.gtolib.api.machine.trait.IExtendRecipeHandler;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.utils.ItemUtils;
 import com.gtolib.utils.MathUtil;
@@ -189,19 +188,10 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
         }
     }
 
-    private static final class HugeNotifiableItemStackHandler extends NotifiableItemStackHandler implements IExtendRecipeHandler {
-
-        private Object2LongOpenCustomHashMap<ItemStack> itemInventory;
-        private boolean changed = true;
+    private static final class HugeNotifiableItemStackHandler extends NotifiableItemStackHandler {
 
         private HugeNotifiableItemStackHandler(MetaMachine machine) {
             super(machine, 1, IO.IN, IO.IN, i -> new HugeCustomItemStackHandler());
-        }
-
-        @Override
-        public void onContentsChanged() {
-            super.onContentsChanged();
-            changed = true;
         }
 
         private long getCount() {
@@ -217,15 +207,15 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
         public Object2LongOpenCustomHashMap<ItemStack> getItemMap() {
             long c = getCount();
             if (c < 1) return null;
-            if (itemInventory == null) {
-                itemInventory = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+            if (itemMap == null) {
+                itemMap = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
             }
             if (changed) {
                 changed = false;
-                itemInventory.clear();
-                itemInventory.put(getStackInSlot(), getCount());
+                itemMap.clear();
+                itemMap.put(getStackInSlot(), getCount());
             }
-            return itemInventory;
+            return itemMap;
         }
 
         @Override

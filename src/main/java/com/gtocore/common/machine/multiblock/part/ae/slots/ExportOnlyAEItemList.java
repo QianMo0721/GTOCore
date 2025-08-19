@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.part.ae.slots;
 
-import com.gtolib.api.machine.trait.IExtendRecipeHandler;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.utils.ItemUtils;
 
@@ -24,11 +23,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements IConfigurableSlotList, IExtendRecipeHandler {
+public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements IConfigurableSlotList {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ExportOnlyAEItemList.class, NotifiableItemStackHandler.MANAGED_FIELD_HOLDER);
-    private Object2LongOpenCustomHashMap<ItemStack> itemInventory;
-    private boolean changed = true;
+
     @Persisted
     private final ExportOnlyAEItemSlot[] inventory;
 
@@ -54,9 +52,7 @@ public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements 
 
     @Override
     public boolean isEmpty() {
-        var map = getItemMap();
-        if (map == null) return true;
-        return map.isEmpty();
+        return getItemMap() == null;
     }
 
     @Override
@@ -145,21 +141,22 @@ public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements 
 
     @Override
     public Object2LongOpenCustomHashMap<ItemStack> getItemMap() {
-        if (itemInventory == null) {
-            itemInventory = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+        if (itemMap == null) {
+            itemMap = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
         }
         if (changed) {
             changed = false;
-            itemInventory.clear();
+            itemMap.clear();
             for (var i : inventory) {
                 var stock = i.stock;
                 if (stock == null || stock.amount() == 0) continue;
                 var stack = i.getStack();
                 if (stack.isEmpty()) continue;
-                itemInventory.addTo(stack, stock.amount());
+                itemMap.addTo(stack, stock.amount());
             }
+            isEmpty = itemMap.isEmpty();
         }
-        return itemInventory.isEmpty() ? null : itemInventory;
+        return isEmpty ? null : itemMap;
     }
 
     @Override

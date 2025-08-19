@@ -104,7 +104,7 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
         int x = 0;
         int y = 0;
         for (int slot = 0; slot < Capacity; slot++) {
-            innerContainer.addWidget(new SlotWidget(inventory, slot, x * 18, y * 18).setBackgroundTexture(GuiTextures.SLOT));
+            innerContainer.addWidget(new SlotWidget(inventory.storage, slot, x * 18, y * 18).setBackgroundTexture(GuiTextures.SLOT));
             x++;
             if (x == yOverflow) {
                 x = 0;

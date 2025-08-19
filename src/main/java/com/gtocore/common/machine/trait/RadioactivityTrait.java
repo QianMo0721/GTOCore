@@ -1,11 +1,13 @@
 package com.gtocore.common.machine.trait;
 
 import com.gtocore.common.machine.multiblock.part.RadiationHatchPartMachine;
+import com.gtocore.data.IdleReason;
 
 import com.gtolib.api.machine.feature.multiblock.IMultiblockTraitHolder;
 import com.gtolib.api.machine.trait.MultiblockTrait;
 import com.gtolib.api.recipe.Recipe;
 
+import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 
 import net.minecraft.network.chat.Component;
@@ -59,11 +61,10 @@ public final class RadioactivityTrait extends MultiblockTrait {
     @Override
     public boolean beforeWorking(@Nullable Recipe recipe) {
         if (recipe == null) return true;
-        if (recipe.data.contains("radioactivity")) {
-            recipeRadioactivity = recipe.data.getInt("radioactivity");
-            if (outside()) {
-                return true;
-            }
+        recipeRadioactivity = recipe.data.getInt("radioactivity");
+        if (recipeRadioactivity > 0 && outside()) {
+            if (machine instanceof IRecipeLogicMachine recipeLogicMachine) IdleReason.setIdleReason(recipeLogicMachine, IdleReason.RADIATION);
+            return true;
         }
         return super.beforeWorking(recipe);
     }

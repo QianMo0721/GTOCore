@@ -26,6 +26,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
+import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.common.data.GCYMBlocks;
@@ -231,6 +232,23 @@ public final class MultiBlockB {
                             .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('F', abilities(MUFFLER))
+                    .where(' ', any())
+                    .build())
+            .addSubPattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle("EEEEE AAA ", "       A  ", "          ", "          ", "          ")
+                    .aisle("EFFFEDBBBA", "      BBB ", "      BBB ", "      BBB ", "       B  ")
+                    .aisle("EFFFEDBBBA", "     DBCBA", "      BCB ", "      BCB ", "     CCCB ")
+                    .aisle("EFFFEDBBBA", "      BBB ", "      BBB ", "      BBB ", "       B  ")
+                    .aisle("EEEEE AAA ", "  G    A  ", "          ", "          ", "          ")
+                    .where('A', blocks(GTBlocks.CASING_STEEL_SOLID.get())
+                            .or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2))
+                            .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
+                    .where('B', blocks(GTBlocks.CASING_PTFE_INERT.get()))
+                    .where('C', blocks(GTBlocks.CASING_POLYTETRAFLUOROETHYLENE_PIPE.get()))
+                    .where('D', blocks(GTBlocks.CASING_STEEL_SOLID.get()))
+                    .where('E', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Steel)))
+                    .where('F', blocks(GTBlocks.STEEL_HULL.get()))
+                    .where('G', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_solid_steel"), GTCEu.id("block/multiblock/blast_furnace"))

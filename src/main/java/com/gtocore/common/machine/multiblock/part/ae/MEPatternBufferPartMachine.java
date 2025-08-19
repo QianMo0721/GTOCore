@@ -1,6 +1,7 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtocore.common.data.machines.GTAEMachines;
+import com.gtocore.common.machine.multiblock.part.ae.slots.MECircuitHandler;
 import com.gtocore.common.machine.trait.InternalSlotRecipeHandler;
 
 import com.gtolib.api.annotation.Scanned;
@@ -98,7 +99,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     @Persisted
     public final NotifiableNotConsumableFluidHandler shareTank;
     @Persisted
-    public final NotifiableNotConsumableItemHandler circuitInventorySimulated;
+    public final MECircuitHandler circuitInventorySimulated;
 
     @Persisted
     private final Set<BlockPos> proxies = new ObjectOpenHashSet<>();
@@ -138,19 +139,12 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         this.caches = new boolean[maxPatternCount];
         this.shareInventory = createShareInventory();
         this.shareTank = new NotifiableNotConsumableFluidHandler(this, 9, 64000).setSkipParallelComputing();
-        this.circuitInventorySimulated = createCircuitInventory();
+        this.circuitInventorySimulated = new MECircuitHandler(this);
         this.internalRecipeHandler = new InternalSlotRecipeHandler(this, getInternalInventory());
     }
 
     NotifiableNotConsumableItemHandler createShareInventory() {
         return new NotifiableNotConsumableItemHandler(this, 9, IO.NONE).setSkipParallelComputing();
-    }
-
-    NotifiableNotConsumableItemHandler createCircuitInventory() {
-        NotifiableNotConsumableItemHandler handle = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE);
-        handle.setFilter(IntCircuitBehaviour::isIntegratedCircuit);
-        handle.shouldSearchContent(false);
-        return handle.setSkipParallelComputing();
     }
 
     @Override
@@ -306,16 +300,14 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
 
         public final NotifiableNotConsumableItemHandler shareInventory;
         public final NotifiableNotConsumableFluidHandler shareTank;
-        public final NotifiableNotConsumableItemHandler circuitInventory;
+        public final MECircuitHandler circuitInventory;
 
         private InternalSlot(MEPatternBufferPartMachine machine, int index) {
             this.machine = machine;
             this.index = index;
             this.shareInventory = machine.createShareInventory();
             this.shareTank = new NotifiableNotConsumableFluidHandler(machine, 9, 64000).setSkipParallelComputing();
-            this.circuitInventory = new NotifiableNotConsumableItemHandler(machine, 1, IO.NONE).setSkipParallelComputing();
-            this.circuitInventory.setFilter(IntCircuitBehaviour::isIntegratedCircuit);
-            this.circuitInventory.shouldSearchContent(false);
+            this.circuitInventory = new MECircuitHandler(machine);
             this.inputSink = new InputSink(this);
         }
 

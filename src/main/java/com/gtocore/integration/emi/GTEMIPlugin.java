@@ -20,6 +20,7 @@ import com.gregtechceu.gtceu.integration.emi.orevein.GTBedrockFluidEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.orevein.GTOreVeinEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.recipe.GTRecipeEMICategory;
 
+import com.hepdd.ae2emicraftingforge.client.handler.Ae2PatternTerminalHandler;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.p3pp3rf1y.sophisticatedbackpacks.compat.recipeviewers.emi.BackpackEmiPlugin;
 
@@ -110,9 +111,11 @@ public final class GTEMIPlugin implements EmiPlugin {
         registry.addRecipeHandler(ModularUIContainer.MENUTYPE, new GTEmiRecipeHandler());
         registry.addRecipeHandler(Me2in1Menu.TYPE, UtilsMiscs.createEMI2in1());
         registry.addRecipeHandler(Wireless.TYPE, UtilsMiscs.createEMIWireless());
-        registry.addRecipeHandler(WCTMenu.TYPE, new Ae2CraftingHandler<>(WCTMenu.class));
-        registry.addRecipeHandler(WETMenu.TYPE, new GTAe2PatternTerminalHandler<>());
         registry.addRecipeHandler(PatternEncodingTermMenu.TYPE, new GTAe2PatternTerminalHandler<>());
+        registry.addRecipeHandler(WETMenu.TYPE, new GTAe2PatternTerminalHandler<>());
+        registry.addRecipeHandler(WCTMenu.TYPE, new Ae2CraftingHandler<>(WCTMenu.class));
+        registry.addRecipeHandler(WETMenu.TYPE, new Ae2PatternTerminalHandler<>(WETMenu.class));
+        registry.addRecipeHandler(PatternEncodingTermMenu.TYPE, new Ae2PatternTerminalHandler<>(PatternEncodingTermMenu.class));
         registry.addCategory(GTProgrammedCircuitCategory.CATEGORY);
 
         GTRecipeEMICategory.registerDisplays(registry);

@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.part.ae.slots;
 
-import com.gtolib.api.machine.trait.IExtendRecipeHandler;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -22,13 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfigurableSlotList, IExtendRecipeHandler {
+public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfigurableSlotList {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ExportOnlyAEFluidList.class, NotifiableFluidTank.MANAGED_FIELD_HOLDER);
+
     @Persisted
     protected ExportOnlyAEFluidSlot[] inventory;
-    private Object2LongOpenHashMap<FluidStack> fluidInventory;
-    private boolean changed = true;
 
     public ExportOnlyAEFluidList(MetaMachine machine, int slots) {
         this(machine, slots, ExportOnlyAEFluidSlot::new);
@@ -45,16 +43,8 @@ public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfi
     }
 
     @Override
-    public void onContentsChanged() {
-        super.onContentsChanged();
-        changed = true;
-    }
-
-    @Override
     public boolean isEmpty() {
-        var map = getFluidMap();
-        if (map == null) return true;
-        return map.isEmpty();
+        return getFluidMap() == null;
     }
 
     @Override
@@ -132,21 +122,22 @@ public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfi
 
     @Override
     public Object2LongOpenHashMap<FluidStack> getFluidMap() {
-        if (fluidInventory == null) {
-            fluidInventory = new Object2LongOpenHashMap<>();
+        if (fluidMap == null) {
+            fluidMap = new Object2LongOpenHashMap<>();
         }
         if (changed) {
             changed = false;
-            fluidInventory.clear();
+            fluidMap.clear();
             for (var i : inventory) {
                 var stock = i.stock;
                 if (stock == null || stock.amount() == 0) continue;
                 var stack = i.getFluid();
                 if (stack.isEmpty()) continue;
-                fluidInventory.addTo(stack, stock.amount());
+                fluidMap.addTo(stack, stock.amount());
             }
+            isEmpty = fluidMap.isEmpty();
         }
-        return fluidInventory.isEmpty() ? null : fluidInventory;
+        return isEmpty ? null : fluidMap;
     }
 
     @Override

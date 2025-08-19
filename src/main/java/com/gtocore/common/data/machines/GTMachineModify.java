@@ -1,7 +1,6 @@
 package com.gtocore.common.data.machines;
 
 import com.gtocore.api.machine.part.GTOPartAbility;
-import com.gtocore.common.data.GTOBlocks;
 import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTORecipeTypes;
 
@@ -12,13 +11,17 @@ import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.RLUtils;
 
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
+import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.Predicates;
 import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.modifier.RecipeModifier;
+import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.common.data.GTMachines;
+import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.data.machines.GTMachineUtils;
 import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
@@ -125,15 +128,20 @@ public final class GTMachineModify {
                     .build();
         });
 
-        GTMultiMachines.ELECTRIC_BLAST_FURNACE.setSubPatternFactory(List.of(definition -> FactoryBlockPattern.start()
-                .aisle("XXXXX", "XXXXX", "     ")
-                .aisle("XXXXX", "XXXXX", "     ")
-                .aisle("XXXXX", "XXIXX", "     ")
-                .aisle("XXXXX", "XXXXX", "  Y  ")
-                .aisle("XXXXX", "XXXXX", "     ")
-                .where('X', blocks(CASING_INVAR_HEATPROOF.get()).or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2)).or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
-                .where('Y', controller(blocks(definition.getBlock())))
-                .where('I', blocks(GTOBlocks.INTEGRAL_FRAMEWORK_LV.get()))
+        GTMultiMachines.ELECTRIC_BLAST_FURNACE.setSubPatternFactory(List.of(definition -> FactoryBlockPattern.start(definition)
+                .aisle("AAAAA", " DBD ", " DBD ", " CCC ")
+                .aisle("ACCCA", "BD DB", "BD DB", "CCCCC")
+                .aisle("A   A", "     ", "     ", "C   C")
+                .aisle("A   A", "B   B", "B   B", "C   C")
+                .aisle("A E A", "     ", "     ", "     ")
+                .where('A', blocks(GTBlocks.CASING_INVAR_HEATPROOF.get())
+                        .or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2))
+                        .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
+                .where('B', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.StainlessSteel)))
+                .where('C', blocks(GTBlocks.CASING_INVAR_HEATPROOF.get()))
+                .where('D', blocks(GTBlocks.CASING_STEEL_PIPE.get()))
+                .where('E', controller(blocks(definition.getBlock())))
+                .where(' ', any())
                 .build()));
 
         for (int tier : GTMachineUtils.ELECTRIC_TIERS) {

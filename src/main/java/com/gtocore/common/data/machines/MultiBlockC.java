@@ -6,6 +6,7 @@ import com.gtocore.client.renderer.machine.PrimitiveDistillationRenderer;
 import com.gtocore.common.data.*;
 import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.EnergyInjectorMachine;
+import com.gtocore.common.machine.multiblock.electric.assembly.ComponentAssemblerMachine;
 import com.gtocore.common.machine.multiblock.electric.bioengineering.BiochemicalReactionRoomMachine;
 import com.gtocore.common.machine.multiblock.electric.bioengineering.BiologicalExtractionMachine;
 import com.gtocore.common.machine.multiblock.electric.nano.NanitesIntegratedMachine;
@@ -31,7 +32,6 @@ import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.MultiBlockFileReader;
 
 import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
@@ -328,7 +328,7 @@ public final class MultiBlockC {
             .workableCasingRenderer(GTOCore.id("block/casings/iridium_casing"), GTCEu.id("block/multiblock/gcym/large_mixer"))
             .register();
 
-    public static final MultiblockMachineDefinition COMPONENT_ASSEMBLER = multiblock("component_assembler", "部件组装机", TierCasingMultiblockMachine.createMachine(COMPONENT_ASSEMBLY_CASING_TIER))
+    public static final MultiblockMachineDefinition COMPONENT_ASSEMBLER = multiblock("component_assembler", "部件组装机", ComponentAssemblerMachine::new)
             .allRotation()
             .tooltips(ComponentBuilder.create().addStoryLine("""
                     格雷科技有限公司为了照顾新入职的员工，特别设计了这台
@@ -345,6 +345,7 @@ public final class MultiBlockC {
                             equipment costs a fortune, hoping employees cherish this opportunity.
                             """).build())
             .tooltipsText("只能运行IV及以下配方", "Can only run recipes up to IV tier")
+            .tooltipsText("升级结构后支持到UV", "After upgrading the structure, it supports UV tier")
             .recipeTypes(GTORecipeTypes.COMPONENT_ASSEMBLY_RECIPES)
             .overclock()
             .block(GTBlocks.CASING_STEEL_SOLID)
@@ -369,7 +370,40 @@ public final class MultiBlockC {
                     .where('J', blocks(GTBlocks.CASING_STEEL_GEARBOX.get()))
                     .where(' ', any())
                     .build())
-            .beforeWorking((m, r) -> ((ITierCasingMachine) m).getCasingTier(COMPONENT_ASSEMBLY_CASING_TIER) < GTValues.LuV)
+            .addSubPattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle(" CCCCCCCCCCCCCCCCCCCCCCCCCCC ", " C         C     C         C ", " C         C     C         C ", " C         C     C         C ", " C         C     C         C ", " CCCCCCCCCCCCCCCCCCCCCCCCCCC ")
+                    .aisle("ADDDDDDDDDDDDDDDDDDDDDDDDDDDA", "AHMMMMMMMMHDHNNNHDHMMMMMMMMHA", "AHMMMMMMMMHDHNNNHDHMMMMMMMMHA", "AHMMMMMMMMHDHNNNHDHMMMMMMMMHA", "ADDDDDDDDDDDDDDDDDDDDDDDDDDDA", " CFFC  CFFC CFFFC CFFC  CFFC ")
+                    .aisle("AEEEEEEEEEEDEEEEEDEEEEEEEEEEA", "B                           B", "A          J     J          A", "B                           B", "ADHHDDDDHHDDDHDHDDDHHDDDDHHDA", " CHHC  CHHC CHFHC CHHC  CHHC ")
+                    .aisle("AFFFFFFFFFFDFFFFFDFFFFFFFFFFA", "BIIIIIIIIII  P P  IIIIIIIIIIB", "A          J P P J          A", "BJJJJJJJJJJ       JJJJJJJJJJB", "ADHHDDDDHHDDDHDHDDDHHDDDDHHDA", " CHHC  CHHC CHFHC CHHC  CHHC ")
+                    .aisle("AGGGGGGGGGGDGGGGGDGGGGGGGGGGA", "B                           B", "AGGGGGGGGGGJGGGGGJGGGGGGGGGGA", "B                           B", "ADHHDDDDHHDDDHDHDDDHHDDDDHHDA", " CHHC  CHHC CHFHC CHHC  CHHC ")
+                    .aisle("AFFFFFFFFFFDFFFFFDFFFFFFFFFFA", "BIIIIIIIIII  P P  IIIIIIIIIIB", "A          J P P J          A", "BJJJJJJJJJJ       JJJJJJJJJJB", "ADHHDDDDHHDDDHDHDDDHHDDDDHHDA", " CHHC  CHHC CHFHC CHHC  CHHC ")
+                    .aisle("AEEEEEEEEEEDEEEEEDEEEEEEEEEEA", "B                           B", "A          J     J          A", "B                           B", "ADHHDDDDHHDDDHDHDDDHHDDDDHHDA", " CHHC  CHHC CHFHC CHHC  CHHC ")
+                    .aisle("ADDDDDDDDDD       DDDDDDDDDDA", "AHDO OO ODH       HDO OO ODHA", "AHDO OO ODH       HDO OO ODHA", "AHD      DH       HD      DHA", "ADDDDDDDDDD       DDDDDDDDDDA", " CFFC  CFFC CFFFC CFFC  CFFC ")
+                    .aisle(" CKKKKKKKKC       CKKKKKKKKC ", " CKO OO OKC       CKO OO OKC ", " CKO OO OKC       CKO OO OKC ", " CKKKKKKKKC       CKKKKKKKKC ", " CC      CC       CC      CC ", " CCCCCCCCCCCCCCCCCCCCCCCCCCC ")
+                    .aisle(" CKFFFFFFKC       CKFFFFFFKC ", "  LO OO OL         LO OO OL  ", "  LO OO OL         LO OO OL  ", "  KNNNNNNK         KNNNNNNK  ", "  C      C         C      C  ", "                             ")
+                    .aisle(" CKFFFFFFKC       CKFFFFFFKC ", "  LO OO OL         LO OO OL  ", "  LO OO OL         LO OO OL  ", "  KNNNNNNK         KNNNNNNK  ", "  C      C         C      C  ", "                             ")
+                    .aisle(" CKFFFFFFKC   Q   CKFFFFFFKC ", "  L      L         L      L  ", "  L      L         L      L  ", "  KNNNNNNK         KNNNNNNK  ", "  C      C         C      C  ", "                             ")
+                    .aisle(" CKKKKKKKKC       CKKKKKKKKC ", "  KNNNNNNK         KNNNNNNK  ", "  KNNNNNNK         KNNNNNNK  ", "  KKKKKKKK         KKKKKKKK  ", "                             ", "                             ")
+                    .where('A', blocks(GTBlocks.CASING_STEEL_SOLID.get())
+                            .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
+                    .where('B', GTOPredicates.tierBlock(CALMAP, COMPONENT_ASSEMBLY_CASING_TIER))
+                    .where('C', blocks(GCYMBlocks.CASING_NONCONDUCTING.get()))
+                    .where('D', blocks(GTBlocks.CASING_STEEL_SOLID.get()))
+                    .where('E', blocks(GTBlocks.CASING_ASSEMBLY_CONTROL.get()))
+                    .where('F', blocks(GTBlocks.STEEL_HULL.get()))
+                    .where('G', blocks(GTBlocks.CASING_ASSEMBLY_LINE.get()))
+                    .where('H', blocks(GTBlocks.CASING_GRATE.get()))
+                    .where('I', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Trinium)))
+                    .where('J', blocks(GTOBlocks.PROCESS_MACHINE_CASING.get()))
+                    .where('K', blocks(GTOBlocks.OXIDATION_RESISTANT_HASTELLOY_N_MECHANICAL_CASING.get()))
+                    .where('L', blocks(GTOBlocks.TITANIUM_NITRIDE_CERAMIC_IMPACT_RESISTANT_MECHANICAL_BLOCK.get()))
+                    .where('M', blocks(GTBlocks.CASING_LAMINATED_GLASS.get()))
+                    .where('N', blocks(GTBlocks.CASING_TEMPERED_GLASS.get()))
+                    .where('O', blocks(GTBlocks.CASING_POLYTETRAFLUOROETHYLENE_PIPE.get()))
+                    .where('P', blocks(Blocks.IRON_BARS))
+                    .where('Q', controller(blocks(definition.get())))
+                    .where(' ', any())
+                    .build())
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_solid_steel"), GTCEu.id("block/multiblock/gcym/large_assembler"))
             .register();
 

@@ -52,13 +52,13 @@ public final class SatelliteControlCenterMachine extends ElectricMultiblockMachi
             SatelliteControlCenterMachine.class, ElectricMultiblockMachine.MANAGED_FIELD_HOLDER);
 
     @RegisterLanguage(en = "Selected planet: ", cn = "已选择的星球：")
-    private static final String PLANET = "gtocoresatellite_control_center.planet";
+    private static final String PLANET = "gtocore.satellite_control_center.planet";
 
     @RegisterLanguage(en = "The required rocket: ", cn = "需要的火箭：")
-    private static final String ROCKET = "gtocoresatellite_control_center.rocket";
+    private static final String ROCKET = "gtocore.satellite_control_center.rocket";
 
     @RegisterLanguage(en = "The required fuel: ", cn = "需要的燃料：")
-    private static final String FUEL = "gtocoresatellite_control_center.fuel";
+    private static final String FUEL = "gtocore.satellite_control_center.fuel";
 
     private boolean launch;
 

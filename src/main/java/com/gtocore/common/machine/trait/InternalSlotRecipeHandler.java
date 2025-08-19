@@ -3,7 +3,6 @@ package com.gtocore.common.machine.trait;
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 
 import com.gtolib.api.machine.trait.ExtendedRecipeHandlerList;
-import com.gtolib.api.machine.trait.IExtendRecipeHandler;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeCapabilityMap;
 
@@ -18,12 +17,14 @@ import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
 import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,11 +108,11 @@ public final class InternalSlotRecipeHandler {
             slot.rhl = this;
             itemRecipeHandler = new SlotItemRecipeHandler(buffer, slot);
             fluidRecipeHandler = new SlotFluidRecipeHandler(buffer, slot);
-            addHandlers(itemRecipeHandler, fluidRecipeHandler, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank, slot.circuitInventory, slot.shareInventory, slot.shareTank);
+            addHandlers(itemRecipeHandler, fluidRecipeHandler, slot.circuitInventory, slot.shareInventory, slot.shareTank, buffer.circuitInventorySimulated, buffer.shareInventory, buffer.shareTank);
         }
     }
 
-    private static final class SlotItemRecipeHandler extends NotifiableRecipeHandlerTrait<Ingredient> implements IExtendRecipeHandler {
+    private static final class SlotItemRecipeHandler extends NotifiableRecipeHandlerTrait<Ingredient> {
 
         private final MEPatternBufferPartMachine.InternalSlot slot;
 
@@ -119,6 +120,11 @@ public final class InternalSlotRecipeHandler {
             super(buffer);
             this.slot = slot;
             slot.setOnContentsChanged(this::notifyListeners);
+        }
+
+        @Override
+        public boolean hasCapability(@Nullable Direction side) {
+            return false;
         }
 
         @Override
@@ -178,7 +184,7 @@ public final class InternalSlotRecipeHandler {
         }
     }
 
-    private static final class SlotFluidRecipeHandler extends NotifiableRecipeHandlerTrait<FluidIngredient> implements IExtendRecipeHandler {
+    private static final class SlotFluidRecipeHandler extends NotifiableRecipeHandlerTrait<FluidIngredient> {
 
         private final MEPatternBufferPartMachine.InternalSlot slot;
 
@@ -186,6 +192,11 @@ public final class InternalSlotRecipeHandler {
             super(buffer);
             this.slot = slot;
             slot.setOnContentsChanged(this::notifyListeners);
+        }
+
+        @Override
+        public boolean hasCapability(@Nullable Direction side) {
+            return false;
         }
 
         @Override

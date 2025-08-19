@@ -2,9 +2,8 @@ package com.gtocore.common.machine.multiblock.part.ae;
 
 import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEItemList;
 import com.gtocore.common.machine.multiblock.part.ae.slots.ExportOnlyAEItemSlot;
+import com.gtocore.common.machine.multiblock.part.ae.slots.MECircuitHandler;
 import com.gtocore.common.machine.multiblock.part.ae.widget.AEItemConfigWidget;
-
-import com.gtolib.api.machine.trait.NotifiableNotConsumableItemHandler;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -54,7 +53,7 @@ public class MEInputBusPartMachine extends MEPartMachine implements IDataStickIn
     public MEInputBusPartMachine(MetaMachineBlockEntity holder) {
         super(holder, IO.IN);
         aeItemHandler = createInventory();
-        circuitInventory = new NotifiableNotConsumableItemHandler(this, 1, IO.NONE).setSkipParallelComputing().setFilter(IntCircuitBehaviour::isIntegratedCircuit).shouldSearchContent(false);
+        circuitInventory = new MECircuitHandler(this);
     }
 
     /////////////////////////////////

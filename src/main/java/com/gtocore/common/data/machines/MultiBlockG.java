@@ -36,6 +36,7 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
+import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.common.data.*;
@@ -100,6 +101,25 @@ public final class MultiBlockG {
                     .where('C', heatingCoils())
                     .where('D', blocks(GTBlocks.CASING_INVAR_HEATPROOF.get()))
                     .where('E', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Steel)))
+                    .where(' ', any())
+                    .build())
+            .addSubPattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle("ADDDA", "BBBBB", "BBBBB", "BBBBB", "BBBBB", "     ")
+                    .aisle("ACCCA", "B B B", "B B B", "BEBEB", "BEBEB", " E E ")
+                    .aisle("ACCCA", "BBBBB", "BBBBB", "BBBBB", "BBBBB", " E E ")
+                    .aisle("     ", "     ", "     ", "     ", " E E ", " E E ")
+                    .aisle("     ", "     ", "     ", "     ", "     ", "     ")
+                    .aisle("     ", "     ", "     ", "     ", "     ", "     ")
+                    .aisle("     ", "     ", "     ", "     ", "     ", "     ")
+                    .aisle("  F  ", "     ", "     ", "     ", "     ", "     ")
+                    .where('A', blocks(GTBlocks.CASING_STEEL_SOLID.get())
+                            .or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2))
+                            .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
+                    .where('B', blocks(GTOBlocks.PRESSURE_CONTAINMENT_CASING.get()))
+                    .where('C', blocks(GTBlocks.CASING_STEEL_SOLID.get()))
+                    .where('D', blocks(GTBlocks.FIREBOX_STEEL.get()))
+                    .where('E', blocks(GTBlocks.CASING_STEEL_PIPE.get()))
+                    .where('F', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_solid_steel"), GTCEu.id("block/multiblock/large_chemical_reactor"))

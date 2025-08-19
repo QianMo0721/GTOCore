@@ -85,6 +85,7 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
     private int coolingAmount;
     private int maxCoolingAmount;
     private long allocatedCWUt;
+    private long cacheCWUt;
     private long maxEUt;
     private Recipe runRecipe;
 
@@ -103,6 +104,7 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
         incompatible = false;
         runRecipe = null;
         allocatedCWUt = 0;
+        cacheCWUt = 0;
         maxCWUt = 0;
         coolingAmount = 0;
         maxCoolingAmount = 0;
@@ -205,12 +207,14 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
     @Override
     public boolean onWorking() {
         if (allocatedCWUt == 0) return false;
+        cacheCWUt = allocatedCWUt;
         allocatedCWUt = 0;
         return super.onWorking();
     }
 
     @Override
     public void afterWorking() {
+        cacheCWUt = allocatedCWUt;
         allocatedCWUt = 0;
         if (coolingAmount > maxCoolingAmount) {
             int damaged = coolingAmount - maxCoolingAmount;
@@ -226,9 +230,7 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
     }
 
     private long requestCWUt(boolean simulate, long cwu) {
-        long maxCWUt = getMaxCWUt() * maxCWUtModification / 10000;
-        long availableCWUt = maxCWUt - this.allocatedCWUt;
-        long toAllocate = Math.min(cwu, availableCWUt);
+        long toAllocate = Math.min(cwu, getMaxCWU());
         if (!simulate) {
             this.allocatedCWUt += toAllocate;
         }
@@ -250,6 +252,11 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
             }
         }
         return 0;
+    }
+
+    @Override
+    public long getMaxCWU() {
+        return (getMaxCWUt() * maxCWUtModification / 10000) - cacheCWUt;
     }
 
     private void maxCWUtModificationUpdate() {
@@ -320,7 +327,7 @@ public final class SupercomputingCenterMachine extends StorageMultiblockMachine 
         super.customText(textList);
         textList.add(Component.translatable("tooltip.avaritia.tier", machineTier));
         textList.add(Component.translatable("gtceu.multiblock.energy_consumption", maxEUt, GTValues.VNF[GTUtil.getTierByVoltage(maxEUt)]).withStyle(ChatFormatting.YELLOW));
-        textList.add(Component.translatable("gtceu.multiblock.hpca.computation", Component.literal(allocatedCWUt + " / " + getMaxCWUt()).append(Component.literal(" CWU/t")).withStyle(ChatFormatting.AQUA)).withStyle(ChatFormatting.GRAY));
+        textList.add(Component.translatable("gtceu.multiblock.hpca.computation", Component.literal(cacheCWUt + " / " + getMaxCWUt()).append(Component.literal(" CWU/t")).withStyle(ChatFormatting.AQUA)).withStyle(ChatFormatting.GRAY));
         textList.add(Component.translatable("gtocore.machine.cwut_modification", ((double) maxCWUtModification / 10000)).withStyle(ChatFormatting.AQUA));
         textList.add(Component.translatable("gtceu.multiblock.hpca.info_max_coolant_required", Component.literal(coolingAmount + " / " + maxCoolingAmount).withStyle(ChatFormatting.AQUA)).withStyle(ChatFormatting.GRAY));
     }

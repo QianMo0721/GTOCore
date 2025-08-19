@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.part;
 
-import com.gtolib.api.machine.trait.IExtendRecipeHandler;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -14,6 +13,7 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableRecipeHandlerTrait;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +39,17 @@ public final class InfiniteWaterHatchPartMachine extends TieredIOPartMachine {
         return false;
     }
 
-    private static final class FluidTank extends NotifiableRecipeHandlerTrait<FluidIngredient> implements IExtendRecipeHandler {
+    private static final class FluidTank extends NotifiableRecipeHandlerTrait<FluidIngredient> {
 
         private static final List<FluidStack> WATER = List.of(new FluidStack(Fluids.WATER, Integer.MAX_VALUE));
 
         private FluidTank(MetaMachine machine) {
             super(machine);
+        }
+
+        @Override
+        public boolean hasCapability(@Nullable Direction side) {
+            return false;
         }
 
         @Override

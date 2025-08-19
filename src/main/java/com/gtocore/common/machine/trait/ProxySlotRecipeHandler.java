@@ -3,9 +3,7 @@ package com.gtocore.common.machine.trait;
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferProxyPartMachine;
 
-import com.gtolib.api.machine.trait.ProxyFluidExtendRecipeHandler;
 import com.gtolib.api.machine.trait.ProxyFluidRecipeHandler;
-import com.gtolib.api.machine.trait.ProxyItemExtendRecipeHandler;
 import com.gtolib.api.machine.trait.ProxyItemRecipeHandler;
 
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
@@ -53,15 +51,15 @@ public final class ProxySlotRecipeHandler {
 
         private ProxyRHL(MEPatternBufferProxyPartMachine machine, MEPatternBufferPartMachine.InternalSlot slot) {
             super(slot, machine);
-            circuit = new ProxyItemExtendRecipeHandler(machine);
-            slotCircuit = new ProxyItemExtendRecipeHandler(machine);
-            sharedItem = new ProxyItemExtendRecipeHandler(machine);
-            slotItem = new ProxyItemExtendRecipeHandler(machine);
-            slotSharedItem = new ProxyItemExtendRecipeHandler(machine);
-            sharedFluid = new ProxyFluidExtendRecipeHandler(machine);
-            slotFluid = new ProxyFluidExtendRecipeHandler(machine);
-            slotSharedFluid = new ProxyFluidExtendRecipeHandler(machine);
-            addHandlers(circuit, sharedItem, slotItem, sharedFluid, slotFluid, slotSharedItem, slotSharedFluid);
+            circuit = new ProxyItemRecipeHandler(machine);
+            slotCircuit = new ProxyItemRecipeHandler(machine);
+            sharedItem = new ProxyItemRecipeHandler(machine);
+            slotItem = new ProxyItemRecipeHandler(machine);
+            slotSharedItem = new ProxyItemRecipeHandler(machine);
+            sharedFluid = new ProxyFluidRecipeHandler(machine);
+            slotFluid = new ProxyFluidRecipeHandler(machine);
+            slotSharedFluid = new ProxyFluidRecipeHandler(machine);
+            addHandlers(slotItem, slotFluid, slotCircuit, slotSharedItem, slotSharedFluid, circuit, sharedItem, sharedFluid);
         }
 
         private void setBuffer(MEPatternBufferPartMachine buffer, InternalSlotRecipeHandler.SlotRHL slotRHL) {
