@@ -21,10 +21,8 @@ import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidEntryList;
 import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidStackList;
-import com.gregtechceu.gtceu.integration.xei.entry.fluid.FluidTagList;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemEntryList;
 import com.gregtechceu.gtceu.integration.xei.entry.item.ItemStackList;
-import com.gregtechceu.gtceu.integration.xei.entry.item.ItemTagList;
 import com.gregtechceu.gtceu.integration.xei.handlers.fluid.CycleFluidEntryHandler;
 import com.gregtechceu.gtceu.integration.xei.handlers.item.CycleItemEntryHandler;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
@@ -78,8 +76,8 @@ final class OreByProductWrapper {
         // "INPUTS"
         ObjectIntPair<Material> washedIn = property.getWashedIn();
         List<Material> separatedInto = property.getSeparatedInto();
-        ItemTagList oreStacks = new ItemTagList();
-        oreStacks.add(ChemicalHelper.getTag(TagPrefix.rawOre, material), 1, null);
+        ItemStackList oreStacks = new ItemStackList();
+        oreStacks.add(ChemicalHelper.get(TagPrefix.rawOre, material));
         itemInputs.add(oreStacks);
         // set up machines as inputs
         List<ItemStack> simpleWashers = new ArrayList<>();
@@ -119,7 +117,7 @@ final class OreByProductWrapper {
         // add prefixes that should count as inputs to input lists (they will not be
         // displayed in actual page)
         for (TagPrefix prefix : IN_PROCESSING_STEPS) {
-            itemInputs.add(ItemTagList.of(ChemicalHelper.getTag(prefix, material), 1, null));
+            itemInputs.add(ItemStackList.of(ChemicalHelper.get(prefix, material)));
         }
         // total number of inputs added
         currentSlot += 21;
@@ -161,9 +159,9 @@ final class OreByProductWrapper {
         addToOutputs(material, TagPrefix.crushedPurified, 1);
         addToOutputs(byproducts[0], TagPrefix.dust, 1);
         addChance(3333, 0);
-        FluidTagList tagList = new FluidTagList();
-        tagList.add(GTMaterials.Water.getFluidTag(), 1000, null);
-        tagList.add(GTMaterials.DistilledWater.getFluidTag(), 100, null);
+        FluidStackList tagList = new FluidStackList();
+        tagList.add(GTMaterials.Water.getFluid(1000));
+        tagList.add(GTMaterials.DistilledWater.getFluid(100));
         fluidInputs.add(tagList);
         // TC crushed/crushed purified -> centrifuged
         addToOutputs(material, TagPrefix.crushedRefined, 1);
@@ -194,7 +192,7 @@ final class OreByProductWrapper {
             addToOutputs(material, TagPrefix.crushedPurified, 1);
             addToOutputs(byproducts[3], TagPrefix.dust, byproductMultiplier);
             addChance(7000, 580);
-            fluidInputs.add(FluidTagList.of(washedIn.first().getFluidTag(), washedIn.rightInt(), null));
+            fluidInputs.add(FluidStackList.of(washedIn.first().getFluid(washedIn.rightInt())));
         } else {
             addEmptyOutputs(2);
             fluidInputs.add(new FluidStackList());

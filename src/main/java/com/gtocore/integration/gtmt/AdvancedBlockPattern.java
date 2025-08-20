@@ -271,7 +271,7 @@ class AdvancedBlockPattern extends BlockPattern {
                     if (foundSlot < 0) {
                         foundSlot = i;
                     }
-                } else if (ItemStack.isSameItemSameTags(coilItemStack, stack) && (stack.getCount() + 1) <= stack.getMaxStackSize()) {
+                } else if (ItemStack.isSameItem(coilItemStack, stack) && (stack.getCount() + 1) <= stack.getMaxStackSize()) {
                     foundSlot = i;
                 }
             }
@@ -311,7 +311,7 @@ class AdvancedBlockPattern extends BlockPattern {
                     }
                 }
 
-            } else if (candidates.stream().anyMatch(candidate -> ItemStack.isSameItemSameTags(candidate, stack)) &&
+            } else if (candidates.stream().anyMatch(candidate -> ItemStack.isSameItem(candidate, stack)) &&
                     !stack.isEmpty() && stack.getItem() instanceof BlockItem) {
                         return IntObjectPair.of(i, handler);
                     }

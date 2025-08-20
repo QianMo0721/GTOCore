@@ -907,7 +907,7 @@ public final class GTOItems {
                             512,
                             6_400_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierNanoSuit - 3)),
                             ConfigHolder.INSTANCE.tools.voltageTierNanoSuit)))
-            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build().getArray())
             .lang("NanoMuscle™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.RARE))
             .tag(Tags.Items.ARMORS_CHESTPLATES)
@@ -922,7 +922,7 @@ public final class GTOItems {
                             512,
                             12_800_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierAdvNanoSuit - 3)),
                             ConfigHolder.INSTANCE.tools.voltageTierAdvNanoSuit)))
-            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build().getArray())
             .lang("Advanced NanoMuscle™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.EPIC))
             .tag(Tags.Items.ARMORS_CHESTPLATES)
@@ -938,7 +938,7 @@ public final class GTOItems {
                             8192,
                             100_000_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierQuarkTech - 5)),
                             ConfigHolder.INSTANCE.tools.voltageTierQuarkTech)))
-            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build().getArray())
             .lang("QuarkTech™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.RARE))
             .tag(Tags.Items.ARMORS_CHESTPLATES)
@@ -952,7 +952,7 @@ public final class GTOItems {
                             8192,
                             1_000_000_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierAdvQuarkTech - 6)),
                             ConfigHolder.INSTANCE.tools.voltageTierAdvQuarkTech)))
-            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build().getArray())
             .lang("Advanced QuarkTech™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.EPIC))
             .tag(Tags.Items.ARMORS_CHESTPLATES)

@@ -1,7 +1,6 @@
 package com.gtocore.data.recipe;
 
 import com.gtocore.data.recipe.generated.DyeRecipes;
-import com.gtocore.data.recipe.mod.ExtraMods;
 import com.gtocore.data.recipe.mod.FunctionalStorage;
 import com.gtocore.data.recipe.mod.ImmersiveAircraft;
 import com.gtocore.integration.Mods;
@@ -16,10 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import appeng.core.AppEng;
 import com.glodblock.github.extendedae.ExtendedAE;
 import com.kyanite.deeperdarker.DeeperDarker;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -31,14 +28,7 @@ public final class RecipeFilter {
         ObjectOpenHashSet<ResourceLocation> set = new ObjectOpenHashSet<>(2048);
         initJsonFilter(set);
         RecipeRemoval.init(set::add);
-        List<Predicate<ResourceLocation>> customFilter = new ObjectArrayList<>();
-        initCustomJsonFilter(customFilter);
-        return id -> {
-            for (Predicate<ResourceLocation> filter : customFilter) {
-                if (filter.test(id)) return true;
-            }
-            return set.contains(id);
-        };
+        return set::contains;
     }
 
     public static void init() {
@@ -52,10 +42,6 @@ public final class RecipeFilter {
         CUTTER_RECIPES.addFilter("cut_glass_block_to_plate");
         ARC_FURNACE_RECIPES.addFilter("arc_carbon_dust");
         ASSEMBLER_RECIPES.addFilter("assemble_wood_frame"); // 与告示牌重复
-    }
-
-    private static void initCustomJsonFilter(List<Predicate<ResourceLocation>> filters) {
-        ExtraMods.initCustomJsonFilter(filters);
     }
 
     private static void initJsonFilter(Set<ResourceLocation> filters) {

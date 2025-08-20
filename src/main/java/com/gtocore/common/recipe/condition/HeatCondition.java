@@ -4,6 +4,7 @@ import com.gtolib.api.machine.feature.IHeaterMachine;
 import com.gtolib.api.recipe.Recipe;
 
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.ICoilMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.condition.RecipeConditionType;
 import com.gregtechceu.gtceu.utils.GTUtil;
@@ -34,6 +35,9 @@ public final class HeatCondition extends AbstractRecipeCondition {
     @Override
     public boolean test(@NotNull Recipe recipe, @NotNull RecipeLogic recipeLogic) {
         MetaMachine machine = recipeLogic.getMachine();
+        if (machine instanceof ICoilMachine coilMachine && coilMachine.getTemperature() >= temperature) {
+            return true;
+        }
         for (Direction side : GTUtil.DIRECTIONS) {
             if (checkNeighborHeat(machine, side)) {
                 return true;
