@@ -1,7 +1,6 @@
 package com.gtocore.common.machine.multiblock.part;
 
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
-import com.gtolib.utils.ItemUtils;
 import com.gtolib.utils.MathUtil;
 import com.gtolib.utils.NumberUtils;
 
@@ -18,6 +17,7 @@ import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
+import com.gregtechceu.gtceu.utils.ItemStackHashStrategy;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -208,7 +208,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
             long c = getCount();
             if (c < 1) return null;
             if (itemMap == null) {
-                itemMap = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+                itemMap = new Object2LongOpenCustomHashMap<>(ItemStackHashStrategy.ITEM);
             }
             if (changed) {
                 changed = false;

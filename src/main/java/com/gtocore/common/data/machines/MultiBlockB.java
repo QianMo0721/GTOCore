@@ -26,7 +26,6 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
-import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.common.data.GCYMBlocks;
@@ -184,7 +183,6 @@ public final class MultiBlockB {
 
     public static final MultiblockMachineDefinition LIQUEFACTION_FURNACE = multiblock("liquefaction_furnace", "液化炉", CoilMultiblockMachine.createCoilMachine(false, true))
             .nonYAxisRotation()
-            .parallelizableTooltips()
             .recipeTypes(GTORecipeTypes.LIQUEFACTION_FURNACE_RECIPES)
             .parallelizableOverclock()
             .block(GTBlocks.CASING_INVAR_HEATPROOF)
@@ -200,10 +198,29 @@ public final class MultiBlockB {
                     .where('A', blocks(GTBlocks.CASING_INVAR_HEATPROOF.get())
                             .setMinGlobalLimited(20)
                             .or(autoAbilities(definition.getRecipeTypes()))
-                            .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('F', abilities(MUFFLER))
                     .where('S', controller(blocks(definition.get())))
+                    .where(' ', any())
+                    .build())
+            .addSubPattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle("AAA    ", "AAA    ", "AAA    ")
+                    .aisle("BBB    ", "BDB    ", "BBB    ")
+                    .aisle("BEBF   ", "E EF   ", "BEBF   ")
+                    .aisle("BEBG   ", "E E    ", "BEBG   ")
+                    .aisle("BEBF   ", "E EF   ", "BEBF   ")
+                    .aisle("BBB   C", "BDB    ", "BBB    ")
+                    .aisle("AAA    ", "AAA    ", "AAA    ")
+                    .where('A', blocks(GTBlocks.CASING_INVAR_HEATPROOF.get())
+                            .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes()))
+                            .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
+                            .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
+                    .where('B', blocks(GTBlocks.CASING_STAINLESS_TURBINE.get()))
+                    .where('C', controller(blocks(definition.get())))
+                    .where('D', blocks(GTBlocks.CASING_STAINLESS_STEEL_GEARBOX.get()))
+                    .where('E', blocks(GTBlocks.CASING_STAINLESS_CLEAN.get()))
+                    .where('F', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.StainlessSteel)))
+                    .where('G', blocks(GTBlocks.CASING_TITANIUM_PIPE.get()))
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/solid/machine_casing_heatproof"), GTCEu.id("block/multiblock/multi_furnace"))
@@ -212,7 +229,6 @@ public final class MultiBlockB {
     public static final MultiblockMachineDefinition REACTION_FURNACE = multiblock("reaction_furnace", "反应炉", CoilMultiblockMachine.createCoilMachine(true, true))
             .nonYAxisRotation()
             .tooltipsKey("gtceu.machine.electric_blast_furnace.tooltip.2")
-            .parallelizableTooltips()
             .recipeTypes(GTORecipeTypes.REACTION_FURNACE_RECIPES)
             .parallelizableOverclock()
             .block(GTBlocks.CASING_STEEL_SOLID)
@@ -229,7 +245,6 @@ public final class MultiBlockB {
                     .where('B', blocks(GTBlocks.CASING_STEEL_SOLID.get())
                             .setMinGlobalLimited(20)
                             .or(autoAbilities(definition.getRecipeTypes()))
-                            .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('F', abilities(MUFFLER))
                     .where(' ', any())
@@ -241,7 +256,8 @@ public final class MultiBlockB {
                     .aisle("EFFFEDBBBA", "      BBB ", "      BBB ", "      BBB ", "       B  ")
                     .aisle("EEEEE AAA ", "  G    A  ", "          ", "          ", "          ")
                     .where('A', blocks(GTBlocks.CASING_STEEL_SOLID.get())
-                            .or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2))
+                            .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes()))
+                            .or(abilities(PARALLEL_HATCH).setMaxGlobalLimited(1))
                             .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
                     .where('B', blocks(GTBlocks.CASING_PTFE_INERT.get()))
                     .where('C', blocks(GTBlocks.CASING_POLYTETRAFLUOROETHYLENE_PIPE.get()))

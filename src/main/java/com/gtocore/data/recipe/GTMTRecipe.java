@@ -660,5 +660,11 @@ public final class GTMTRecipe {
                 'B', CustomTags.LV_CIRCUITS,
                 'P', new MaterialEntry(TagPrefix.plate, GTMaterials.Steel),
                 'W', GTItems.TERMINAL);
+
+        VanillaRecipeHelper.addShapedRecipe(provider, "wireless_energy_terminal", CustomItems.WIRELESS_ENERGY_TERMINAL.asStack(),
+                "ABA",
+                "CDC",
+                "ACA",
+                'A', new MaterialEntry(TagPrefix.foil, GTMaterials.Tin), 'B', GTItems.COVER_SCREEN.asStack(), 'C', new MaterialEntry(TagPrefix.gem, GTMaterials.EnderPearl), 'D', CustomItems.ADVANCED_TERMINAL.asStack());
     }
 }

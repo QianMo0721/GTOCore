@@ -251,7 +251,7 @@ final class FormingPress {
                 .save();
 
         FORMING_PRESS_RECIPES.builder("beryllium_target_base")
-                .inputItems(GTItems.SHAPE_MOLD_CYLINDER.asStack())   // 模具不消耗
+                .notConsumable(GTItems.SHAPE_MOLD_CYLINDER.asStack())   // 模具不消耗
                 .inputItems(TagPrefix.ingot, GTMaterials.Beryllium, 2)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.Beryllium)
                 .EUt(30720)
@@ -259,7 +259,7 @@ final class FormingPress {
                 .save();
 
         FORMING_PRESS_RECIPES.builder("stainless_steel_target_base")
-                .inputItems(GTItems.SHAPE_MOLD_CYLINDER.asStack())   // 模具不消耗
+                .notConsumable(GTItems.SHAPE_MOLD_CYLINDER.asStack())   // 模具不消耗
                 .inputItems(TagPrefix.ingot, GTMaterials.StainlessSteel, 2)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .EUt(30720)
@@ -267,7 +267,7 @@ final class FormingPress {
                 .save();
 
         FORMING_PRESS_RECIPES.builder("zirconium_carbide_target_base")
-                .inputItems(GTItems.SHAPE_MOLD_CYLINDER.asStack())   // 模具不消耗
+                .notConsumable(GTItems.SHAPE_MOLD_CYLINDER.asStack())   // 模具不消耗
                 .inputItems(TagPrefix.ingot, GTOMaterials.ZirconiumCarbide, 2)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTOMaterials.ZirconiumCarbide)
                 .EUt(30720)

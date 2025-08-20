@@ -2588,6 +2588,7 @@
   "gtocore.machine.algae_farm.tooltip.0": "Every 10 seconds, randomly consume 5-10B water, and randomly output 1-10 algae",
   "gtocore.machine.algae_farm.tooltip.1": "If 10B fermentation biomass is placed on the input bus, then increase the output amount by 10 times",
   "gtocore.machine.algae_farm.tooltip.2": "If n algae are in the input bus, specify the output content, and increase the output amount by n/4 times",
+  "gtocore.machine.alloy_blast_smelter.tooltip.0": "The running speed doubles after installing the auxiliary module",
   "gtocore.machine.analysis": "Analysing...",
   "gtocore.machine.analysis_and_research_center.tooltip.0": "An all-in-one analysis/deduction machine.",
   "gtocore.machine.analysis_and_research_center.tooltip.1": "§bResearch data§r is obtained based on §bscanning data§r.",

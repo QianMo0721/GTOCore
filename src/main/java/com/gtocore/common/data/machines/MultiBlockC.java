@@ -385,6 +385,7 @@ public final class MultiBlockC {
                     .aisle(" CKFFFFFFKC   Q   CKFFFFFFKC ", "  L      L         L      L  ", "  L      L         L      L  ", "  KNNNNNNK         KNNNNNNK  ", "  C      C         C      C  ", "                             ")
                     .aisle(" CKKKKKKKKC       CKKKKKKKKC ", "  KNNNNNNK         KNNNNNNK  ", "  KNNNNNNK         KNNNNNNK  ", "  KKKKKKKK         KKKKKKKK  ", "                             ", "                             ")
                     .where('A', blocks(GTBlocks.CASING_STEEL_SOLID.get())
+                            .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes()))
                             .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
                     .where('B', GTOPredicates.tierBlock(CALMAP, COMPONENT_ASSEMBLY_CASING_TIER))
                     .where('C', blocks(GCYMBlocks.CASING_NONCONDUCTING.get()))

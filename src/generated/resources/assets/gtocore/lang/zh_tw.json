@@ -1202,6 +1202,7 @@
   "gtocore.machine.algae_farm.tooltip.0": "每10秒隨機消耗5-10B水，隨機輸齣1-10個藻類",
   "gtocore.machine.algae_farm.tooltip.1": "如果輸入10B髮酵生物質，則輸齣量提升10倍",
   "gtocore.machine.algae_farm.tooltip.2": "如果在輸入總線放入n個特定藻類，則指定輸齣內容，且輸齣量提升n/4倍",
+  "gtocore.machine.alloy_blast_smelter.tooltip.0": "安裝附屬模塊後運行速度翻倍",
   "gtocore.machine.analysis": "分析中...",
   "gtocore.machine.analysis_and_research_center.tooltip.0": "分析/推演的一體化機器。",
   "gtocore.machine.analysis_and_research_center.tooltip.1": "根據§b掃描數據§r得到§b研究數據§r。",

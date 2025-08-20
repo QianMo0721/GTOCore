@@ -36,6 +36,7 @@ import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
+import com.gregtechceu.gtceu.core.MixinHelpers;
 import com.gregtechceu.gtceu.data.pack.GTDynamicDataPack;
 import com.gregtechceu.gtceu.data.recipe.GTCraftingComponents;
 import com.gregtechceu.gtceu.data.recipe.MaterialInfoLoader;
@@ -152,6 +153,8 @@ public final class Data {
         LootSystem.defaultBlockTable(RegistriesUtils.getBlock("farmersrespite:kettle"));
         GTOLoots.BLOCKS.forEach(b -> LootSystem.defaultBlockTable((Block) b));
         GTOLoots.BLOCKS = null;
+        GTOLoots.generateGTDynamicLoot();
+        MixinHelpers.registryGTDynamicTags();
         GTOCore.LOGGER.info("Data loading took {}ms", System.currentTimeMillis() - time);
     }
 

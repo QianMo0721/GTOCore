@@ -1,6 +1,7 @@
 package com.gtocore.common.data.machines;
 
 import com.gtocore.api.machine.part.GTOPartAbility;
+import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTORecipeTypes;
 
@@ -135,6 +136,7 @@ public final class GTMachineModify {
                 .aisle("A   A", "B   B", "B   B", "C   C")
                 .aisle("A E A", "     ", "     ", "     ")
                 .where('A', blocks(GTBlocks.CASING_INVAR_HEATPROOF.get())
+                        .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes()))
                         .or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2))
                         .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
                 .where('B', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.StainlessSteel)))

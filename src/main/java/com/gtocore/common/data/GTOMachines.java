@@ -58,7 +58,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import com.hepdd.gtmthings.GTMThings;
-import com.hepdd.gtmthings.common.block.machine.multiblock.part.ProgrammableHatchPartMachine;
 import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.Pair;
 

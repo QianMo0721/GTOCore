@@ -61,6 +61,10 @@ public final class GTOPredicates {
         return Predicates.blocks(LIGHT);
     }
 
+    public static TraceabilityPredicate autoIOAbilities(GTRecipeType... recipeType) {
+        return Predicates.autoAbilities(recipeType, false, false, true, true, true, true);
+    }
+
     public static TraceabilityPredicate autoLaserAbilities(GTRecipeType... recipeType) {
         TraceabilityPredicate predicate = Predicates.autoAbilities(recipeType, false, false, true, true, true, true);
         for (GTRecipeType type : recipeType) {

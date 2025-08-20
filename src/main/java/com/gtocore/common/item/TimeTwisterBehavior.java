@@ -1,5 +1,7 @@
 package com.gtocore.common.item;
 
+import com.gtocore.common.entity.TaskEntity;
+
 import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
 import com.gregtechceu.gtceu.api.capability.GTCapabilityHelper;
 import com.gregtechceu.gtceu.api.item.component.IInteractionItem;
@@ -8,8 +10,7 @@ import com.gregtechceu.gtceu.api.machine.feature.IOverclockMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
-import com.gtocore.common.entity.TaskEntity;
-import com.hepdd.gtmthings.api.misc.WirelessEnergyContainer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -23,6 +24,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.hepdd.gtmthings.api.misc.WirelessEnergyContainer;
 
 public final class TimeTwisterBehavior implements IInteractionItem {
 

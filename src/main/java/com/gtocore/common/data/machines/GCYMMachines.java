@@ -406,12 +406,16 @@ public final class GCYMMachines {
             .tooltipsKey("gtceu.machine.electric_blast_furnace.tooltip.1")
             .tooltipsKey("gtceu.machine.electric_blast_furnace.tooltip.2")
             .tooltipsKey("gtocore.machine.recipe.run", Component.translatable("gtceu.alloy_smelter"))
+            .tooltipsText("安装附属模块后运行速度翻倍", "The running speed doubles after installing the auxiliary module")
             .coilParallelTooltips()
             .allRotation()
             .recipeTypes(ALLOY_BLAST_RECIPES)
             .recipeTypes(ALLOY_SMELTER_RECIPES)
             .recipeModifier((m, r) -> {
                 if (m instanceof CoilCustomParallelMultiblockMachine machine) {
+                    if (machine.getSubFormed() > 0) {
+                        r.duration = Math.max(1, r.duration / 2);
+                    }
                     if (machine.getRecipeType() == ALLOY_SMELTER_RECIPES) {
                         return RecipeModifierFunction.overclocking(m, r);
                     } else {
@@ -436,6 +440,28 @@ public final class GCYMMachines {
                     .where('G', blocks(HEAT_VENT.get()))
                     .where('A', air())
                     .where('#', any())
+                    .build())
+            .addSubPattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle("BBB AAAAA", "BBB ACCCA", "BBB ACCCA", "    ACCCA", "    AAAAA")
+                    .aisle("DDD AAAAA", "FGF AEEEA", "DDD AEEEA", "    AEEEA", "    AAAAA")
+                    .aisle("DDD AAAAA", "FGF AAAAA", "DDD AAAAA", "    AAAAA", "    AAAAA")
+                    .aisle("DDD   H  ", "FGF      ", "DDD      ", "         ", "      H  ")
+                    .aisle("DDD      ", "FGF      ", "DDD      ", "         ", "         ")
+                    .aisle("DDDH     ", "FGFC     ", "DDDH     ", "         ", "         ")
+                    .aisle("DDDH     ", "FGFC     ", "DDDH     ", "         ", "         ")
+                    .aisle("DDDH     ", "FGFC     ", "DDDH     ", "         ", "         ")
+                    .aisle("BBB   I  ", "BBB      ", "BBB      ", "         ", "         ")
+                    .where('A', blocks(GTBlocks.CASING_TUNGSTENSTEEL_TURBINE.get()))
+                    .where('B', blocks(GCYMBlocks.CASING_HIGH_TEMPERATURE_SMELTING.get())
+                            .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes())))
+                    .where('C', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.TungstenSteel)))
+                    .where('D', blocks(GCYMBlocks.CASING_HIGH_TEMPERATURE_SMELTING.get()))
+                    .where('E', blocks(GTBlocks.CASING_TUNGSTENSTEEL_GEARBOX.get()))
+                    .where('F', blocks(GCYMBlocks.HEAT_VENT.get()))
+                    .where('G', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.HSSS)))
+                    .where('H', blocks(GTBlocks.CASING_TUNGSTENSTEEL_PIPE.get()))
+                    .where('I', controller(blocks(definition.get())))
+                    .where(' ', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/gcym/high_temperature_smelting_casing"),
                     GTCEu.id("block/multiblock/gcym/blast_alloy_smelter"))

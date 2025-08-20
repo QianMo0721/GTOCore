@@ -81,6 +81,17 @@ public final class ProcessingPlantMachine extends StorageMultiblockMachine imple
             GTORecipeTypes.LAMINATOR_RECIPES,
             GTORecipeTypes.LASER_WELDER_RECIPES);
 
+    public static Component getComponent() {
+        var c = Component.empty();
+        boolean first = true;
+        for (var r : RECIPE_TYPES) {
+            if (!first) c.append(", ");
+            first = false;
+            c.append(Component.translatable("gtceu." + r.registryName.getPath()));
+        }
+        return c;
+    }
+
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
             ProcessingPlantMachine.class, StorageMultiblockMachine.MANAGED_FIELD_HOLDER);
 

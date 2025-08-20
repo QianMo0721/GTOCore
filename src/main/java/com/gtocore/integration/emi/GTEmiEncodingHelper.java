@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.item.MetaMachineItem;
 import com.gregtechceu.gtceu.utils.GTUtil;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
 
@@ -72,6 +73,9 @@ public class GTEmiEncodingHelper {
                     .stream()
                     .map(s -> intoGenericStack(s, GTUtil.isCtrlDown()))
                     .forEach(list::add);
+            if (list.isEmpty() && GTUtil.isCtrlDown()) {
+                list.add(List.of(new GenericStack(AEItemKey.of(VirtualItemProviderBehavior.setVirtualItem(CustomItems.VIRTUAL_ITEM_PROVIDER.asStack(), ItemStack.EMPTY)), 1)));
+            }
         }
         emiRecipe.getInputs()
                 .stream()

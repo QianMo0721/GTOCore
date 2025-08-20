@@ -1,7 +1,6 @@
 package com.gtocore.common.machine.multiblock.part.ae.slots;
 
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
-import com.gtolib.utils.ItemUtils;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
@@ -10,6 +9,7 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlot;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlotList;
+import com.gregtechceu.gtceu.utils.ItemStackHashStrategy;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -142,7 +142,7 @@ public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements 
     @Override
     public Object2LongOpenCustomHashMap<ItemStack> getItemMap() {
         if (itemMap == null) {
-            itemMap = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+            itemMap = new Object2LongOpenCustomHashMap<>(ItemStackHashStrategy.ITEM);
         }
         if (changed) {
             changed = false;

@@ -7,13 +7,13 @@ import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
-import com.gtolib.utils.ItemUtils;
 import com.gtolib.utils.MathUtil;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
+import com.gregtechceu.gtceu.utils.ItemStackHashStrategy;
 
 import net.minecraft.world.item.ItemStack;
 
@@ -55,7 +55,7 @@ public class SuperMolecularAssemblerMachine extends ElectricMultiblockMachine {
     private Recipe getRecipe() {
         long maxEUt = getOverclockVoltage();
         if (maxEUt == 0) return null;
-        Object2LongOpenCustomHashMap<ItemStack> map = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+        Object2LongOpenCustomHashMap<ItemStack> map = new Object2LongOpenCustomHashMap<>(ItemStackHashStrategy.ITEM_AND_TAG);
         for (var machine : partMachines) {
             for (var inventory : machine.getInternalInventory()) {
                 if (inventory.getAmount() > 0) {

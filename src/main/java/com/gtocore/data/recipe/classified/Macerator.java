@@ -123,7 +123,7 @@ final class Macerator {
 
         MACERATOR_RECIPES.recipeBuilder("wheat_seeds")
                 .inputItems(new ItemStack(Items.WHEAT.asItem()))
-                .outputItems(new ItemStack(Blocks.WHEAT.asItem(), 64))
+                .outputItems(new ItemStack(Blocks.WHEAT.asItem(), 8))
                 .EUt(2)
                 .duration(200)
                 .save();

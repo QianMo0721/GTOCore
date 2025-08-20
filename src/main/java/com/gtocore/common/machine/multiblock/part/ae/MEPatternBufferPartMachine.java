@@ -15,7 +15,6 @@ import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.syncdata.SyncManagedFieldHolder;
-import com.gtolib.utils.ItemUtils;
 import com.gtolib.utils.MathUtil;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
@@ -33,6 +32,7 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
+import com.gregtechceu.gtceu.utils.ItemStackHashStrategy;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -290,7 +290,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     public record BufferData(Object2LongMap<ItemStack> items, Object2LongMap<FluidStack> fluids) {}
 
     public BufferData mergeInternalSlots() {
-        var items = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+        var items = new Object2LongOpenCustomHashMap<>(ItemStackHashStrategy.ITEM_AND_TAG);
         var fluids = new Object2LongOpenHashMap<FluidStack>();
         for (InternalSlot slot : getInternalInventory()) {
             slot.itemInventory.object2LongEntrySet().fastForEach(e -> items.addTo(e.getKey(), e.getLongValue()));
@@ -307,7 +307,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         public final int index;
         final InputSink inputSink;
         private Runnable onContentsChanged = () -> {};
-        public final Object2LongOpenCustomHashMap<ItemStack> itemInventory = new Object2LongOpenCustomHashMap<>(ItemUtils.HASH_STRATEGY);
+        public final Object2LongOpenCustomHashMap<ItemStack> itemInventory = new Object2LongOpenCustomHashMap<>(ItemStackHashStrategy.ITEM);
         public final Object2LongOpenHashMap<FluidStack> fluidInventory = new Object2LongOpenHashMap<>();
         private List<ItemStack> itemStacks = null;
         private List<FluidStack> fluidStacks = null;

@@ -2588,6 +2588,7 @@
   "gtocore.machine.algae_farm.tooltip.0": "每10秒随机消耗5-10B水，随机输出1-10个藻类",
   "gtocore.machine.algae_farm.tooltip.1": "如果输入10B发酵生物质，则输出量提升10倍",
   "gtocore.machine.algae_farm.tooltip.2": "如果在输入总线放入n个特定藻类，则指定输出内容，且输出量提升n/4倍",
+  "gtocore.machine.alloy_blast_smelter.tooltip.0": "安装附属模块后运行速度翻倍",
   "gtocore.machine.analysis": "分析中...",
   "gtocore.machine.analysis_and_research_center.tooltip.0": "分析/推演的一体化机器。",
   "gtocore.machine.analysis_and_research_center.tooltip.1": "根据§b扫描数据§r得到§b研究数据§r。",

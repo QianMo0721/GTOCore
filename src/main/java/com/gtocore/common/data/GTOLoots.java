@@ -33,10 +33,12 @@ import com.google.common.collect.ImmutableMultimap;
 import com.mojang.datafixers.util.Pair;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.shadowsoffire.placebo.loot.LootSystem;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public final class GTOLoots {
 
@@ -50,14 +52,21 @@ public final class GTOLoots {
 
     public static ImmutableMultimap<LootDataType<?>, ResourceLocation> TYPEKEYS_CACHE;
 
-    public static void removal(Set<ResourceLocation> filters) {
+    public static Predicate<ResourceLocation> getFilter() {
+        ObjectOpenHashSet<ResourceLocation> set = new ObjectOpenHashSet<>();
+        removal(set);
+        return set::contains;
+    }
+
+    private static void removal(Set<ResourceLocation> filters) {
         filters.add(RLUtils.fromNamespaceAndPath("expatternprovider", "blocks/ex_emc_interface"));
         filters.add(RLUtils.fromNamespaceAndPath("farmersrespite", "blocks/kettle"));
     }
 
     public static Pair<ImmutableMap<LootDataId<?>, ?>, ImmutableMultimap<LootDataType<?>, ResourceLocation>> apply(Map<LootDataType<?>, Map<ResourceLocation, ?>> collectedElements) {
         Map<ResourceLocation, LootTable> lootTables = (Map<ResourceLocation, LootTable>) collectedElements.get(LootDataType.TABLE);
-        generateGTDynamicLoot(lootTables);
+        lootTables.putAll(DYNAMIC_LOOT);
+        DYNAMIC_LOOT = null;
         ImmutableMap.Builder<LootDataId<?>, Object> builder = ImmutableMap.builder();
         ImmutableMultimap.Builder<LootDataType<?>, ResourceLocation> builder1 = ImmutableMultimap.builder();
         collectedElements.forEach((p_279449_, p_279262_) -> p_279262_.forEach((p_279130_, p_279313_) -> {
@@ -73,9 +82,11 @@ public final class GTOLoots {
         return Pair.of(builder.build(), builder1.build());
     }
 
-    private static final VanillaBlockLoot BLOCK_LOOT = new VanillaBlockLoot();
+    private static VanillaBlockLoot BLOCK_LOOT = new VanillaBlockLoot();
 
-    private static void generateGTDynamicLoot(Map<ResourceLocation, LootTable> lootTables) {
+    private static Map<ResourceLocation, LootTable> DYNAMIC_LOOT = new Object2ObjectOpenHashMap<>();
+
+    public static void generateGTDynamicLoot() {
         GTMaterialBlocks.MATERIAL_BLOCKS.rowMap().forEach((prefix, map) -> {
             if (TagPrefix.ORES.containsKey(prefix)) {
                 final TagPrefix.OreType type = TagPrefix.ORES.get(prefix);
@@ -118,16 +129,16 @@ public final class GTOLoots {
                     if (!isEmpty) {
                         builder.withPool(pool);
                     }
-                    lootTables.put(lootTableId, builder.setParamSet(LootContextParamSets.BLOCK).build());
+                    DYNAMIC_LOOT.put(lootTableId, builder.setParamSet(LootContextParamSets.BLOCK).build());
                     ((BlockBehaviourAccessor) blockEntry.get()).setDrops(lootTableId);
                 });
             } else {
-                addMaterialBlockLootTables(lootTables, map);
+                addMaterialBlockLootTables(map);
             }
         });
-        GTMaterialBlocks.CABLE_BLOCKS.rowMap().forEach((prefix, map) -> addMaterialBlockLootTables(lootTables, map));
-        GTMaterialBlocks.FLUID_PIPE_BLOCKS.rowMap().forEach((prefix, map) -> addMaterialBlockLootTables(lootTables, map));
-        GTMaterialBlocks.ITEM_PIPE_BLOCKS.rowMap().forEach((prefix, map) -> addMaterialBlockLootTables(lootTables, map));
+        GTMaterialBlocks.CABLE_BLOCKS.rowMap().forEach((prefix, map) -> addMaterialBlockLootTables(map));
+        GTMaterialBlocks.FLUID_PIPE_BLOCKS.rowMap().forEach((prefix, map) -> addMaterialBlockLootTables(map));
+        GTMaterialBlocks.ITEM_PIPE_BLOCKS.rowMap().forEach((prefix, map) -> addMaterialBlockLootTables(map));
         GTMaterialBlocks.SURFACE_ROCK_BLOCKS.forEach((material, blockEntry) -> {
             ResourceLocation lootTableId = RLUtils.fromNamespaceAndPath(blockEntry.getId().getNamespace(),
                     "blocks/" + blockEntry.getId().getPath());
@@ -135,7 +146,7 @@ public final class GTOLoots {
                     .createSingleItemTable(ChemicalHelper.get(TagPrefix.dustTiny, material).getItem(),
                             UniformGenerator.between(3, 5))
                     .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE));
-            lootTables.put(lootTableId, builder.setParamSet(LootContextParamSets.BLOCK).build());
+            DYNAMIC_LOOT.put(lootTableId, builder.setParamSet(LootContextParamSets.BLOCK).build());
             ((BlockBehaviourAccessor) blockEntry.get()).setDrops(lootTableId);
         });
         GTRegistries.MACHINES.forEach(machine -> {
@@ -143,16 +154,17 @@ public final class GTOLoots {
             ResourceLocation id = machine.getId();
             ResourceLocation lootTableId = RLUtils.fromNamespaceAndPath(id.getNamespace(), "blocks/" + id.getPath());
             ((BlockBehaviourAccessor) block).setDrops(lootTableId);
-            lootTables.put(lootTableId,
+            DYNAMIC_LOOT.put(lootTableId,
                     BLOCK_LOOT.createSingleItemTable(block).setParamSet(LootContextParamSets.BLOCK).build());
         });
+        BLOCK_LOOT = null;
     }
 
-    private static void addMaterialBlockLootTables(Map<ResourceLocation, LootTable> lootTables, Map<Material, ? extends BlockEntry<? extends Block>> map) {
+    private static void addMaterialBlockLootTables(Map<Material, ? extends BlockEntry<? extends Block>> map) {
         map.forEach((material, blockEntry) -> {
             ResourceLocation lootTableId = RLUtils.fromNamespaceAndPath(blockEntry.getId().getNamespace(), "blocks/" + blockEntry.getId().getPath());
             ((BlockBehaviourAccessor) blockEntry.get()).setDrops(lootTableId);
-            lootTables.put(lootTableId, BLOCK_LOOT.createSingleItemTable(blockEntry.get()).setParamSet(LootContextParamSets.BLOCK).build());
+            DYNAMIC_LOOT.put(lootTableId, BLOCK_LOOT.createSingleItemTable(blockEntry.get()).setParamSet(LootContextParamSets.BLOCK).build());
         });
     }
 }

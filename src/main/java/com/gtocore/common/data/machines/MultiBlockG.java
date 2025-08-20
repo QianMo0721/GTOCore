@@ -113,6 +113,7 @@ public final class MultiBlockG {
                     .aisle("     ", "     ", "     ", "     ", "     ", "     ")
                     .aisle("  F  ", "     ", "     ", "     ", "     ", "     ")
                     .where('A', blocks(GTBlocks.CASING_STEEL_SOLID.get())
+                            .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes()))
                             .or(abilities(PartAbility.INPUT_ENERGY).setMaxGlobalLimited(2))
                             .or(abilities(GTOPartAbility.ACCELERATE_HATCH).setMaxGlobalLimited(1)))
                     .where('B', blocks(GTOBlocks.PRESSURE_CONTAINMENT_CASING.get()))

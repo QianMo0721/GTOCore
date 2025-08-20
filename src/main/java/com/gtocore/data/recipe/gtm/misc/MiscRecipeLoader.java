@@ -397,10 +397,10 @@ public final class MiscRecipeLoader {
                     'M', new FluidContainerIngredient(Milk.getFluid(1000)),
                     'D', DOUGH);
         } else {
-            VanillaRecipeHelper.addShapedRecipe(provider, "flour_to_dough", new ItemStack(DOUGH, 4),
+            VanillaRecipeHelper.addShapedFluidContainerRecipe(provider, "flour_to_dough", new ItemStack(DOUGH, 4),
                     "FFF", "FWF", "FFF",
                     'F', ChemicalHelper.get(dust, Wheat),
-                    'W', Water.getBucket());
+                    'W', new FluidContainerIngredient(Water.getFluid(1000)));
 
             MIXER_RECIPES.recipeBuilder("flour_to_dough")
                     .inputItems(dust, Wheat, 4)

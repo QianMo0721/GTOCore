@@ -106,10 +106,6 @@ public final class MiscRecipe {
                 'Q', new MaterialEntry(dust, QuartzSand),
                 'L', new MaterialEntry(dust, Clay),
                 'B', new ItemStack(Items.BUCKET));
-        VanillaRecipeHelper.addShapedFluidContainerRecipe(provider, "flour_to_dough", new ItemStack(DOUGH, 8),
-                "FFF", "FWF", "FFF",
-                'F', ChemicalHelper.get(dust, Wheat),
-                'W', new FluidContainerIngredient(Water.getFluid(1000)));
 
         VACUUM_PUMP_RECIPES.recipeBuilder("a")
                 .notConsumable(pipeHugeFluid, Bronze)
