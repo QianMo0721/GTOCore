@@ -65,6 +65,7 @@ public final class MultiBlockA {
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.EVAPORATION_RECIPES)
             .parallelizableOverclock()
+            .moduleTooltips()
             .block(GTOBlocks.STAINLESS_EVAPORATION_CASING)
             .pattern(definition -> FactoryBlockPattern.start(definition, RIGHT, BACK, UP)
                     .aisle("FYF", "YYY", "FYF")

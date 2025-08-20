@@ -346,6 +346,7 @@ public final class MultiBlockC {
                             """).build())
             .tooltipsText("只能运行IV及以下配方", "Can only run recipes up to IV tier")
             .tooltipsText("升级结构后支持到UV", "After upgrading the structure, it supports UV tier")
+            .moduleTooltips()
             .recipeTypes(GTORecipeTypes.COMPONENT_ASSEMBLY_RECIPES)
             .overclock()
             .block(GTBlocks.CASING_STEEL_SOLID)

@@ -899,7 +899,7 @@ public final class GTOItems {
     public static final ItemEntry<Item> UNSTABLE_GAIA_SOUL = register("unstable_gaia_soul", "§e不稳定的盖亚之魂");
     public static final ItemEntry<Item> WILDEN_SLATE = register("wilden_slate", "§d荒野石板");
 
-    public static final ItemEntry<SpaceArmorComponentItem> SPACE_NANOMUSCLE_CHESTPLATE = item("space_nanomuscle_chestplate", "太空纳米胸甲",
+    public static final ItemEntry<SpaceArmorComponentItem> SPACE_NANOMUSCLE_CHESTPLATE = item("space_nanomuscle_chestplate", "纳米肌体™套装太空胸甲",
             (p) -> new SpaceArmorComponentItem(GTArmorMaterials.ARMOR,
                     ArmorItem.Type.CHESTPLATE, 5000, p)
                     .setArmorLogic(new NanoMuscleSuite(
@@ -907,13 +907,14 @@ public final class GTOItems {
                             512,
                             6_400_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierNanoSuit - 3)),
                             ConfigHolder.INSTANCE.tools.voltageTierNanoSuit)))
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
             .lang("NanoMuscle™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.RARE))
             .tag(Tags.Items.ARMORS_CHESTPLATES)
             .tag(CustomTags.PPE_ARMOR)
             .register();
 
-    public static final ItemEntry<SpaceArmorComponentItem> SPACE_ADVANCED_NANOMUSCLE_CHESTPLATE = item("space_advanced_nanomuscle_chestplate", "太空进阶纳米胸甲",
+    public static final ItemEntry<SpaceArmorComponentItem> SPACE_ADVANCED_NANOMUSCLE_CHESTPLATE = item("space_advanced_nanomuscle_chestplate", "纳米肌体™进阶套装太空胸甲",
             (p) -> new SpaceArmorComponentItem(
                     GTArmorMaterials.ARMOR,
                     ArmorItem.Type.CHESTPLATE, 10000, p)
@@ -921,13 +922,14 @@ public final class GTOItems {
                             512,
                             12_800_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierAdvNanoSuit - 3)),
                             ConfigHolder.INSTANCE.tools.voltageTierAdvNanoSuit)))
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
             .lang("Advanced NanoMuscle™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.EPIC))
             .tag(Tags.Items.ARMORS_CHESTPLATES)
             .tag(CustomTags.PPE_ARMOR)
             .register();
 
-    public static final ItemEntry<SpaceArmorComponentItem> SPACE_QUARKTECH_CHESTPLATE = item("space_quarktech_chestplate", "太空夸克胸甲",
+    public static final ItemEntry<SpaceArmorComponentItem> SPACE_QUARKTECH_CHESTPLATE = item("space_quarktech_chestplate", "夸克高科™套装太空胸甲",
             (p) -> new SpaceArmorComponentItem(
                     GTArmorMaterials.ARMOR,
                     ArmorItem.Type.CHESTPLATE, 20000, p)
@@ -936,19 +938,21 @@ public final class GTOItems {
                             8192,
                             100_000_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierQuarkTech - 5)),
                             ConfigHolder.INSTANCE.tools.voltageTierQuarkTech)))
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
             .lang("QuarkTech™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.RARE))
             .tag(Tags.Items.ARMORS_CHESTPLATES)
             .tag(CustomTags.PPE_ARMOR)
             .register();
 
-    public static final ItemEntry<SpaceArmorComponentItem> SPACE_ADVANCED_QUARKTECH_CHESTPLATE = item("space_advanced_quarktech_chestplate", "太空进阶夸克胸甲",
+    public static final ItemEntry<SpaceArmorComponentItem> SPACE_ADVANCED_QUARKTECH_CHESTPLATE = item("space_advanced_quarktech_chestplate", "夸克高科™进阶套装太空胸甲",
             (p) -> new SpaceArmorComponentItem(GTArmorMaterials.ARMOR,
                     ArmorItem.Type.CHESTPLATE, 50000, p)
                     .setArmorLogic(new AdvancedQuarkTechSuite(
                             8192,
                             1_000_000_000L * (long) Math.max(1, Math.pow(4, ConfigHolder.INSTANCE.tools.voltageTierAdvQuarkTech - 6)),
                             ConfigHolder.INSTANCE.tools.voltageTierAdvQuarkTech)))
+            .toolTips(ComponentBuilder.create().addLines("需要整套装备", "A complete set of armor is required").build())
             .lang("Advanced QuarkTech™ Space Suite Chestplate")
             .properties(p -> p.rarity(Rarity.EPIC))
             .tag(Tags.Items.ARMORS_CHESTPLATES)

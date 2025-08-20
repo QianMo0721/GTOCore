@@ -766,13 +766,14 @@ public final class MultiBlockD {
             .tooltips(NewDataAttributes.EMPTY_WITH_BAR.create(
                     h -> h.addLines("并行加成", "Parallelism Bonus", StyleBuilder::setGold),
                     c -> c.addLines(
-                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("配方等级每高出ULV一级，并行数+2", "For each tier above ULV, parallelism +2", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab),
+                            NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("配方等级每高出ULV一级，并行数+2，安装附属模块后+4", "For each tier above ULV, parallelism +2, After installing the auxiliary module +4", StyleBuilder::setWhite), p -> p, StyleBuilder::setOneTab),
                             NewDataAttributes.EMPTY_WITH_POINT.createBuilder(x -> x.addLines("最终配方等级受限于整体框架等级", "Final recipe tier is constrained by framework tier", StyleBuilder::setRed), p -> p, StyleBuilder::setOneTab))))
             .specialParallelizableTooltips()
             .tooltips(NewDataAttributes.ALLOW_PARALLEL_NUMBER.create(
                     h -> h.addLines("自ULV起，电压每高出1级，获得的并行数+2", "From ULV, each voltage tier increases the obtained parallelism by 2"),
                     c -> c.addCommentLines("公式 : 2 * (tier - 0), 算去吧", "Formula: 2 * (tier - 0), go calculate it yourself")))
             .tooltips(NewDataAttributes.RECIPES_TYPE.create(ProcessingPlantMachine.getComponent()))
+            .moduleTooltips()
             .block(GTOBlocks.MULTI_FUNCTIONAL_CASING)
             .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("bbb", "bbb", "bbb")

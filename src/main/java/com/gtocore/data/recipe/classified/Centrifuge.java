@@ -325,7 +325,7 @@ final class Centrifuge {
                 .cleanroom(CleanroomType.STERILE_CLEANROOM)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_1")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Uranium235)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Uranium235, 6)
@@ -337,7 +337,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_2")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Uranium238)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Uranium238, 6)
@@ -349,7 +349,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_3")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Neptunium)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Neptunium, 6)
@@ -361,7 +361,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_4")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Plutonium239)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Plutonium239, 6)
@@ -373,7 +373,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_5")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Plutonium241)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Plutonium241, 6)
@@ -385,7 +385,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_6")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Americium)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Americium, 6)
@@ -397,7 +397,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_7")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Curium)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Curium, 6)
@@ -409,7 +409,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base")
+        CENTRIFUGE_RECIPES.builder("stainless_steel_target_base_8")
                 .inputItems(GTOTagPrefix.EXCITED_STAINLESS_STEEL_TARGET, GTMaterials.Berkelium)
                 .outputItems(GTOTagPrefix.TARGET_BASE, GTMaterials.StainlessSteel)
                 .outputItems(TagPrefix.dustSmall, GTMaterials.Berkelium, 6)
@@ -421,7 +421,7 @@ final class Centrifuge {
                 .duration(640)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_1")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Thorium)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Thorium, 3)
@@ -433,7 +433,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_2")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Protactinium)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Protactinium, 3)
@@ -444,7 +444,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_3")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Uranium235)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Uranium235, 4)
@@ -455,7 +455,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_4")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Uranium238)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Uranium238, 4)
@@ -466,7 +466,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_5")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Neptunium)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Neptunium, 3)
@@ -477,7 +477,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_6")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Plutonium239)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Plutonium239, 4)
@@ -488,7 +488,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_7")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Plutonium241)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Plutonium241, 4)
@@ -499,7 +499,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_8")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Americium)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Americium, 3)
@@ -511,7 +511,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_9")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Curium)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Curium, 3)
@@ -523,7 +523,7 @@ final class Centrifuge {
                 .duration(320)
                 .save();
 
-        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod")
+        CENTRIFUGE_RECIPES.builder("tungsten_carbide_reactor_fuel_rod_10")
                 .inputItems(GTOTagPrefix.BREEDER_ROD, GTMaterials.Berkelium)
                 .outputItems(GTOItems.TUNGSTEN_CARBIDE_REACTOR_FUEL_ROD.asItem())
                 .outputItems(TagPrefix.dust, GTMaterials.Berkelium, 3)

@@ -86,6 +86,7 @@ public final class MultiBlockG {
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.CRYSTALLIZATION_RECIPES)
             .overclock()
+            .moduleTooltips()
             .block(GTBlocks.CASING_STEEL_SOLID)
             .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("aaaaa", "aBBBa", "aBBBa", "aaaaa", "     ")
