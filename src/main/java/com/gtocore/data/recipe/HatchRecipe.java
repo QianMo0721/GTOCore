@@ -7,6 +7,7 @@ import com.gtocore.data.CraftingComponents;
 
 import com.gtolib.GTOCore;
 import com.gtolib.utils.RLUtils;
+import com.gtolib.utils.RegistriesUtils;
 import com.gtolib.utils.TagUtils;
 
 import com.gregtechceu.gtceu.api.GTValues;
@@ -75,6 +76,18 @@ final class HatchRecipe {
                 "ABA",
                 'B', GTBlocks.CASING_PRIMITIVE_BRICKS.asStack(), 'A', TagUtils.createTag(RLUtils.forge("chests")));
 
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("steam_fluid_input_hatch"), GTOMachines.STEAM_FLUID_INPUT_HATCH.asStack(),
+                " A ",
+                " B ",
+                "   ",
+                'A', RegistriesUtils.getItemStack("gtceu:wood_drum"), 'B', GTBlocks.BRONZE_HULL.asStack());
+
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("steam_fluid_output_hatch"), GTOMachines.STEAM_FLUID_OUTPUT_HATCH.asStack(),
+                "   ",
+                " A ",
+                " B ",
+                'A', GTBlocks.BRONZE_HULL.asStack(), 'B', RegistriesUtils.getItemStack("gtceu:wood_drum"));
+
         for (int tier : tiersBetween(LV, MAX)) {
             ASSEMBLER_RECIPES.recipeBuilder("dual_import_bus_" + VN[tier].toLowerCase())
                     .inputItems(FRAME.get(tier))
@@ -101,14 +114,6 @@ final class HatchRecipe {
                     .duration(300)
                     .EUt(VA[tier])
                     .save();
-        }
-
-        for (int tier = LV; tier < LuV; tier++) {
-            String tierName = VN[tier].toLowerCase();
-            MachineDefinition inputBuffer = DUAL_IMPORT_HATCH[tier];
-            MachineDefinition outputBuffer = DUAL_EXPORT_HATCH[tier];
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("dual_hatch_output_to_input_" + tierName), inputBuffer.asStack(), "d", "B", 'B', outputBuffer.getItem());
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("dual_hatch_input_to_output_" + tierName), outputBuffer.asStack(), "d", "B", 'B', inputBuffer.getItem());
         }
 
         Material[] multiHatchMaterials = {

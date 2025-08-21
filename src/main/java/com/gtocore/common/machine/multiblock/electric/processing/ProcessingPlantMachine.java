@@ -112,7 +112,7 @@ public final class ProcessingPlantMachine extends StorageMultiblockMachine imple
 
     public ProcessingPlantMachine(MetaMachineBlockEntity holder) {
         super(holder, 1, ProcessingPlantMachine::filter);
-        customParallelTrait = new CustomParallelTrait(this, true, machine -> ((ProcessingPlantMachine) machine).getTier() > 0 ? (long) ((ProcessingPlantMachine) machine).getTier() * (((ProcessingPlantMachine) machine).formeds > 0 ? 4 : 2) : 0);
+        customParallelTrait = new CustomParallelTrait(this, true, machine -> ((ProcessingPlantMachine) machine).getTier() > 0 ? (long) ((ProcessingPlantMachine) machine).getTier() * (((ProcessingPlantMachine) machine).getSubFormedAmount() > 0 ? 4 : 2) : 0);
         tierCasingTrait = new TierCasingTrait(this, GTOValues.INTEGRAL_FRAMEWORK_TIER);
     }
 

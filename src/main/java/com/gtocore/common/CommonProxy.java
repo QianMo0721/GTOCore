@@ -1,5 +1,6 @@
 package com.gtocore.common;
 
+import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.common.block.BlockMap;
 import com.gtocore.common.data.*;
 import com.gtocore.common.forge.ForgeCommonEvent;
@@ -92,6 +93,7 @@ public class CommonProxy {
 
     private static void commonSetup(FMLCommonSetupEvent event) {
         BlockMap.build();
+        GTOPartAbility.init();
         if (GTOCore.isExpert()) AEConfig.instance().setChannelModel(ChannelMode.DEFAULT);
 
         CustomItems.ADVANCED_TERMINAL.get().getComponents().clear();

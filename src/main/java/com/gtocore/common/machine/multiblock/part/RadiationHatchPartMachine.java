@@ -16,6 +16,7 @@ import com.gregtechceu.gtceu.api.machine.feature.IMachineModifyDrops;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.MultiblockPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
+import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -27,6 +28,7 @@ import com.lowdragmc.lowdraglib.gui.util.ClickData;
 import com.lowdragmc.lowdraglib.gui.widget.*;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -63,13 +65,15 @@ public final class RadiationHatchPartMachine extends MultiblockPartMachine imple
     private final Map<IO, List<RecipeHandlerList>> capabilitiesProxy;
     private final Map<IO, Map<RecipeCapability<?>, List<IRecipeHandler<?>>>> capabilitiesFlat;
     private TickableSubscription radiationSubs;
+    private final RecipeHandlerList currentHandlerList;
 
     public RadiationHatchPartMachine(MetaMachineBlockEntity holder) {
         super(holder);
         inventory = new NotifiableItemStackHandler(this, 1, IO.IN, IO.BOTH);
         this.capabilitiesProxy = new EnumMap<>(IO.class);
         this.capabilitiesFlat = new EnumMap<>(IO.class);
-        addHandlerList(RecipeHandlerList.of(IO.IN, inventory));
+        currentHandlerList = RecipeHandlerList.of(IO.IN, inventory);
+        addHandlerList(currentHandlerList);
         radiationSubs = subscribeServerTick(radiationSubs, this::checkRadiation);
     }
 
@@ -131,6 +135,14 @@ public final class RadiationHatchPartMachine extends MultiblockPartMachine imple
     public int getRadioactivity() {
         return this.radioactivity;
     }
+
+    @Override
+    public @Nullable RecipeHandlerList getCurrentHandlerList() {
+        return currentHandlerList;
+    }
+
+    @Override
+    public void setCurrentHandlerList(RecipeHandlerList list, GTRecipe recipe) {}
 
     @Override
     public Map<IO, List<RecipeHandlerList>> getCapabilitiesProxy() {

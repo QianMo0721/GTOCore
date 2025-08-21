@@ -468,9 +468,9 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
         }
 
         @Override
-        protected void handleSearchingRecipes(Iterator<GTRecipe> matches) {
+        public void findAndHandleRecipe() {
             workingRecipe = null;
-            super.handleSearchingRecipes(matches);
+            super.findAndHandleRecipe();
         }
 
         private boolean matchDTRecipe(Recipe recipe) {

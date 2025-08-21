@@ -134,9 +134,9 @@ public final class ChemicalEnergyDevourerMachine extends ElectricMultiblockMachi
             recipe = ParallelLogic.accurateParallel(this, recipe, (int) (getOverclockVoltage() / EUt));
             if (recipe == null) return null;
             if (isOxygenBoosted && isDinitrogenTetroxideBoosted) {
-                recipe.setOutputEUt(EUt * recipe.getParallels() * 4);
+                recipe.setOutputEUt(EUt * recipe.parallels * 4);
             } else if (isOxygenBoosted) {
-                recipe.setOutputEUt(EUt * recipe.getParallels() * 2);
+                recipe.setOutputEUt(EUt * recipe.parallels * 2);
             }
             return recipe;
         }

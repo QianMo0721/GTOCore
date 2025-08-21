@@ -23,7 +23,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 
 import it.unimi.dsi.fastutil.objects.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -63,9 +62,6 @@ public final class InternalSlotRecipeHandler {
             return true;
         }
 
-        @Override
-        public void setDistinct(boolean ignored, boolean notify) {}
-
         public boolean handleRecipeContent(GTRecipe recipe, RecipeCapabilityMap<List<Object>> contents, boolean simulate) {
             if (slot.isEmpty()) return false;
             boolean item = contents.item == null;
@@ -85,13 +81,13 @@ public final class InternalSlotRecipeHandler {
                     for (var handler : getCapability(FluidRecipeCapability.CAP)) {
                         left = handler.handleRecipe(IO.IN, recipe, left, simulate);
                         if (left == null) {
-                            slot.setRecipe(((Recipe) recipe).getRootRecipe());
+                            slot.setRecipe(((Recipe) recipe).rootRecipe);
                             return true;
                         }
                     }
                     return false;
                 }
-                slot.setRecipe(((Recipe) recipe).getRootRecipe());
+                slot.setRecipe(((Recipe) recipe).rootRecipe);
                 return true;
             }
             return false;
@@ -136,12 +132,6 @@ public final class InternalSlotRecipeHandler {
         @Override
         public List<Ingredient> handleRecipeInner(IO io, GTRecipe recipe, List<Ingredient> left, boolean simulate) {
             return slot.handleItemInternal(left, simulate);
-        }
-
-        @Override
-        @NotNull
-        public List<Object> getContents() {
-            return (List) slot.getItems();
         }
 
         @Override
@@ -208,12 +198,6 @@ public final class InternalSlotRecipeHandler {
         @Override
         public List<FluidIngredient> handleRecipeInner(IO io, GTRecipe recipe, List<FluidIngredient> left, boolean simulate) {
             return slot.handleFluidInternal(left, simulate);
-        }
-
-        @Override
-        @NotNull
-        public List<Object> getContents() {
-            return (List) slot.getFluids();
         }
 
         @Override

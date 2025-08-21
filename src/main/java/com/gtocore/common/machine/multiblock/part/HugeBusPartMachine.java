@@ -12,7 +12,6 @@ import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife;
-import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDistinctPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -55,7 +54,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public final class HugeBusPartMachine extends TieredIOPartMachine implements IDistinctPart, IMachineLife {
+public final class HugeBusPartMachine extends TieredIOPartMachine implements IMachineLife {
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(HugeBusPartMachine.class, TieredIOPartMachine.MANAGED_FIELD_HOLDER);
     @Persisted
@@ -92,16 +91,6 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
             inventorySubs.unsubscribe();
             inventorySubs = null;
         }
-    }
-
-    @Override
-    public boolean isDistinct() {
-        return inventory.isDistinct();
-    }
-
-    @Override
-    public void setDistinct(boolean isDistinct) {
-        inventory.setDistinct(isDistinct);
     }
 
     private void refundAll(ClickData clickData) {
@@ -163,7 +152,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IDi
 
     @Override
     public void attachConfigurators(ConfiguratorPanel configuratorPanel) {
-        IDistinctPart.super.attachConfigurators(configuratorPanel);
+        super.attachConfigurators(configuratorPanel);
         configuratorPanel.attachConfigurators(new ButtonConfigurator(new GuiTextureGroup(GuiTextures.BUTTON, new TextTexture("\ud83d\udd19")), this::refundAll).setTooltips(List.of(Component.translatable("gtmthings.machine.huge_item_bus.tooltip.1"))));
     }
 

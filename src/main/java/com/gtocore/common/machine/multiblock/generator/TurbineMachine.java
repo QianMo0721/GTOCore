@@ -216,7 +216,7 @@ public final class TurbineMachine extends ElectricMultiblockMachine {
         long turbineMaxVoltage = (long) (getVoltage() * Math.pow((double) Math.min(maxSpeed, rotorSpeed) / maxSpeed, 2));
         recipe = ParallelLogic.accurateParallel(this, recipe, (int) (turbineMaxVoltage / EUt));
         if (recipe == null) return null;
-        long eut = Math.min(turbineMaxVoltage, recipe.getParallels() * EUt);
+        long eut = Math.min(turbineMaxVoltage, recipe.parallels * EUt);
         energyPerTick = eut;
         recipe.duration = recipe.duration * rotorHolder.getTotalEfficiency() / 100;
         recipe.setOutputEUt(eut);

@@ -414,7 +414,7 @@ public final class GCYMMachines {
             .recipeTypes(ALLOY_SMELTER_RECIPES)
             .recipeModifier((m, r) -> {
                 if (m instanceof CoilCustomParallelMultiblockMachine machine) {
-                    if (machine.getSubFormed() > 0) {
+                    if (machine.getSubFormedAmount() > 0) {
                         r.duration = Math.max(1, r.duration / 2);
                     }
                     if (machine.getRecipeType() == ALLOY_SMELTER_RECIPES) {

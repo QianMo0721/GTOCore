@@ -56,7 +56,7 @@ public final class HeatExchangerMachine extends NoEnergyMultiblockMachine implem
                 .duration(200)
                 .buildRawRecipe(), Integer.MAX_VALUE);
         if (result == null) return null;
-        long count = result.getParallels() * recipe.data.getLong("eu");
+        long count = result.parallels * recipe.data.getLong("eu");
         if (inputFluid(water ? Fluids.WATER : DistilledWater, count / 160)) {
             this.count = count / 4;
             return result;

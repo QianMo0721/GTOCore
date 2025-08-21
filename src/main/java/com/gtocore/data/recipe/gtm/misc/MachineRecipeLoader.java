@@ -1265,7 +1265,7 @@ public final class MachineRecipeLoader {
                     'B', importHatch9x.asStack());
         }
 
-        for (int tier : GTMachineUtils.DUAL_HATCH_TIERS) {
+        for (int tier : GTValues.tiersBetween(LV, MAX)) {
             var tierName = VN[tier].toLowerCase(Locale.ROOT);
 
             var inputBuffer = DUAL_IMPORT_HATCH[tier];

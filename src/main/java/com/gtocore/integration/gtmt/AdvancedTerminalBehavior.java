@@ -69,15 +69,19 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                 } else {
                     pattern = controller.getPattern();
                 }
-                if (!controller.isFormed()) {
-                    AdvancedBlockPattern.getAdvancedBlockPattern(pattern).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
-                    controller.getMultiblockState().cleanCache();
-                } else if (autoBuildSetting.isReplaceMode()) {
+                if (autoBuildSetting.isReplaceMode()) {
                     AdvancedBlockPattern.getAdvancedBlockPattern(pattern).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
                     controller.requestCheck();
+                } else {
+                    if (controller.isFormed()) {
+                        controller.onStructureInvalid();
+                        controller.setWaitingTime(10);
+                    }
+                    AdvancedBlockPattern.getAdvancedBlockPattern(pattern).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
+                    controller.getMultiblockState().cleanCache();
+                    controller.setWaitingTime(0);
                 }
-
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

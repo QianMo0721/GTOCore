@@ -24,7 +24,6 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class InfiniteWaterHatchPartMachine extends TieredIOPartMachine {
@@ -63,8 +62,8 @@ public final class InfiniteWaterHatchPartMachine extends TieredIOPartMachine {
         }
 
         @Override
-        public @NotNull List<Object> getContents() {
-            return new ArrayList<>(WATER);
+        public @NotNull Object[] getContents() {
+            return new Object[] { WATER };
         }
 
         @Override

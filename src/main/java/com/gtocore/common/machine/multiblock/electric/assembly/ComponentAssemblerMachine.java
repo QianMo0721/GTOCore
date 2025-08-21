@@ -20,7 +20,7 @@ public final class ComponentAssemblerMachine extends TierCasingMultiblockMachine
     @Override
     public void onStructureFormed() {
         super.onStructureFormed();
-        if (formeds > 0) maxCasingTier = GTValues.UV;
+        if (getSubFormedAmount() > 0) maxCasingTier = GTValues.UV;
     }
 
     @Override

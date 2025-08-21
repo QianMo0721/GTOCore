@@ -765,6 +765,24 @@ public final class GTOMachines {
             .renderer(() -> new OverlayTieredMachineRenderer(IV, GTCEu.id("block/machine/part/item_bus.import")))
             .register();
 
+    public static final MachineDefinition STEAM_FLUID_INPUT_HATCH = machine("steam_fluid_input_hatch", "蒸汽流体输入仓", holder -> new SteamFluidHatchPartMachine(holder, IO.IN))
+            .langValue("Fluid Input Hatch (Steam)")
+            .abilities()
+            .abilities(GTOPartAbility.STEAM_IMPORT_FLUIDS)
+            .tooltips(Component.translatable("gtceu.machine.fluid_hatch.import.tooltip"))
+            .tooltips(Component.translatable("gtceu.universal.tooltip.fluid_storage_capacity", FormattingUtil.formatNumbers(16000)))
+            .renderer(() -> new OverlaySteamMachineRenderer(GTCEu.id("block/machine/part/fluid_hatch.import")))
+            .register();
+
+    public static final MachineDefinition STEAM_FLUID_OUTPUT_HATCH = machine("steam_fluid_output_hatch", "蒸汽流体输出仓", holder -> new SteamFluidHatchPartMachine(holder, IO.OUT))
+            .langValue("Fluid Output Hatch (Steam)")
+            .allRotation()
+            .abilities(GTOPartAbility.STEAM_EXPORT_FLUIDS)
+            .tooltips(Component.translatable("gtceu.machine.fluid_hatch.export.tooltip"))
+            .tooltips(Component.translatable("gtceu.universal.tooltip.fluid_storage_capacity", FormattingUtil.formatNumbers(16000)))
+            .renderer(() -> new OverlaySteamMachineRenderer(GTCEu.id("block/machine/part/fluid_hatch.export")))
+            .register();
+
     public static final MachineDefinition STEAM_VENT_HATCH = machine("steam_vent_hatch", "蒸汽排气仓", SteamVentHatchMachine::new)
             .allRotation()
             .notAllowSharedTooltips()

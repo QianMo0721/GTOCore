@@ -1581,7 +1581,7 @@
   "gtocore.machine.steam_parallel_machine.modification_oc": "修改超頻次數: ",
   "gtocore.machine.steam_parallel_machine.oc": "每次超頻將減少2倍耗時和增加3倍蒸汽消耗",
   "gtocore.machine.stellar_forge.pressure": "內部壓力：",
-  "gtocore.machine.structure_check": "更新結構檢查",
+  "gtocore.machine.structure_check": "更新結構檢查(shift點擊將重新檢查結構)",
   "gtocore.machine.superconducting_magnetic_presser.tooltip.0": "聽說這玩意以前是電磁炮",
   "gtocore.machine.swarm_core.tooltip.0": "能夠運行任意等級的納米鍛爐配方",
   "gtocore.machine.swarm_core.tooltip.1": "處理速度固定為20倍",

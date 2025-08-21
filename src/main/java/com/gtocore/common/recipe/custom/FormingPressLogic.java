@@ -81,8 +81,9 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
             if (handlers.isEmpty()) continue;
             for (var handler : handlers) {
                 if (!handler.shouldSearchContent()) continue;
-                for (var content : handler.getContents()) {
-                    if (content instanceof ItemStack stack && !stack.isEmpty()) {
+                var items = handler.getItemMap();
+                if (items != null) {
+                    for (var stack : items.keySet()) {
                         boolean isMold = GTItems.SHAPE_MOLD_NAME.isIn(stack);
                         if (isMold && data.mold.isEmpty() && stack.hasCustomHoverName()) {
                             data.mold = stack;
@@ -92,7 +93,7 @@ public final class FormingPressLogic implements GTRecipeType.ICustomRecipeLogic 
                         if (data.found()) {
                             var recipe = data.buildRecipe();
                             if (recipe != null) {
-                                if (h != null) h.gtolib$setCurrentHandlerList(rhl, recipe);
+                                if (h != null) h.setCurrentHandlerList(rhl, recipe);
                                 return recipe;
                             }
                         }
