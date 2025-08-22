@@ -248,7 +248,8 @@ public final class GTOConfig {
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Extended Pattern Provider Size (Currently used for performance test, only effective in dev mode)", cn = "扩展样板供应器容量（目前用于性能测试，仅在开发模式下生效）")
     public int exPatternSize = 36;
 
-    private enum Difficulty {
+    public enum Difficulty {
+
         Simple,
         Normal,
         Expert

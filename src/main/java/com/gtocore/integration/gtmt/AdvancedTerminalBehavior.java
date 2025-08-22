@@ -330,7 +330,7 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
 
         boolean isPlaceHatch(Block[] blocks) {
             if (this.noHatchMode == 0) return true;
-            if (blocks != null && blocks.length > 0) {
+            if (blocks != null && blocks.length > 1) {
                 var block = blocks[0];
                 return !(block instanceof MetaMachineBlock machineBlock) || !Hatch.Set.contains(machineBlock);
             }
