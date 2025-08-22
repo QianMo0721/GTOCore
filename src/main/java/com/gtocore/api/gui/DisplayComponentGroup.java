@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 import com.lowdragmc.lowdraglib.gui.widget.*;
 import com.lowdragmc.lowdraglib.utils.Position;
 import com.lowdragmc.lowdraglib.utils.Size;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,8 +29,8 @@ public class DisplayComponentGroup extends WidgetGroup {
     @NotNull
     private final List<ResourceLocation> originList;
     /// Uses both sides
-    private final List<Pair<ResourceLocation, Boolean>> current = new ArrayList<>();
-    private final Map<ResourceLocation, DisplayComponentWidget> displayWidgets = new HashMap<>();
+    private final List<Pair<ResourceLocation, Boolean>> current = new ObjectArrayList<>();
+    private final Map<ResourceLocation, DisplayComponentWidget> displayWidgets = new Object2ObjectOpenHashMap<>();
     private DraggableScrollableWidgetGroup scrollArea;
 
     public DisplayComponentGroup(@NotNull List<ResourceLocation> originList,

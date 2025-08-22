@@ -444,7 +444,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         @Nullable
         public List<Ingredient> handleItemInternal(List<Ingredient> left, boolean simulate) {
             boolean changed = false;
-            for (var it = left.iterator(); it.hasNext();) {
+            for (var it = left.listIterator(0); it.hasNext();) {
                 var ingredient = it.next();
                 if (ingredient.isEmpty()) {
                     it.remove();
@@ -486,7 +486,7 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
         @Nullable
         public List<FluidIngredient> handleFluidInternal(List<FluidIngredient> left, boolean simulate) {
             boolean changed = false;
-            for (var it = left.iterator(); it.hasNext();) {
+            for (var it = left.listIterator(0); it.hasNext();) {
                 var ingredient = it.next();
                 if (ingredient.isEmpty()) {
                     it.remove();

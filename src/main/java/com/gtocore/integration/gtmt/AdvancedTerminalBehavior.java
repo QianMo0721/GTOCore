@@ -74,10 +74,8 @@ public class AdvancedTerminalBehavior implements IItemUIFactory {
                     controller.getMultiblockState().cleanCache();
                     controller.requestCheck();
                 } else {
-                    if (controller.isFormed()) {
-                        controller.onStructureInvalid();
-                        controller.setWaitingTime(10);
-                    }
+                    controller.requestCheck();
+                    controller.setWaitingTime(10);
                     AdvancedBlockPattern.getAdvancedBlockPattern(pattern).autoBuild(context.getPlayer(), controller.getMultiblockState(), autoBuildSetting);
                     controller.getMultiblockState().cleanCache();
                     controller.setWaitingTime(0);
