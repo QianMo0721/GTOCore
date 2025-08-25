@@ -18,7 +18,6 @@ import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -49,7 +48,6 @@ import vazkii.botania.common.lib.BotaniaTags;
 import vectorwing.farmersdelight.common.tag.ForgeTags;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.gregtechceu.gtceu.api.data.tag.TagPrefix.*;
 import static com.gregtechceu.gtceu.common.data.GTMaterials.*;
@@ -61,7 +59,7 @@ import static vazkii.botania.common.block.BotaniaBlocks.motifDaybloom;
 
 public final class BotaniaRecipes {
 
-    public static void init(Consumer<FinishedRecipe> provider) {
+    public static void init() {
         // 植物魔法系列测试配方
         if (GTCEu.isDev()) {
             // 植物酿造 - 好像只能酿造植物魔法的那些
@@ -70,7 +68,7 @@ public final class BotaniaRecipes {
                     .addIngredient(ItemTags.SMALL_FLOWERS)
                     .addIngredient(Items.DIAMOND_BLOCK)
                     .addIngredient(BotaniaTags.Items.RUNES)
-                    .save(provider);
+                    .save();
         }
 
         // 白雏菊
@@ -85,7 +83,7 @@ public final class BotaniaRecipes {
             PureDaisyRecipeBuilder.builder(recipe.id)
                     .input(recipe.input)
                     .output(recipe.output)
-                    .save(provider);
+                    .save();
         }
 
         // 魔力池
@@ -119,7 +117,7 @@ public final class BotaniaRecipes {
                     .mana(recipe.mana)
                     .group(recipe.group)
                     .customCatalyst(recipe.customCatalyst)
-                    .save(provider);
+                    .save();
         }
 
         // 花药台
@@ -141,7 +139,7 @@ public final class BotaniaRecipes {
                     .reagent(recipe.catalyst)
                     .output(recipe.output);
             for (int i = 0; i < recipe.input.length; i++) build.addIngredient(recipe.input[i]);
-            build.save(provider);
+            build.save();
         }
 
         // 符文祭坛
@@ -171,7 +169,7 @@ public final class BotaniaRecipes {
                     .mana(recipe.mana)
                     .setHeadRecipe(recipe.setHeadRecipe);
             for (int i = 0; i < recipe.input.length; i++) build.addIngredient(recipe.input[i]);
-            build.save(provider);
+            build.save();
         }
 
         // 泰拉凝聚板
@@ -202,24 +200,24 @@ public final class BotaniaRecipes {
                     .output(recipe.output)
                     .mana(recipe.mana);
             for (int i = 0; i < recipe.input.length; i++) build.addIngredient(recipe.input[i]);
-            build.save(provider);
+            build.save();
         }
 
         // 精灵门
         ElvenTradeRecipeBuilder.builder("dragonstone")
                 .addInput(ItemsRegistry.SOURCE_GEM)
                 .addOutput(BotaniaItems.dragonstone)
-                .save(provider);
+                .save();
 
         ElvenTradeRecipeBuilder.builder("dragonstone_block")
                 .addInput(BlockRegistry.SOURCE_GEM_BLOCK)
                 .addOutput(BotaniaBlocks.dragonstoneBlock)
-                .save(provider);
+                .save();
 
         ElvenTradeRecipeBuilder.builder("colorful_mystical_flower")
                 .addInput(BotaniaItems.fertilizer)
                 .addOutput(COLORFUL_MYSTICAL_FLOWER)
-                .save(provider);
+                .save();
 
         // 凝矿兰
         record OrechidRecipe(
@@ -279,7 +277,7 @@ public final class BotaniaRecipes {
                             .input(recipe.input)
                             .output(ChemicalHelper.getBlock(recipe.output, recipe.material[k]))
                             .weight(recipe.weight[k])
-                            .save(provider);
+                            .save();
                 }
             } else if (recipe.id == 2) {
                 for (int k = 0; k < recipe.material.length; k++) {
@@ -287,7 +285,7 @@ public final class BotaniaRecipes {
                             .input(recipe.input)
                             .output(ChemicalHelper.getBlock(recipe.output, recipe.material[k]))
                             .weight(recipe.weight[k])
-                            .save(provider);
+                            .save();
                 }
             } else if (recipe.id == 3) {
                 for (int k = 0; k < recipe.material.length; k++) {
@@ -296,7 +294,7 @@ public final class BotaniaRecipes {
                             .output(ChemicalHelper.getBlock(recipe.output, recipe.material[k]))
                             .weight(recipe.weight[k])
                             .biomeTag(BiomeTags.IS_FOREST)
-                            .save(provider);
+                            .save();
                 }
             }
         }
@@ -305,7 +303,7 @@ public final class BotaniaRecipes {
                 .input(Blocks.NETHERRACK)
                 .output(Blocks.ANCIENT_DEBRIS)
                 .weight(10)
-                .save(provider);
+                .save();
 
         Material[] ores = { PerditioCrystal, GnomeCrystal, SylphCrystal, UndineCrystal, SalamanderCrystal };
         for (Material material : ores) {
@@ -314,7 +312,7 @@ public final class BotaniaRecipes {
                     .output(ChemicalHelper.getBlock(GTOTagPrefix.LIVING_STONE, material))
                     .weight(10)
                     .biomeTag(BiomeTags.IS_FOREST)
-                    .save(provider);
+                    .save();
         }
 
         // 精灵交易
@@ -686,7 +684,7 @@ public final class BotaniaRecipes {
                     .circuitMeta(recipe.circuitMeta)
                     .MANAt(recipe.mana / 50);
             for (Object2IntMap.Entry<Item> entry : CountMap.object2IntEntrySet()) build.inputItems(entry.getKey(), entry.getIntValue());
-            build.save(provider);
+            build.save();
         }
 
         List<IndustrialAltarRecipe> IndustrialAltar3 = List.of(
@@ -709,7 +707,7 @@ public final class BotaniaRecipes {
                     .circuitMeta(recipe.circuitMeta)
                     .MANAt(recipe.mana / 50);
             for (Object2IntMap.Entry<Item> entry : CountMap.object2IntEntrySet()) build.inputItems(entry.getKey(), entry.getIntValue() * 4);
-            build.save(provider);
+            build.save();
         }
 
         INDUSTRIAL_ALTAR_RECIPES.builder("runerock_block")
@@ -839,7 +837,7 @@ public final class BotaniaRecipes {
                     .circuitMeta(recipe.circuitMeta)
                     .MANAt(32);
             for (Object2IntMap.Entry<Item> entry : CountMap.object2IntEntrySet()) build.inputItems(entry.getKey(), entry.getIntValue() * 2);
-            build.save(provider);
+            build.save();
         }
 
         INDUSTRIAL_ALTAR_RECIPES.builder("colorful_mystical_flower")

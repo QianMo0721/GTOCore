@@ -23,7 +23,6 @@ import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.data.recipe.CustomTags;
 import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
 
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,8 +33,6 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import io.github.lounode.extrabotany.common.item.ExtraBotanyItems;
 import vazkii.botania.common.block.BotaniaBlocks;
 import vazkii.botania.common.item.BotaniaItems;
-
-import java.util.function.Consumer;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gregtechceu.gtceu.api.data.tag.TagPrefix.*;
@@ -48,7 +45,7 @@ import static com.gtolib.GTOCore.id;
 
 public final class MagicRecipesA {
 
-    public static void init(Consumer<FinishedRecipe> provider) {
+    public static void init() {
         // 机器外壳
         Material[] ManaSteels = {
                 OriginalBronze, Manasteel, Terrasteel, Elementium, Alfsteel, Gaiasteel, Orichalcos
@@ -60,7 +57,7 @@ public final class MagicRecipesA {
                 GTOBlocks.ORICHALCOS_CASING.asStack(),
         };
         for (int i = 0; i < ManaSteels.length; i++) {
-            VanillaRecipeHelper.addShapedRecipe(provider, id(GTOValues.MANAN[i].toLowerCase() + "_mana_hull"), ManaMachine.MANA_HULL[i].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(id(GTOValues.MANAN[i].toLowerCase() + "_mana_hull"), ManaMachine.MANA_HULL[i].asStack(),
                     "CBC", "BAB", "CBC",
                     'A', ManaCasing[i], 'B', new MaterialEntry(plate, ManaSteels[i]), 'C', new MaterialEntry(rod, ManaSteels[i]));
         }
@@ -364,11 +361,11 @@ public final class MagicRecipesA {
                     .duration(50)
                     .save();
 
-            VanillaRecipeHelper.addShapedRecipe(provider, id("original_bronze_casing"), GTOBlocks.ORIGINAL_BRONZE_CASING.asStack(),
+            VanillaRecipeHelper.addShapedRecipe(id("original_bronze_casing"), GTOBlocks.ORIGINAL_BRONZE_CASING.asStack(),
                     "CCC", "CBC", "CCC",
                     'B', new MaterialEntry(frameGt, OriginalBronze), 'C', new MaterialEntry(plate, OriginalBronze));
 
-            VanillaRecipeHelper.addShapedRecipe(provider, id("manasteel_casing"), GTOBlocks.MANASTEEL_CASING.asStack(),
+            VanillaRecipeHelper.addShapedRecipe(id("manasteel_casing"), GTOBlocks.MANASTEEL_CASING.asStack(),
                     "CCC", "CBC", "CCC",
                     'B', new MaterialEntry(frameGt, Manasteel), 'C', new MaterialEntry(plate, Manasteel));
 
@@ -955,37 +952,37 @@ public final class MagicRecipesA {
                     .MANAt(8192)
                     .save();
 
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("alchemy_cauldron"), ManaMachine.ALCHEMY_CAULDRON.asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("alchemy_cauldron"), ManaMachine.ALCHEMY_CAULDRON.asStack(),
                     "BBB", "ADA", "AAA",
                     'A', new MaterialEntry(TagPrefix.plate, Steel), 'B', new MaterialEntry(rod, Steel), 'D', Items.CAULDRON);
 
-            VanillaRecipeHelper.addShapedRecipe(provider, id("mana_heater"), ManaMachine.MANA_HEATER.asStack(),
+            VanillaRecipeHelper.addShapedRecipe(id("mana_heater"), ManaMachine.MANA_HEATER.asStack(),
                     "EEE", "CDC", "CBC",
                     'B', ManaMachine.MANA_HULL[2].asStack(), 'C', RegistriesUtils.getItemStack("botania:livingrock_bricks"), 'D', RegistriesUtils.getItemStack("botania:mana_pool"), 'E', new MaterialEntry(plate, Manasteel));
 
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("lv_primitive_magic_energy"), ManaMachine.PRIMITIVE_MAGIC_ENERGY[GTValues.LV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("lv_primitive_magic_energy"), ManaMachine.PRIMITIVE_MAGIC_ENERGY[GTValues.LV].asStack(),
                     "ABA", "BCB", "DBD",
                     'A', new MaterialEntry(TagPrefix.lens, GTOMaterials.ManaGlass), 'B', RegistriesUtils.getItemStack("botania:rune_mana"), 'C', GTOMachines.THERMAL_GENERATOR[GTValues.LV].asStack(), 'D', RegistriesUtils.getItemStack("botania:lens_bounce"));
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("mv_primitive_magic_energy"), ManaMachine.PRIMITIVE_MAGIC_ENERGY[GTValues.MV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("mv_primitive_magic_energy"), ManaMachine.PRIMITIVE_MAGIC_ENERGY[GTValues.MV].asStack(),
                     "ABA", "CDC", "EFE",
                     'A', new MaterialEntry(TagPrefix.plate, GTMaterials.Aluminium), 'B', RegistriesUtils.getItemStack("botania:mana_bomb"), 'C', GTMachines.ENERGY_CONVERTER_8A[GTValues.LV].asStack(), 'D', ManaMachine.PRIMITIVE_MAGIC_ENERGY[GTValues.LV].asStack(), 'E', RegistriesUtils.getItemStack("botania:lens_piston"), 'F', new MaterialEntry(TagPrefix.plateDense, GTMaterials.SteelMagnetic));
 
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("lv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.LV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("lv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.LV].asStack(),
                     "ABA", "CDC", "AEA",
                     'A', new MaterialEntry(TagPrefix.plate, GTOMaterials.Manasteel), 'B', GTItems.ROBOT_ARM_LV.asStack(), 'C', CustomTags.LV_CIRCUITS, 'D', ManaMachine.MANA_HULL[GTValues.LV].asStack(), 'E', GTItems.FIELD_GENERATOR_LV.asStack());
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("mv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.MV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("mv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.MV].asStack(),
                     "ABC", "DED", "FGH",
                     'A', RegistriesUtils.getItemStack("botania:rune_water"), 'B', GTItems.ROBOT_ARM_MV.asStack(), 'C', RegistriesUtils.getItemStack("botania:rune_fire"), 'D', CustomTags.MV_CIRCUITS, 'E', ManaMachine.MANA_HULL[GTValues.MV].asStack(), 'F', RegistriesUtils.getItemStack("botania:rune_earth"), 'G', GTItems.FIELD_GENERATOR_MV.asStack(), 'H', RegistriesUtils.getItemStack("botania:rune_air"));
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("hv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.HV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("hv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.HV].asStack(),
                     "ABA", "CDC", "AEA",
                     'A', new MaterialEntry(TagPrefix.plate, GTOMaterials.Terrasteel), 'B', GTItems.ROBOT_ARM_HV.asStack(), 'C', CustomTags.HV_CIRCUITS, 'D', ManaMachine.MANA_HULL[GTValues.HV].asStack(), 'E', GTItems.FIELD_GENERATOR_HV.asStack());
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("ev_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.EV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("ev_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.EV].asStack(),
                     "ABA", "CDC", "AEA",
                     'A', new MaterialEntry(TagPrefix.plate, GTOMaterials.Elementium), 'B', GTItems.ROBOT_ARM_EV.asStack(), 'C', CustomTags.EV_CIRCUITS, 'D', ManaMachine.MANA_HULL[GTValues.EV].asStack(), 'E', GTItems.FIELD_GENERATOR_EV.asStack());
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("iv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.IV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("iv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.IV].asStack(),
                     "ABA", "CDC", "AEA",
                     'A', new MaterialEntry(TagPrefix.plate, GTOMaterials.Alfsteel), 'B', GTItems.ROBOT_ARM_IV.asStack(), 'C', CustomTags.IV_CIRCUITS, 'D', ManaMachine.MANA_HULL[GTValues.IV].asStack(), 'E', GTItems.FIELD_GENERATOR_IV.asStack());
-            VanillaRecipeHelper.addShapedRecipe(provider, true, GTOCore.id("luv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.LuV].asStack(),
+            VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("luv_mana_assembler"), ManaMachine.MANA_ASSEMBLER[GTValues.LuV].asStack(),
                     "ABA", "CDC", "AEA",
                     'A', new MaterialEntry(TagPrefix.plate, GTOMaterials.Gaiasteel), 'B', GTItems.ROBOT_ARM_LuV.asStack(), 'C', CustomTags.LuV_CIRCUITS, 'D', ManaMachine.MANA_HULL[GTValues.LuV].asStack(), 'E', GTItems.FIELD_GENERATOR_LuV.asStack());
 
@@ -993,22 +990,22 @@ public final class MagicRecipesA {
 
         // 杂项配方
         {
-            VanillaRecipeHelper.addShapedRecipe(provider, "mortar_grind_living_rock_block",
+            VanillaRecipeHelper.addShapedRecipe("mortar_grind_living_rock_block",
                     ChemicalHelper.get(dust, Livingrock, 9), "X", "m", 'X', BotaniaBlocks.livingrock);
-            VanillaRecipeHelper.addShapedRecipe(provider, "mortar_grind_living_wood_planks",
+            VanillaRecipeHelper.addShapedRecipe("mortar_grind_living_wood_planks",
                     ChemicalHelper.get(dust, Livingwood), "X", "m", 'X', BotaniaBlocks.livingwoodPlanks);
-            VanillaRecipeHelper.addShapedRecipe(provider, "mortar_grind_living_clay_block",
+            VanillaRecipeHelper.addShapedRecipe("mortar_grind_living_clay_block",
                     ChemicalHelper.get(dust, Livingclay, 9), "X", "m", 'X', ChemicalHelper.get(block, Livingclay));
-            VanillaRecipeHelper.addShapedRecipe(provider, "mortar_grind_living_steel",
+            VanillaRecipeHelper.addShapedRecipe("mortar_grind_living_steel",
                     ChemicalHelper.get(dust, Livingsteel), "X", "m", 'X', ChemicalHelper.get(ingot, Livingsteel));
-            VanillaRecipeHelper.addShapedRecipe(provider, "mortar_grind_runerock_block",
+            VanillaRecipeHelper.addShapedRecipe("mortar_grind_runerock_block",
                     ChemicalHelper.get(dust, Runerock, 9), "X", "m", 'X', ChemicalHelper.get(block, Runerock));
 
-            VanillaRecipeHelper.addShapelessRecipe(provider, id("living_dust"), ChemicalHelper.get(dust, Livingsteel, 6),
+            VanillaRecipeHelper.addShapelessRecipe(id("living_dust"), ChemicalHelper.get(dust, Livingsteel, 6),
                     new MaterialEntry(dust, Steel), new MaterialEntry(dust, Steel), new MaterialEntry(dust, Steel),
                     new MaterialEntry(dust, Steel), new MaterialEntry(dust, Steel), new MaterialEntry(dust, Steel),
                     new MaterialEntry(dust, Livingclay), new MaterialEntry(dust, Livingwood), new MaterialEntry(dust, Livingrock));
-            VanillaRecipeHelper.addShapelessRecipe(provider, id("white_wax"), ChemicalHelper.get(dust, WhiteWax, 4),
+            VanillaRecipeHelper.addShapelessRecipe(id("white_wax"), ChemicalHelper.get(dust, WhiteWax, 4),
                     Items.HONEYCOMB, Items.HONEYCOMB, BotaniaBlocks.whiteBuriedPetals.asItem(), BotaniaBlocks.whiteBuriedPetals.asItem(),
                     new MaterialEntry(dust, Livingrock), new MaterialEntry(dust, Livingrock), new MaterialEntry(dust, Livingrock),
                     new MaterialEntry(dust, Livingrock), new MaterialEntry(dust, Livingrock));
@@ -1016,22 +1013,22 @@ public final class MagicRecipesA {
 
         // 工具配方
         {
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("livingwood_mallet"), RegistriesUtils.getItemStack("gtocore:livingwood_mallet"),
+            VanillaRecipeHelper.addShapedRecipe(GTOCore.id("livingwood_mallet"), RegistriesUtils.getItemStack("gtocore:livingwood_mallet"),
                     " AA", "BAA", " AA",
                     'A', RegistriesUtils.getItemStack("botania:livingwood_planks"), 'B', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("dreamwood_mallet"), RegistriesUtils.getItemStack("gtocore:dreamwood_mallet"),
+            VanillaRecipeHelper.addShapedRecipe(GTOCore.id("dreamwood_mallet"), RegistriesUtils.getItemStack("gtocore:dreamwood_mallet"),
                     " AA", "BAA", " AA",
                     'A', RegistriesUtils.getItemStack("botania:dreamwood_planks"), 'B', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("shimmerwood_mallet"), RegistriesUtils.getItemStack("gtocore:shimmerwood_mallet"),
+            VanillaRecipeHelper.addShapedRecipe(GTOCore.id("shimmerwood_mallet"), RegistriesUtils.getItemStack("gtocore:shimmerwood_mallet"),
                     " AA", "BAA", " AA",
                     'A', new MaterialEntry(TagPrefix.block, GTOMaterials.Shimmerwood), 'B', new MaterialEntry(TagPrefix.rod, GTMaterials.Wood));
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("livingrock_mortar"), RegistriesUtils.getItemStack("gtocore:livingrock_mortar"),
+            VanillaRecipeHelper.addShapedRecipe(GTOCore.id("livingrock_mortar"), RegistriesUtils.getItemStack("gtocore:livingrock_mortar"),
                     " A ", "BAB", "BBB",
                     'A', new MaterialEntry(TagPrefix.block, GTOMaterials.Livingrock), 'B', new MaterialEntry(TagPrefix.rock, GTMaterials.Stone));
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("runerock_mortar"), RegistriesUtils.getItemStack("gtocore:runerock_mortar"),
+            VanillaRecipeHelper.addShapedRecipe(GTOCore.id("runerock_mortar"), RegistriesUtils.getItemStack("gtocore:runerock_mortar"),
                     " A ", "BAB", "BBB",
                     'A', new MaterialEntry(TagPrefix.block, GTOMaterials.Runerock), 'B', new MaterialEntry(TagPrefix.rock, GTMaterials.Stone));
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("shimmerrock_mortar"), RegistriesUtils.getItemStack("gtocore:shimmerrock_mortar"),
+            VanillaRecipeHelper.addShapedRecipe(GTOCore.id("shimmerrock_mortar"), RegistriesUtils.getItemStack("gtocore:shimmerrock_mortar"),
                     " A ", "BAB", "BBB",
                     'A', new MaterialEntry(TagPrefix.block, GTOMaterials.Shimmerrock), 'B', new MaterialEntry(TagPrefix.rock, GTMaterials.Stone));
         }
