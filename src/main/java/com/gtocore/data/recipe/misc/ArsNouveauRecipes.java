@@ -14,9 +14,7 @@ import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,14 +23,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
 
-import com.hollingsworth.arsnouveau.api.registry.PerkRegistry;
 import com.hollingsworth.arsnouveau.common.datagen.RecipeDatagen;
-import com.hollingsworth.arsnouveau.common.items.PerkItem;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import io.github.lounode.extrabotany.common.item.ExtraBotanyItems;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import vazkii.botania.common.block.BotaniaBlocks;
 import vazkii.botania.common.item.BotaniaItems;
 import vectorwing.farmersdelight.common.tag.ForgeTags;
@@ -44,7 +38,6 @@ import static com.gregtechceu.gtceu.api.data.tag.TagPrefix.*;
 import static com.gregtechceu.gtceu.common.data.GTMaterials.*;
 import static com.gtocore.common.data.GTOMaterials.*;
 import static com.gtocore.common.data.GTORecipeTypes.INFUSER_CORE_RECIPES;
-import static com.gtolib.utils.ItemUtils.getFirstSized;
 
 public final class ArsNouveauRecipes {
 
@@ -409,19 +402,9 @@ public final class ArsNouveauRecipes {
         );
 
         for (MultiblockImbuementRecipe recipe : MultiblockImbuement) {
-            Object2IntMap<String> countMap = new Object2IntOpenHashMap<>();
-            Map<String, Ingredient> ingredientMap = new HashMap<>();
-
-            for (Ingredient ingredient : recipe.pedestal) {
-                String key = generateIngredientKey(ingredient);
-                countMap.mergeInt(key, 1, Integer::sum);
-                if (!ingredientMap.containsKey(key)) ingredientMap.put(key, ingredient);
-            }
-
             var build = INFUSER_CORE_RECIPES.builder(recipe.id);
             if (!recipe.model) {
-                build
-                        .inputItems(recipe.input, 4)
+                build.inputItems(recipe.input, 4)
                         .outputItems(recipe.output.copyWithCount(recipe.output.getCount() << 2))
                         .circuitMeta(recipe.circuitMeta)
                         .duration(400)
@@ -429,13 +412,14 @@ public final class ArsNouveauRecipes {
                 for (int i = 0; i < recipe.pedestal.length; i++) build.notConsumable(recipe.pedestal[i]);
                 for (int i = 0; i < recipe.inputFluid.length; i++) build.inputFluids(recipe.inputFluid[i]);
             } else {
-                build
-                        .inputItems(recipe.input)
+                build.inputItems(recipe.input)
                         .outputItems(recipe.output)
                         .circuitMeta(recipe.circuitMeta)
                         .duration(100)
                         .MANAt(recipe.source / 25);
-                for (Object2IntMap.Entry<String> entry : countMap.object2IntEntrySet()) build.inputItems(ingredientMap.get(entry.getKey()), entry.getIntValue());
+                for (Ingredient ingredient : recipe.pedestal) {
+                    build.inputIngredient(ingredient);
+                }
                 for (int i = 0; i < recipe.inputFluid.length; i++) build.inputFluids(recipe.inputFluid[i]);
             }
             build.save(provider);
@@ -645,19 +629,5 @@ public final class ArsNouveauRecipes {
                     'A', new MaterialEntry(TagPrefix.ingot, GTOMaterials.InfusedGold), 'B', new MaterialEntry(TagPrefix.dust, GTMaterials.Redstone), 'C', RegistriesUtils.getItemStack("ars_nouveau:source_gem_block"));
 
         }
-    }
-
-    public static PerkItem getPerkItem(ResourceLocation id) {
-        return PerkRegistry.getPerkItemMap().get(id);
-    }
-
-    private static String generateIngredientKey(Ingredient ingredient) {
-        if (ingredient.isEmpty()) return "EMPTY";
-        ItemStack[] items = ingredient.getItems();
-        if (items.length == 1) return BuiltInRegistries.ITEM.getKey(items[0].getItem()).toString();
-        List<String> itemKeys = new ArrayList<>();
-        for (ItemStack stack : items) itemKeys.add(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
-        Collections.sort(itemKeys);
-        return String.join(",", itemKeys);
     }
 }
