@@ -1,7 +1,8 @@
-package com.gtocore.data.recipe.mod;
+package com.gtocore.data.recipe.ae2;
 
 import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.data.GTOBlocks;
+import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.data.GTOMaterials;
 
 import com.gtolib.GTOCore;
@@ -21,6 +22,7 @@ import com.gregtechceu.gtceu.data.recipe.VanillaRecipeHelper;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import appeng.core.AppEng;
 import appeng.core.definitions.AEBlocks;
@@ -35,6 +37,7 @@ import static com.gtocore.common.data.GTORecipeTypes.ASSEMBLER_RECIPES;
 public final class AE2 {
 
     public static void init(Consumer<FinishedRecipe> provider) {
+        Ae2wtlibRecipes.init(provider);
         if (GTOCore.isSimple()) return;
         VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("import_bus"), RegistriesUtils.getItemStack("ae2:import_bus"),
                 "ABC",
@@ -140,8 +143,8 @@ public final class AE2 {
                 .inputItems(GTItems.CONVEYOR_MODULE_MV.asStack())
                 .inputItems(CustomTags.MV_CIRCUITS, 2)
                 .inputItems(TagPrefix.plateDouble, GTMaterials.Aluminium, 4)
-                .inputItems(GTOBlocks.BOROSILICATE_GLASS.asStack(4))
-                .outputItems(AEBlocks.INTERFACE.block().asItem(), 4)
+                .inputItems(GTOBlocks.BOROSILICATE_GLASS.asStack(2))
+                .outputItems(AEBlocks.INTERFACE.block().asItem(), 2)
                 .inputFluids(GTMaterials.Polyethylene, 576)
                 .EUt(120)
                 .duration(200)
@@ -174,11 +177,8 @@ public final class AE2 {
                 .inputItems("expatternprovider:assembler_matrix_wall")
                 .inputItems("expatternprovider:ex_pattern_provider", 2)
                 .inputItems("ae2:blue_lumen_paint_ball", 6)
-                .inputItems(CustomTags.HV_CIRCUITS)
-                .inputItems("ae2:fluix_glass_cable", 4)
-                .inputItems(AEItems.LOGIC_PROCESSOR.asItem())
-                .inputItems(AEItems.CALCULATION_PROCESSOR.asItem())
-                .inputItems(AEItems.ENGINEERING_PROCESSOR.asItem())
+                .inputItems(CustomTags.EV_CIRCUITS)
+                .inputItems(AEItems.LOGIC_PROCESSOR.asItem(), 4)
                 .outputItems("expatternprovider:assembler_matrix_pattern")
                 .inputFluids(GTMaterials.SolderingAlloy, 288)
                 .EUt(120)
@@ -189,29 +189,11 @@ public final class AE2 {
                 .inputItems("expatternprovider:assembler_matrix_wall")
                 .inputItems("expatternprovider:ex_molecular_assembler", 2)
                 .inputItems("ae2:purple_lumen_paint_ball", 6)
-                .inputItems(CustomTags.HV_CIRCUITS)
-                .inputItems("ae2:fluix_glass_cable", 4)
-                .inputItems(AEItems.LOGIC_PROCESSOR.asItem())
-                .inputItems(AEItems.CALCULATION_PROCESSOR.asItem())
-                .inputItems(AEItems.ENGINEERING_PROCESSOR.asItem())
+                .inputItems(CustomTags.EV_CIRCUITS)
+                .inputItems(AEItems.CALCULATION_PROCESSOR.asItem(), 4)
                 .outputItems("expatternprovider:assembler_matrix_crafter")
                 .inputFluids(GTMaterials.SolderingAlloy, 576)
                 .EUt(120)
-                .duration(100)
-                .save();
-
-        ASSEMBLER_RECIPES.builder("assembler_matrix_speed")
-                .inputItems("expatternprovider:assembler_matrix_wall")
-                .inputItems(AEItems.SPEED_CARD.asItem(), 2)
-                .inputItems("ae2:red_lumen_paint_ball", 6)
-                .inputItems(CustomTags.HV_CIRCUITS)
-                .inputItems("ae2:fluix_glass_cable", 4)
-                .inputItems(AEItems.LOGIC_PROCESSOR.asItem())
-                .inputItems(AEItems.CALCULATION_PROCESSOR.asItem())
-                .inputItems(AEItems.ENGINEERING_PROCESSOR.asItem())
-                .outputItems("expatternprovider:assembler_matrix_speed")
-                .inputFluids(GTMaterials.SolderingAlloy, 288)
-                .EUt(480)
                 .duration(100)
                 .save();
 
@@ -228,22 +210,6 @@ public final class AE2 {
                 .duration(100)
                 .save();
 
-        ASSEMBLER_RECIPES.builder("pattern_provider")
-                .inputItems(AEItems.FORMATION_CORE.asItem())
-                .inputItems(AEItems.ANNIHILATION_CORE.asItem())
-                .inputItems(CustomTags.HV_CIRCUITS)
-                .inputItems(GTItems.ROBOT_ARM_MV.asStack(2))
-                .inputItems(TagPrefix.frameGt, GTMaterials.Aluminium)
-                .inputItems(TagPrefix.plate, GTMaterials.StainlessSteel, 4)
-                .inputItems(AEItems.LOGIC_PROCESSOR.asItem())
-                .inputItems(AEItems.CALCULATION_PROCESSOR.asItem())
-                .inputItems(AEItems.ENGINEERING_PROCESSOR.asItem())
-                .outputItems(AEBlocks.PATTERN_PROVIDER.block().asItem())
-                .inputFluids(GTMaterials.PolyvinylChloride, 576)
-                .EUt(480)
-                .duration(100)
-                .save();
-
         ASSEMBLER_RECIPES.builder("requester")
                 .inputItems(GTItems.TOOL_DATA_STICK.asStack(8))
                 .inputItems(TagPrefix.frameGt, GTMaterials.Titanium)
@@ -256,7 +222,7 @@ public final class AE2 {
                 .inputItems(AEBlocks.INTERFACE.block().asItem())
                 .outputItems("merequester:requester")
                 .inputFluids(GTMaterials.SolderingAlloy, 576)
-                .EUt(7680)
+                .EUt(GTValues.VA[GTValues.EV])
                 .duration(400)
                 .save();
 
@@ -325,45 +291,215 @@ public final class AE2 {
                 .duration(300)
                 .save();
 
-        if (GTOCore.isNormal()) {
-            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("blank_pattern"), new ItemStack(AEItems.BLANK_PATTERN.asItem()),
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("water_infinity_cell"), RegistriesUtils.getItemStack("expatternprovider:infinity_cell"),
+                "ABA",
+                "BCB",
+                "ABA",
+                'A', RegistriesUtils.getItemStack("botania:rune_water"), 'B', GTItems.COVER_INFINITE_WATER.asStack(), 'C', new ItemStack(AEItems.FLUID_CELL_256K.asItem()));
+
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("me_packing_tape"), RegistriesUtils.getItemStack("expatternprovider:me_packing_tape"),
+                "ABC",
+                "BDB",
+                "CBA",
+                'A', new MaterialEntry(TagPrefix.dust, GTOMaterials.Fluix), 'B', GTItems.DUCT_TAPE.asStack(), 'C', new ItemStack(Items.SLIME_BALL.asItem()), 'D', new MaterialEntry(TagPrefix.dust, GTMaterials.EnderPearl));
+
+        var cell = RegistriesUtils.getItemStack("expatternprovider:infinity_cell", 1, "{record:{\"#c\":\"ae2:i\",id:\"minecraft:cobblestone\"}}");
+        VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("infinity_cell"), cell,
+                "ABA",
+                "CDE",
+                "ABA",
+                'A', RegistriesUtils.getItemStack("botania:rune_earth"),
+                'B', GTMachines.ROCK_CRUSHER[GTValues.EV].asStack(),
+                'C', new ItemStack(Items.WATER_BUCKET.asItem()),
+                'D', new ItemStack(GTOItems.CELL_COMPONENT_1M.asItem()),
+                'E', new ItemStack(Items.LAVA_BUCKET.asItem()));
+
+        if (GTOCore.isExpert()) {
+            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("ex_pattern_provider"), RegistriesUtils.getItemStack("expatternprovider:ex_pattern_provider"),
                     "ABA",
                     "CDC",
-                    "EEE",
-                    'A', CustomTags.LV_CIRCUITS, 'B', new MaterialEntry(TagPrefix.plate, GTMaterials.RedAlloy), 'C', new MaterialEntry(TagPrefix.plate, GTMaterials.Glass), 'D', GTItems.SHAPE_EMPTY.asStack(), 'E', new MaterialEntry(TagPrefix.plate, GTMaterials.PolyvinylChloride));
-        } else {
-            ASSEMBLER_RECIPES.recipeBuilder("blank_pattern")
-                    .inputItems(TagPrefix.plate, GTMaterials.Steel, 3)
-                    .inputItems(TagPrefix.plate, GTMaterials.PolyvinylChloride, 2)
-                    .inputItems(TagPrefix.plate, GTMaterials.RedAlloy, 4)
-                    .inputItems(CustomTags.HV_CIRCUITS)
-                    .inputFluids(GTMaterials.Glass.getFluid(288))
-                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem()))
-                    .EUt(120)
-                    .duration(200)
-                    .save();
+                    "ABA",
+                    'A', new ItemStack(AEBlocks.PATTERN_PROVIDER.block().asItem()),
+                    'B', new ItemStack(AEItems.ENGINEERING_PROCESSOR.asItem()),
+                    'C', new ItemStack(AEItems.CAPACITY_CARD.asItem()),
+                    'D', CustomTags.EV_CIRCUITS);
 
-            ASSEMBLER_RECIPES.recipeBuilder("blank_pattern_better")
-                    .inputItems(TagPrefix.plate, GTMaterials.Steel, 3)
-                    .inputItems(TagPrefix.plate, GTMaterials.Polytetrafluoroethylene, 2)
-                    .inputItems(TagPrefix.plate, GTMaterials.RedAlloy, 4)
-                    .inputItems(CustomTags.EV_CIRCUITS)
-                    .inputFluids(GTMaterials.Glass.getFluid(1152))
-                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 4))
-                    .EUt(480)
-                    .duration(200)
-                    .save();
-
-            ASSEMBLER_RECIPES.recipeBuilder("blank_pattern_best")
-                    .inputItems(TagPrefix.plate, GTMaterials.Steel, 3)
-                    .inputItems(TagPrefix.plate, GTMaterials.Polybenzimidazole, 2)
-                    .inputItems(TagPrefix.plate, GTMaterials.RedAlloy, 4)
+            ASSEMBLER_RECIPES.builder("assembler_matrix_speed")
+                    .inputItems("expatternprovider:assembler_matrix_wall")
+                    .inputItems(AEItems.SPEED_CARD.asItem(), 2)
+                    .inputItems("ae2:red_lumen_paint_ball", 6)
+                    .inputItems(GTItems.FIELD_GENERATOR_MV.asStack(4))
                     .inputItems(CustomTags.IV_CIRCUITS)
-                    .inputFluids(GTMaterials.Glass.getFluid(2304))
-                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 16))
-                    .EUt(1920)
-                    .duration(200)
+                    .inputItems(AEItems.ENGINEERING_PROCESSOR.asItem(), 8)
+                    .outputItems("expatternprovider:assembler_matrix_speed")
+                    .inputFluids(GTMaterials.SolderingAlloy, 288)
+                    .EUt(480)
+                    .duration(100)
                     .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern_less")
+                    .inputItems(TagPrefix.plate, GTMaterials.StainlessSteel, 8)
+                    .inputItems(TagPrefix.plate, GTMaterials.PolyvinylChloride, 5)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 16)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(1))
+                    .inputItems(CustomTags.HV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem()))
+                    .EUt(GTValues.VA[GTValues.HV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern")
+                    .inputItems(TagPrefix.plate, GTOMaterials.Terrasteel, 8)
+                    .inputItems(TagPrefix.plate, GTMaterials.PolyvinylChloride, 5)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 16)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(2))
+                    .inputItems(CustomTags.HV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 2))
+                    .EUt(GTValues.VA[GTValues.EV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern_better")
+                    .inputItems(TagPrefix.plate, GTMaterials.TungstenSteel, 8)
+                    .inputItems(TagPrefix.plate, GTMaterials.Polytetrafluoroethylene, 5)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 32)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(8))
+                    .inputItems(CustomTags.IV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 8))
+                    .EUt(GTValues.VA[GTValues.IV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern_best")
+                    .inputItems(TagPrefix.plate, GTMaterials.RhodiumPlatedPalladium, 8)
+                    .inputItems(TagPrefix.plate, GTMaterials.Polybenzimidazole, 5)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 64)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 64)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(64))
+                    .inputItems(CustomTags.LuV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 64))
+                    .EUt(GTValues.VA[GTValues.LuV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("pattern_provider_magic")
+                    .inputItems(new ItemStack(AEItems.FORMATION_CORE.asItem()))
+                    .inputItems(new ItemStack(AEItems.ANNIHILATION_CORE.asItem()))
+                    .inputItems(GTItems.ROBOT_ARM_HV.asStack(2))
+                    .inputItems(TagPrefix.frameGt, GTMaterials.StainlessSteel, 1)
+                    .inputItems(TagPrefix.plate, GTOMaterials.Alfsteel, 6)
+                    .inputItems(new ItemStack(AEItems.ENGINEERING_PROCESSOR.asItem()))
+                    .outputItems(AEBlocks.PATTERN_PROVIDER.block().asItem())
+                    .inputFluids(GTMaterials.PolyvinylChloride, 576)
+                    .EUt(480)
+                    .duration(100)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("pattern_provider")
+                    .inputItems(new ItemStack(AEItems.FORMATION_CORE.asItem()))
+                    .inputItems(new ItemStack(AEItems.ANNIHILATION_CORE.asItem()))
+                    .inputItems(GTItems.ROBOT_ARM_HV.asStack(2))
+                    .inputItems(TagPrefix.frameGt, GTMaterials.StainlessSteel, 1)
+                    .inputItems(TagPrefix.plate, GTMaterials.Titanium, 6)
+                    .inputItems(new ItemStack(AEItems.ENGINEERING_PROCESSOR.asItem()))
+                    .outputItems(AEBlocks.PATTERN_PROVIDER.block().asItem())
+                    .inputFluids(GTMaterials.PolyvinylChloride, 576)
+                    .EUt(480)
+                    .duration(100)
+                    .save();
+
+        } else {
+            VanillaRecipeHelper.addShapedRecipe(provider, GTOCore.id("ex_pattern_provider"), RegistriesUtils.getItemStack("expatternprovider:ex_pattern_provider"),
+                    "ABA",
+                    "CDC",
+                    "ABA",
+                    'A', new ItemStack(AEBlocks.PATTERN_PROVIDER.block().asItem()),
+                    'B', new ItemStack(AEItems.ENGINEERING_PROCESSOR.asItem()),
+                    'C', new ItemStack(AEItems.CAPACITY_CARD.asItem()),
+                    'D', CustomTags.HV_CIRCUITS);
+
+            ASSEMBLER_RECIPES.builder("assembler_matrix_speed")
+                    .inputItems("expatternprovider:assembler_matrix_wall")
+                    .inputItems(AEItems.SPEED_CARD.asItem(), 2)
+                    .inputItems("ae2:red_lumen_paint_ball", 6)
+                    .inputItems(CustomTags.EV_CIRCUITS)
+                    .inputItems(AEItems.ENGINEERING_PROCESSOR.asItem(), 8)
+                    .outputItems("expatternprovider:assembler_matrix_speed")
+                    .inputFluids(GTMaterials.SolderingAlloy, 288)
+                    .EUt(480)
+                    .duration(100)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern_less")
+                    .inputItems(TagPrefix.plate, GTOMaterials.Manasteel, 3)
+                    .inputItems(TagPrefix.plate, GTMaterials.Polyethylene, 2)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 8)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(1))
+                    .inputItems(CustomTags.LV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem()))
+                    .EUt(GTValues.VA[GTValues.HV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern")
+                    .inputItems(TagPrefix.plate, GTMaterials.StainlessSteel, 3)
+                    .inputItems(TagPrefix.plate, GTMaterials.PolyvinylChloride, 2)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 16)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(2))
+                    .inputItems(CustomTags.HV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 4))
+                    .EUt(GTValues.VA[GTValues.EV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern_better")
+                    .inputItems(TagPrefix.plate, GTMaterials.TungstenSteel, 3)
+                    .inputItems(TagPrefix.plate, GTMaterials.Polytetrafluoroethylene, 2)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 32)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(4))
+                    .inputItems(CustomTags.IV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 16))
+                    .EUt(GTValues.VA[GTValues.IV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("blank_pattern_best")
+                    .inputItems(TagPrefix.plate, GTMaterials.RhodiumPlatedPalladium, 3)
+                    .inputItems(TagPrefix.plate, GTMaterials.Polybenzimidazole, 2)
+                    .inputItems(TagPrefix.foil, GTMaterials.Aluminium, 64)
+                    .inputItems(GTItems.NAND_MEMORY_CHIP.asStack(8))
+                    .inputItems(CustomTags.LuV_CIRCUITS)
+                    .outputItems(new ItemStack(AEItems.BLANK_PATTERN.asItem(), 64))
+                    .EUt(GTValues.VA[GTValues.LuV])
+                    .duration(40)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("pattern_provider")
+                    .inputItems(new ItemStack(AEItems.FORMATION_CORE.asItem()))
+                    .inputItems(new ItemStack(AEItems.ANNIHILATION_CORE.asItem()))
+                    .inputItems(GTItems.ROBOT_ARM_MV.asStack(2))
+                    .inputItems(TagPrefix.frameGt, GTMaterials.Aluminium)
+                    .inputItems(TagPrefix.plate, GTMaterials.StainlessSteel, 6)
+                    .inputItems(new ItemStack(AEItems.ENGINEERING_PROCESSOR.asItem()))
+                    .outputItems(AEBlocks.PATTERN_PROVIDER.block().asItem())
+                    .inputFluids(GTMaterials.PolyvinylChloride, 576)
+                    .EUt(480)
+                    .duration(100)
+                    .save();
+
+            ASSEMBLER_RECIPES.builder("pattern_provider_magic")
+                    .inputItems(new ItemStack(AEItems.FORMATION_CORE.asItem()))
+                    .inputItems(new ItemStack(AEItems.ANNIHILATION_CORE.asItem()))
+                    .inputItems(GTItems.ROBOT_ARM_HV.asStack(1))
+                    .inputItems(TagPrefix.frameGt, GTMaterials.StainlessSteel, 1)
+                    .inputItems(TagPrefix.plate, GTOMaterials.Terrasteel, 6)
+                    .inputItems(new ItemStack(AEItems.ENGINEERING_PROCESSOR.asItem()))
+                    .outputItems(AEBlocks.PATTERN_PROVIDER.block().asItem(), 4)
+                    .inputFluids(GTMaterials.PolyvinylChloride, 576)
+                    .EUt(480)
+                    .duration(100)
+                    .save();
+
         }
     }
 
@@ -401,6 +537,7 @@ public final class AE2 {
 
         filters.add(RLUtils.fromNamespaceAndPath("merequester", "requester"));
 
+        filters.add(ExtendedAE.id("epp"));// ex_pattern_provider
         filters.add(ExtendedAE.id("cobblestone_cell"));
         filters.add(ExtendedAE.id("water_cell"));
         filters.add(ExtendedAE.id("tape"));
