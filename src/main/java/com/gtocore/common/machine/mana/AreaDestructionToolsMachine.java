@@ -2,9 +2,9 @@ package com.gtocore.common.machine.mana;
 
 import com.gtocore.common.data.GTOBlocks;
 
-import com.gtolib.utils.Explosion.ChunkExplosion;
-import com.gtolib.utils.Explosion.CylinderExplosion;
-import com.gtolib.utils.Explosion.SphereExplosion;
+import com.gtolib.utils.explosion.ChunkExplosion;
+import com.gtolib.utils.explosion.CylinderExplosion;
+import com.gtolib.utils.explosion.SphereExplosion;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -19,15 +19,14 @@ import com.gregtechceu.gtceu.common.data.GTItems;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import com.lowdragmc.lowdraglib.gui.util.ClickData;
 import com.lowdragmc.lowdraglib.gui.widget.*;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -37,60 +36,65 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 public class AreaDestructionToolsMachine extends MetaMachine implements IFancyUIMachine {
 
+    private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(
+            AreaDestructionToolsMachine.class, MetaMachine.MANAGED_FIELD_HOLDER);
+
     @Persisted
     private final NotifiableItemStackHandler inventory;
 
-    @Persisted
-    private final Object2IntMap<Item> itemStatistics = new Object2IntOpenHashMap<>();
-
-    int model = 0;
-    int ExplosiveEnergy = 0;
-    int ExplosiveYield = 0;
+    private int model = 0;
+    private int explosiveYield = 0;
 
     public AreaDestructionToolsMachine(MetaMachineBlockEntity holder) {
         super(holder);
-        inventory = new NotifiableItemStackHandler(this, 9, IO.BOTH);
+        inventory = new NotifiableItemStackHandler(this, 9, IO.NONE, IO.BOTH);
+        inventory.addChangedListener(() -> {
+            Level level = getLevel();
+            if (level == null) return;
+            model = 0;
+            int explosiveEnergy = 0;
+            explosiveYield = 0;
+
+            for (int i = 0; i < inventory.getSlots(); i++) {
+                var stack = inventory.getStackInSlot(i);
+                var item = stack.getItem();
+                if (item == GTItems.SHAPE_MOLD_BALL.asItem()) model = 1;
+                else if (item == GTItems.SHAPE_MOLD_CYLINDER.asItem()) model = 2;
+                else if (item == GTItems.SHAPE_MOLD_BLOCK.asItem()) model = 3;
+                else if (item == GTBlocks.INDUSTRIAL_TNT.asItem()) explosiveEnergy += 30 * stack.getCount();
+                else if (item == GTOBlocks.NUKE_BOMB.asItem()) explosiveEnergy += 2048 * stack.getCount();
+                else if (item == GTOBlocks.NAQUADRIA_CHARGE.asItem()) explosiveEnergy += 3200 * stack.getCount();
+                else if (item == GTOBlocks.LEPTONIC_CHARGE.asItem()) explosiveEnergy += 2048000 * stack.getCount();
+                else if (item == GTOBlocks.QUANTUM_CHROMODYNAMIC_CHARGE.asItem()) explosiveEnergy += 32000000 * stack.getCount();
+            }
+
+            if (model == 1) explosiveYield = (int) Math.cbrt((double) explosiveEnergy / 4) * 10;
+            else if (model == 2) explosiveYield = (int) Math.sqrt((double) explosiveEnergy / level.getHeight()) * 18;
+            else if (model == 3) explosiveYield = (int) Math.sqrt((double) explosiveEnergy / level.getHeight()) * 16;
+        });
     }
 
-    private void updateItemStatistics() {
-        Level level = getLevel();
-        if (level == null) return;
-        itemStatistics.clear();
-        model = 0;
-        ExplosiveEnergy = 0;
-        ExplosiveYield = 0;
+    @Override
+    @NotNull
+    public ManagedFieldHolder getFieldHolder() {
+        return MANAGED_FIELD_HOLDER;
+    }
 
-        for (int i = 0; i < inventory.getSlots(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
-            if (!stack.isEmpty()) itemStatistics.mergeInt(stack.getItem(), stack.getCount(), Integer::sum);
-        }
-
-        for (Object2IntMap.Entry<Item> entry : itemStatistics.object2IntEntrySet()) {
-            if (entry.getKey() == GTItems.SHAPE_MOLD_BALL.asItem()) model = 1;
-            else if (entry.getKey() == GTItems.SHAPE_MOLD_CYLINDER.asItem()) model = 2;
-            else if (entry.getKey() == GTItems.SHAPE_MOLD_BLOCK.asItem()) model = 3;
-            else if (entry.getKey() == GTBlocks.INDUSTRIAL_TNT.asItem()) ExplosiveEnergy += 30 * entry.getIntValue();
-            else if (entry.getKey() == GTOBlocks.NUKE_BOMB.asItem()) ExplosiveEnergy += 2048 * entry.getIntValue();
-            else if (entry.getKey() == GTOBlocks.NAQUADRIA_CHARGE.asItem()) ExplosiveEnergy += 3200 * entry.getIntValue();
-            else if (entry.getKey() == GTOBlocks.LEPTONIC_CHARGE.asItem()) ExplosiveEnergy += 2048000 * entry.getIntValue();
-            else if (entry.getKey() == GTOBlocks.QUANTUM_CHROMODYNAMIC_CHARGE.asItem()) ExplosiveEnergy += 32000000 * entry.getIntValue();
-        }
-
-        if (model == 1) ExplosiveYield = (int) Math.cbrt((double) ExplosiveEnergy / 4) * 10;
-        else if (model == 2) ExplosiveYield = (int) Math.sqrt((double) ExplosiveEnergy / level.getHeight()) * 18;
-        else if (model == 3) ExplosiveYield = (int) Math.sqrt((double) ExplosiveEnergy / level.getHeight()) * 16;
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        inventory.notifyListeners();
     }
 
     private void triggerExplosion() {
-        updateItemStatistics();
         BlockPos pos = getPos();
         Level level = getLevel();
         if (level == null) return;
 
         if (model == 0) return;
-        else if (model == 1) SphereExplosion.explosion(pos, level, ExplosiveYield, true, true, false);
-        else if (model == 2) CylinderExplosion.explosion(pos, level, ExplosiveYield, true, true, false);
-        else if (model == 3) ChunkExplosion.explosion(pos, level, ExplosiveYield, true, true, false);
+        else if (model == 1) SphereExplosion.explosion(pos, level, explosiveYield, true, true, false);
+        else if (model == 2) CylinderExplosion.explosion(pos, level, explosiveYield, true, true, false);
+        else if (model == 3) ChunkExplosion.explosion(pos, level, explosiveYield, true, true, false);
 
         for (int i = 0; i < inventory.getSlots(); i++) {
             inventory.setStackInSlot(i, ItemStack.EMPTY);
@@ -118,30 +122,18 @@ public class AreaDestructionToolsMachine extends MetaMachine implements IFancyUI
     }
 
     private void addDisplayText(List<Component> textList) {
-        textList.add(Component.translatable("gtocore.machine.area_destruction_tools.update_stats")
-                .append(ComponentPanelWidget.withButton(Component.literal(" [\uD83D\uDD04]"), "updatestats")));
-
         textList.add(Component.translatable("gtocore.machine.area_destruction_tools.detonate_instruction")
                 .append(ComponentPanelWidget.withButton(Component.literal(" [\uD83D\uDCA5]"), "detonate")));
 
         textList.add(Component.translatable("gtocore.machine.area_destruction_tools.model." + model));
-        textList.add(Component.translatable("gtocore.machine.area_destruction_tools.explosive_yield", ExplosiveYield));
+        textList.add(Component.translatable("gtocore.machine.area_destruction_tools.explosive_yield", explosiveYield));
     }
 
     private void handleDisplayClick(String componentData, ClickData clickData) {
         if (!clickData.isRemote) {
-            if ("updatestats".equals(componentData)) {
-                updateItemStatistics();
-            } else if ("detonate".equals(componentData)) {
+            if ("detonate".equals(componentData)) {
                 triggerExplosion();
             }
         }
-    }
-
-    // 其他必要的方法
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        updateItemStatistics();
     }
 }
