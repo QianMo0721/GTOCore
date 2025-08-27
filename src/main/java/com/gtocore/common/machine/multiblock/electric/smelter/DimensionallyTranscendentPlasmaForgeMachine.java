@@ -33,7 +33,7 @@ public final class DimensionallyTranscendentPlasmaForgeMachine extends CoilMulti
             if (recipe.data.getInt("ebf_temp") > 32000) {
                 return false;
             }
-        }else if (recipe.data.getInt("ebf_temp") > getTemperature()) {
+        } else if (recipe.data.getInt("ebf_temp") > getTemperature()) {
             return false;
         }
         return super.beforeWorking(recipe);
