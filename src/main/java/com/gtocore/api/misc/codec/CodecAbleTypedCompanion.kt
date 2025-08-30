@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf
 
 import com.mojang.serialization.Codec
 
-interface CodecAbleCompanion<T> {
+interface CodecAbleTypedCompanion<T> {
     fun getCodec(): Codec<T>
 
     // 函数式值传递，会创建新对象

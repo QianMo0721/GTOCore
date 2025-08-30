@@ -284,5 +284,3 @@ fun ((String) -> ComponentListSupplier).initialize(): (String) -> ComponentListS
 
 @JvmName("initializeListString2")
 fun ((String, String) -> ComponentListSupplier).initialize(): (String, String) -> ComponentListSupplier = this.also { it("", "") }
-
-fun Any.wirelessDebug() = if (GTOConfig.INSTANCE.aeWirelessLog) println("DEBUG: $this") else Unit

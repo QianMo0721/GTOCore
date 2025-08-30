@@ -1,6 +1,6 @@
 package com.gtocore.common.saved
 
-import com.gtocore.api.misc.codec.CodecAbleCompanion
+import com.gtocore.api.misc.codec.CodecAbleTypedCompanion
 import com.gtocore.api.misc.codec.CodecAbleTyped
 import com.gtocore.common.network.WirelessNetworkTopologyManager
 import com.gtocore.config.GTOConfig
@@ -180,7 +180,7 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
 
     private val topologyManager = WirelessNetworkTopologyManager()
 
-    companion object : CodecAbleCompanion<WirelessGrid> {
+    companion object : CodecAbleTypedCompanion<WirelessGrid> {
         override fun getCodec(): Codec<WirelessGrid> = RecordCodecBuilder.create { b ->
             b.group(
                 Codec.STRING.fieldOf("name").forGetter { it.name },
@@ -197,7 +197,7 @@ class WirelessGrid(val name: String, val owner: UUID, var isDefault: Boolean = f
     // ****** RUN TIME ******//
     // //////////////////////////////
     class MachineInfo(var pos: BlockPos = BlockPos.ZERO, var owner: String = "", var descriptionId: String = "", var level: ResourceKey<Level> = WirelessSavedData.UNKNOWN) : CodecAbleTyped<MachineInfo, MachineInfo.Companion> {
-        companion object : CodecAbleCompanion<MachineInfo> {
+        companion object : CodecAbleTypedCompanion<MachineInfo> {
             override fun getCodec(): Codec<MachineInfo> = RecordCodecBuilder.create { b ->
                 b.group(
                     BlockPos.CODEC.optionalFieldOf("pos", BlockPos.ZERO).forGetter { it.pos },
