@@ -252,6 +252,18 @@ public final class GTOMachines {
                     .langValue(VNF[tier] + " Overclock Hatch")
                     .allRotation()
                     .abilities(GTOPartAbility.OVERCLOCK_HATCH)
+                    .tooltips(NewDataAttributes.MAIN_FUNCTION.create(
+                            v -> v.addLines("让机器超频", "accelerate machine"),
+                            p -> p.addCommentLines(
+                                    """
+                                            同样的超频级别，此数值越高，超频因子越大
+                                            更大的超频因子代表更激进的超频策略
+                                            耗能更高，速度更快！""",
+                                    """
+                                            For the same overclocking level, the higher this value, the greater the overclocking factor
+                                            A larger overclocking factor represents a more aggressive overclocking strategy
+                                            Higher energy consumption, faster speed!"""
+                            )))
                     .workableTieredHullRenderer(GTOCore.id("block/machines/overclock_hatch/overclock_hatch_mk" + (tier - 7)))
                     .notAllowSharedTooltips()
                     .register(),
