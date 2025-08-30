@@ -224,6 +224,19 @@ public final class GTOConfig {
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Lightning Rod Effect", cn = "引雷针特效")
     public boolean lightningRodEffect = true;
 
+    // 新增：食肉惩罚设置
+    @Configurable
+    @Configurable.Comment("当玩家在某动物附近食用其来源食物时，影响的半径（格）")
+    @Configurable.Range(min = 1, max = 64)
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Carnivory Punish Radius", cn = "食肉惩罚半径")
+    public int cannibalismRadius = 32;
+
+    @Configurable
+    @Configurable.Comment("当玩家在某动物附近食用其来源食物时，对该动物造成的伤害值（半颗心=1.0）")
+    @Configurable.Range(min = 0, max = 100)
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Carnivory Punish Damage", cn = "食肉惩罚伤害")
+    public float cannibalismDamage = 1.0F;
+
     // 开发和调试设置
     @Configurable
     @Configurable.Comment("开启开发者模式")

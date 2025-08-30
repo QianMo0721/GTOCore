@@ -80,11 +80,6 @@ public final class ForgeClientEvent {
                 event.getToolTip().add(1, Component.translatable(tooltipKey));
             }
         }
-        // int maxStep = MultiStepItemHelper.getMaxStep(stack);
-        // if (maxStep > 0) {
-        // event.getToolTip().add(Component.translatable("gtocore.tooltip.item.craft_step",
-        // MultiStepItemHelper.getStep(stack) + " / " + maxStep));
-        // }
         Item item = stack.getItem();
         var arr = ((IItem) item).gtolib$getToolTips();
         if (arr != null) {

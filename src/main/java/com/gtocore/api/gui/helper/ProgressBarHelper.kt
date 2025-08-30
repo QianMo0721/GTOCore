@@ -1,7 +1,7 @@
 package com.gtocore.api.gui.helper
 
-import com.gtocore.api.misc.codec.CodecAbleTypedCompanion
 import com.gtocore.api.misc.codec.CodecAbleTyped
+import com.gtocore.api.misc.codec.CodecAbleTypedCompanion
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics

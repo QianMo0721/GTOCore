@@ -1,7 +1,7 @@
 package com.gtocore.common.saved
 
-import com.gtocore.api.misc.codec.CodecAbleTypedCompanion
 import com.gtocore.api.misc.codec.CodecAbleTyped
+import com.gtocore.api.misc.codec.CodecAbleTypedCompanion
 import com.gtocore.common.network.WirelessNetworkTopologyManager
 import com.gtocore.config.GTOConfig
 import com.gtocore.integration.ae.WirelessMachine

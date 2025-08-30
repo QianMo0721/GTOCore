@@ -1,7 +1,6 @@
 package com.gtocore.api.lang
 
 import com.gtocore.common.data.translation.ComponentSlang
-import com.gtocore.config.GTOConfig
 
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
