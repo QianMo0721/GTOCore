@@ -546,4 +546,11 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add(Star(1) + ("向库存添加以下物品以提高爆炸当量：" translatedTo "Add the following items to inventory to increase explosive yield:")) { blue() }
         add(Star(1) + ("§c工业TNT§r/§c核弹§r/§c超能硅岩爆弹§r/§c轻子爆弹§r/§c量子色动力学爆弹§r" translatedTo "§cIndustrial TNT§r/§cNuke Bomb§r/§cNaquadria Charge§r/§cLeptonic Charge§r/§cQuantum Chromodynamic Charge§r")) { blue() }
     }
+
+    // 转子仓
+    val RotorHatchTooltips = ComponentListSupplier {
+        setTranslationPrefix("rotor_hatch")
+        add(Warning(1) + ("转子所在平面3x3内只能存在一个转子仓" translatedTo "There can only be one rotor hatch in the 3x3 plane where the rotor is located").InfoWarning())
+        add(Star(1) + ("不同类型的转子的效率，耐久不同" translatedTo "Different types of rotors have different efficiency and durability").InfoFunction())
+    }
 }

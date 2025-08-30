@@ -657,6 +657,7 @@ public final class GTOMachines {
             .register();
 
     public static final MachineDefinition ROTOR_HATCH = machine("rotor_hatch", "转子仓", h -> new ItemHatchPartMachine(h, 1, i -> TurbineRotorBehaviour.getBehaviour(i) != null))
+            .tooltips(GTOMachineTranslation.INSTANCE.getRotorHatchTooltips().getSupplier())
             .tier(EV)
             .allRotation()
             .notAllowSharedTooltips()

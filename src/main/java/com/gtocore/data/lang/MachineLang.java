@@ -13,6 +13,8 @@ final class MachineLang {
         addCNEN("gtocore.machine.structure_check", "更新结构检查(shift点击将重新检查结构)", "Update structure check (Clicking on Shift will recheck the structure).");
         addCNEN("gtocore.machine.overclock_configurator", "调整机器超频的最小时间", "Adjust the minimum time for machine overclocking.");
         addCNEN("gtocore.machine.thread", "同时处理至多 %s 种不同配方，每种配方至多 %s 个", "Processing up to %s different recipes simultaneously, with a maximum of %s for each recipe.");
+        addCNEN("gtocore.machine.thread.0", "同时处理至多 %s 种不同配方", "Processing up to %s different recipes simultaneously");
+        addCNEN("gtocore.machine.thread.1", "每种配方至多 %s 个", "With a maximum of %s for each recipe.");
         addCNEN("gtocore.machine.thread_hatch.tooltip.0", "可为机器提供 %s 线程的并行", "Can provide %s thread parallel processing for the machine.");
         addCNEN("gtocore.machine.rest_burn_time", "剩余燃烧时间: %s Tick", "Rest Burn Time %s Tick");
         addCNEN("gtocore.machine.total_time.duration", "额外耗时减免: %s", "Additional Duration Reduction: %s");
