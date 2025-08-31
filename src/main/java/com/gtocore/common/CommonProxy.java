@@ -12,8 +12,8 @@ import com.gtocore.integration.ftbquests.EMIRecipeModHelper;
 import com.gtocore.integration.ftbu.AreaShape;
 
 import com.gtolib.GTOCore;
-import com.gtolib.ae2.me2in1.Me2in1Menu;
-import com.gtolib.ae2.me2in1.Wireless;
+import com.gtolib.api.ae2.me2in1.Me2in1Menu;
+import com.gtolib.api.ae2.me2in1.Wireless;
 import com.gtolib.api.data.Dimension;
 import com.gtolib.api.player.IEnhancedPlayer;
 import com.gtolib.api.registries.ScanningClass;

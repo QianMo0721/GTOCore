@@ -4,7 +4,7 @@ import com.gtocore.common.data.machines.GTAEMachines;
 import com.gtocore.common.machine.multiblock.part.ae.slots.MECircuitHandler;
 import com.gtocore.common.machine.trait.InternalSlotRecipeHandler;
 
-import com.gtolib.ae2.MyPatternDetailsHelper;
+import com.gtolib.api.ae2.MyPatternDetailsHelper;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.capability.ISync;

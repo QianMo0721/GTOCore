@@ -45,8 +45,8 @@ import com.gregtechceu.gtceu.api.machine.feature.IDropSaveMachine
 import com.gregtechceu.gtceu.api.machine.feature.IInteractedMachine
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler
-import com.gtolib.ae2.MyPatternDetailsHelper
-import com.gtolib.ae2.pattern.IParallelPatternDetails
+import com.gtolib.api.ae2.MyPatternDetailsHelper
+import com.gtolib.api.ae2.pattern.IParallelPatternDetails
 import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.capability.ISync

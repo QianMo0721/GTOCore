@@ -10,7 +10,7 @@ import com.gtocore.common.item.armor.SpaceArmorComponentItem;
 import com.gtocore.common.item.misc.GrassHarvesterBehaviour;
 
 import com.gtolib.GTOCore;
-import com.gtolib.ae2.me2in1.Wireless;
+import com.gtolib.api.ae2.me2in1.Wireless;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.ComponentSupplier;

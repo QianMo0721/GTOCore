@@ -4,7 +4,7 @@ import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.machine.multiblock.part.ae.IStorageAccess;
 import com.gtocore.common.machine.multiblock.part.ae.MEBigStorageAccessPartMachine;
 
-import com.gtolib.ae2.storage.BigCellDataStorage;
+import com.gtolib.api.ae2.storage.BigCellDataStorage;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.machine.feature.multiblock.IStorageMultiblock;

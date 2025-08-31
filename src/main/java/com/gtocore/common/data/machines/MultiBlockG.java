@@ -19,8 +19,8 @@ import com.gtocore.common.machine.multiblock.storage.WirelessDimensionRepeaterMa
 import com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMachine;
 
 import com.gtolib.GTOCore;
-import com.gtolib.ae2.machine.MECPUMachine;
 import com.gtolib.api.GTOValues;
+import com.gtolib.api.ae2.machine.MECPUMachine;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.annotation.component_builder.ComponentBuilder;
 import com.gtolib.api.annotation.component_builder.StyleBuilder;
