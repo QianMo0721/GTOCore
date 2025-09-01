@@ -3,7 +3,7 @@ package com.gtocore.common.data.machines;
 import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.part.ae.*;
 
-import com.gtolib.ae2.machine.MECPUMachine;
+import com.gtolib.api.ae2.machine.MECPUMachine;
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.machine.MachineDefinition;

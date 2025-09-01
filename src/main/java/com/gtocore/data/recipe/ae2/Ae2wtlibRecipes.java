@@ -3,7 +3,7 @@ package com.gtocore.data.recipe.ae2;
 import com.gtocore.common.data.GTOItems;
 
 import com.gtolib.GTOCore;
-import com.gtolib.ae2.me2in1.Wireless;
+import com.gtolib.api.ae2.me2in1.Wireless;
 
 import com.gregtechceu.gtceu.data.pack.GTDynamicDataPack;
 

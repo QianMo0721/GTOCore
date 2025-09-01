@@ -553,4 +553,16 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
         add(Warning(1) + ("转子所在平面3x3内只能存在一个转子仓" translatedTo "There can only be one rotor hatch in the 3x3 plane where the rotor is located").InfoWarning())
         add(Star(1) + ("不同类型的转子的效率，耐久不同" translatedTo "Different types of rotors have different efficiency and durability").InfoFunction())
     }
+
+    // 数字矿机
+    val DigitalMinerTooltips = ComponentListSupplier {
+        setTranslationPrefix("digital_miner")
+        add("固定每两秒采掘一次" translatedTo "Mines once every two seconds") { aqua() }
+        add("可通过GUI设置采掘范围和目标方块" translatedTo "Mining range and target blocks can be set via GUI") { aqua() }
+        add("机器电压等级每高出一级：" translatedTo "For each increase in machine voltage level:") { aqua() }
+        add(" - 可采掘最大范围翻倍（最高256）" translatedTo " - Maximum mining range is doubled (up to 256)") { gray() }
+        add(" - 每次采掘的方块数量翻倍（最高4096）" translatedTo " - The number of blocks mined each time is doubled(up to 4096)") { gray() }
+        add(" - 耗电量翻4倍" translatedTo " - Power consumption is quadrupled") { gray() }
+        add("通入红石信号以重新计算采掘区域并执行" translatedTo "Input a redstone signal to recalculate the mining area and execute mining") { aqua() }
+    }
 }

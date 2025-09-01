@@ -1,8 +1,8 @@
 package com.gtocore.common.machine.multiblock.part.ae;
 
-import com.gtolib.ae2.stacks.IKeyCounter;
-import com.gtolib.ae2.storage.BigCellDataStorage;
-import com.gtolib.ae2.storage.CellDataStorage;
+import com.gtolib.api.ae2.IKeyCounter;
+import com.gtolib.api.ae2.storage.BigCellDataStorage;
+import com.gtolib.api.ae2.storage.CellDataStorage;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.ConditionalSubscriptionHandler;
@@ -98,7 +98,7 @@ public final class MEBigStorageAccessPartMachine extends MultiblockPartMachine i
         if (dirty) {
             dirty = false;
             getCellStorage().setPersisted(false);
-            markDirty();
+            onChanged();
         }
         if (uuid == null || capacity == 0 || !isOnline) return;
         if (!check) {

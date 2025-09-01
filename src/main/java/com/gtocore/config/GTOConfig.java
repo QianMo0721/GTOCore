@@ -5,6 +5,7 @@ import com.gtolib.api.annotation.DataGeneratorScanned;
 import com.gtolib.api.annotation.language.RegisterLanguage;
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeLogic;
 import com.gregtechceu.gtceu.config.ConfigHolder;
 
@@ -138,6 +139,8 @@ public final class GTOConfig {
                 ConfigHolder.INSTANCE.gameplay.hazardsEnabled = false;
             }
             ConfigHolder.INSTANCE.dev.debug = GTCEu.isDev();
+
+            MultiblockControllerMachine.sendMessage = GTOConfig.INSTANCE.sendMultiblockErrorMessages;
         }
     }
 
@@ -236,6 +239,16 @@ public final class GTOConfig {
     @Configurable.Range(min = 0, max = 100)
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Carnivory Punish Damage", cn = "食肉惩罚伤害")
     public float cannibalismDamage = 1.0F;
+
+    @Configurable
+    @Configurable.Comment("关闭后将渲染视角外，且渲染器被标记为Global的方块实体，对于具有高级特效机器来说可能有帮助")
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Embeddium Global BE Culling", cn = "Embbedium Global方块实体剔除")
+    public boolean EmbeddiumBECulling = true;
+
+    @Configurable
+    @Configurable.Comment("启用后，进入游戏时，若多方块结构未能成型，则将错误信息将发送给机器的所有者")
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Send Multiblock Error Messages", cn = "发送多方块错误信息")
+    public boolean sendMultiblockErrorMessages = true;
 
     // 开发和调试设置
     @Configurable

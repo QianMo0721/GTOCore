@@ -5,6 +5,7 @@ import com.gtocore.api.gui.ktflexible.progressBar
 import com.gtocore.api.gui.ktflexible.textBlock
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine.MODE.FLUID
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine.MODE.ITEM
+import com.gtocore.mixin.ae2.GridAccessor
 
 import net.minecraft.network.chat.Component
 import net.minecraft.server.TickTask
@@ -29,7 +30,6 @@ import com.gtolib.api.annotation.Scanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.gui.ktflexible.button
 import com.gtolib.api.gui.ktflexible.rootFresh
-import com.gtolib.mixin.ae2.GridAccessor
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI
 import com.lowdragmc.lowdraglib.gui.widget.PhantomSlotWidget
 import com.lowdragmc.lowdraglib.gui.widget.Widget
