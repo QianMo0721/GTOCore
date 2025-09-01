@@ -272,6 +272,11 @@ public final class GTOConfig {
     public boolean aeWirelessLog = false;
 
     @Configurable
+    @Configurable.Comment("AE2 网格存储键")
+    @RegisterLanguage(namePrefix = "config.gtocore.option", cn = "更改此键会使所有网络失效", en = "Changing this key will invalidate all networks")
+    public String aeGridKey = "four";
+
+    @Configurable
     @Configurable.Comment("Spark 性能分析器的启动阶段")
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Spark Profiler Start Phase", cn = "Spark 分析器启动阶段")
     public SparkRange startSpark = SparkRange.NONE;

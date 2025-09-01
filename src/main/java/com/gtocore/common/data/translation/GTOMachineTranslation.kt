@@ -151,7 +151,7 @@ object GTOMachineTranslation : AutoInitialize<GTOMachineTranslation>() {
     val AutoConnectMETooltips = ComponentListSupplier {
         setTranslationPrefix("auto_connect_me")
         add(Star(1) + ("此机器可以自动连接ME无线网络" translatedTo "This machine can automatically connect to the ME Wireless network")) { aqua() }
-        add(Tab(1) + ("按下Shift防止以禁用首次自动连接" translatedTo "Press Shift to prevent the first automatic connection from being disabled")) { gray() }
+        add(Tab(1) + ("按下Shift放置以自动连接收藏的网络" translatedTo "Press Shift to place to automatically connect to the collected network")) { gray() }
         add(Tab(1) + ("小心塞爆矿处！" translatedTo "Be careful to explode the ae storage! ")) { gray() }
     }
 
