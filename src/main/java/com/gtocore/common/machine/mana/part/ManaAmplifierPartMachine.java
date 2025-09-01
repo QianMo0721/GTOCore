@@ -22,7 +22,7 @@ public final class ManaAmplifierPartMachine extends AmountConfigurationHatchPart
     private final NotifiableManaContainer manaContainer;
 
     public ManaAmplifierPartMachine(MetaMachineBlockEntity holder) {
-        super(holder, 2, 1, Integer.MAX_VALUE);
+        super(holder, 2, 1, Long.MAX_VALUE);
         manaContainer = new ManaContainer(this);
         manaContainer.setAcceptDistributor(true);
     }
@@ -63,7 +63,12 @@ public final class ManaAmplifierPartMachine extends AmountConfigurationHatchPart
 
         @Override
         protected long extractionRate() {
-            return Math.min(getMaxMana() - getCurrentMana(), 20L * ((ManaAmplifierPartMachine) machine).getCurrent());
+            return getMaxMana() - getCurrentMana();
+        }
+
+        @Override
+        public long getMaxMana() {
+            return ((ManaAmplifierPartMachine) machine).getCurrent();
         }
     }
 
