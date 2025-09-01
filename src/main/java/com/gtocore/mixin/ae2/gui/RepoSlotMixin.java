@@ -32,13 +32,13 @@ public class RepoSlotMixin implements IRepoSlot {
     }
 
     @Override
-    @Shadow
+    @Shadow(remap = true)
     public @NotNull ItemStack getItem() {
         throw new UnsupportedOperationException("This method should not be called directly.");
     }
 
     @Override
-    @Shadow
+    @Shadow(remap = true)
     public boolean hasItem() {
         throw new UnsupportedOperationException("This method should not be called directly.");
     }
