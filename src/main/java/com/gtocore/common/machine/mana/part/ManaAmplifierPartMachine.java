@@ -1,5 +1,7 @@
 package com.gtocore.common.machine.mana.part;
 
+import com.gtolib.api.annotation.DataGeneratorScanned;
+import com.gtolib.api.annotation.language.RegisterLanguage;
 import com.gtolib.api.machine.mana.feature.IManaMachine;
 import com.gtolib.api.machine.mana.trait.NotifiableManaContainer;
 import com.gtolib.api.machine.part.AmountConfigurationHatchPartMachine;
@@ -11,11 +13,18 @@ import com.gregtechceu.gtceu.api.machine.feature.IOverclockMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 
+import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
+import com.lowdragmc.lowdraglib.gui.widget.Widget;
+import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import org.jetbrains.annotations.NotNull;
 
+@DataGeneratorScanned
 public final class ManaAmplifierPartMachine extends AmountConfigurationHatchPartMachine implements IManaMachine {
+
+    @RegisterLanguage(cn = "最大魔力", en = "Max Mana")
+    private static final String MAX = "gtocore.machine.mana_amplifier_part.max_mana";
 
     private static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(ManaAmplifierPartMachine.class, AmountConfigurationHatchPartMachine.MANAGED_FIELD_HOLDER);
     @Persisted
@@ -25,6 +34,11 @@ public final class ManaAmplifierPartMachine extends AmountConfigurationHatchPart
         super(holder, 2, 1, Long.MAX_VALUE);
         manaContainer = new ManaContainer(this);
         manaContainer.setAcceptDistributor(true);
+    }
+
+    @Override
+    public Widget createUIWidget() {
+        return ((WidgetGroup) super.createUIWidget()).addWidget(new LabelWidget(24, -16, () -> MAX));
     }
 
     @Override
