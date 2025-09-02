@@ -20,7 +20,6 @@ import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
-import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.common.data.*;
@@ -69,7 +68,7 @@ public final class MultiBlockF {
                     .where('R', blocks(GTBlocks.CASING_TUNGSTENSTEEL_PIPE.get()))
                     .where('S', heatingCoils())
                     .where('T', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Naquadah)))
-                    .where('U', abilities(PartAbility.MUFFLER))
+                    .where('U', abilities(MUFFLER))
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/gcym/high_temperature_smelting_casing"), GTCEu.id("block/multiblock/gcym/blast_alloy_smelter"))

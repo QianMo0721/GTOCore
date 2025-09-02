@@ -93,13 +93,13 @@ public final class StructureWriteBehavior implements IItemUIFactory {
         if (getPos(playerInventoryHolder.getHeld()) != null && playerInventoryHolder.getPlayer() instanceof ServerPlayer player) {
             if (BLOCK_MAP == null) {
                 BLOCK_MAP = ImmutableMap.<Block, BiConsumer<StringBuilder, Character>>builder()
-                        .put(Blocks.OAK_LOG, (b, c) -> b.append("controller(blocks(definition.get()))"))
-                        .put(Blocks.DIRT, (b, c) -> b.append("heatingCoils()"))
-                        .put(Blocks.WHITE_WOOL, (b, c) -> b.append("air()"))
-                        .put(Blocks.GLASS, (b, c) -> b.append("GTOPredicates.glass()"))
-                        .put(Blocks.GLOWSTONE, (b, c) -> b.append("GTOPredicates.light()"))
-                        .put(GTOBlocks.ABS_WHITE_CASING.get(), (b, c) -> b.append("GTOPredicates.absBlocks()"))
-                        .put(Blocks.FURNACE, (b, c) -> b.append("abilities(PartAbility.MUFFLER)"))
+                        .put(Blocks.OAK_LOG, (b, c) -> b.append("controller(blocks(definition.get())))"))
+                        .put(Blocks.DIRT, (b, c) -> b.append("heatingCoils())"))
+                        .put(Blocks.WHITE_WOOL, (b, c) -> b.append("air())"))
+                        .put(Blocks.GLASS, (b, c) -> b.append("GTOPredicates.glass())"))
+                        .put(Blocks.GLOWSTONE, (b, c) -> b.append("GTOPredicates.light())"))
+                        .put(GTOBlocks.ABS_WHITE_CASING.get(), (b, c) -> b.append("GTOPredicates.absBlocks())"))
+                        .put(Blocks.FURNACE, (b, c) -> b.append("abilities(MUFFLER))"))
                         .build();
             }
             ItemStack itemStack = playerInventoryHolder.getHeld();
@@ -130,6 +130,7 @@ public final class StructureWriteBehavior implements IItemUIFactory {
             blockPattern.legend.forEach((b, c) -> {
                 if (c.equals(' ')) return;
                 if (BLOCK_MAP.containsKey(b)) {
+                    builder.append(".where('").append(c).append("', ");
                     BLOCK_MAP.get(b).accept(builder, c);
                     builder.append("\n");
                     return;

@@ -1,6 +1,6 @@
 package com.gtocore.mixin.ae2.storage;
 
-import com.gtocore.common.machine.multiblock.part.ae.IStorageAccess;
+import com.gtocore.common.machine.multiblock.part.ae.StorageAccessPartMachine;
 
 import com.gtolib.utils.holder.IntObjectHolder;
 
@@ -56,9 +56,9 @@ public abstract class NetworkStorageMixin {
 
     @Inject(method = "mount", at = @At(value = "INVOKE", target = "Ljava/util/NavigableMap;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"), remap = false, cancellable = true)
     private void gtolib$mount(int priority, MEStorage inventory, CallbackInfo ci) {
-        if (inventory instanceof IStorageAccess) {
+        if (inventory instanceof StorageAccessPartMachine) {
             for (var inv : gtolib$inventory) {
-                if (inv.obj instanceof IStorageAccess) {
+                if (inv.obj instanceof StorageAccessPartMachine) {
                     ci.cancel();
                     return;
                 }

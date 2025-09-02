@@ -33,7 +33,7 @@ import com.gregtechceu.gtceu.api.machine.TickableSubscription
 import com.gregtechceu.gtceu.integration.ae2.machine.feature.IGridConnectedMachine
 import com.gregtechceu.gtceu.utils.GTUtil
 import com.gregtechceu.gtceu.utils.TaskHandler
-import com.gtolib.api.annotation.Scanned
+import com.gtolib.api.annotation.DataGeneratorScanned
 import com.gtolib.api.annotation.language.RegisterLanguage
 import com.gtolib.api.capability.ISync
 import com.gtolib.api.capability.ISync.createEnumField
@@ -134,7 +134,7 @@ class WirelessMachinePersisted(var machine: WirelessMachine) :
     override fun getOnContentsChanged(): Runnable? = onContentChanged
 }
 
-@Scanned
+@DataGeneratorScanned
 interface WirelessMachine :
     IGridConnectedMachine,
     ISync,
@@ -142,7 +142,7 @@ interface WirelessMachine :
     val requesterUUID: UUID
         get() = self().ownerUUID ?: uuid
 
-    @Scanned
+    @DataGeneratorScanned
     companion object {
         @RegisterLanguage(cn = "网络节点选择", en = "Grid Node Selector")
         const val gridNodeSelector = "gtocore.integration.ae.WirelessMachine.gridNodeSelector"
