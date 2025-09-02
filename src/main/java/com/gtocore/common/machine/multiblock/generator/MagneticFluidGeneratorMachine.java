@@ -44,7 +44,7 @@ public final class MagneticFluidGeneratorMachine extends TierCasingMultiblockMac
         super.onStructureFormed();
         int tier = getCasingTier(GTOValues.GLASS_TIER);
         if (tier < outputTier) outputTier = 0;
-        if (getSubFormedAmount() > 0) base = 3;
+        if (getSubFormedAmount() > 0) base = 4;
     }
 
     @Override
@@ -52,6 +52,7 @@ public final class MagneticFluidGeneratorMachine extends TierCasingMultiblockMac
         super.onStructureInvalid();
         outputTier = 0;
         laser = false;
+        base = 2;
     }
 
     @Nullable
