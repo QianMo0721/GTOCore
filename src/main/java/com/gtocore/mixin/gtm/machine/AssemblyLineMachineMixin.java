@@ -1,4 +1,4 @@
-package com.gtocore.mixin.gtm;
+package com.gtocore.mixin.gtm.machine;
 
 import com.gtocore.data.IdleReason;
 

@@ -2298,6 +2298,7 @@
   "gtocore.lang.auto_connect_me.0.582464958": "This machine can automatically connect to the ME Wireless network",
   "gtocore.lang.auto_connect_me.1.-1869929608": "Press Shift to place to automatically connect to the collected network",
   "gtocore.lang.auto_connect_me.2.-1916171520": "Be careful to explode the ae storage! ",
+  "gtocore.lang.banned": "Channel mode command banned in expert",
   "gtocore.lang.boil_water_machine.0.-78093449": "Requires external heat source to operate",
   "gtocore.lang.boil_water_machine.1.-1309148959": "explode",
   "gtocore.lang.boil_water_machine.1.1092372183": "When steam overflows, continuing to work will ",
