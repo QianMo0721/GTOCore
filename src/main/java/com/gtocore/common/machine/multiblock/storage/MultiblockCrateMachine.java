@@ -17,7 +17,6 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 import com.gregtechceu.gtceu.api.transfer.item.LockableItemStackHandler;
 
-import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -110,7 +109,8 @@ public class MultiblockCrateMachine extends MultiblockControllerMachine implemen
         int x = 0;
         int y = 0;
         for (int slot = 0; slot < Capacity; slot++) {
-            innerContainer.addWidget(new SlotWidget(inventory.storage, slot, x * 18, y * 18){
+            innerContainer.addWidget(new SlotWidget(inventory.storage, slot, x * 18, y * 18) {
+
                 @Override
                 public boolean isEnabled() {
                     return true;
