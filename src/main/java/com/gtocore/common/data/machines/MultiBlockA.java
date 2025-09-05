@@ -8,6 +8,7 @@ import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.common.data.translation.GTOMachineTranslation;
 import com.gtocore.common.machine.multiblock.electric.FishingGroundMachine;
+import com.gtocore.common.machine.multiblock.electric.MoltenCoreMachine;
 import com.gtocore.common.machine.multiblock.electric.StellarForgeMachine;
 import com.gtocore.common.machine.multiblock.electric.assembly.PrecisionAssemblerMachine;
 import com.gtocore.common.machine.multiblock.electric.processing.IntegratedOreProcessor;
@@ -1993,9 +1994,9 @@ public final class MultiBlockA {
             .workableCasingRenderer(GTOCore.id("block/casings/red_steel_casing"), GTCEu.id("block/multiblock/fusion_reactor"))
             .register();
 
-    public static final MultiblockMachineDefinition MOLTEN_CORE = multiblock("molten_core", "熔火之心", CoilCrossRecipeMultiblockMachine::createCoilParallel)
+    public static final MultiblockMachineDefinition MOLTEN_CORE = multiblock("molten_core", "熔火之心", MoltenCoreMachine::new)
             .nonYAxisRotation()
-            .recipeTypes(GTRecipeTypes.FLUID_HEATER_RECIPES, GTRecipeTypes.DISTILLERY_RECIPES)
+            .recipeTypes(GTORecipeTypes.FLUID_HEATER_RECIPES, GTORecipeTypes.DISTILLERY_RECIPES, GTORecipeTypes.DISTILLATION_RECIPES)
             .tooltips(GTOMachineTranslation.INSTANCE.getMoltenCoreTooltips().getSupplier())
             .coilParallelTooltips()
             .laserTooltips()
@@ -2032,6 +2033,40 @@ public final class MultiBlockA {
                             .or(abilities(MAINTENANCE).setExactLimit(1)))
                     .where('J', heatingCoils())
                     .where('K', controller(blocks(definition.get())))
+                    .where(' ', any())
+                    .build())
+            .addSubPattern(definition -> FactoryBlockPattern.start(definition)
+                    .aisle("AAAAAAHHHHHAAAAAA", "A  A  HHHHH  A  A", "A  A  HHHHH  A  A", "AAAA         AAAA", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("A  AAAAAAAAAAA  A", " BB   DDDDD   BB ", " BB   AAAAA   BB ", "A  A         A  A", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "      AAAAA      ", "                 ")
+                    .aisle("A  AAAAAAAAAAA  A", " BB  DAEEEAD  BB ", "ABB  AAEEEAA  BBA", "A  A  FEGEF  A  A", "      FEGEF      ", "      FEGEF      ", "      FEGEF      ", "      FEGEF      ", "      FEGEF      ", "      FEGEF      ", "     AAEEEAA     ", "                 ")
+                    .aisle("A  AAAAAAAAAAA  A", "ABB  DEEEEED  BBA", " BB  AE   EA  BB ", "A  A  E   E  A  A", "      E   E      ", "      E   E      ", "      E   E      ", "      E   E      ", "      E   E      ", "      E   E      ", "     AE   EA     ", "       EEE       ")
+                    .aisle("A  AAAAAAAAAAA  A", " BB  DEEEEED  BB ", " BB  AE C EA  BB ", "A  A  G C G  A  A", "      G C G      ", "      G C G      ", "      G C G      ", "      G C G      ", "      G C G      ", "      G C G      ", "    AAE C EA     ", "       ECE       ")
+                    .aisle("A  AAAAAAAAAAA  A", " BB ADEEEEEDA BB ", "ABB AAE   EAA BBA", "A  AA E   E AA  A", "    AEE   EEA    ", "    A E   E A    ", "    AEE   EEA    ", "    A E   E A    ", "    AEE   EEA    ", "    A E   E A    ", "   AA E   EAAA   ", "    AAAEEEAAA    ")
+                    .aisle("A  AAAAAAAAAAA  A", "ABBDDEEEEEEEDDBBA", " BBAAEEEEEEEAABB ", "A  A EEEEEEE A  A", "    EEEEEEEEE    ", "     EEEEEEE     ", "    EEEEEEEEE    ", "     EEEEEEE     ", "    EEEEEEEEE    ", "     EEEEEEE     ", "   A EEEEEEE A   ", "      AAAAA      ")
+                    .aisle("A  AAAAAAAAAAA  A", " BBDEEEEEEEEEDBB ", " BBAE   E   EABB ", "A  AE   E   EA  A", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "   AE   E   EA   ", "     EEEAEEE     ")
+                    .aisle("A  AAAAAAAAAAA  A", " BBDEEEEEEEEEDBB ", "ABBAE C E C EABBA", "A  AG C E C GA  A", "    G C E C G    ", "    G C E C G    ", "    G C E C G    ", "    G C E C G    ", "    G C E C G    ", "    G C E C G    ", "   AE C E C EA   ", "     ECEAECE     ")
+                    .aisle("A  AAAAAAAAAAA  A", "ABBDEEEEEEEEEDBBA", " BBAE   E   EABB ", "A  AE   E   EA  A", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "    E   E   E    ", "   AE   E   EA   ", "     EEEAEEE     ")
+                    .aisle("A  AAAAAAAAAAA  A", " BBDAEEEAEEEADBB ", " BBAAEEEAEEEAABB ", "A  AFEEEAEEEFA  A", "    FEEEAEEEF    ", "    FEEEAEEEF    ", "    FEEEAEEEF    ", "    FEEEAEEEF    ", "    FEEEAEEEF    ", "    FEEEAEEEF    ", "   AAEEEAEEEAA   ", "        A        ")
+                    .aisle("A  AAAAAAAAAAA  A", " BB DDDDADDDD BB ", "ABB AAAAAAAAA BBA", "A  A         A  A", "                 ", "                 ", "                 ", "       AAA       ", "       ACA       ", "       AAA       ", "    AAAAAAAAA    ", "                 ")
+                    .aisle("A  AAAA   AAAA  A", "ABBC    C    CBBA", " BBC    C    CBB ", "A  A    C    A  A", "        C        ", "        C        ", "        C        ", "        C        ", "        C        ", "       AAA       ", "       AAA       ", "                 ")
+                    .aisle("A  AAA     AAA  A", " BBC         CBB ", " BBC         CBB ", "A  A         A  A", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "       AAA       ", "                 ")
+                    .aisle("AAAA         AAAA", "A  A         A  A", "A  A         A  A", "AAAA         AAAA", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("AAA           AAA", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("AA             AA", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("AA             AA", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("A               A", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
+                    .aisle("                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "        I        ", "                 ", "                 ")
+                    .where('A', blocks(GTOBlocks.NAQUADAH_ALLOY_CASING.get()))
+                    .where('B', blocks(GTOBlocks.PRESSURE_CONTAINMENT_CASING.get()))
+                    .where('C', blocks(GTOBlocks.AMPROSIUM_PIPE_CASING.get()))
+                    .where('D', blocks(GTOBlocks.PI_HIGH_TEMPERATURE_INSULATION_MECHANICAL_HOUSING.get()))
+                    .where('E', blocks(GTOBlocks.IRIDIUM_CASING.get()))
+                    .where('F', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTOMaterials.Inconel792)))
+                    .where('G', blocks(GTBlocks.FUSION_GLASS.get()))
+                    .where('H', blocks(GTOBlocks.IRIDIUM_CASING.get())
+                            .or(GTOPredicates.autoIOAbilities(definition.getRecipeTypes())))
+                    .where('I', controller(blocks(definition.get())))
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTOCore.id("block/casings/iridium_casing"), GTOCore.id("block/machines/molten_core"))
