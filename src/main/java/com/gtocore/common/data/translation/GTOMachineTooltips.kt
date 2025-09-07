@@ -4,7 +4,7 @@ import com.gtocore.api.lang.ComponentListSupplier
 import com.gtocore.api.lang.ComponentSupplier
 import com.gtocore.api.lang.toComponentSupplier
 import com.gtocore.api.lang.toLiteralSupplier
-import com.gtocore.common.data.translation.ComponentSlang.Circle
+import com.gtocore.common.data.translation.ComponentSlang.Tab
 import com.gtocore.common.machine.electric.ElectricHeaterMachine
 import com.gtocore.common.machine.multiblock.storage.MEStorageMachine
 import com.gtocore.common.machine.noenergy.BoilWaterMachine
@@ -71,7 +71,6 @@ fun ComponentListSupplier.danger(info: ComponentSupplier) {
  * 小作文请参看 [GTOMachineStories]
  */
 object GTOMachineTooltips {
-
 
     // 外置热源锅炉
     val BoilWaterMachineTooltips = ComponentListSupplier {
@@ -860,7 +859,7 @@ object GTOMachineTooltips {
         important("只能在太阳下工作" translatedTo "Can only operate under the sun")
 
         section("可用大小" translatedTo "Usable Size")
-        command("最小：3x3" translatedTo "Minimum: 3x3")
+        command("最小：5x5" translatedTo "Minimum: 5x5")
         command("最大：13x13" translatedTo "Maximum: 13x13")
     }
 
@@ -1113,5 +1112,37 @@ object GTOMachineTooltips {
         section(ComponentSlang.OutputProbability)
         content("每个配方循环中，不同的两种夸克释放催化剂的组合将正确识别出孤立的夸克并完成配方" translatedTo "Each recipe cycle, different combinations of two Quark Releasing Catalysts will correctly identify the Isolated Quarks and complete the recipe.")
         content("如果最近插入的两种催化剂是正确的组合，则立即输出稳定重子物质" translatedTo "If the last two inserted Catalysts are the correct combination, Stable Baryonic Matter will be output immediately.")
+    }
+
+    // 源初重构仪
+    val ThePrimordialReconstructorTooltips = ComponentListSupplier {
+        setTranslationPrefix("the_primordial_reconstructor")
+        add("通过电路选择工作模式" translatedTo "Select the operating mode through the circuit") { gold() }
+        add(Tab(1) + ("电路 1：物品解构" translatedTo "Circuit 1: Item Deconstruction")) { aqua() }
+        add(Tab(2) + ("需要输入 书 铭刻之布 摘抄符石" translatedTo "Requires input Book  Affix Canvas  Sigil of Withdrawal")) { gray().italic() }
+        add(Tab(1) + ("电路 2：物品 + 附魔 解构" translatedTo "Circuit 2: Item + Enchantments Deconstruction")) { aqua() }
+        add(Tab(2) + ("需要输入 铭刻之布 摘抄符石" translatedTo "Requires input Affix Canvas  Sigil of Withdrawal")) { gray().italic() }
+        add(Tab(1) + ("电路 3：物品 + 刻印 解构" translatedTo "Circuit 3: Item + Affixes Deconstruction")) { aqua() }
+        add(Tab(2) + ("需要输入 书 摘抄符石" translatedTo "Requires input Book  Sigil of Withdrawal")) { gray().italic() }
+        add(Tab(1) + ("电路 4：物品 + 附魔 + 刻印 解构" translatedTo "Circuit 4: Item + Enchantments + Affixes Deconstruction")) { aqua() }
+        add(Tab(2) + ("需要输入 摘抄符石" translatedTo "Requires input Sigil of Withdrawal")) { gray().italic() }
+        add(Tab(1) + ("电路 5：附魔精粹合成附魔书" translatedTo "Circuit 5: Essence synthesis Enchanted Book")) { aqua() }
+        add(Tab(2) + ("需要输入一本书，消耗附魔精粹和魔力合成" translatedTo "Need to input a book, consume enchantment essence and magic synthesis")) { gray().italic() }
+        add(Tab(1) + ("电路 6：附魔书合并" translatedTo "Circuit 6: Enchantment Enchanted Book Merge")) { aqua() }
+        add(Tab(2) + ("消耗魔力合成，会输出额外的书" translatedTo "Consume magic power to synthesize, and output additional books")) { gray().italic() }
+        add(Tab(1) + ("电路 7：刻印精粹合成铭刻之布" translatedTo "Circuit 7: Affix Enchanted Book Merge")) { aqua() }
+        add(Tab(2) + ("消耗魔力合成，需要一个铭刻之布" translatedTo "Consume magic power to synthesize, and requires an Affix Canvas")) { gray().italic() }
+        add(Tab(1) + ("电路 8：宝石合并" translatedTo "Circuit 8: Gem Merge")) { aqua() }
+        add(Tab(2) + ("使用同级的珍宝材料和宝石粉合并宝石" translatedTo "Use the same level of rarity materials and gem dust to merge gems")) { gray().italic() }
+        add(Tab(1) + ("电路 9：强行附魔" translatedTo "Circuit 9: Forced enchantment")) { aqua() }
+        add(Tab(2) + ("消耗魔力强行将附魔书上的附魔添加到物品上" translatedTo "Consume magic power to forcibly adds the enchantment from the enchanted book to the item")) { gray().italic() }
+        add(Tab(1) + ("电路 10：强行刻印" translatedTo "Circuit 10: Forced add affixes")) { aqua() }
+        add(Tab(2) + ("消耗魔力强行将铭刻之布上的刻印添加到物品上" translatedTo "Consume magic power to forcibly adds the affixes from the affix canvas to the item")) { gray().italic() }
+        add(Tab(1) + ("电路 11：强行修改物品稀有度" translatedTo "Circuit 11: Forcefully modify item rarity")) { aqua() }
+        add(Tab(2) + ("消耗魔力，珍宝材料和新生符文强行改变稀有度" translatedTo "Consume magic power and enter rarity material and sigil of rebirth to forcibly change the rarity")) { gray().italic() }
+        add(Tab(1) + ("电路 12：强行添加镶孔" translatedTo "Circuit 12: Forced addition of sockets")) { aqua() }
+        add(Tab(2) + ("消耗魔力，镶孔符文强行添加镶孔" translatedTo "Consume magic power and enter sigil of socketing to forcibly addition of sockets")) { gray().italic() }
+        add(Tab(1) + ("电路 13：强行镶嵌宝石" translatedTo "Circuit 13: Forced gem inlay")) { aqua() }
+        add(Tab(2) + ("消耗魔力，强行将宝石镶嵌到物品上" translatedTo "Consume magic power to forcibly inserting gems into items")) { gray().italic() }
     }
 }

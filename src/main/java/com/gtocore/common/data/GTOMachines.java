@@ -6,10 +6,7 @@ import com.gtocore.common.blockentity.TesseractBlockEntity;
 import com.gtocore.common.data.machines.*;
 import com.gtocore.common.data.translation.GTOMachineStories;
 import com.gtocore.common.data.translation.GTOMachineTooltips;
-import com.gtocore.common.machine.electric.AdvancedTesseractMachine;
-import com.gtocore.common.machine.electric.ElectricHeaterMachine;
-import com.gtocore.common.machine.electric.TesseractMachine;
-import com.gtocore.common.machine.electric.VacuumPumpMachine;
+import com.gtocore.common.machine.electric.*;
 import com.gtocore.common.machine.generator.LightningRodMachine;
 import com.gtocore.common.machine.generator.WindMillTurbineMachine;
 import com.gtocore.common.machine.monitor.*;
@@ -89,6 +86,11 @@ public final class GTOMachines {
                     .allRotation()
                     .tooltipsText("用于测试机器同步的工具。", "A tool for testing machine synchronization.")
                     .tooltipsText("请勿在生产环境中使用。", "Do not use in production environment.")
+                    .register();
+
+            final MachineDefinition TEST_REPORT_OUTPUT = machine("test_report_output", "测试报告输出器", TestReportOutput::new)
+                    .allRotation()
+                    .tooltipsText("打印一些测试用信息", "Print some test information")
                     .register();
         }
     }
