@@ -4,8 +4,6 @@ import com.gtocore.common.data.GTOItems;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.ae2.IPatternProviderLogic;
-import com.gtolib.api.ae2.pattern.IParallelPatternDetails;
-import com.gtolib.utils.MathUtil;
 import com.gtolib.utils.holder.IntHolder;
 import com.gtolib.utils.holder.LongHolder;
 import com.gtolib.utils.holder.ObjectHolder;
@@ -176,23 +174,8 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
             expectedOutputs.clear();
             expectedContainerItems.clear();
             ObjectHolder<KeyCounter[]> craftingContainer = new ObjectHolder<>(null);
-            int parallelValue = 1;
-            if (progress.value > 1 && details instanceof IParallelPatternDetails parallelPatternDetails) {
-                int num = MathUtil.saturatedCast(Long.highestOneBit(progress.value));
-                for (int i = 0; i < 4 && num > 0; i++) {
-                    parallelPatternDetails.parallel(num);
-                    craftingContainer.value = ExecutingCraftingJob.extractPatternInputs(parallelPatternDetails, inventory, level, expectedOutputs, expectedContainerItems);
-                    if (craftingContainer.value != null) {
-                        parallelValue = num;
-                        break;
-                    }
-                    num >>= 1;
-                }
-            } else {
-                craftingContainer.value = ExecutingCraftingJob.extractPatternInputs(details, inventory, level, expectedOutputs, expectedContainerItems);
-            }
+            craftingContainer.value = ExecutingCraftingJob.extractPatternInputs(details, inventory, level, expectedOutputs, expectedContainerItems);
             var providerIterable = craftingService.getProviders(details).iterator();
-            int finalParallelValue = parallelValue;
             IntSupplier pushPatternSuccess = () -> {
                 energyService.extractAEPower(CraftingCpuHelper.calculatePatternPower(craftingContainer.value), Actionable.MODULATE, PowerMultiplier.CONFIG);
                 pushedPatterns.value++;
@@ -205,7 +188,7 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
                     job.tt.gtolib$addMaxItems(expectedContainerItem.getLongValue(), expectedContainerItem.getKey().getType());
                 }
 
-                progress.value -= finalParallelValue;
+                progress.value--;
                 if (progress.value <= 0) {
                     it.remove();
                     return BREAK;
