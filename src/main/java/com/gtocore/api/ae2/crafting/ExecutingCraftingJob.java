@@ -1,14 +1,11 @@
 package com.gtocore.api.ae2.crafting;
 
-import com.gtolib.api.ae2.pattern.IDetails;
 import com.gtolib.api.ae2.pattern.IParallelPatternDetails;
-import com.gtolib.api.ae2.stacks.IKeyCounter;
 import com.gtolib.utils.holder.LongHolder;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.Level;
 
 import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
@@ -16,13 +13,9 @@ import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingPlan;
 import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
-import appeng.api.stacks.KeyCounter;
 import appeng.crafting.CraftingLink;
-import appeng.crafting.execution.CraftingCpuHelper;
 import appeng.crafting.execution.ElapsedTimeTracker;
-import appeng.crafting.inv.ICraftingInventory;
 import appeng.crafting.inv.ListCraftingInventory;
 import appeng.me.service.CraftingService;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
@@ -51,7 +44,7 @@ class ExecutingCraftingJob {
     long remainingAmount;
     Integer playerId;
 
-    ExecutingCraftingJob(ICraftingPlan plan, ListCraftingInventory.ChangeListener changeListener, CraftingLink link, @Nullable Integer playerId, OptimizedCraftingCpuLogic cpu) {
+    ExecutingCraftingJob(ICraftingPlan plan, ListCraftingInventory.ChangeListener changeListener, CraftingLink link, @Nullable Integer playerId) {
         this.finalOutput = plan.finalOutput();
         this.remainingAmount = this.finalOutput.amount();
         this.waitingFor = new ListCraftingInventory(changeListener);
@@ -143,75 +136,5 @@ class ExecutingCraftingJob {
         }
 
         return data;
-    }
-
-    static KeyCounter[] extractPatternInputs(IPatternDetails details, ListCraftingInventory sourceInv, Level level, KeyCounter expectedOutputs, KeyCounter expectedContainerItems) {
-        var inputs = details.getInputs();
-        KeyCounter[] inputHolder = getInputHolder((IDetails) details);
-        boolean found = true;
-
-        var counter = IKeyCounter.of(sourceInv.list);
-        for (int x = 0; x < inputs.length; x++) {
-            var list = inputHolder[x];
-            var input = inputs[x];
-            long remainingMultiplier = input.getMultiplier();
-            var possibleInputs = input.getPossibleInputs();
-            for (var stack : possibleInputs) {
-                var amount = stack.amount();
-                var fuzz = stack.what();
-                if (counter.gtolib$contains(fuzz) && input.isValid(fuzz, level)) {
-                    long extracted = extractTemplates(sourceInv, fuzz, amount, remainingMultiplier);
-                    list.add(fuzz, extracted * amount);
-                    var containerItem = input.getRemainingKey(fuzz);
-                    if (containerItem != null) {
-                        expectedContainerItems.add(containerItem, extracted);
-                    }
-                    remainingMultiplier -= extracted;
-                    if (remainingMultiplier == 0) break;
-                }
-            }
-
-            if (remainingMultiplier > 0) {
-                found = false;
-                break;
-            }
-        }
-
-        if (!found) {
-            CraftingCpuHelper.reinjectPatternInputs(sourceInv, inputHolder);
-            return null;
-        }
-
-        for (var output : details.getOutputs()) {
-            expectedOutputs.add(output.what(), output.amount());
-        }
-
-        return inputHolder;
-    }
-
-    private static KeyCounter[] getInputHolder(IDetails details) {
-        int length = details.getInputs().length;
-        var inputHolder = new KeyCounter[length];
-        var ih = details.gtolib$getInputHolder();
-        for (int x = 0; x < length; x++) {
-            var kc = ih[x];
-            kc.clear();
-            inputHolder[x] = kc;
-        }
-        return inputHolder;
-    }
-
-    private static long extractTemplates(ICraftingInventory inv, AEKey key, long amount, long multiplier) {
-        long maxTotal = amount * multiplier;
-        var extracted = inv.extract(key, maxTotal, Actionable.SIMULATE);
-        if (extracted == 0) return 0;
-        multiplier = extracted / amount;
-        maxTotal = amount * multiplier;
-        if (maxTotal == 0) return 0;
-        extracted = inv.extract(key, maxTotal, Actionable.MODULATE);
-        if (extracted == 0 || extracted != maxTotal) {
-            throw new IllegalStateException("Failed to correctly extract whole number. Invalid simulation!");
-        }
-        return multiplier;
     }
 }

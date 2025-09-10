@@ -4,7 +4,9 @@ import com.gtocore.common.data.GTOItems;
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.ae2.IPatternProviderLogic;
+import com.gtolib.api.ae2.pattern.IDetails;
 import com.gtolib.api.ae2.pattern.IParallelPatternDetails;
+import com.gtolib.api.ae2.stacks.IKeyCounter;
 import com.gtolib.utils.holder.IntHolder;
 import com.gtolib.utils.holder.LongHolder;
 import com.gtolib.utils.holder.ObjectHolder;
@@ -44,7 +46,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.util.Set;
 import java.util.UUID;
@@ -60,13 +61,13 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
 
     private ExecutingCraftingJob job = null;
 
-    private final Set<Consumer<AEKey>> listeners = new ObjectOpenHashSet<>();
+    private Consumer<AEKey> listener = null;
 
     private final SetMultimap<AEKey, GlobalPos> pendingRequests = HashMultimap.create();
 
     private final ListCraftingInventory.ChangeListener changeListener = what -> {
         lastModifiedOnTick = TickHandler.instance().getCurrentTick();
-        for (var listener : listeners) {
+        if (listener != null) {
             listener.accept(what);
         }
     };
@@ -97,7 +98,7 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
                 .orElse(null);
         var craftId = UUID.randomUUID();
         var linkCpu = new CraftingLink(CraftingCpuHelper.generateLinkData(craftId, requester == null, false), cluster);
-        this.job = new ExecutingCraftingJob(plan, changeListener, linkCpu, playerId, this);
+        this.job = new ExecutingCraftingJob(plan, changeListener, linkCpu, playerId);
         cluster.updateOutput(plan.finalOutput());
         cluster.markDirty();
         notifyJobOwner(job, CraftingJobStatusPacket.Status.STARTED);
@@ -160,7 +161,6 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
         var it = job.tasks.object2ObjectEntrySet().fastIterator();
 
         var expectedOutputs = new KeyCounter();
-        var expectedContainerItems = new KeyCounter();
 
         taskLoop:
         while (it.hasNext()) {
@@ -173,24 +173,24 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
 
             var tmp_details = task.getKey();
             expectedOutputs.clear();
-            expectedContainerItems.clear();
             ObjectHolder<KeyCounter[]> craftingContainer = new ObjectHolder<>(null);
             long parallelValue = 1;
             if (progress.value > 1 && tmp_details instanceof IParallelPatternDetails pd) {
-                var parallelPatternDetails = pd.getCopy();
-                long num = 1L << (Long.numberOfLeadingZeros(1) - Long.numberOfLeadingZeros(progress.value) & ~1);
-                for (int i = 0; i < 4 && num > 0; i++) {
-                    parallelPatternDetails.parallel(num);
-                    craftingContainer.value = ExecutingCraftingJob.extractPatternInputs(parallelPatternDetails, inventory, level, expectedOutputs, expectedContainerItems);
-                    if (craftingContainer.value != null) {
-                        parallelValue = num;
+                var parallel = getMaxParallel(progress.value, pd, inventory);
+                if (parallel == 0) continue;
+                if (parallel > 1) {
+                    var parallelPatternDetails = pd.getCopy();
+                    parallelPatternDetails.parallel(parallel);
+                    if ((craftingContainer.value = extractPatternInputs(parallelPatternDetails, inventory, expectedOutputs)) == null) {
+                        continue;
+                    } else {
+                        parallelValue = parallel;
                         tmp_details = parallelPatternDetails;
-                        break;
                     }
-                    num >>= 1;
                 }
-            } else {
-                craftingContainer.value = ExecutingCraftingJob.extractPatternInputs(tmp_details, inventory, level, expectedOutputs, expectedContainerItems);
+            }
+            if (craftingContainer.value == null) {
+                if ((craftingContainer.value = extractPatternInputs(tmp_details, inventory, expectedOutputs)) == null) continue;
             }
             var details = tmp_details;
             var providerIterable = craftingService.getProviders(details).iterator();
@@ -201,10 +201,6 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
 
                 for (var expectedOutput : expectedOutputs) {
                     job.waitingFor.insert(expectedOutput.getKey(), expectedOutput.getLongValue(), Actionable.MODULATE);
-                }
-                for (var expectedContainerItem : expectedContainerItems) {
-                    job.waitingFor.insert(expectedContainerItem.getKey(), expectedContainerItem.getLongValue(), Actionable.MODULATE);
-                    job.tt.gtolib$addMaxItems(expectedContainerItem.getLongValue(), expectedContainerItem.getKey().getType());
                 }
 
                 progress.value -= finalParallelValue;
@@ -218,8 +214,7 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
                 }
 
                 expectedOutputs.reset();
-                expectedContainerItems.reset();
-                craftingContainer.value = ExecutingCraftingJob.extractPatternInputs(details, inventory, level, expectedOutputs, expectedContainerItems);
+                craftingContainer.value = extractPatternInputs(details, inventory, expectedOutputs);
                 return 0;
             };
             var targetOutput = details.getPrimaryOutput().what();
@@ -398,12 +393,12 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
 
     @Override
     public void addListener(Consumer<AEKey> listener) {
-        listeners.add(listener);
+        this.listener = listener;
     }
 
     @Override
     public void removeListener(Consumer<AEKey> listener) {
-        listeners.remove(listener);
+        this.listener = null;
     }
 
     @Override
@@ -511,5 +506,71 @@ public class OptimizedCraftingCpuLogic extends CraftingCpuLogic {
                             status),
                     connectedPlayer);
         }
+    }
+
+    private static KeyCounter[] extractPatternInputs(IPatternDetails details, ListCraftingInventory sourceInv, KeyCounter expectedOutputs) {
+        var inputs = details.getInputs();
+        KeyCounter[] inputHolder = getInputHolder((IDetails) details);
+        boolean found = true;
+
+        var counter = IKeyCounter.of(sourceInv.list);
+        for (int x = 0; x < inputs.length; x++) {
+            var list = inputHolder[x];
+            var input = inputs[x];
+            long remainingMultiplier = input.getMultiplier();
+            for (var stack : input.getPossibleInputs()) {
+                var what = stack.what();
+                if (counter.gtolib$contains(what)) {
+                    var amount = stack.amount();
+                    var extracted = sourceInv.extract(what, amount * remainingMultiplier, Actionable.MODULATE);
+                    if (extracted == 0) continue;
+                    list.add(what, extracted);
+                    remainingMultiplier -= (extracted / amount);
+                    if (remainingMultiplier == 0) break;
+                }
+            }
+
+            if (remainingMultiplier > 0) {
+                found = false;
+                break;
+            }
+        }
+
+        if (!found) {
+            CraftingCpuHelper.reinjectPatternInputs(sourceInv, inputHolder);
+            return null;
+        }
+
+        for (var output : details.getOutputs()) {
+            expectedOutputs.add(output.what(), output.amount());
+        }
+
+        return inputHolder;
+    }
+
+    private static long getMaxParallel(long maxParallel, IPatternDetails details, ListCraftingInventory sourceInv) {
+        for (IPatternDetails.IInput input : details.getInputs()) {
+            long extracted = 0;
+            for (var stack : input.getPossibleInputs()) {
+                extracted += (sourceInv.list.get(stack.what()) / stack.amount());
+            }
+            maxParallel = Math.min(maxParallel, extracted / input.getMultiplier());
+            if (maxParallel < 1) {
+                return 0;
+            }
+        }
+        return maxParallel;
+    }
+
+    private static KeyCounter[] getInputHolder(IDetails details) {
+        int length = details.getInputs().length;
+        var inputHolder = new KeyCounter[length];
+        var ih = details.gtolib$getInputHolder();
+        for (int x = 0; x < length; x++) {
+            var kc = ih[x];
+            kc.clear();
+            inputHolder[x] = kc;
+        }
+        return inputHolder;
     }
 }
