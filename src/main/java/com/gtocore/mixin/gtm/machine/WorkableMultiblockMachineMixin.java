@@ -70,9 +70,10 @@ public abstract class WorkableMultiblockMachineMixin extends MultiblockControlle
 
     @Override
     public boolean canVoidRecipeOutputs(RecipeCapability<?> capability) {
-        if (capability == ItemRecipeCapability.CAP && gtolib$isItemOutput) {
-            return true;
-        } else return capability == FluidRecipeCapability.CAP && gtolib$isFluidOutput;
+        if (gtolib$isDualOutput || getVoidingMode().canVoid(capability)) return true;
+        if (capability == ItemRecipeCapability.CAP) {
+            return gtolib$isItemOutput;
+        } else return gtolib$isFluidOutput;
     }
 
     /**
