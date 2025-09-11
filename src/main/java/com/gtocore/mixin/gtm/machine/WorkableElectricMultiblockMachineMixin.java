@@ -12,7 +12,6 @@ import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.IEnergyContainer;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
-import com.gregtechceu.gtceu.api.gui.fancy.IFancyConfigurator;
 import com.gregtechceu.gtceu.api.gui.fancy.IFancyConfiguratorButton;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IVoidable;
@@ -23,7 +22,6 @@ import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
 
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 
@@ -127,8 +125,8 @@ public abstract class WorkableElectricMultiblockMachineMixin extends WorkableMul
      */
     @Overwrite(remap = false)
     public void attachConfigurators(ConfiguratorPanel configuratorPanel) {
-        IVoidable.attachConfigurators(configuratorPanel, this);
         configuratorPanel.attachConfigurators(new IFancyConfiguratorButton.Toggle(GuiTextures.BUTTON_POWER.getSubTexture(0, 0, 1, 0.5), GuiTextures.BUTTON_POWER.getSubTexture(0, 0.5, 1, 0.5), this::isWorkingEnabled, (clickData, pressed) -> this.setWorkingEnabled(pressed)).setTooltipsSupplier(pressed -> List.of(Component.translatable(pressed ? "behaviour.soft_hammer.enabled" : "behaviour.soft_hammer.disabled"))));
+        IVoidable.attachConfigurators(configuratorPanel, this);
         if (!isGenerator()) {
             configuratorPanel.attachConfigurators(new OverclockConfigurator(this));
             configuratorPanel.attachConfigurators(new IFancyConfiguratorButton.Toggle(
@@ -136,12 +134,6 @@ public abstract class WorkableElectricMultiblockMachineMixin extends WorkableMul
                     GuiTextures.BUTTON_BATCH.getSubTexture(0, 0.5, 1, 0.5),
                     this::isBatchEnabled, (cd, p) -> batchEnabled = p)
                     .setTooltipsSupplier(p -> List.of(Component.translatable("gtceu.machine.batch_" + (p ? "enabled" : "disabled")))));
-        }
-        for (Direction direction : Direction.values()) {
-            if (self().getCoverContainer().hasCover(direction)) {
-                IFancyConfigurator configurator = self().getCoverContainer().getCoverAtSide(direction).getConfigurator();
-                if (configurator != null) configuratorPanel.attachConfigurators(configurator);
-            }
         }
         ICheckPatternMachine.attachConfigurators(configuratorPanel, self());
     }

@@ -5,7 +5,6 @@ import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.widget.FloatInputWidget;
 import com.gregtechceu.gtceu.api.gui.widget.ToggleButtonWidget;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.MultiblockPartMachine;
-import com.gregtechceu.gtceu.data.lang.LangHandler;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
@@ -106,7 +105,7 @@ public final class SensorPartMachine extends MultiblockPartMachine {
         @Override
         public void updateScreen() {
             super.updateScreen();
-            setHoverTooltips(List.copyOf(LangHandler.getMultiLang("gtocore.machine.sensor.invert." + (isPressed ? "enabled" : "disabled"))));
+            setHoverTooltips("gtocore.machine.sensor.invert." + (isPressed ? "enabled" : "disabled"));
         }
     }
 

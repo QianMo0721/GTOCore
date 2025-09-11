@@ -58,12 +58,8 @@ final class MachineLang {
         addCNEN("gtocore.machine.neutron_activator.efficiency", "动能消耗倍速: %s", "Kinetic Energy Consumption Multiplier: %s");
         addCNEN("gtocore.machine.neutron_activator.ev", "当前中子动能: %seV", "Current Neutron Kinetic Energy: %seV");
         addCNEN("gtocore.machine.height", "高度: %s", "Height: %s");
-        addCNEN("gtocore.machine.sensor.invert.disabled.0", "红石输出: 普通", "Redstone Output: Normal");
-        addCNEN("gtocore.machine.sensor.invert.disabled.1", "点击为以反转红石逻辑", "Click to toggle inverted redstone logic");
-        addCNEN("gtocore.machine.sensor.invert.disabled.2", "介于所设定的最小值和最大值之间时传感器将发出红石信号", "When neutron kinetic energy is between the set minimum and maximum values, the sensor will emit a redstone signal");
-        addCNEN("gtocore.machine.sensor.invert.enabled.0", "红石输出: 反转", "Redstone Output: Inverted");
-        addCNEN("gtocore.machine.sensor.invert.enabled.1", "点击切换为普通红石逻辑", "Click to switch to normal redstone logic");
-        addCNEN("gtocore.machine.sensor.invert.enabled.2", "介于所设定的最小值和最大值之外时传感器将发出红石信号", "When neutron kinetic energy is outside the set minimum and maximum values, the sensor will emit a redstone signal");
+        addCNEN("gtocore.machine.sensor.invert.disabled", "红石输出: 普通", "Redstone Output: Normal");
+        addCNEN("gtocore.machine.sensor.invert.enabled", "红石输出: 反转", "Redstone Output: Inverted");
         addCNEN("gtocore.machine.oc_amount", "超频次数: %s", "Overclocking Times: %s");
         addCNEN("gtocore.machine.off", "关闭", "Off");
         addCNEN("gtocore.machine.on", "打开", "On");
