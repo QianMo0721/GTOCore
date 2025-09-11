@@ -64,10 +64,9 @@ public abstract class ProcessingEncodingPanelMixin extends EncodingModePanel {
                 Component.translatable("gtocore.pattern.divide", 5),
                 Component.translatable("gtocore.pattern.tooltip.divide", 5));
 
-        gtolib$clearSecOutput = new ModifyIconButton( b -> ((IPatterEncodingTermMenu) menu).gtolib$clearSecOutput(),ModifyIcon.TOOLBAR_BUTTON_BACKGROUND,
+        gtolib$clearSecOutput = new ModifyIconButton(b -> ((IPatterEncodingTermMenu) menu).gtolib$clearSecOutput(), ModifyIcon.TOOLBAR_BUTTON_BACKGROUND,
                 Component.translatable("gtocore.pattern.clearSecOutput"),
                 Component.translatable("gtocore.pattern.tooltip.clearSecOutput"));
-
 
         widgets.add("modify1", gtolib$multipleTow);
         widgets.add("modify2", gtolib$multipleThree);

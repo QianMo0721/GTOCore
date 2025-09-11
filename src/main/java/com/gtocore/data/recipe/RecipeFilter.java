@@ -342,6 +342,7 @@ public final class RecipeFilter {
         filters.add(RLUtils.avaritia("eio_creative_power"));
         filters.add(RLUtils.avaritia("botania_creative_pool"));
         filters.add(RLUtils.avaritia("compressed_chest"));
+        filters.add(RLUtils.avaritia("infinity_catalyst_eternal"));
 
         filters.add(RLUtils.ad("refining/fuel_from_refining_oil"));
         filters.add(RLUtils.ad("oxygen_loading/oxygen_from_oxygen_loading_oxygen"));

@@ -1,11 +1,11 @@
 package com.gtocore.integration.ae;
 
 import com.gtolib.GTOCore;
+import com.gtolib.api.ae2.ExternalStorageCacheStrategy;
 import com.gtolib.utils.BlockCapabilityCache;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -40,7 +40,6 @@ import appeng.me.storage.MEInventoryHandler;
 import appeng.me.storage.NullInventory;
 import appeng.menu.me.items.CraftingTermMenu;
 import appeng.parts.PartModel;
-import appeng.parts.automation.StackWorldBehaviors;
 import appeng.parts.reporting.AbstractTerminalPart;
 import appeng.util.inv.AppEngInternalInventory;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -202,10 +201,8 @@ public class SimpleCraftingTerminal extends AbstractTerminalPart
     private Map<AEKeyType, ExternalStorageStrategy> getExternalStorageStrategies() {
         if (externalStorageStrategies == null) {
             var host = getHost().getBlockEntity();
-            this.externalStorageStrategies = StackWorldBehaviors.createExternalStorageStrategies(
-                    (ServerLevel) host.getLevel(),
-                    host.getBlockPos().relative(getSide()),
-                    getSide().getOpposite());
+            var side = getSide();
+            this.externalStorageStrategies = ExternalStorageCacheStrategy.createExternalStorageStrategies(host, host.getBlockPos().relative(side), side, side.getOpposite());
         }
         return externalStorageStrategies;
     }

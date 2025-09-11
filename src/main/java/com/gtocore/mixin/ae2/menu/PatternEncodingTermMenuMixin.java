@@ -72,7 +72,7 @@ public abstract class PatternEncodingTermMenuMixin extends MEStorageMenu impleme
             sendClientAction("clearSecOutput");
         } else {
             for (int i = 1; i <= 8; i++) {
-                encodedOutputsInv.setStack(i,null);
+                encodedOutputsInv.setStack(i, null);
             }
         }
     }
