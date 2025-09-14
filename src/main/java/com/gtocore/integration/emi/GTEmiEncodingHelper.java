@@ -29,9 +29,9 @@ public class GTEmiEncodingHelper { // also accessed by gtolib
     @Nullable
     private static GenericStack ofVirtual(EmiStack stack) {
         if (stack.getKey() instanceof Item) {
-            var item = stack.getItemStack();
+            var item = CustomItems.VIRTUAL_ITEM_PROVIDER.asStack();
             item.getOrCreateTag().putBoolean("marked", true);
-            return new GenericStack(AEItemKey.of(VirtualItemProviderBehavior.setVirtualItem(CustomItems.VIRTUAL_ITEM_PROVIDER.asStack(), item)), 1);
+            return new GenericStack(AEItemKey.of(VirtualItemProviderBehavior.setVirtualItem(item, stack.getItemStack())), 1);
         }
         return null;
     }

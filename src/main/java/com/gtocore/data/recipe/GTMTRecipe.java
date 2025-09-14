@@ -1,6 +1,7 @@
 package com.gtocore.data.recipe;
 
 import com.gtocore.common.data.GTOItems;
+import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.common.data.machines.GTAEMachines;
 
@@ -31,6 +32,16 @@ import static com.gtocore.common.data.GTORecipeTypes.SCANNER_RECIPES;
 public final class GTMTRecipe {
 
     public static void init() {
+        ASSEMBLER_RECIPES.builder("virtual_item_supply_machine")
+                .inputItems(GTOMachines.PROGRAMMABLEC_HATCH[2].asStack())
+                .inputItems(CustomItems.PROGRAMMABLE_COVER.get(), 16)
+                .inputItems("expatternprovider:caner", 4)
+                .inputItems(GTItems.ROBOT_ARM_MV.asStack(16))
+                .outputItems(GTAEMachines.VIRTUAL_ITEM_SUPPLY_MACHINE.asStack())
+                .EUt(120)
+                .duration(400)
+                .save();
+
         ASSEMBLER_RECIPES.recipeBuilder("programmable_cover")
                 .inputItems(GTItems.ROBOT_ARM_MV.asStack(2))
                 .inputItems(CustomItems.VIRTUAL_ITEM_PROVIDER.asStack())

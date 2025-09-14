@@ -25,7 +25,7 @@ public final class GTAEMachines {
             .tier(MV)
             .allRotation()
             .notAllowSharedTooltips()
-            .renderer(() -> new OverlayTieredMachineRenderer(HV, GTCEu.id("block/machine/part/me_pattern_buffer_proxy")))
+            .renderer(() -> new OverlayTieredMachineRenderer(MV, GTCEu.id("block/machine/part/me_pattern_buffer_proxy")))
             .register();
 
     public static final MachineDefinition CRAFTING_CPU_INTERFACE = machine("crafting_cpu_interface", "合成CPU接口", MECPUMachine::createPart)
