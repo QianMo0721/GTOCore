@@ -1,11 +1,13 @@
 package com.gtocore.mixin.jade;
 
+import com.gtocore.common.blockentity.TesseractBlockEntity;
 import com.gtocore.integration.jade.GTOJadePlugin;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.transfer.fluid.FluidHandlerList;
 import com.gregtechceu.gtceu.api.transfer.item.ItemHandlerList;
+import com.gregtechceu.gtceu.common.machine.multiblock.part.MufflerPartMachine;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
@@ -54,7 +56,10 @@ public class CommonProxyMixin {
 
     @Redirect(method = "createItemCollector", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/common/capabilities/CapabilityProvider;getCapability(Lnet/minecraftforge/common/capabilities/Capability;)Lnet/minecraftforge/common/util/LazyOptional;"), remap = false)
     private static <T> LazyOptional<T> createItemCollector(CapabilityProvider instance, Capability<T> capability) {
-        if (instance instanceof MetaMachineBlockEntity blockEntity) {
+        if (instance instanceof MetaMachineBlockEntity blockEntity && !(blockEntity instanceof TesseractBlockEntity)) {
+            if (blockEntity.metaMachine instanceof MufflerPartMachine mufflerPartMachine) {
+                return LazyOptional.of(mufflerPartMachine::getInventory).cast();
+            }
             var ts = blockEntity.metaMachine.getTraits();
             List<IItemHandler> filteredTraits = new ObjectArrayList<>(ts.size());
             for (var t : ts) {

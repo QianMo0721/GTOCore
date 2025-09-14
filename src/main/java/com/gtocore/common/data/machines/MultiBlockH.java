@@ -406,7 +406,8 @@ public final class MultiBlockH {
             .coilParallelTooltips()
             .laserTooltips()
             .multipleRecipesTooltips()
-            .recipeTypes(GTORecipeTypes.BIOCHEMICAL_EXTRACTION_RECIPES, GTORecipeTypes.BIOCHEMICAL_REACTION_RECIPES)
+            .combinedRecipeTooltips()
+            .recipeTypes(GTORecipeTypes.LIFE_FORGE)
             .block(GTOBlocks.SPS_CASING)
             .pattern(definition -> MultiBlockFileReader.start(definition, RelativeDirection.FRONT, RelativeDirection.UP, RelativeDirection.LEFT) // definition
                     .where('A', blocks(GTOBlocks.SPS_CASING.get())

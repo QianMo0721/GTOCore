@@ -4,10 +4,12 @@ import com.gtolib.api.machine.part.ItemHatchPartMachine;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
+import com.gregtechceu.gtceu.api.cover.CoverBehavior;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.feature.IMachineLife;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
+import com.gregtechceu.gtceu.api.transfer.fluid.IFluidHandlerModifiable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
@@ -77,6 +80,18 @@ public class TesseractMachine extends MetaMachine implements IFancyUIMachine, IM
     }
 
     @Override
+    public @Nullable IItemHandlerModifiable getItemHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
+        var cap = getCapability(ForgeCapabilities.ITEM_HANDLER, side);
+        return cap != null ? cap.orElse(null) instanceof IItemHandlerModifiable m ? m : null : null;
+    }
+
+    @Override
+    public @Nullable IFluidHandlerModifiable getFluidHandlerCap(@Nullable Direction side, boolean useCoverCapability) {
+        var cap = getCapability(ForgeCapabilities.ITEM_HANDLER, side);
+        return cap != null ? getCapability(ForgeCapabilities.FLUID_HANDLER, side).orElse(null) instanceof IFluidHandlerModifiable m ? m : null : null;
+    }
+
+    @Override
     @Nullable
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (call) return null;
@@ -106,6 +121,16 @@ public class TesseractMachine extends MetaMachine implements IFancyUIMachine, IM
                 }
             }
             call = false;
+            if (side != null) {
+                var handler = result.orElse(null);
+                if (handler instanceof IItemHandlerModifiable modifiable) {
+                    CoverBehavior cover = getCoverContainer().getCoverAtSide(side);
+                    return cover != null ? ForgeCapabilities.ITEM_HANDLER.orEmpty(cap, LazyOptional.of(() -> cover.getItemHandlerCap(modifiable))) : result;
+                } else if (handler instanceof IFluidHandlerModifiable modifiable) {
+                    CoverBehavior cover = getCoverContainer().getCoverAtSide(side);
+                    return cover != null ? ForgeCapabilities.FLUID_HANDLER.orEmpty(cap, LazyOptional.of(() -> cover.getFluidHandlerCap(modifiable))) : result;
+                }
+            }
             return result;
         }
         return null;

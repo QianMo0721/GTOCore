@@ -1003,4 +1003,6 @@ public final class GTORecipeTypes {
     public static final RecipeType LARGE_CHEMICAL_PLANT = CombinedRecipeType.register("large_chemical_plant", LARGE_CHEMICAL_RECIPES, CHEMICAL_RECIPES, POLYMERIZATION_REACTOR_RECIPES).setMaxIOSize(3, 3, 5, 4).setEUIO(IO.IN).setSound(GTSoundEntries.CHEMICAL);
 
     public static final RecipeType EXTREME_COMPRESSOR = CombinedRecipeType.register("extreme_compressor", COMPRESSOR_RECIPES, GAS_COMPRESSOR_RECIPES).setMaxIOSize(1, 1, 1, 1).setEUIO(IO.IN).setSound(GTSoundEntries.COMPRESSOR);
+
+    public static final RecipeType LIFE_FORGE = CombinedRecipeType.register("life_forge", BIOCHEMICAL_EXTRACTION_RECIPES, BIOCHEMICAL_REACTION_RECIPES).setMaxIOSize(1, 1, 1, 1).setEUIO(IO.IN).setSound(GTSoundEntries.ARC);
 }

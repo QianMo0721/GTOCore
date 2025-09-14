@@ -180,6 +180,7 @@
     "gtm.registry.GTRegistryStringMixin",
     "gtm.registry.MachineBuilderMixin",
     "jade.CommonProxyMixin",
+    "jade.JadeForgeUtilsMixin",
     "mc.BlockBehaviourMixin",
     "mc.LanguageMixin",
     "mc.SharedConstantsMixin",
