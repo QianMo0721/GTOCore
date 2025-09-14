@@ -99,8 +99,6 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
     private int tier;
     @Persisted
     private long time;
-    @Persisted
-    private boolean isActive;
     private final ConditionalSubscriptionHandler tickSubs;
     private SensorPartMachine sensorMachine;
 
@@ -180,10 +178,8 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      * 如果机器当前未激活，将其状态设为激活并更新激活的区块。
      */
     private void activateMachine() {
-        if (!isActive) {
-            isActive = true;
-            updateActiveBlocks(true);
-        }
+        activated = true;
+        this.requestSync();
     }
 
     /**
@@ -257,10 +253,8 @@ public final class PrimitiveDistillationTowerMachine extends NoEnergyMultiblockM
      * 如果机器当前处于激活状态，则将其状态设为非激活，并更新相关的活动块标志。
      */
     private void deactivateMachine() {
-        if (isActive) {
-            isActive = false;
-            updateActiveBlocks(false);
-        }
+        activated = false;
+        this.requestSync();
     }
 
     /**
