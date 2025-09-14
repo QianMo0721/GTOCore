@@ -149,8 +149,4 @@ public final class INFFluidDrillLogic extends RecipeLogic implements IFluidDrill
     public Fluid getVeinFluid() {
         return this.veinFluid;
     }
-
-    public DrillingControlCenterMachine getCache() {
-        return this.cache;
-    }
 }

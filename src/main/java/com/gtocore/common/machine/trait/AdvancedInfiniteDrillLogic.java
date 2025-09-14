@@ -2,7 +2,9 @@ package com.gtocore.common.machine.trait;
 
 import com.gtocore.common.machine.multiblock.electric.voidseries.AdvancedInfiniteDrillMachine;
 
+import com.gtolib.api.machine.multiblock.DrillingControlCenterMachine;
 import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
+import com.gtolib.api.machine.trait.IFluidDrillLogic;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeRunner;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
@@ -23,11 +25,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEnhancedRecipeLogic {
+public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEnhancedRecipeLogic, IFluidDrillLogic {
 
     private static final int MAX_PROGRESS = 20;
     private final Object2IntOpenHashMap<Fluid> veinFluids = new O2IOpenCacheHashMap<>();
     private int range;
+    private DrillingControlCenterMachine cache;
 
     public AdvancedInfiniteDrillLogic(IRecipeLogicMachine machine, int range) {
         super(machine);
@@ -67,9 +70,7 @@ public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEn
     private Recipe getFluidDrillRecipe() {
         if (!veinFluids.isEmpty()) {
             var recipe = gtolib$getRecipeBuilder().duration(MAX_PROGRESS).EUt(20000).outputFluids(veinFluids.object2IntEntrySet().stream().map(entry -> new FluidStack(entry.getKey(), entry.getIntValue())).toArray(FluidStack[]::new)).buildRawRecipe();
-            recipe.modifier(new ContentModifier(getParallel(), efficiency(getMachine().getRate() * 500)), true);
-            recipe.manat = 0L;
-            recipe.cwut = 0L;
+            recipe.modifier(new ContentModifier(getParallel() * efficiency(getMachine().getRate() * 500), 0), true);
             RecipeModifierFunction.overclocking(getMachine(), recipe);
             if (RecipeRunner.matchRecipe(machine, recipe) && RecipeRunner.matchTickRecipe(machine, recipe)) {
                 return recipe;
@@ -83,7 +84,10 @@ public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEn
         var currentHeat = drill.getCurrentHeat();
         var heat = drill.getRate();
         var efficiency = efficiency(currentHeat);
-        return (long) efficiency * heat;
+        var produced = (long) efficiency * heat;
+        var machine = getNetMachine();
+        if (machine != null) produced = (long) (produced * machine.getMultiplier());
+        return produced;
     }
 
     /**
@@ -169,5 +173,21 @@ public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEn
 
     public int getRange() {
         return this.range;
+    }
+
+    @Override
+    public DrillingControlCenterMachine getNetMachineCache() {
+        return cache;
+    }
+
+    @Override
+    public void setNetMachineCache(DrillingControlCenterMachine cache) {
+        this.cache = cache;
+    }
+
+    @Override
+    public void onMachineUnLoad() {
+        super.onMachineUnLoad();
+        this.cache = null;
     }
 }
