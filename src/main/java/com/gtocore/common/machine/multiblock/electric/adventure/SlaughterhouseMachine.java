@@ -169,7 +169,7 @@ public final class SlaughterhouseMachine extends StorageMultiblockMachine {
             ItemStack itemStack = getStorageStack();
             boolean isFixed = !itemStack.isEmpty();
             String[] mobList = isFixed ? null : c == 1 ? mobList1 : mobList2;
-            int parallel = (getTier() - 2) << 3;
+            int parallel = Math.max(1, (getTier() - 2) << 3);
             int tierMultiplier = Math.min(16, parallel);
             int multiplier = parallel / tierMultiplier;
 
