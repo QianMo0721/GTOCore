@@ -5,6 +5,7 @@ import com.gtocore.common.machine.multiblock.electric.voidseries.AdvancedInfinit
 import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeRunner;
+import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.BedrockFluidVeinSavedData;
 import com.gregtechceu.gtceu.api.data.worldgen.bedrockfluid.FluidVeinWorldEntry;
@@ -69,6 +70,7 @@ public final class AdvancedInfiniteDrillLogic extends RecipeLogic implements IEn
             recipe.modifier(new ContentModifier(getParallel(), efficiency(getMachine().getRate() * 500)), true);
             recipe.manat = 0L;
             recipe.cwut = 0L;
+            RecipeModifierFunction.overclocking(getMachine(), recipe);
             if (RecipeRunner.matchRecipe(machine, recipe) && RecipeRunner.matchTickRecipe(machine, recipe)) {
                 return recipe;
             }

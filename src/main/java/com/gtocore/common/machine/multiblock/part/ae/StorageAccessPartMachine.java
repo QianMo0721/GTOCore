@@ -218,6 +218,7 @@ public abstract class StorageAccessPartMachine extends AmountConfigurationHatchP
                 dirty = false;
                 getCellStorage().setPersisted(false);
                 onChanged();
+                CellDataStorage.setDirty();
             }
             if (uuid == null || capacity == 0 || !isOnline) return;
             if (!check) {
@@ -560,6 +561,7 @@ public abstract class StorageAccessPartMachine extends AmountConfigurationHatchP
                 dirty = false;
                 getCellStorage().setPersisted(false);
                 onChanged();
+                CellDataStorage.setDirty();
             }
             if (uuid == null || capacity == 0 || !isOnline) return;
             if (!check) {
