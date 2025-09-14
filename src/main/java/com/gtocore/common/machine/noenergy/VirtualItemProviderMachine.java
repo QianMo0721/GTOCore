@@ -75,7 +75,6 @@ public final class VirtualItemProviderMachine extends MetaMachine implements IUI
         getMainNode().addService(IStorageProvider.class, this);
         storage.setStoredMap(new O2LOpenCacheHashMap<>());
         inventory.setFilter(stack -> stack.getItem() == VIRTUAL_ITEM_PROVIDER && stack.hasTag());
-        inventory.storage.isInputLimited = true;
         inventory.addChangedListener(() -> {
             storage.getStoredMap().clear();
             for (var i = 0; i < inventory.storage.size; i++) {
@@ -83,7 +82,7 @@ public final class VirtualItemProviderMachine extends MetaMachine implements IUI
                 if (stack.isEmpty()) continue;
                 stack = stack.copyWithCount(1);
                 stack.getOrCreateTag().putBoolean("marked", true);
-                storage.getStoredMap().put(AEItemKey.of(stack), IParallelMachine.MAX_PARALLEL);
+                storage.getStoredMap().addTo(AEItemKey.of(stack), IParallelMachine.MAX_PARALLEL);
             }
         });
     }

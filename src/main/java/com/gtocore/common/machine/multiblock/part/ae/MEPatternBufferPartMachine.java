@@ -13,10 +13,12 @@ import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.machine.trait.NotifiableNotConsumableFluidHandler;
 import com.gtolib.api.machine.trait.NotifiableNotConsumableItemHandler;
 import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.RecipeBuilder;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.syncdata.SyncManagedFieldHolder;
 import com.gtolib.utils.MathUtil;
+import com.gtolib.utils.RLUtils;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -200,6 +202,17 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
                 internalSlot.refund();
             }
         }
+    }
+
+    @Override
+    public @Nullable IPatternDetails decodePattern(ItemStack stack, int index) {
+        var pattern = super.decodePattern(stack, index);
+        if (pattern == null) return null;
+        var id = stack.getOrCreateTag().getString("recipe");
+        if (!id.isEmpty() && !caches[index]) {
+            getInternalInventory()[index].setRecipe(RecipeBuilder.RECIPE_MAP.get(RLUtils.parse(id)));
+        }
+        return super.decodePattern(stack, index);
     }
 
     @Override
