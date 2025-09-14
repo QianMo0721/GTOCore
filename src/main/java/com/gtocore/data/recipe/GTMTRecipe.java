@@ -21,7 +21,6 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 
 import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
 import com.hepdd.gtmthings.data.CustomItems;
 import com.hepdd.gtmthings.data.CustomMachines;
 import com.hepdd.gtmthings.data.WirelessMachines;
@@ -49,16 +48,6 @@ public final class GTMTRecipe {
                 .outputItems(CustomItems.VIRTUAL_ITEM_PROVIDER.asItem())
                 .EUt(480)
                 .duration(200)
-                .save();
-
-        ASSEMBLER_RECIPES.recipeBuilder("virtual_item_provider_cell")
-                .inputItems(new ItemStack(AEItems.ITEM_CELL_256K.asItem()))
-                .inputItems(CustomItems.VIRTUAL_ITEM_PROVIDER.asItem())
-                .inputItems(GTItems.CONVEYOR_MODULE_HV.asStack(2))
-                .inputFluids(GTMaterials.Polyethylene.getFluid(288))
-                .outputItems(CustomItems.VIRTUAL_ITEM_PROVIDER_CELL.asItem())
-                .EUt(480)
-                .duration(800)
                 .save();
 
         SCANNER_RECIPES.recipeBuilder("wireless_energy_binding_tool")
