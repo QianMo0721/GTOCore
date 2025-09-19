@@ -6359,7 +6359,7 @@
   "material.gtocore.zirconium_oxide": "二氧化锆",
   "material.gtocore.znfealcl": "锌-铁-铝-氯混合",
   "material.gtocore.zylon": "柴隆纤维",
-  "message.gtocore.difficulty_mismatch": "服务器难度与当前客户端不符，无法加入游戏！（当前：%s，服务器：%s）",
+  "message.gtocore.difficulty_mismatch": "服务器难度与当前客户端不符，无法加入游戏！（服务器：%s，当前：%s）",
   "metaitem.tool.tooltip.rotor.coating": "镀层材料：%s",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0": "§6镀层机制：",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0.magic": "§d魔法§6镀层机制：",

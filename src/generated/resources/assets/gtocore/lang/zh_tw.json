@@ -4131,7 +4131,7 @@
   "material.gtocore.zirconium_oxide": "二氧化鋯",
   "material.gtocore.znfealcl": "鋅-鐵-鋁-氯混合",
   "material.gtocore.zylon": "柴隆纖維",
-  "message.gtocore.difficulty_mismatch": "服務器難度與當前客戶端不符，無法加入遊戲！（當前：%s，服務器：%s）",
+  "message.gtocore.difficulty_mismatch": "服務器難度與當前客戶端不符，無法加入遊戲！（服務器：%s，當前：%s）",
   "metaitem.tool.tooltip.rotor.coating": "鍍層材料：%s",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0": "§6鍍層機製：",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0.magic": "§d魔法§6鍍層機製：",

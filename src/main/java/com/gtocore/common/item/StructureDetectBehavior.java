@@ -86,6 +86,7 @@ public final class StructureDetectBehavior extends TooltipBehavior implements IT
         if (player != null) {
             Level level = context.getLevel();
             if (level.isClientSide()) return InteractionResult.PASS;
+            stack.setTag(new CompoundTag());
             BlockPos blockPos = context.getClickedPos();
             if (MetaMachine.getMachine(level, blockPos) instanceof IMultiController controller) {
                 if (controller.isFormed()) {

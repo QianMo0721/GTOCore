@@ -6359,7 +6359,7 @@
   "material.gtocore.zirconium_oxide": "Zirconium Oxide",
   "material.gtocore.znfealcl": "Znfealcl",
   "material.gtocore.zylon": "Zylon",
-  "message.gtocore.difficulty_mismatch": "The server difficulty does not match the current client and cannot join the game! (Current: %s, Server: %s)",
+  "message.gtocore.difficulty_mismatch": "The server difficulty does not match the current client and cannot join the game! (Server: %s, Current: %s)",
   "metaitem.tool.tooltip.rotor.coating": "Coating Material: %s",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0": "§6Coating Mechanism:",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0.magic": "§dMagical§6 Coating Mechanism:",
