@@ -4411,6 +4411,7 @@
   "gtocore.satellite_control_center.planet": "Selected planet: ",
   "gtocore.satellite_control_center.rocket": "The required rocket: ",
   "gtocore.source": "Structure From: %s",
+  "gtocore.structure_detect.module": "Possible module error",
   "gtocore.tier.advanced": "Advanced",
   "gtocore.tier.base": "Basic",
   "gtocore.tier.c_a": "Casing Tier: %s",

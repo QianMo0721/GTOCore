@@ -2997,6 +2997,7 @@
   "gtocore.satellite_control_center.planet": "已選擇的星球：",
   "gtocore.satellite_control_center.rocket": "需要的火箭：",
   "gtocore.source": "結構來源：%s",
+  "gtocore.structure_detect.module": "可能的模塊錯誤",
   "gtocore.tier.advanced": "高級",
   "gtocore.tier.base": "基礎",
   "gtocore.tier.c_a": "外殼等級：%s",
