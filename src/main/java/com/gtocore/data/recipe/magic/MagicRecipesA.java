@@ -345,7 +345,7 @@ public final class MagicRecipesA {
                         .save();
 
                 ALCHEMY_CAULDRON_RECIPES.recipeBuilder("alchemy_" + names[i] + "_fluid_fust")
-                        .circuitMeta(i + 1)
+                        .circuitMeta(i + 6)
                         .inputItems(HELIO_COAL)
                         .inputFluids(Elements[i].getFluid(GAS, 1000))
                         .outputFluids(Elements[i].getFluid(LIQUID, 50))

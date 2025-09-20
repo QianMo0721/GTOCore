@@ -65,8 +65,8 @@ public final class GTAEMachines {
             .renderer(() -> new OverlayTieredMachineRenderer(EV, GTCEu.id("block/machine/part/me_pattern_buffer")))
             .register();
 
-    public static final MachineDefinition ME_ENERGY_ACCESS_HATCH = machine("me_energy_access_hatch", "ME存储访问仓", MEEnergyAccessPartMachine::new)
-            .langValue("ME Storage Access Hatch")
+    public static final MachineDefinition ME_ENERGY_ACCESS_HATCH = machine("me_energy_access_hatch", "ME能量访问仓", MEEnergyAccessPartMachine::new)
+            .langValue("ME Energy Access Hatch")
             .tier(EV)
             .allRotation()
             .notAllowSharedTooltips()
