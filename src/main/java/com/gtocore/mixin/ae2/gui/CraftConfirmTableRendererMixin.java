@@ -28,13 +28,13 @@ import java.util.List;
 @Mixin(CraftConfirmTableRenderer.class)
 public abstract class CraftConfirmTableRendererMixin extends AbstractTableRenderer<CraftingPlanSummaryEntry> {
 
-    public CraftConfirmTableRendererMixin(AEBaseScreen<?> screen, int x, int y, int rows) {
+    protected CraftConfirmTableRendererMixin(AEBaseScreen<?> screen, int x, int y, int rows) {
         super(screen, x, y, rows);
     }
 
     @Nullable
     @Unique
-    KeyCounter gto$cachedKeys = null;
+    private KeyCounter gto$cachedKeys = null;
 
     @Inject(method = "getEntryDescription(Lappeng/menu/me/crafting/CraftingPlanSummaryEntry;)Ljava/util/List;",
             remap = false,

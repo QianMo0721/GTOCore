@@ -200,6 +200,13 @@ public final class Data {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Client.interrupt();
+        }
+    }
+
+    private static class Client {
+
+        private static void interrupt() {
             ((MinecraftAccessor) Minecraft.getInstance()).embeddium$getGameThread().interrupt();
         }
     }
