@@ -286,6 +286,12 @@ public final class ForgeCommonEvent {
                 enhancedPlayer.getPlayerData().setDrift(enhancedPlayer.getPlayerData().disableDrift);
                 OrganUtilsKt.ktFreshOrganState(enhancedPlayer.getPlayerData());
             }
+            if (!GTCEu.isDev() && player.getLanguage().startsWith("en")) {
+                player.sendSystemMessage(
+                        Component.literal("If you are using the English translation. This translation is community-maintained with help from AI. Have suggestions or corrections? Click this message to contribute. No Chinese required.")
+                                .withStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)
+                                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://paratranz.cn/projects/16320"))));
+            }
         }
     }
 
