@@ -288,9 +288,16 @@ public final class ForgeCommonEvent {
             }
             if (!GTCEu.isDev() && player.getLanguage().startsWith("en")) {
                 player.sendSystemMessage(
-                        Component.literal("If you are using the English translation. This translation is community-maintained with help from AI. Have suggestions or corrections? Click this message to contribute. No Chinese required.")
-                                .withStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)
+                        Component.literal("If you are using the English translation. This translation is community-maintained with help from AI. Have suggestions or corrections? No Chinese required.")
+                                .withStyle(Style.EMPTY.withColor(ChatFormatting.YELLOW)));
+                player.sendSystemMessage(
+                        Component.literal("Click Here to Join the English translation project on ParaTranz")
+                                .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)
                                         .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://paratranz.cn/projects/16320"))));
+                player.sendSystemMessage(
+                        Component.literal("Click Here to Join the Discord for more information and updates")
+                                .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)
+                                        .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/ZSVb4dgVNB"))));
             }
         }
     }
