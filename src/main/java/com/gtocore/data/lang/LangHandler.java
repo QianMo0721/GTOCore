@@ -200,7 +200,7 @@ public final class LangHandler {
         addCNEN("biome.gtocore.ceres_biome", "谷神星", "Ceres");
         addCNEN("biome.gtocore.enceladus_biome", "土卫二", "Enceladus");
         addCNEN("biome.gtocore.ganymede_biome", "木卫三", "Ganymede");
-        addCNEN("biome.gtocore.io_biome", "木卫二", "Io");
+        addCNEN("biome.gtocore.io_biome", "木卫一", "Io");
         addCNEN("biome.gtocore.pluto_biome", "冥王星", "Pluto");
         addCNEN("biome.gtocore.titan_biome", "土卫六", "Titan");
         addCNEN("biome.gtocore.create", "创造", "Create");

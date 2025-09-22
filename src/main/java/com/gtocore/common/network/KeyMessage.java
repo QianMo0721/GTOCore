@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -21,8 +22,9 @@ final class KeyMessage {
         }
         switch (type) {
             case 0 -> handleFlightSpeed(player);
-            case 1 -> upgradeToolSpeed(player);
-            case 2 -> drift(player);
+            case 1 -> toggleNightVision(player);
+            case 2 -> upgradeToolSpeed(player);
+            case 3 -> drift(player);
         }
     }
 
@@ -54,6 +56,19 @@ final class KeyMessage {
                 player.displayClientMessage(Component.translatable("gtocore.reach_limit"), true);
             }
         }
+    }
+
+    private static void toggleNightVision(Player player) {
+            CompoundTag data = player.getPersistentData();
+            boolean nightVisionEnabled = data.getBoolean("night_vision");
+            data.putBoolean("night_vision", !nightVisionEnabled);
+
+            if (nightVisionEnabled) {
+                player.removeEffect(MobEffects.NIGHT_VISION);
+                player.displayClientMessage(Component.translatable("metaarmor.message.nightvision.disabled"), true);
+            } else {
+                player.displayClientMessage(Component.translatable("metaarmor.message.nightvision.enabled"), true);
+            }
     }
 
     private static void upgradeToolSpeed(Player player) {

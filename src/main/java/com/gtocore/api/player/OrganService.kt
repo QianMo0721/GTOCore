@@ -13,8 +13,6 @@ import com.gtocore.utils.ktGetOrganStack
 import net.minecraft.network.chat.Component
 import net.minecraft.server.TickTask
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.effect.MobEffectInstance
-import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
@@ -41,15 +39,6 @@ class OrganService : IOrganService {
         if (player.tickCount % 20 != 0) return
         val playerData = IEnhancedPlayer.of(player).playerData
         playerData.wingState = false
-        // Night Vision
-        when (playerData.organTierCache.getInt(OrganType.Eye) > 0) {
-            true -> run {
-                val shouldAdd = player.getEffect(MobEffects.NIGHT_VISION)?.let { it.duration < 20 * 45 - 20 * 15 } ?: true
-                if (!shouldAdd)return@run
-                player.addEffect(MobEffectInstance(MobEffects.NIGHT_VISION, 20 * 45, 0, false, false, true))
-            }
-            false -> {}
-        }
         // Movement Speed
         (0..4).forEach { tier ->
             val modifierNAME = "gtocore:organ_speed_tier_$tier"

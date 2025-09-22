@@ -16,11 +16,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.NavigableMap;
 
 @Mixin(NetworkStorage.class)
 public abstract class NetworkStorageMixin {
+
+    @Unique
+    private static final Deque<NetworkStorage> gtocore$DEQUE = new ArrayDeque<>();
 
     @Unique
     private ObjectArrayList<IntObjectHolder<MEStorage>> gtolib$inventory;
@@ -38,6 +43,10 @@ public abstract class NetworkStorageMixin {
 
     @Shadow(remap = false)
     protected abstract void flushQueuedOperations();
+
+    @Shadow(remap = false)
+    @Final
+    private static ThreadLocal<Deque<NetworkStorage>> DEPTH_MOD;
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     private void gtolib$init(CallbackInfo ci) {
@@ -122,12 +131,12 @@ public abstract class NetworkStorageMixin {
      */
     @Overwrite(remap = false)
     public void getAvailableStacks(KeyCounter out) {
-        if (mountsInUse) return;
-        this.mountsInUse = true;
+        if (DEPTH_MOD.get() != null) return;
+        DEPTH_MOD.set(gtocore$DEQUE);
         try {
             gtolib$inventory.forEach(entry -> entry.obj.getAvailableStacks(out));
         } finally {
-            this.mountsInUse = false;
+            DEPTH_MOD.remove();
         }
     }
 }

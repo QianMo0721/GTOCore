@@ -83,7 +83,6 @@ sealed class OrganItemBase(properties: Properties, val organType: OrganType) :
             tooltipComponents.add(OrganTranslation.level(tier).get())
             if (tier >= 1) {
                 tooltipComponents.add(OrganTranslation.speedBoostInfo((1..tier).sumOf { TierData.MovementSpeedFunction(it) * 10 }.toFloat()).get())
-                tooltipComponents.add(OrganTranslation.nightVisionInfo.get())
             }
             if (tier >= 2) tooltipComponents.add(OrganTranslation.blockReachInfo(2).get())
             if (tier >= 4) tooltipComponents.add(OrganTranslation.flightInfo.get())
