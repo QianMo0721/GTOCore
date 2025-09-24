@@ -16,7 +16,6 @@ import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
 import com.gregtechceu.gtceu.utils.collection.O2OOpenCacheHashMap;
 
-import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -26,6 +25,7 @@ import net.minecraft.world.level.material.Fluid;
 
 import com.lowdragmc.lowdraglib.gui.util.ClickData;
 import com.lowdragmc.lowdraglib.gui.widget.ComponentPanelWidget;
+import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -184,8 +184,8 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
         long eut = 0;
         if (getEnergyContainer().getEnergyStored() < 1000) return null;
         availableEu = getOverclockVoltage();
-        for(var it=waterPurificationUnitMachineMap.object2BooleanEntrySet().iterator();it.hasNext();){
-            var entry=it.next();
+        for (var it = waterPurificationUnitMachineMap.object2BooleanEntrySet().iterator(); it.hasNext();) {
+            var entry = it.next();
             var machine = entry.getKey();
             if (machine.isFormed() && !machine.isInValid()) {
                 if (machine.getRecipeLogic().isIdle()) {

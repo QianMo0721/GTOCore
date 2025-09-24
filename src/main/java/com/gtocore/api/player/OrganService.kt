@@ -103,6 +103,7 @@ class OrganService : IOrganService {
             val planet: Planet = PlanetApi.API.getPlanet(player.level()) ?: return@run
             if (!player.gameMode.isSurvival) return@run
             if (GTODimensions.OVERWORLD.equals(planet.dimension().location())) return@run
+            if (GTODimensions.GLACIO.equals(planet.dimension().location())) return@run
             if (!GTODimensions.isPlanet(planet.dimension().location())) return@run
 
             val tier: Int = planet.tier()
