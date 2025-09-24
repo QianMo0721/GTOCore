@@ -69,10 +69,6 @@ public final class RecipeTypeModify {
             GenerateDisassembly.generateDisassembly(b);
         });
 
-        CHEMICAL_BATH_RECIPES.onRecipeBuild((b) -> {
-            if (b.data.contains("essence_recovery")) b.category(GTORecipeCategories.ESSENCE_RECOVERY);
-        });
-
         PLASMA_GENERATOR_FUELS.onRecipeBuild((recipeBuilder) -> {
             long eu = recipeBuilder.duration * GTValues.V[GTValues.EV] * 2;
             int water = (int) (eu / 80);
