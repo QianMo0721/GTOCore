@@ -62,8 +62,6 @@ public final class GTOLoots {
     private static void removal(Set<ResourceLocation> filters) {
         filters.add(RLUtils.fromNamespaceAndPath("expatternprovider", "blocks/ex_emc_interface"));
         filters.add(RLUtils.fromNamespaceAndPath("farmersrespite", "blocks/kettle"));
-        filters.add(RLUtils.fromNamespaceAndPath("mynethersdelight", "blocks/blackstone_cooking_pot"));
-        filters.add(RLUtils.fromNamespaceAndPath("kitchenkarrot", "blocks/gem_carrot"));
     }
 
     public static Pair<ImmutableMap<LootDataId<?>, ?>, ImmutableMultimap<LootDataType<?>, ResourceLocation>> apply(Map<LootDataType<?>, Map<ResourceLocation, ?>> collectedElements) {

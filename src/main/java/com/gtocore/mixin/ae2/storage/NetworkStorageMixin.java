@@ -44,9 +44,8 @@ public abstract class NetworkStorageMixin {
     @Shadow(remap = false)
     protected abstract void flushQueuedOperations();
 
-    @Shadow(remap = false)
-    @Final
-    private static ThreadLocal<Deque<NetworkStorage>> DEPTH_MOD;
+    @Unique
+    private boolean gtocore$inUse;
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     private void gtolib$init(CallbackInfo ci) {
@@ -131,12 +130,12 @@ public abstract class NetworkStorageMixin {
      */
     @Overwrite(remap = false)
     public void getAvailableStacks(KeyCounter out) {
-        if (DEPTH_MOD.get() != null) return;
-        DEPTH_MOD.set(gtocore$DEQUE);
+        if (gtocore$inUse) return;
+        gtocore$inUse = true;
         try {
             gtolib$inventory.forEach(entry -> entry.obj.getAvailableStacks(out));
         } finally {
-            DEPTH_MOD.remove();
+            gtocore$inUse = false;
         }
     }
 }
