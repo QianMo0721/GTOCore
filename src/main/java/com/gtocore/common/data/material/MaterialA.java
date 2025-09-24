@@ -604,7 +604,7 @@ public final class MaterialA {
                 .color(0xc380c6)
                 .secondaryColor(0x8b5e8b)
                 .blastTemp(8660, HIGHER, GTValues.VA[GTValues.LuV], 900)
-                .components(Titanium, 82, Aluminium, 5, Vanadium, 5, Molybdenum, 5, Chromium, 3)
+                .components(Titanium, 82, Aluminium, 5, Vanadium, 5, Molybdenum, 5, Chromium, 3, Niobium, 1)
                 .iconSet(METALLIC)
                 .flags(GENERATE_GEAR, GENERATE_CURVED_PLATE,
                         GENERATE_SMALL_GEAR, GENERATE_LONG_ROD,

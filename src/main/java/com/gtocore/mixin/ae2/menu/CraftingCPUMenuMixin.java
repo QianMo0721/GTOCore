@@ -74,7 +74,7 @@ public class CraftingCPUMenuMixin extends AEBaseMenu implements IActionHolder, I
         }
     }
 
-    @Inject(method = "broadcastChanges", at = @At(value = "INVOKE", target = "Lappeng/menu/me/crafting/CraftingCPUMenu;sendPacketToClient(Lappeng/core/sync/BasePacket;)V", shift = At.Shift.AFTER), remap = false)
+    @Inject(method = "broadcastChanges", at = @At(value = "INVOKE", target = "Lappeng/menu/me/crafting/CraftingCPUMenu;sendPacketToClient(Lappeng/core/sync/BasePacket;)V", shift = At.Shift.AFTER, remap = false))
     private void gto$onBroadcastChanges(CallbackInfo ci) {
         gto$lastCraftingResults = HashMultimap.create(((OptimizedCraftingCpuLogic) cpu.craftingLogic).getCraftingResults());
         ServerPlayer player = (ServerPlayer) getPlayer();

@@ -2,6 +2,7 @@ package com.gtocore.data.recipe.gtm.chemistry;
 
 import com.gregtechceu.gtceu.api.data.chemical.material.Material;
 import com.gregtechceu.gtceu.api.machine.multiblock.CleanroomType;
+
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -15,7 +16,7 @@ import static com.gtocore.common.machine.multiblock.water.WaterPurificationPlant
 final class BrewingRecipes {
 
     public static void init() {
-        for (Material material : new Material[]{Talc, Soapstone, Redstone}) {
+        for (Material material : new Material[] { Talc, Soapstone, Redstone }) {
             BREWING_RECIPES.recipeBuilder("lubricant_from_oil_and_" + material.getName())
                     .inputItems(dust, material)
                     .inputFluids(Oil.getFluid(1000))
@@ -76,13 +77,13 @@ final class BrewingRecipes {
                 .inputItems(Items.TORCHFLOWER_SEEDS)
                 .inputFluids(Water.getFluid(20)).outputFluids(Biomass.getFluid(20)).save();
 
-        //water
+        // water
         for (int i = 1; i < 8; i++)
             for (int j = 0; j < i; j++) {
                 BREWING_RECIPES.builder("water_%s_%s".formatted(i, j))
                         .inputFluids(GradePurifiedWater[i], 1000)
                         .outputFluids(GradePurifiedWater[j], 1000)
-                        .circuitMeta(j+1)
+                        .circuitMeta(j + 1)
                         .duration(20)
                         .cleanroom(CleanroomType.CLEANROOM)
                         .save();
