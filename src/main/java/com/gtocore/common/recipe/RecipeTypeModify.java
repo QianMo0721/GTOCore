@@ -71,7 +71,6 @@ public final class RecipeTypeModify {
 
         CHEMICAL_BATH_RECIPES.onRecipeBuild((b) -> {
             if (b.data.contains("essence_recovery")) b.category(GTORecipeCategories.ESSENCE_RECOVERY);
-            GenerateDisassembly.generateDisassembly(b);
         });
 
         PLASMA_GENERATOR_FUELS.onRecipeBuild((recipeBuilder) -> {
