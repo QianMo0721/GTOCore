@@ -16,6 +16,7 @@ import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.GTUtil;
 import com.gregtechceu.gtceu.utils.collection.O2OOpenCacheHashMap;
 
+import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -25,12 +26,10 @@ import net.minecraft.world.level.material.Fluid;
 
 import com.lowdragmc.lowdraglib.gui.util.ClickData;
 import com.lowdragmc.lowdraglib.gui.widget.ComponentPanelWidget;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +55,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
 
     long availableEu;
 
-    final Object2BooleanOpenHashMap<WaterPurificationUnitMachine> waterPurificationUnitMachineMap = new Object2BooleanOpenHashMap<>();
+    final Object2BooleanSortedMap<WaterPurificationUnitMachine> waterPurificationUnitMachineMap = new Object2BooleanRBTreeMap<>(Comparator.comparingLong(a -> -a.multiple));
 
     public WaterPurificationPlantMachine(MetaMachineBlockEntity holder) {
         super(holder);
@@ -77,8 +76,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
     @Override
     public void onStructureInvalid() {
         IIWirelessInteractor.removeFromNet(NETWORK, this);
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             if (entry.getBooleanValue()) {
                 entry.getKey().getRecipeLogic().resetRecipeLogic();
                 entry.setValue(false);
@@ -90,8 +88,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
     @Override
     public void onRecipeFinish() {
         super.onRecipeFinish();
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             if (entry.getBooleanValue() && entry.getKey().getRecipeLogic().getLastRecipe() != null) {
                 entry.getKey().getRecipeLogic().onRecipeFinish();
                 entry.getKey().onRecipeFinish();
@@ -102,8 +99,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
 
     @Override
     public boolean onWorking() {
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             if (entry.getBooleanValue()) {
                 entry.getKey().onWorking();
                 entry.getKey().getRecipeLogic().setProgress(getRecipeLogic().getProgress());
@@ -114,8 +110,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
 
     @Override
     public void onWaiting() {
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             if (entry.getBooleanValue()) {
                 entry.getKey().getRecipeLogic().setWaiting(getEnhancedRecipeLogic().gtolib$getIdleReason());
             }
@@ -125,8 +120,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
 
     @Override
     public void setWorkingEnabled(boolean isWorkingAllowed) {
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             var machine = entry.getKey();
             machine.setWorking(isWorkingAllowed);
             entry.setValue(machine.getRecipeLogic().isWorking());
@@ -136,8 +130,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
 
     @Override
     protected boolean beforeWorking(@Nullable Recipe r) {
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             if (entry.getBooleanValue()) {
                 entry.getKey().getRecipeLogic().resetRecipeLogic();
                 entry.getKey().getRecipeLogic().setupRecipe(entry.getKey().recipe);
@@ -163,8 +156,7 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
         super.addDisplayText(textList);
         if (!isFormed()) return;
         textList.add(Component.translatable("gtocore.machine.water_purification_plant.bind"));
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for (var entry : waterPurificationUnitMachineMap.object2BooleanEntrySet()) {
             MutableComponent component = Component.translatable(entry.getKey().getBlockState().getBlock().getDescriptionId()).append(" ");
             if (entry.getBooleanValue()) {
                 component.append(Component.translatable("gtceu.multiblock.running").append("\n").append(Component.translatable("gtceu.multiblock.energy_consumption", FormattingUtil.formatNumbers(entry.getKey().eut), Component.literal(GTValues.VNF[GTUtil.getTierByVoltage(entry.getKey().eut)]))));
@@ -192,8 +184,8 @@ public final class WaterPurificationPlantMachine extends ElectricMultiblockMachi
         long eut = 0;
         if (getEnergyContainer().getEnergyStored() < 1000) return null;
         availableEu = getOverclockVoltage();
-        for (ObjectIterator<Object2BooleanMap.Entry<WaterPurificationUnitMachine>> it = waterPurificationUnitMachineMap.object2BooleanEntrySet().fastIterator(); it.hasNext();) {
-            var entry = it.next();
+        for(var it=waterPurificationUnitMachineMap.object2BooleanEntrySet().iterator();it.hasNext();){
+            var entry=it.next();
             var machine = entry.getKey();
             if (machine.isFormed() && !machine.isInValid()) {
                 if (machine.getRecipeLogic().isIdle()) {
