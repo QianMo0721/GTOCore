@@ -1,6 +1,7 @@
 package com.gtocore.integration.emi;
 
 import com.gtocore.integration.chisel.ChiselRecipe;
+import com.gtocore.integration.emi.multipage.MultiblockInfoEmiRecipe;
 import com.gtocore.integration.emi.oreprocessing.OreProcessingEmiCategory;
 import com.gtocore.integration.emi.satellite.SatelliteEmiCategory;
 
@@ -19,7 +20,6 @@ import com.gregtechceu.gtceu.common.data.GTFluids;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.fluid.potion.PotionFluid;
 import com.gregtechceu.gtceu.integration.emi.circuit.GTProgrammedCircuitCategory;
-import com.gregtechceu.gtceu.integration.emi.multipage.MultiblockInfoEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.orevein.GTBedrockFluidEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.orevein.GTOreVeinEmiCategory;
 import com.gregtechceu.gtceu.integration.emi.recipe.GTRecipeEMICategory;
@@ -109,7 +109,7 @@ public final class GTEMIPlugin implements EmiPlugin {
     public void register(EmiRegistry registry) {
         if (GTCEu.isProd()) ChiselRecipe.register(registry);
 
-        registry.addCategory(MultiblockInfoEmiCategory.CATEGORY);
+        registry.addCategory(MultiblockInfoEmiRecipe.CATEGORY);
         registry.addCategory(OreProcessingEmiCategory.CATEGORY);
         registry.addCategory(GTOreVeinEmiCategory.CATEGORY);
         registry.addCategory(GTBedrockFluidEmiCategory.CATEGORY);
