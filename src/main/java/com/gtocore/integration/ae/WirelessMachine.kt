@@ -378,7 +378,8 @@ interface WirelessMachine :
                         maxWidth = availableWidth - 4,
                         textSupplier = { Component.translatable(yourWirelessGrid) },
                     )
-                    vScroll(width = availableWidth, height = 176 - 4 - 20 - 36 - 16, { spacing = 2 }) a@{
+                    val yOffest = if (isConnectedClient) -20 else 0
+                    vScroll(width = availableWidth, height = 176 - 4 - 20 - 36 - 16 + yOffest, { spacing = 2 }) a@{
                         wirelessMachineRunTime.gridAccessibleCache.get()
                             .forEach { grid ->
                                 hBox(height = 14, { spacing = 4 }) {
