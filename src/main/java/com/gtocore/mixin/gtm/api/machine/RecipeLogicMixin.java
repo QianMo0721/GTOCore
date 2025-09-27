@@ -161,8 +161,9 @@ public abstract class RecipeLogicMixin extends MachineTrait implements IEnhanced
      * @reason .
      */
     @Overwrite
-    protected boolean matchRecipe(GTRecipe recipe) {
-        return RecipeRunner.matchTickRecipe(machine, (Recipe) recipe) && (recipe.parallels > 1 || RecipeRunner.matchRecipe(machine, (Recipe) recipe));
+    protected boolean matchRecipe(GTRecipe r) {
+        var recipe = (Recipe) r;
+        return RecipeRunner.matchTickRecipe(machine, recipe) && (recipe.contentParallel > 0 || RecipeRunner.matchRecipe(machine, recipe));
     }
 
     /**

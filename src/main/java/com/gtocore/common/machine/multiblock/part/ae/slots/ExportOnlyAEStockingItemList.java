@@ -2,14 +2,13 @@ package com.gtocore.common.machine.multiblock.part.ae.slots;
 
 import com.gtocore.common.machine.multiblock.part.ae.MEStockingBusPartMachine;
 
-import com.gtolib.api.ae2.IExpandedStorageService;
 import com.gtolib.utils.MathUtil;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemPredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -32,13 +31,13 @@ public class ExportOnlyAEStockingItemList extends ExportOnlyAEItemList {
     }
 
     @Override
-    public boolean forEachItems(ItemPredicate function) {
+    public boolean forEachItems(ObjectLongPredicate<ItemStack> function) {
         if (machine.isWorkingEnabled()) return super.forEachItems(function);
         return false;
     }
 
     @Override
-    public void fastForEachItems(ItemConsumer function) {
+    public void fastForEachItems(ObjectLongConsumer<ItemStack> function) {
         if (machine.isWorkingEnabled()) super.fastForEachItems(function);
     }
 
@@ -94,7 +93,7 @@ public class ExportOnlyAEStockingItemList extends ExportOnlyAEItemList {
                 if (!machine.isOnline()) return 0;
                 var grid = machine.getMainNode().getGrid();
                 if (grid == null) return 0;
-                long extracted = simulate ? Math.min(amount, IExpandedStorageService.of(grid.getStorageService()).getLazyKeyCounter().get(stock.what())) : grid.getStorageService().getInventory().extract(stock.what(), amount, Actionable.MODULATE, machine.getActionSource());
+                long extracted = simulate ? stock.amount() : grid.getStorageService().getInventory().extract(stock.what(), amount, Actionable.MODULATE, machine.getActionSource());
                 if (extracted > 0) {
                     if (!simulate) {
                         this.stock = ExportOnlyAESlot.copy(stock, stock.amount() - extracted);
@@ -116,8 +115,8 @@ public class ExportOnlyAEStockingItemList extends ExportOnlyAEItemList {
                 if (!machine.isOnline()) return ItemStack.EMPTY;
                 var grid = machine.getMainNode().getGrid();
                 if (grid == null) return ItemStack.EMPTY;
-                var key = config.what();
-                long extracted = simulate ? Math.min(amount, IExpandedStorageService.of(grid.getStorageService()).getLazyKeyCounter().get(key)) : grid.getStorageService().getInventory().extract(key, amount, Actionable.MODULATE, machine.getActionSource());
+                var key = stock.what();
+                long extracted = simulate ? stock.amount() : grid.getStorageService().getInventory().extract(key, amount, Actionable.MODULATE, machine.getActionSource());
                 if (extracted > 0) {
                     ItemStack resultStack = key instanceof AEItemKey itemKey ? itemKey.toStack((int) extracted) : ItemStack.EMPTY;
                     if (!simulate) {

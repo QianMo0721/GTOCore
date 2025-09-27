@@ -1,10 +1,11 @@
 package com.gtocore.common.data;
 
+import com.gtolib.api.gui.GTOGuiTextures;
+
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.recipe.category.GTRecipeCategory;
 import com.gregtechceu.gtceu.common.data.GTRecipeCategories;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
-import com.gtolib.api.gui.GTOGuiTextures;
 
 public final class GTORecipeCategories {
 

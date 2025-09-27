@@ -1,17 +1,20 @@
 package com.gtocore.data.recipe.classified;
 
-import com.google.common.collect.ImmutableMap;
-import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
-import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
-import com.gregtechceu.gtceu.common.item.armor.PowerlessJetpack;
 import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.data.GTOFluidStorageKey;
 import com.gtocore.common.machine.multiblock.generator.FullCellGenerator;
+
+import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
+import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
+import com.gregtechceu.gtceu.common.item.armor.PowerlessJetpack;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+
+import com.google.common.collect.ImmutableMap;
 
 import static com.gregtechceu.gtceu.common.data.GTMaterials.Oxygen;
 import static com.gtocore.common.data.GTORecipeTypes.*;

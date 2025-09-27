@@ -2,16 +2,15 @@ package com.gtocore.common.machine.multiblock.part.ae.slots;
 
 import com.gtocore.common.machine.multiblock.part.ae.MEStockingHatchPartMachine;
 
-import com.gtolib.api.ae2.IExpandedStorageService;
 import com.gtolib.utils.MathUtil;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidPredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
 import com.gregtechceu.gtceu.integration.ae2.utils.AEUtil;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraftforge.fluids.FluidStack;
 
@@ -33,13 +32,13 @@ public class ExportOnlyAEStockingFluidList extends ExportOnlyAEFluidList {
     }
 
     @Override
-    public boolean forEachFluids(FluidPredicate function) {
+    public boolean forEachFluids(ObjectLongPredicate<FluidStack> function) {
         if (machine.isWorkingEnabled()) return super.forEachFluids(function);
         return false;
     }
 
     @Override
-    public void fastForEachFluids(FluidConsumer function) {
+    public void fastForEachFluids(ObjectLongConsumer<FluidStack> function) {
         if (machine.isWorkingEnabled()) super.fastForEachFluids(function);
     }
 
@@ -100,7 +99,7 @@ public class ExportOnlyAEStockingFluidList extends ExportOnlyAEFluidList {
                 if (!machine.isOnline()) return 0;
                 var grid = machine.getMainNode().getGrid();
                 if (grid == null) return 0;
-                long extracted = simulate ? Math.min(amount, IExpandedStorageService.of(grid.getStorageService()).getLazyKeyCounter().get(stock.what())) : grid.getStorageService().getInventory().extract(stock.what(), amount, Actionable.MODULATE, machine.getActionSource());
+                long extracted = simulate ? stock.amount() : grid.getStorageService().getInventory().extract(stock.what(), amount, Actionable.MODULATE, machine.getActionSource());
                 if (extracted > 0) {
                     if (!simulate) {
                         this.stock = ExportOnlyAESlot.copy(stock, stock.amount() - extracted);
@@ -123,7 +122,7 @@ public class ExportOnlyAEStockingFluidList extends ExportOnlyAEFluidList {
                 var grid = machine.getMainNode().getGrid();
                 if (grid == null) return FluidStack.EMPTY;
                 var key = stock.what();
-                long extracted = action.simulate() ? Math.min(maxDrain, IExpandedStorageService.of(grid.getStorageService()).getLazyKeyCounter().get(key)) : grid.getStorageService().getInventory().extract(key, maxDrain, Actionable.MODULATE, machine.getActionSource());
+                long extracted = action.simulate() ? stock.amount() : grid.getStorageService().getInventory().extract(key, maxDrain, Actionable.MODULATE, machine.getActionSource());
                 if (extracted > 0) {
                     FluidStack resultStack = key instanceof AEFluidKey fluidKey ? AEUtil.toFluidStack(fluidKey, extracted) : FluidStack.EMPTY;
                     if (action.execute()) {

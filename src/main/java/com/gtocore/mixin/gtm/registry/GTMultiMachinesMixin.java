@@ -26,7 +26,7 @@ public class GTMultiMachinesMixin {
 
     @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/gregtechceu/gtceu/api/registry/registrate/GTRegistrate;multiblock(Ljava/lang/String;Ljava/util/function/Function;)Lcom/gregtechceu/gtceu/api/registry/registrate/MultiblockMachineBuilder;", ordinal = 2), remap = false)
     private static MultiblockMachineBuilder electric_blast_furnace(GTRegistrate instance, String name, Function<MetaMachineBlockEntity, ? extends MultiblockControllerMachine> metaMachine) {
-        return GTORegistration.GTM.multiblock(name, CoilMultiblockMachine.createCoilMachine(true, false)).moduleTooltips();
+        return GTORegistration.GTM.multiblock(name, CoilMultiblockMachine.createCoilMachine(true, false)).moduleTooltips().upgradable();
     }
 
     @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/gregtechceu/gtceu/api/registry/registrate/GTRegistrate;multiblock(Ljava/lang/String;Ljava/util/function/Function;)Lcom/gregtechceu/gtceu/api/registry/registrate/MultiblockMachineBuilder;", ordinal = 3), remap = false)

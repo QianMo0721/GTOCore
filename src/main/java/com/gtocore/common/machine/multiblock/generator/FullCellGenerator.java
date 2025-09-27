@@ -1,6 +1,17 @@
 package com.gtocore.common.machine.multiblock.generator;
 
-import com.google.common.collect.ImmutableMap;
+import com.gtocore.api.data.tag.GTOTagPrefix;
+import com.gtocore.common.data.GTOFluidStorageKey;
+import com.gtocore.common.data.GTOMaterials;
+import com.gtocore.common.data.GTORecipeTypes;
+
+import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
+import com.gtolib.api.recipe.IdleReason;
+import com.gtolib.api.recipe.Recipe;
+import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
+import com.gtolib.api.recipe.modifier.ParallelLogic;
+import com.gtolib.utils.MachineUtils;
+
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -10,24 +21,17 @@ import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
-import com.gtocore.api.data.tag.GTOTagPrefix;
-import com.gtocore.common.data.GTOFluidStorageKey;
-import com.gtocore.common.data.GTOMaterials;
-import com.gtocore.common.data.GTORecipeTypes;
-import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
-import com.gtolib.api.recipe.IdleReason;
-import com.gtolib.api.recipe.Recipe;
-import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
-import com.gtolib.api.recipe.modifier.ParallelLogic;
-import com.gtolib.utils.MachineUtils;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.material.Fluid;
+
+import com.google.common.collect.ImmutableMap;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

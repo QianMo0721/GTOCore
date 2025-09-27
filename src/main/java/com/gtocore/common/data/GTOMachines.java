@@ -1,5 +1,36 @@
 package com.gtocore.common.data;
 
+import com.gtocore.api.machine.part.GTOPartAbility;
+import com.gtocore.client.renderer.machine.*;
+import com.gtocore.common.blockentity.TesseractBlockEntity;
+import com.gtocore.common.data.machines.*;
+import com.gtocore.common.data.translation.GTOMachineTooltips;
+import com.gtocore.common.machine.electric.*;
+import com.gtocore.common.machine.generator.LightningRodMachine;
+import com.gtocore.common.machine.generator.WindMillTurbineMachine;
+import com.gtocore.common.machine.monitor.*;
+import com.gtocore.common.machine.multiblock.part.*;
+import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine;
+import com.gtocore.common.machine.multiblock.part.maintenance.*;
+import com.gtocore.common.machine.noenergy.BoilWaterMachine;
+import com.gtocore.common.machine.noenergy.HeaterMachine;
+import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
+import com.gtocore.common.machine.steam.SteamVacuumPumpMachine;
+import com.gtocore.integration.ae.MeWirelessConnectMachine;
+import com.gtocore.integration.ae.SyncTesterMachine;
+
+import com.gtolib.GTOCore;
+import com.gtolib.api.GTOValues;
+import com.gtolib.api.annotation.NewDataAttributes;
+import com.gtolib.api.lang.CNEN;
+import com.gtolib.api.machine.SimpleNoEnergyMachine;
+import com.gtolib.api.machine.feature.multiblock.IParallelMachine;
+import com.gtolib.api.machine.part.DroneHatchPartMachine;
+import com.gtolib.api.machine.part.ItemHatchPartMachine;
+import com.gtolib.api.registries.GTOMachineBuilder;
+import com.gtolib.api.registries.GTORegistration;
+import com.gtolib.utils.register.BlockRegisterUtils;
+
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -19,40 +50,13 @@ import com.gregtechceu.gtceu.common.item.TurbineRotorBehaviour;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.DualHatchPartMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.EnergyHatchPartMachine;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
-import com.gtocore.api.machine.part.GTOPartAbility;
-import com.gtocore.client.renderer.machine.*;
-import com.gtocore.common.blockentity.TesseractBlockEntity;
-import com.gtocore.common.data.machines.*;
-import com.gtocore.common.data.translation.GTOMachineTooltips;
-import com.gtocore.common.machine.electric.*;
-import com.gtocore.common.machine.generator.LightningRodMachine;
-import com.gtocore.common.machine.generator.WindMillTurbineMachine;
-import com.gtocore.common.machine.monitor.*;
-import com.gtocore.common.machine.multiblock.part.*;
-import com.gtocore.common.machine.multiblock.part.ae.MEPatternContentSortMachine;
-import com.gtocore.common.machine.multiblock.part.maintenance.*;
-import com.gtocore.common.machine.noenergy.BoilWaterMachine;
-import com.gtocore.common.machine.noenergy.HeaterMachine;
-import com.gtocore.common.machine.noenergy.PerformanceMonitorMachine;
-import com.gtocore.common.machine.steam.SteamVacuumPumpMachine;
-import com.gtocore.integration.ae.MeWirelessConnectMachine;
-import com.gtocore.integration.ae.SyncTesterMachine;
-import com.gtolib.GTOCore;
-import com.gtolib.api.GTOValues;
-import com.gtolib.api.annotation.NewDataAttributes;
-import com.gtolib.api.lang.CNEN;
-import com.gtolib.api.machine.SimpleNoEnergyMachine;
-import com.gtolib.api.machine.feature.multiblock.IParallelMachine;
-import com.gtolib.api.machine.part.DroneHatchPartMachine;
-import com.gtolib.api.machine.part.ItemHatchPartMachine;
-import com.gtolib.api.registries.GTOMachineBuilder;
-import com.gtolib.api.registries.GTORegistration;
-import com.gtolib.utils.register.BlockRegisterUtils;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+
 import com.hepdd.gtmthings.GTMThings;
 import it.unimi.dsi.fastutil.Function;
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gregtechceu.gtceu.api.capability.recipe.IO.IN;
@@ -237,7 +241,7 @@ public final class GTOMachines {
     /// ///////////////////////////////////
     public static final MachineDefinition[] THREAD_HATCH = registerTieredMachines("thread_hatch", tier -> GTOValues.VNFR[tier] + "线程仓",
             ThreadHatchPartMachine::new, (tier, builder) -> builder
-                    .langValue(VNF[tier] + " Thread Hatch")
+                    .langValue(GTOValues.VNFR[tier] + " Thread Hatch")
                     .allRotation()
                     .abilities(GTOPartAbility.THREAD_HATCH)
                     .workableTieredHullRenderer(GTOCore.id("block/machines/thread_hatch/thread_hatch_mk" + (tier - 7)))
@@ -247,7 +251,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition[] OVERCLOCK_HATCH = registerTieredMachines("overclock_hatch", tier -> GTOValues.VNFR[tier] + "超频仓",
             OverclockHatchPartMachine::new, (tier, builder) -> builder
-                    .langValue(VNF[tier] + " Overclock Hatch")
+                    .langValue(GTOValues.VNFR[tier] + " Overclock Hatch")
                     .allRotation()
                     .abilities(GTOPartAbility.OVERCLOCK_HATCH)
                     .tooltips(NewDataAttributes.MAIN_FUNCTION.create(
@@ -268,7 +272,7 @@ public final class GTOMachines {
 
     public static final MachineDefinition[] ACCELERATE_HATCH = registerTieredMachines("accelerate_hatch", tier -> GTOValues.VNFR[tier] + "加速仓",
             AccelerateHatchPartMachine::new, (tier, builder) -> builder
-                    .langValue(VNF[tier] + " Accelerate Hatch")
+                    .langValue(GTOValues.VNFR[tier] + " Accelerate Hatch")
                     .allRotation()
                     .abilities(GTOPartAbility.ACCELERATE_HATCH)
                     .tooltips(NewDataAttributes.MAIN_FUNCTION.create(
@@ -290,7 +294,7 @@ public final class GTOMachines {
     public static final MachineDefinition[] PROGRAMMABLEC_HATCH = registerTieredMachines("programmablec_hatch", tier -> GTOValues.VNFR[tier] + "可编程仓",
             (holder, tier) -> new ProgrammableHatchPartMachine(holder, tier, IN),
             (tier, builder) -> builder
-                    .langValue("%s Programmablec Hatch".formatted(VNF[tier]))
+                    .langValue("%s Programmablec Hatch".formatted(GTOValues.VNFR[tier]))
                     .allRotation()
                     .abilities(PartAbility.IMPORT_ITEMS)
                     .renderer(() -> new OverlayTieredMachineRenderer(tier, GTCEu.id("block/machine/part/dual_hatch.import")))
@@ -467,10 +471,10 @@ public final class GTOMachines {
             .allRotation()
             .register();
 
-    public static final MachineDefinition[] NEUTRON_ACCELERATOR = registerTieredMachines("neutron_accelerator", tier -> VNF[tier] + "中子加速器",
+    public static final MachineDefinition[] NEUTRON_ACCELERATOR = registerTieredMachines("neutron_accelerator", tier -> GTOValues.VNFR[tier] + "中子加速器",
             NeutronAcceleratorPartMachine::new,
             (tier, builder) -> builder
-                    .langValue(VNF[tier] + " Neutron Accelerator")
+                    .langValue(GTOValues.VNFR[tier] + " Neutron Accelerator")
                     .allRotation()
                     .abilities(GTOPartAbility.NEUTRON_ACCELERATOR)
                     .tooltips(GTOMachineTooltips.INSTANCE.getNeutronAcceleratorTooltips().invoke(V[tier], VNF[tier], (V[tier] << 3) / 10, 2 * V[tier]).getSupplier())

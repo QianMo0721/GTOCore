@@ -234,6 +234,7 @@ public final class MultiBlockB {
             .recipeTypes(GTORecipeTypes.REACTION_FURNACE_RECIPES)
             .parallelizableOverclock()
             .moduleTooltips()
+            .upgradable()
             .block(GTBlocks.CASING_STEEL_SOLID)
             .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.BACK, RelativeDirection.UP, RelativeDirection.LEFT)
                     .aisle("A   A", "ABBBA", "BBCBB", "BBBBB", " BBB ")

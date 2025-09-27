@@ -1,15 +1,5 @@
 package com.gtocore.common.data.machines;
 
-import com.gregtechceu.gtceu.GTCEu;
-import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
-import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
-import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
-import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
-import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
-import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
-import com.gregtechceu.gtceu.api.pattern.Predicates;
-import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
-import com.gregtechceu.gtceu.common.data.*;
 import com.gtocore.api.machine.part.GTOPartAbility;
 import com.gtocore.api.pattern.GTOPredicates;
 import com.gtocore.client.renderer.machine.AdvancedHyperRenderer;
@@ -25,6 +15,7 @@ import com.gtocore.common.data.translation.GTOMachineTooltips;
 import com.gtocore.common.machine.multiblock.electric.space.DysonSphereLaunchSiloMachine;
 import com.gtocore.common.machine.multiblock.electric.space.DysonSphereReceivingStationMcahine;
 import com.gtocore.common.machine.multiblock.generator.*;
+
 import com.gtolib.GTOCore;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.machine.multiblock.ElectricMultiblockMachine;
@@ -33,11 +24,24 @@ import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.MachineUtils;
 import com.gtolib.utils.MultiBlockFileReader;
 import com.gtolib.utils.RegistriesUtils;
-import com.tterrag.registrate.util.entry.BlockEntry;
+
+import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
+import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.api.fluids.store.FluidStorageKeys;
+import com.gregtechceu.gtceu.api.machine.MultiblockMachineDefinition;
+import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
+import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
+import com.gregtechceu.gtceu.api.pattern.Predicates;
+import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
+import com.gregtechceu.gtceu.common.data.*;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.Shapes;
+
+import com.tterrag.registrate.util.entry.BlockEntry;
 
 import java.util.function.Supplier;
 

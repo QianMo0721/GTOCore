@@ -87,7 +87,6 @@
   "config.gtocore.option.emiGlobalFavorites": "EMI 全局收藏夾",
   "config.gtocore.option.exPatternSize": "[調試] 擴展樣板供應器容量",
   "config.gtocore.option.fastMultiBlockPage": "快速多方塊頁面加載",
-  "config.gtocore.option.fastParallelcalculate": "快速併行計算",
   "config.gtocore.option.ftbUltimineRange": "連鎖挖掘檢查范圍",
   "config.gtocore.option.gameDifficulty": "遊戲難度",
   "config.gtocore.option.lightningRodEffect": "引雷針特效",

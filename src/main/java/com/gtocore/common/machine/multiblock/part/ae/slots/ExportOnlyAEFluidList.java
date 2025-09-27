@@ -4,8 +4,6 @@ import com.gtolib.api.ae2.stacks.IAEFluidKey;
 import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidPredicate;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -14,6 +12,8 @@ import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
 import com.gregtechceu.gtceu.api.transfer.fluid.CustomFluidTank;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlot;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlotList;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraftforge.fluids.FluidStack;
 
@@ -144,7 +144,7 @@ public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfi
     }
 
     @Override
-    public boolean forEachFluids(FluidPredicate function) {
+    public boolean forEachFluids(ObjectLongPredicate<FluidStack> function) {
         for (var i : inventory) {
             if (i.config == null) continue;
             var stock = i.stock;
@@ -155,7 +155,7 @@ public class ExportOnlyAEFluidList extends NotifiableFluidTank implements IConfi
     }
 
     @Override
-    public void fastForEachFluids(FluidConsumer function) {
+    public void fastForEachFluids(ObjectLongConsumer<FluidStack> function) {
         for (var i : inventory) {
             if (i.config == null) continue;
             var stock = i.stock;

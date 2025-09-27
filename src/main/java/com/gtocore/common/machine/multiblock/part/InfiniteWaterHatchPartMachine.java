@@ -7,14 +7,14 @@ import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidPredicate;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredIOPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableRecipeHandlerTrait;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -99,12 +99,12 @@ public final class InfiniteWaterHatchPartMachine extends TieredIOPartMachine {
         }
 
         @Override
-        public boolean forEachFluids(FluidPredicate function) {
+        public boolean forEachFluids(ObjectLongPredicate<FluidStack> function) {
             return function.test(WATER, Long.MAX_VALUE);
         }
 
         @Override
-        public void fastForEachFluids(FluidConsumer function) {
+        public void fastForEachFluids(ObjectLongConsumer<FluidStack> function) {
             function.accept(WATER, Long.MAX_VALUE);
         }
 

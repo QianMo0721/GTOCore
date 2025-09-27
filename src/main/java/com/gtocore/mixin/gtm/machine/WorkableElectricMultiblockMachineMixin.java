@@ -19,7 +19,6 @@ import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMa
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableMultiblockMachine;
 import com.gregtechceu.gtceu.api.misc.EnergyContainerList;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
-import com.gregtechceu.gtceu.common.data.machines.GTMultiMachines;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -200,7 +199,7 @@ public abstract class WorkableElectricMultiblockMachineMixin extends WorkableMul
 
     @Override
     public boolean gtolib$canUpgraded() {
-        return getDefinition() == GTMultiMachines.ELECTRIC_BLAST_FURNACE;
+        return false;
     }
 
     @Override

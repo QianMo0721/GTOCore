@@ -1,5 +1,5 @@
 {
     "ldlib": {
-        "connection": "gtocore:block/casings/abs_rad_casing_ctm"
+        "connection": "gtocore:block/casings/abs_red_casing_ctm"
     }
 }

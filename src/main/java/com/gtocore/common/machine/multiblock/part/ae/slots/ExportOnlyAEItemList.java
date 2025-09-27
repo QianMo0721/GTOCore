@@ -4,8 +4,6 @@ import com.gtolib.api.ae2.stacks.IAEItemKey;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemPredicate;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -13,6 +11,8 @@ import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlot;
 import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlotList;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -147,7 +147,7 @@ public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements 
     }
 
     @Override
-    public boolean forEachItems(ItemPredicate function) {
+    public boolean forEachItems(ObjectLongPredicate<ItemStack> function) {
         for (var i : inventory) {
             if (i.config == null) continue;
             var stock = i.stock;
@@ -158,7 +158,7 @@ public class ExportOnlyAEItemList extends NotifiableItemStackHandler implements 
     }
 
     @Override
-    public void fastForEachItems(ItemConsumer function) {
+    public void fastForEachItems(ObjectLongConsumer<ItemStack> function) {
         for (var i : inventory) {
             if (i.config == null) continue;
             var stock = i.stock;

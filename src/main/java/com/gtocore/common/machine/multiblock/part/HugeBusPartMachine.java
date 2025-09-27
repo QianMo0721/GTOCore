@@ -7,8 +7,6 @@ import com.gtolib.utils.NumberUtils;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemPredicate;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
@@ -19,6 +17,8 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -196,7 +196,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IMa
         }
 
         @Override
-        public boolean forEachItems(ItemPredicate function) {
+        public boolean forEachItems(ObjectLongPredicate<ItemStack> function) {
             var amount = ((HugeCustomItemStackHandler) storage).count;
             if (amount > 0) {
                 return function.test(getStackInSlot(0), amount);
@@ -205,7 +205,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IMa
         }
 
         @Override
-        public void fastForEachItems(ItemConsumer function) {
+        public void fastForEachItems(ObjectLongConsumer<ItemStack> function) {
             var amount = ((HugeCustomItemStackHandler) storage).count;
             if (amount > 0) {
                 function.accept(getStackInSlot(0), amount);

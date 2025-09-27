@@ -190,11 +190,6 @@ public final class GTOConfig {
     public boolean fastMultiBlockPage = true;
 
     @Configurable
-    @Configurable.Comment({ "使用更快的并行算法", "Use a faster parallel algorithm" })
-    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Fast Parallel Calculate", cn = "快速并行计算")
-    public boolean fastParallelcalculate = true;
-
-    @Configurable
     @Configurable.Comment({ "机器查找配方最大间隔（tick）", "Maximum interval for machines to search for recipes (ticks)" })
     @Configurable.Range(min = 5, max = 200)
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Recipe Search Max Interval", cn = "配方搜索最大间隔")

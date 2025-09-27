@@ -1,31 +1,41 @@
 package com.gtocore.common.machine.trait;
 
+import com.gtocore.api.data.tag.GTOTagPrefix;
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 
 import com.gtolib.api.ae2.stacks.IAEFluidKey;
 import com.gtolib.api.ae2.stacks.IAEItemKey;
 import com.gtolib.api.machine.trait.ExtendedRecipeHandlerList;
+import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
+import com.gtolib.api.machine.trait.NonStandardHandler;
 import com.gtolib.api.recipe.Recipe;
 import com.gtolib.api.recipe.RecipeCapabilityMap;
+import com.gtolib.api.recipe.ingredient.FastFluidIngredient;
+import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
+import com.gtolib.api.recipe.modifier.ParallelCache;
 
 import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.capability.recipe.RecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.FluidPredicate;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemConsumer;
-import com.gregtechceu.gtceu.api.capability.recipe.function.ItemPredicate;
+import com.gregtechceu.gtceu.api.item.TagPrefixItem;
+import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.MultiblockPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.IRecipeHandlerTrait;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableRecipeHandlerTrait;
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
+import com.gregtechceu.gtceu.api.recipe.content.Content;
 import com.gregtechceu.gtceu.api.recipe.ingredient.FluidIngredient;
 import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
+import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
+import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 
 import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +60,113 @@ public final class InternalSlotRecipeHandler {
             super(rhl.slot, rhl.part);
             rhl.rhl = this;
         }
+
+        private Object2LongOpenCustomHashMap<ItemStack> getItemMap(ParallelCache parallelCache) {
+            var ingredientStacks = parallelCache.getItemIngredientMap();
+            for (var container : getCapability(ItemRecipeCapability.CAP)) {
+                if (container instanceof NonStandardHandler) continue;
+                container.fastForEachItems(ingredientStacks::addTo);
+            }
+            return ingredientStacks;
+        }
+
+        private Reference2LongOpenHashMap<Fluid> getFluidMap(ParallelCache parallelCache) {
+            var ingredientStacks = parallelCache.getFluidIngredientMap();
+            for (var container : getCapability(ItemRecipeCapability.CAP)) {
+                if (container instanceof NonStandardHandler) continue;
+                container.fastForEachFluids((a, b) -> ingredientStacks.addTo(a.getFluid(), b));
+            }
+            return ingredientStacks;
+        }
+
+        @Override
+        public long getInputItemParallel(IRecipeLogicMachine holder, List<Content> contents, long parallelAmount) {
+            ParallelCache parallelCache = IEnhancedRecipeLogic.of(holder.getRecipeLogic()).gtolib$getParallelCache();
+            Object2LongOpenCustomHashMap<ItemStack> ingredientStacks = null;
+            for (var content : contents) {
+                if (content.chance > 0 && content.content instanceof FastSizedIngredient ingredient) {
+                    var inner = ingredient.getInner().values;
+                    if (inner.length > 0) {
+                        long needed = ingredient.getAmount();
+                        long available = 0;
+                        if (inner[0] instanceof Ingredient.ItemValue itemValue) {
+                            var item = itemValue.item.getItem();
+                            if (item instanceof TagPrefixItem tagPrefixItem && tagPrefixItem.tagPrefix == GTOTagPrefix.CATALYST) continue;
+                            for (var it = slot.itemInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
+                                var e = it.next();
+                                if (item == e.getKey().getItem()) {
+                                    available = e.getLongValue();
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (var it = slot.itemInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
+                                var e = it.next();
+                                if (ingredient.testItem(e.getKey().getItem())) {
+                                    available = e.getLongValue();
+                                    break;
+                                }
+                            }
+                        }
+                        if (available == 0) {
+                            if (ingredientStacks == null) ingredientStacks = getItemMap(parallelCache);
+                            for (var iter = ingredientStacks.object2LongEntrySet().fastIterator(); iter.hasNext();) {
+                                var inventoryEntry = iter.next();
+                                if (ingredient.test(inventoryEntry.getKey())) {
+                                    available = inventoryEntry.getLongValue();
+                                    break;
+                                }
+                            }
+                        }
+                        if (available >= needed) {
+                            parallelAmount = Math.min(parallelAmount, available / needed);
+                        } else {
+                            parallelAmount = 0;
+                            break;
+                        }
+                    }
+                }
+            }
+            parallelCache.cleanItemMap();
+            return parallelAmount;
+        }
+
+        @Override
+        public long getInputFluidParallel(IRecipeLogicMachine holder, List<Content> contents, long parallelAmount) {
+            ParallelCache parallelCache = IEnhancedRecipeLogic.of(holder.getRecipeLogic()).gtolib$getParallelCache();
+            Reference2LongOpenHashMap<Fluid> ingredientStacks = null;
+            for (var content : contents) {
+                if (content.chance > 0 && content.content instanceof FastFluidIngredient ingredient) {
+                    long needed = ingredient.getAmount();
+                    long available = 0;
+                    for (var it = slot.fluidInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
+                        var e = it.next();
+                        if (ingredient.testFluid(e.getKey().getFluid())) {
+                            available = e.getLongValue();
+                            break;
+                        }
+                    }
+                    if (available == 0) {
+                        if (ingredientStacks == null) ingredientStacks = getFluidMap(parallelCache);
+                        for (var it = ingredientStacks.reference2LongEntrySet().fastIterator(); it.hasNext();) {
+                            var inventoryEntry = it.next();
+                            if (ingredient.testFluid(inventoryEntry.getKey())) {
+                                available = inventoryEntry.getLongValue();
+                                break;
+                            }
+                        }
+                    }
+                    if (available >= needed) {
+                        parallelAmount = Math.min(parallelAmount, available / needed);
+                    } else {
+                        parallelAmount = 0;
+                        break;
+                    }
+                }
+            }
+            parallelCache.cleanFluidMap();
+            return parallelAmount;
+        }
     }
 
     public static abstract class AbstractRHL extends ExtendedRecipeHandlerList {
@@ -65,6 +182,69 @@ public final class InternalSlotRecipeHandler {
         @Override
         public boolean isDistinct() {
             return true;
+        }
+
+        @Override
+        public long getInputItemParallel(IRecipeLogicMachine holder, List<Content> contents, long parallelAmount) {
+            for (var content : contents) {
+                if (content.chance > 0 && content.content instanceof FastSizedIngredient ingredient) {
+                    var inner = ingredient.getInner().values;
+                    if (inner.length > 0) {
+                        long needed = ingredient.getAmount();
+                        long available = 0;
+                        if (inner[0] instanceof Ingredient.ItemValue itemValue) {
+                            var item = itemValue.item.getItem();
+                            if (item instanceof TagPrefixItem tagPrefixItem && tagPrefixItem.tagPrefix == GTOTagPrefix.CATALYST) continue;
+                            for (var it = slot.itemInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
+                                var e = it.next();
+                                if (item == e.getKey().getItem()) {
+                                    available = e.getLongValue();
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (var it = slot.itemInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
+                                var e = it.next();
+                                if (ingredient.testItem(e.getKey().getItem())) {
+                                    available = e.getLongValue();
+                                    break;
+                                }
+                            }
+                        }
+                        if (available >= needed) {
+                            parallelAmount = Math.min(parallelAmount, available / needed);
+                        } else {
+                            parallelAmount = 0;
+                            break;
+                        }
+                    }
+                }
+            }
+            return parallelAmount;
+        }
+
+        @Override
+        public long getInputFluidParallel(IRecipeLogicMachine holder, List<Content> contents, long parallelAmount) {
+            for (var content : contents) {
+                if (content.chance > 0 && content.content instanceof FastFluidIngredient ingredient) {
+                    long needed = ingredient.getAmount();
+                    long available = 0;
+                    for (var it = slot.fluidInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
+                        var e = it.next();
+                        if (ingredient.testFluid(e.getKey().getFluid())) {
+                            available = e.getLongValue();
+                            break;
+                        }
+                    }
+                    if (available >= needed) {
+                        parallelAmount = Math.min(parallelAmount, available / needed);
+                    } else {
+                        parallelAmount = 0;
+                        break;
+                    }
+                }
+            }
+            return parallelAmount;
         }
 
         public boolean handleRecipeContent(GTRecipe recipe, RecipeCapabilityMap<List<Object>> contents, boolean simulate) {
@@ -113,7 +293,7 @@ public final class InternalSlotRecipeHandler {
         }
     }
 
-    private static final class SlotItemRecipeHandler extends NotifiableRecipeHandlerTrait<Ingredient> {
+    private static final class SlotItemRecipeHandler extends NotifiableRecipeHandlerTrait<Ingredient> implements NonStandardHandler {
 
         private final MEPatternBufferPartMachine.InternalSlot slot;
 
@@ -160,7 +340,7 @@ public final class InternalSlotRecipeHandler {
         }
 
         @Override
-        public boolean forEachItems(ItemPredicate function) {
+        public boolean forEachItems(ObjectLongPredicate<ItemStack> function) {
             for (var it = slot.itemInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
                 var e = it.next();
                 var a = e.getLongValue();
@@ -174,7 +354,7 @@ public final class InternalSlotRecipeHandler {
         }
 
         @Override
-        public void fastForEachItems(ItemConsumer function) {
+        public void fastForEachItems(ObjectLongConsumer<ItemStack> function) {
             slot.itemInventory.object2LongEntrySet().fastForEach(e -> {
                 var a = e.getLongValue();
                 if (a < 1) return;
@@ -202,7 +382,7 @@ public final class InternalSlotRecipeHandler {
         }
     }
 
-    private static final class SlotFluidRecipeHandler extends NotifiableRecipeHandlerTrait<FluidIngredient> {
+    private static final class SlotFluidRecipeHandler extends NotifiableRecipeHandlerTrait<FluidIngredient> implements NonStandardHandler {
 
         private final MEPatternBufferPartMachine.InternalSlot slot;
 
@@ -249,7 +429,7 @@ public final class InternalSlotRecipeHandler {
         }
 
         @Override
-        public boolean forEachFluids(FluidPredicate function) {
+        public boolean forEachFluids(ObjectLongPredicate<FluidStack> function) {
             for (var it = slot.fluidInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
                 var e = it.next();
                 var a = e.getLongValue();
@@ -263,7 +443,7 @@ public final class InternalSlotRecipeHandler {
         }
 
         @Override
-        public void fastForEachFluids(FluidConsumer function) {
+        public void fastForEachFluids(ObjectLongConsumer<FluidStack> function) {
             slot.fluidInventory.object2LongEntrySet().fastForEach(e -> {
                 var a = e.getLongValue();
                 if (a < 1) return;
