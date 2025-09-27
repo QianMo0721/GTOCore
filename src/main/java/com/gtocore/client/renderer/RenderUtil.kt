@@ -1,13 +1,15 @@
 package com.gtocore.client.renderer
 
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.GameRenderer
+
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
-import net.minecraft.client.gui.GuiGraphics
-import net.minecraft.client.renderer.GameRenderer
 import org.joml.Matrix4f
+
 import java.awt.Color
 
 object RenderUtil {
@@ -31,10 +33,10 @@ object RenderUtil {
         val matrix = guiGraphics.pose().last().pose()
 
         // Define the colors for the four corners
-        val c1 = getDynamicRainbowColor(0.0f)       // Top-Left
-        val c2 = getDynamicRainbowColor(0.25f)      // Top-Right
-        val c3 = getDynamicRainbowColor(0.5f)       // Bottom-Right
-        val c4 = getDynamicRainbowColor(0.75f)      // Bottom-Left
+        val c1 = getDynamicRainbowColor(0.0f) // Top-Left
+        val c2 = getDynamicRainbowColor(0.25f) // Top-Right
+        val c3 = getDynamicRainbowColor(0.5f) // Bottom-Right
+        val c4 = getDynamicRainbowColor(0.75f) // Bottom-Left
 
         // Enable blending and set the appropriate shader for colored vertices
         RenderSystem.enableBlend()
@@ -85,9 +87,7 @@ object RenderUtil {
     /**
      * Gets a color from the rainbow spectrum based on a hue value.
      */
-    private fun getRainbowColor(hue: Float): Int {
-        return Color.HSBtoRGB(hue, 0.8f, 1.0f)
-    }
+    private fun getRainbowColor(hue: Float): Int = Color.HSBtoRGB(hue, 0.8f, 1.0f)
 
     /**
      * Gets a rainbow color that changes over time.
