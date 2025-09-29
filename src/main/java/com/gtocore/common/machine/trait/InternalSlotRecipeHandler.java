@@ -76,6 +76,7 @@ public final class InternalSlotRecipeHandler {
             for (var content : contents) {
                 if (content.chance > 0 && content.content instanceof FastFluidIngredient ingredient) {
                     long needed = ingredient.getAmount();
+                    if (needed < 1) continue;
                     long available = 0;
                     for (var it = slot.fluidInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
                         var e = it.next();
@@ -138,6 +139,7 @@ public final class InternalSlotRecipeHandler {
             for (var content : contents) {
                 if (content.chance > 0 && content.content instanceof FastSizedIngredient ingredient) {
                     long needed = ingredient.getAmount();
+                    if (needed < 1) continue;
                     long available = 0;
                     for (var it = slot.itemInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
                         var e = it.next();
@@ -173,6 +175,7 @@ public final class InternalSlotRecipeHandler {
             for (var content : contents) {
                 if (content.chance > 0 && content.content instanceof FastFluidIngredient ingredient) {
                     long needed = ingredient.getAmount();
+                    if (needed < 1) continue;
                     long available = 0;
                     for (var it = slot.fluidInventory.object2LongEntrySet().fastIterator(); it.hasNext();) {
                         var e = it.next();
