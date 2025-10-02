@@ -1,6 +1,6 @@
 package com.gtocore.common.item;
 
-import com.gtocore.api.placeholder.IPlaceholderEXKT;
+import com.gtocore.api.placeholder.IPlaceholder;
 
 import com.gtolib.IItem;
 import com.gtolib.api.recipe.lookup.MapIngredient;
@@ -30,7 +30,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-public final class DiscItem extends Item implements IPlaceholderEXKT<Object, ItemStack, Unit> {
+public final class DiscItem extends Item implements IPlaceholder<Object, ItemStack, Unit> {
 
     public DiscItem(Properties properties) {
         super(properties);

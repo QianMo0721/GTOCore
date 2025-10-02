@@ -1,7 +1,6 @@
 package com.gtocore.mixin.mc;
 
-import com.gtocore.api.placeholder.IPlaceholderEXKT;
-import com.gtocore.common.item.DiscItem;
+import com.gtocore.api.placeholder.IPlaceholder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -12,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
-import dev.emi.emi.api.stack.FluidEmiStack;
+import dev.emi.emi.api.stack.EmiStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -51,21 +50,19 @@ public abstract class GuiGraphicsMixin {
     @Nullable
     private static Object gtocore$getPlaceholderTarget(@Nullable LivingEntity entity, @Nullable Level level, ItemStack placeholderStack, int x, int y, int seed, int GuiOffset) {
         // 1. 检查物品是否为占位符，并且不在递归守卫中。
-        if (!(placeholderStack.getItem() instanceof IPlaceholderEXKT) || gtocore$RENDERING_GUARD.get() == placeholderStack) {
+        if (!(placeholderStack.getItem() instanceof IPlaceholder placeholder) || gtocore$RENDERING_GUARD.get() == placeholderStack) {
             return null;
         }
         if (Screen.hasShiftDown()) {
-            if ((placeholderStack.getItem() instanceof DiscItem discitem)) {
-                var target = discitem.getCurrentTarget(placeholderStack, null);
+            var target = placeholder.getCurrentTarget(placeholderStack, null);
 
-                // 4. 验证目标以确保其不为空。
-                if (target != null) {
-                    if (target instanceof ItemStack itemTarget && !itemTarget.isEmpty()) {
-                        return itemTarget;
-                    }
-                    if (target instanceof FluidStack fluidTarget && !fluidTarget.isEmpty()) {
-                        return fluidTarget;
-                    }
+            // 4. 验证目标以确保其不为空。
+            if (target != null) {
+                if (target instanceof ItemStack itemTarget && !itemTarget.isEmpty()) {
+                    return itemTarget;
+                }
+                if (target instanceof FluidStack fluidTarget && !fluidTarget.isEmpty()) {
+                    return fluidTarget;
                 }
             }
         }
@@ -95,8 +92,7 @@ public abstract class GuiGraphicsMixin {
                     // 如果是 Item，使用原始方法渲染它。
                     this.renderItem(entity, level, itemTarget, x, y, seed, GuiOffset);
                 } else if (target instanceof FluidStack fluidTarget) {
-                    FluidEmiStack emiStack = new FluidEmiStack(fluidTarget.getFluid());
-                    emiStack.render((GuiGraphics) (Object) this, x, y, Minecraft.getInstance().getFrameTime());
+                    EmiStack.of(fluidTarget.getFluid()).render((GuiGraphics) (Object) this, x, y, Minecraft.getInstance().getFrameTime());
                 }
             } finally {
                 // 始终移除守卫。

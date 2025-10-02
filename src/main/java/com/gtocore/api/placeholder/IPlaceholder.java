@@ -10,7 +10,7 @@ import java.util.List;
  * C 获取当前目标时所需的上下文对象的类型。
  * S 携带占位符配置信息的源对象类型 (例如 ItemStack)。
  */
-public interface IPlaceholderEXKT<T, S, C> {
+public interface IPlaceholder<T, S, C> {
 
     /**
      * 从源对象中读取配置，并返回此占位符应显示的目标对象列表的列表。
