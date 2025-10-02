@@ -1,14 +1,5 @@
 package com.gtocore.common.machine.multiblock.steam;
 
-import com.gtocore.common.data.GTOBlocks;
-
-import com.gtolib.api.annotation.Scanned;
-import com.gtolib.api.annotation.dynamic.DynamicInitialValue;
-import com.gtolib.api.annotation.dynamic.DynamicInitialValueTypes;
-import com.gtolib.api.machine.feature.IEnhancedRecipeLogicMachine;
-import com.gtolib.api.machine.trait.CustomRecipeLogic;
-import com.gtolib.api.recipe.Recipe;
-
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.IExplosionMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IDisplayUIMachine;
@@ -20,7 +11,13 @@ import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
 import com.gregtechceu.gtceu.api.pattern.util.RelativeDirection;
 import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.config.ConfigHolder;
-
+import com.gtocore.common.data.GTOBlocks;
+import com.gtolib.api.annotation.Scanned;
+import com.gtolib.api.annotation.dynamic.DynamicInitialValue;
+import com.gtolib.api.annotation.dynamic.DynamicInitialValueTypes;
+import com.gtolib.api.machine.feature.IEnhancedRecipeLogicMachine;
+import com.gtolib.api.machine.trait.CustomRecipeLogic;
+import com.gtolib.api.recipe.Recipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -28,42 +25,43 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.Fluids;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.EXPORT_FLUIDS_1X;
-import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.IMPORT_FLUIDS_1X;
+import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.EXPORT_FLUIDS;
+import static com.gregtechceu.gtceu.api.machine.multiblock.PartAbility.IMPORT_FLUIDS;
 import static com.gregtechceu.gtceu.api.pattern.Predicates.*;
 import static com.gregtechceu.gtceu.common.data.GTMaterials.Steam;
 
 @Scanned
 public class LargeSteamSolarBoilerMachine extends WorkableMultiblockMachine implements IExplosionMachine, IDisplayUIMachine, IEnhancedRecipeLogicMachine {
 
-    private static final TraceabilityPredicate INNER_PREDICATE = new TraceabilityPredicate(
-            blockWorldState -> true, null, null) {
-
-        @Override
-        public boolean testOnly() {
-            return true;
-        }
-
-        @Override
-        public boolean isAny() {
-            return false;
-        }
-
-        @Override
-        public boolean isAir() {
-            return false;
-        }
-    };
 
     @DynamicInitialValue(key = "gtocore.machine.large_steam_solar_boiler", typeKey = DynamicInitialValueTypes.KEY_MULTIPLY, simpleValue = "30", normalValue = "18", expertValue = "12", cn = "基础蒸汽产率 : %s / t", en = "Basic steam production : %s / t")
     private static int basicSteamProduction = 10;
+    static {
+        new TraceabilityPredicate(
+                blockWorldState -> true, null, null) {
 
-    private static final int MAX_LR_DIST = 5, MAX_B_DIST = 11;
+            @Override
+            public boolean testOnly() {
+                return true;
+            }
+
+            @Override
+            public boolean isAny() {
+                return false;
+            }
+
+            @Override
+            public boolean isAir() {
+                return false;
+            }
+        };
+    }
+
+    private static final int MAX_LR_DIST = 62, MAX_B_DIST = 125;
     private static final int MIN_LR_DIST = 1, MIN_B_DIST = 3;
     private static final int STEAM_GENERATION_INTERVAL = 20;
 
@@ -159,9 +157,9 @@ public class LargeSteamSolarBoilerMachine extends WorkableMultiblockMachine impl
                 .aisle(boundaryRow)
                 .aisle(middleRow).setRepeatable(safeBDist)
                 .aisle(controllerRow)
-                .where('a', blocks(GTBlocks.STEEL_HULL.get()).or(abilities(EXPORT_FLUIDS_1X)).or(abilities(IMPORT_FLUIDS_1X)))
+                .where('a', blocks(GTBlocks.STEEL_HULL.get()).or(abilities(EXPORT_FLUIDS)).or(abilities(IMPORT_FLUIDS)))
                 .where('b', blocks(GTOBlocks.SOLAR_HEAT_COLLECTOR_PIPE_CASING.get()))
-                .where('~', controller(INNER_PREDICATE))
+                .where('~', controller(blocks(this.getDefinition().get())))
                 .build();
     }
 
