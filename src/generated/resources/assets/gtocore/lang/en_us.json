@@ -6684,6 +6684,7 @@
   "material.gtocore.znfealcl": "Znfealcl",
   "material.gtocore.zylon": "Zylon",
   "message.gtocore.difficulty_mismatch": "The server difficulty does not match the current client and cannot join the game! (Server: %s, Current: %s)",
+  "metaitem.pipe.tooltip": "Use wrench press and hold shift while right clicking to set §eAuto Pull§r and §eRestrict Flow Direction§r",
   "metaitem.tool.tooltip.rotor.coating": "Coating Material: %s",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0": "§6Coating Mechanism:",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0.magic": "§dMagical§6 Coating Mechanism:",

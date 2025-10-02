@@ -128,6 +128,7 @@
     "eio.TravelHandlerMixin",
     "endremastered.EREnderEyeMixin",
     "ftbq.FTBQuestsCommandsMixin",
+    "ftbq.QuestMixin",
     "ftbq.ToggleEditingModeMessageMixin",
     "ftbu.FTBUltimineMixin",
     "ftbu.FTBUltiminePlayerDataMixin",

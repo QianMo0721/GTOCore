@@ -4333,6 +4333,7 @@
   "material.gtocore.znfealcl": "鋅-鐵-鋁-氯混合",
   "material.gtocore.zylon": "柴隆纖維",
   "message.gtocore.difficulty_mismatch": "服務器難度與當前客戶端不符，無法加入遊戲！（服務器：%s，當前：%s）",
+  "metaitem.pipe.tooltip": "使用扳手shift右鍵以設置§e自動抽取§r和§e限製傳輸方嚮§r",
   "metaitem.tool.tooltip.rotor.coating": "鍍層材料：%s",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0": "§6鍍層機製：",
   "metaitem.tool.tooltip.rotor.coating.tooltip.0.magic": "§d魔法§6鍍層機製：",
