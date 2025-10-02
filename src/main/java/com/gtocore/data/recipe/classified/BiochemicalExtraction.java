@@ -1,9 +1,11 @@
 package com.gtocore.data.recipe.classified;
 
-import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gtocore.common.data.GTOItems;
 import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.data.tag.Tags;
+
+import com.gregtechceu.gtceu.common.data.GTMaterials;
+
 import net.minecraft.world.item.Items;
 
 import static com.gtocore.common.data.GTORecipeTypes.BIOCHEMICAL_EXTRACTION_RECIPES;

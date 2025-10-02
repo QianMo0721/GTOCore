@@ -1,10 +1,7 @@
 package com.gtocore.integration.eio;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import com.enderio.core.CoreNBTKeys;
-import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.gtocore.common.machine.multiblock.part.ae.MEPatternPartMachineKt;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +14,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import com.enderio.core.CoreNBTKeys;
+import com.enderio.machines.common.travel.AnchorTravelTarget;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;

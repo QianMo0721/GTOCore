@@ -1,7 +1,5 @@
 package com.gtocore.common.data.translation
 
-import com.google.common.collect.ImmutableMap
-import com.gregtechceu.gtceu.api.GTValues
 import com.gtocore.api.lang.ComponentListSupplier
 import com.gtocore.api.lang.toComponentSupplier
 import com.gtocore.api.lang.toLiteralSupplier
@@ -10,9 +8,13 @@ import com.gtocore.common.machine.multiblock.storage.MEStorageMachine
 import com.gtocore.common.machine.multiblock.storage.MultiblockCrateMachine
 import com.gtocore.common.machine.noenergy.BoilWaterMachine
 import com.gtocore.common.machine.noenergy.HeaterMachine
+
+import net.minecraft.network.chat.Component
+
+import com.google.common.collect.ImmutableMap
+import com.gregtechceu.gtceu.api.GTValues
 import com.gtolib.utils.NumberUtils
 import com.lowdragmc.lowdraglib.side.fluid.FluidHelper
-import net.minecraft.network.chat.Component
 
 /**
  * 用于收纳机器相关用法

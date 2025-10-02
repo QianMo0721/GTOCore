@@ -1,24 +1,23 @@
 package com.gtocore.mixin.buildinggadgets2;
 
+import com.gtocore.integration.ae.CreateEncodedPattern;
+
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
+
+import appeng.core.definitions.AEItems;
 import com.direwolf20.buildinggadgets2.common.containers.TemplateManagerContainer;
 import com.direwolf20.buildinggadgets2.common.network.packets.PacketUpdateTemplateManager;
 import com.direwolf20.buildinggadgets2.common.worlddata.BG2Data;
 import com.direwolf20.buildinggadgets2.util.GadgetNBT;
 import com.direwolf20.buildinggadgets2.util.MiscHelpers;
 import com.direwolf20.buildinggadgets2.util.datatypes.StatePos;
-import com.gtocore.integration.ae.CreateEncodedPattern;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,22 +31,14 @@ import java.util.function.Supplier;
 @Mixin(value = PacketUpdateTemplateManager.class, remap = false)
 public abstract class PacketUpdateTemplateManagerMixin {
 
-    @Unique
-    private static final Item ENCODED_PATTERN = ForgeRegistries.ITEMS.getValue(ResourceLocation.fromNamespaceAndPath("ae2", "processing_pattern"));
-    @Unique
-    private static final Item BLANK_PATTERN = ForgeRegistries.ITEMS.getValue(ResourceLocation.fromNamespaceAndPath("ae2", "blank_pattern"));
-
     @Inject(
             method = "handle",
             at = @At("HEAD"),
-            cancellable = true
-    )
+            cancellable = true)
     private static void handleAe2PatternPreemptively(
-            PacketUpdateTemplateManager message,
-            Supplier<NetworkEvent.Context> context,
-            CallbackInfo ci
-    ) {
-
+                                                     PacketUpdateTemplateManager message,
+                                                     Supplier<NetworkEvent.Context> context,
+                                                     CallbackInfo ci) {
         int mode = ((PacketUpdateTemplateManagerMixin) (Object) message).getMode();
         String templateName = ((PacketUpdateTemplateManagerMixin) (Object) message).getTemplateName();
         ServerPlayer sender = context.get().getSender();
@@ -59,7 +50,7 @@ public abstract class PacketUpdateTemplateManagerMixin {
 
         ItemStack templateStack = container.getSlot(1).getItem();
 
-        if (BLANK_PATTERN == null || (!templateStack.is(BLANK_PATTERN) && !templateStack.is(ENCODED_PATTERN))) return;
+        if (!templateStack.is(AEItems.BLANK_PATTERN.asItem()) && !templateStack.is(AEItems.PROCESSING_PATTERN.asItem())) return;
         ItemStack gadgetStack = container.getSlot(0).getItem();
         UUID sourceUUID = GadgetNBT.getUUID(gadgetStack);
         BG2Data bg2Data = BG2Data.get(Objects.requireNonNull(sender.getServer()).overworld());
