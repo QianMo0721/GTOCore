@@ -7,6 +7,7 @@ import com.gtocore.client.forge.GTORender;
 import com.gtocore.client.renderer.item.MonitorItemDecorations;
 import com.gtocore.common.CommonProxy;
 import com.gtocore.common.data.GTOFluids;
+import com.gtocore.common.forge.ClientForge;
 import com.gtocore.common.machine.monitor.MonitorBlockItem;
 
 import com.gtolib.GTOCore;
@@ -52,6 +53,7 @@ public final class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(ForgeClientEvent.class);
         MinecraftForge.EVENT_BUS.register(GTOComponentHandler.class);
         MinecraftForge.EVENT_BUS.register(GTORender.class);
+        MinecraftForge.EVENT_BUS.register(ClientForge.class);
         registerAEModels();
         if (GTCEu.Mods.isShimmerLoaded()) eventBus.addListener(ClientProxy::registerLights);
     }
