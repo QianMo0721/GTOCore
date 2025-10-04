@@ -191,7 +191,7 @@ class MessageScreen(private val message: ClientForge.MessageDefinition, private 
         // 渲染标题（居中，带背景）
         val titleBgLeft = this.width / 2 - 100
         val titleBgRight = this.width / 2 + 100
-        guiGraphics.fill(titleBgLeft, titleY - 3, titleBgRight, titleY + 15, 0xCC1E3A5F.toInt())
+        guiGraphics.fill(titleBgLeft, titleY - 8, titleBgRight, titleY + 15, 0xCC1E3A5F.toInt())
         guiGraphics.drawCenteredString(
             this.font,
             Component.translatable(title_Key).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE).withBold(true)),
