@@ -1958,6 +1958,7 @@
   "gto.message.all_recent_confirmed": "✅ All recent messages confirmed!",
   "gto.message.back": "Back",
   "gto.message.close": "Close",
+  "gto.message.command_tip": "Tip: You can access these messages anytime via /gtocorec message",
   "gto.message.confirm_next": "Message confirmed. Showing next message...",
   "gto.message.gotit": "✅ Got it",
   "gto.message.list_icon": "📋",

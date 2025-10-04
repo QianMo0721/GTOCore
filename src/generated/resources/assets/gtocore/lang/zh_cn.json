@@ -1958,6 +1958,7 @@
   "gto.message.all_recent_confirmed": "✅ 所有最近消息已确认！",
   "gto.message.back": "返回",
   "gto.message.close": "关闭",
+  "gto.message.command_tip": "提示：你随时可以通过 /gtocorec message 访问这些信息",
   "gto.message.confirm_next": "消息确认，显示下一条...",
   "gto.message.gotit": "✅ 知道了",
   "gto.message.list_icon": "📋",
