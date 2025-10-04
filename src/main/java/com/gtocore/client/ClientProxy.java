@@ -60,6 +60,7 @@ public final class ClientProxy extends CommonProxy {
 
     private static void init() {
         KeyBind.init();
+        ClientForge.INSTANCE.getMESSAGE_DEFINITIONS().forEach(ClientForge.MessageDefinition::getContentHash);
     }
 
     @SuppressWarnings("all")
