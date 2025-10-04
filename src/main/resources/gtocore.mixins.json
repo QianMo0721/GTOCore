@@ -44,6 +44,7 @@
     "ae2.InterfaceLogicMixin",
     "ae2.QuartzCuttingKnifeItemMixin",
     "ae2.TickManagerServiceMixin",
+    "ae2.blockentity.AbstractLevelEmitterPartMixin",
     "ae2.blockentity.AEBaseBlockEntityMixin",
     "ae2.blockentity.AEBaseEntityBlockMixin",
     "ae2.blockentity.CableBusBlockMixin",
