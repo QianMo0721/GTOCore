@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(QuartzCuttingKnifeItem.class)
 public class QuartzCuttingKnifeItemMixin {
 
-    @Inject(method = "useOn", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
     private void onUseOnClient(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
         Player player = context.getPlayer();
         Level level = context.getLevel();
@@ -59,7 +59,7 @@ public class QuartzCuttingKnifeItemMixin {
 
     @Unique
     @OnlyIn(Dist.CLIENT)
-    private void gtocore$setClipboard(Component localizedName) {
+    private static void gtocore$setClipboard(Component localizedName) {
         Minecraft.getInstance().keyboardHandler.setClipboard(localizedName.getString());
     }
 }
