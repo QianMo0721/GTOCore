@@ -1,6 +1,7 @@
-package com.gtocore.integration.eio;
+package com.gtocore.common.forge;
 
 import com.gtocore.api.travel.TravelMode;
+import com.gtocore.integration.eio.ITravelHandlerHook;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -12,14 +13,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import com.enderio.base.common.item.tool.TravelStaffItem;
 
 import java.util.Objects;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TravelStaffItemMixinLikeForge {
 
     @SubscribeEvent

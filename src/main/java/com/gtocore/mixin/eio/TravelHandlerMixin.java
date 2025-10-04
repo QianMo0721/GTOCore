@@ -28,17 +28,17 @@ import java.util.stream.Stream;
 @Mixin(TravelHandler.class)
 public class TravelHandlerMixin implements ITravelHandlerHook {
 
-    @Redirect(method = { "lambda$getAnchorTarget$8", "lambda$getElevatorAnchorTarget$13" }, at = @At(value = "INVOKE", target = "Lcom/enderio/base/common/handler/TravelHandler;isTeleportPositionClear(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Ljava/util/Optional;", remap = false), remap = false)
+    @Redirect(method = { "lambda$getTeleportAnchorTarget$8", "lambda$getElevatorAnchorTarget$13" }, at = @At(value = "INVOKE", target = "Lcom/enderio/base/common/handler/TravelHandler;isTeleportPositionClear(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Ljava/util/Optional;"), remap = false)
     private static Optional<Double> gto$redirectIsTeleportPositionClear2(BlockGetter level, BlockPos target) {
         return ITravelHandlerHook.gto$isTeleportPositionAndSurroundingClear(level, target);
     }
 
-    @Redirect(method = "blockTeleportTo", at = @At(value = "INVOKE", target = "Lcom/enderio/base/common/handler/TravelHandler;isTeleportPositionClear(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Ljava/util/Optional;", remap = false), remap = false)
+    @Redirect(method = "blockTeleportTo", at = @At(value = "INVOKE", target = "Lcom/enderio/base/common/handler/TravelHandler;isTeleportPositionClear(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Ljava/util/Optional;"), remap = false)
     private static Optional<Double> gto$redirectIsTeleportPositionClear(BlockGetter level, BlockPos target, @Local(argsOnly = true) Player player) {
         return player.level().isClientSide() ? Optional.of(2d) : TravelHandler.isTeleportPositionClear(level, target);
     }
 
-    @Redirect(method = "getAnchorTarget", at = @At(value = "INVOKE", target = "Lcom/enderio/base/common/travel/TravelSavedData;getTravelTargetsInItemRange(Lnet/minecraft/core/BlockPos;)Ljava/util/stream/Stream;", remap = false), remap = false)
+    @Redirect(method = "getTeleportAnchorTarget", at = @At(value = "INVOKE", target = "Lcom/enderio/base/common/travel/TravelSavedData;getTravelTargetsInItemRange(Lnet/minecraft/core/BlockPos;)Ljava/util/stream/Stream;"), remap = false)
     private static Stream<ITravelTarget> gto$filterAnchorTargets(TravelSavedData instance, BlockPos center, @Local(argsOnly = true) Player player) {
         return ITravelHandlerHook.filterTargets(player, instance.getTravelTargetsInItemRange(center));
     }
