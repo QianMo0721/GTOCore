@@ -128,7 +128,6 @@
     "buildinggadgets2.TemplateManagerHandlerMixin",
     "eae.TileAssemblerMatrixBaseMixin",
     "eio.TravelHandlerMixin",
-    "eio.TravelStaffItemMixin",
     "endremastered.EREnderEyeMixin",
     "ftbq.FTBQuestsCommandsMixin",
     "ftbq.QuestMixin",
