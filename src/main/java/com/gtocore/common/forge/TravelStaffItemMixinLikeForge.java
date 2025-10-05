@@ -37,7 +37,6 @@ public class TravelStaffItemMixinLikeForge {
             return;
         }
 
-
         TravelMode currentMode = gtocore$getTravelMode(stack);
         TravelMode nextMode = currentMode.next();
         gtocore$setTravelMode(stack, nextMode);
