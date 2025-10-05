@@ -4,6 +4,7 @@ import com.gtocore.client.Tooltips;
 import com.gtocore.common.data.GTOBedrockFluids;
 import com.gtocore.common.data.GTOFluidStorageKey;
 import com.gtocore.common.data.GTORecipeCategories;
+import com.gtocore.common.data.translation.GTOItemTooltips;
 import com.gtocore.data.recipe.research.AnalyzeData;
 
 import com.gtolib.GTOCore;
@@ -50,6 +51,7 @@ public final class LangHandler {
     }
 
     private static void init() {
+        GTOItemTooltips.INSTANCE.initLanguage();
         MaterialsRegisterUtils.LANG.forEach((k, v) -> addCNEN("material.gtocore." + k, v));
         RecipeTypeRegisterUtils.LANG.forEach((k, v) -> addCNEN("gtceu." + k, v));
         GTOBedrockFluids.LANG.forEach((k, v) -> addCNEN("gtceu.jei.bedrock_fluid." + k, v));
