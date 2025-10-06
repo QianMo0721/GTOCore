@@ -5,8 +5,6 @@ import com.gtocore.api.lang.toLiteralSupplier
 import com.gtocore.api.misc.AutoInitialize
 import com.gtocore.utils.setTooltips
 
-import net.minecraftforge.coremod.api.ASMAPI.listOf
-
 import appeng.core.definitions.AEItems
 import appeng.core.definitions.AEParts
 import com.enderio.base.common.init.EIOItems

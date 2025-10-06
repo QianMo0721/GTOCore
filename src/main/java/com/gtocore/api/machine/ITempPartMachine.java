@@ -1,4 +1,4 @@
-package com.gtocore.api.machine.part;
+package com.gtocore.api.machine;
 
 import com.gtolib.api.machine.feature.IReceiveHeatMachine;
 
