@@ -97,9 +97,11 @@ public class ProgrammableHatchPartMachine extends DualHatchPartMachine implement
             if (patternDetails instanceof IDetails details) {
                 var type = details.getRecipeType();
                 if (type != null) {
-                        getControllers().forEach(controller -> {
-                            if (controller instanceof IRecipeLogicMachine recipeLogicMachine) recipeLogicMachine.setRecipeType(type);
-                        });
+                    getControllers().forEach(controller -> {
+                        if (controller instanceof IRecipeLogicMachine recipeLogicMachine)
+                            recipeLogicMachine.setRecipeType(type);
+                    });
+                }
             }
         }
         if (result.needBreak()) return result;
