@@ -196,7 +196,7 @@ public class FastNeutronBreederReactor extends CustomParallelMultiblockMachine i
 
             fastForEachInputItems((stack, amount) -> {
                 var neutron_sources = Wrapper.NEUTRON_SOURCES.get(stack.getItem());
-                if (neutron_sources > 0) {
+                if (neutron_sources != null) {
                     neutronFluxkeV += (long) neutron_sources * amount;
                     inputItem(stack.getItem(), amount);
                 }
@@ -211,7 +211,7 @@ public class FastNeutronBreederReactor extends CustomParallelMultiblockMachine i
             fastForEachInputFluids((stack, amount) -> {
                 var fluid = stack.getFluid();
                 var coolants = Wrapper.COOLANTS.get(fluid);
-                if (coolants > 0 && temperature > 298) {
+                if (coolants != null && temperature > 298) {
                     long processAmount = Math.min((long) Math.ceil((temperature - 298f) / coolants), amount);
                     if (fluid == GTMaterials.DistilledWater.getFluid()) {
                         processAmount = Math.min(processAmount, Integer.MAX_VALUE / 160);
