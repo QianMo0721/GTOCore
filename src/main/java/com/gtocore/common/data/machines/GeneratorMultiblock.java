@@ -6,6 +6,7 @@ import com.gtocore.client.renderer.machine.AdvancedHyperRenderer;
 import com.gtocore.client.renderer.machine.AnnihilateGeneratorRenderer;
 import com.gtocore.client.renderer.machine.ArrayMachineRenderer;
 import com.gtocore.common.data.GTOBlocks;
+import com.gtocore.common.data.GTOMachines;
 import com.gtocore.common.data.GTOMaterials;
 import com.gtocore.common.data.GTORecipeTypes;
 import com.gtocore.common.data.machines.structure.AnnihilateGeneratorA;
@@ -87,7 +88,7 @@ public final class GeneratorMultiblock {
                         .where('B', blocks(photovoltaicBlock.get()))
                         .where('C', blocks(casing.get()))
                         .where('D', blocks(casing.get())
-                                .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                                .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                                 .or(abilities(IMPORT_FLUIDS).setMaxGlobalLimited(1))
                                 .or(abilities(OUTPUT_ENERGY).setMaxGlobalLimited(1))
                                 .or(abilities(GTOPartAbility.OUTPUT_MANA).setMaxGlobalLimited(4))
@@ -130,7 +131,7 @@ public final class GeneratorMultiblock {
                     .where('K', blocks(GTOBlocks.BORON_CARBIDE_CERAMIC_RADIATION_RESISTANT_MECHANICAL_CUBE.get()))
                     .where('L', controller(blocks(definition.get())))
                     .where('I', blocks(GTBlocks.CASING_TUNGSTENSTEEL_ROBUST.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                             .or(abilities(OUTPUT_LASER).setExactLimit(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1))
                             .or(abilities(IMPORT_FLUIDS).setMaxGlobalLimited(1))
@@ -227,7 +228,7 @@ public final class GeneratorMultiblock {
                     .where('N', blocks(GTBlocks.CASING_TUNGSTENSTEEL_ROBUST.get())
                             .or(abilities(OUTPUT_ENERGY).setMaxGlobalLimited(4, 4)))
                     .where('n', blocks(GTBlocks.CASING_TUNGSTENSTEEL_ROBUST.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                             .or(abilities(MAINTENANCE).setExactLimit(1))
                             .or(abilities(OUTPUT_ENERGY).setMaxGlobalLimited(4, 4)))
                     .where('O', blocks(GTOBlocks.OXIDATION_RESISTANT_HASTELLOY_N_MECHANICAL_CASING.get()))
@@ -574,7 +575,7 @@ public final class GeneratorMultiblock {
                     .where('H', blocks(GTOBlocks.MOLECULAR_CASING.get()))
                     .where('I', blocks(GTBlocks.HIGH_POWER_CASING.get()))
                     .where('a', blocks(GTBlocks.HIGH_POWER_CASING.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                             .or(abilities(IMPORT_FLUIDS).setExactLimit(1))
                             .or(abilities(COMPUTATION_DATA_RECEPTION).setExactLimit(1))
                             .or(abilities(OUTPUT_LASER).setExactLimit(1)))
@@ -612,7 +613,7 @@ public final class GeneratorMultiblock {
                     .where('F', blocks(GTOBlocks.AMPROSIUM_PIPE_CASING.get()))
                     .where('G', blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Trinium)))
                     .where('a', blocks(GTOBlocks.HYPER_MECHANICAL_CASING.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                             .or(abilities(IMPORT_FLUIDS).setMaxGlobalLimited(2))
                             .or(abilities(OUTPUT_ENERGY).setMaxGlobalLimited(1))
                             .or(abilities(OUTPUT_LASER).setMaxGlobalLimited(1)))
@@ -652,7 +653,7 @@ public final class GeneratorMultiblock {
                     .where('G', blocks(GTOBlocks.CONTAINMENT_FIELD_GENERATOR.get()))
                     .where('H', blocks(GTOBlocks.HYPER_CORE.get()))
                     .where('a', blocks(GTOBlocks.ENHANCE_HYPER_MECHANICAL_CASING.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                             .or(abilities(IMPORT_FLUIDS).setMaxGlobalLimited(1))
                             .or(abilities(MAINTENANCE).setExactLimit(1))
                             .or(abilities(OUTPUT_ENERGY).setMaxGlobalLimited(1))
@@ -729,7 +730,7 @@ public final class GeneratorMultiblock {
                     .where('H', blocks(GTOBlocks.HYPER_CORE.get()))
                     .where('I', blocks(GTOBlocks.AMPROSIUM_PIPE_CASING.get()))
                     .where('a', blocks(GTOBlocks.ENHANCE_HYPER_MECHANICAL_CASING.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
                             .or(abilities(IMPORT_FLUIDS).setMaxGlobalLimited(2))
                             .or(abilities(MAINTENANCE).setExactLimit(1))
                             .or(abilities(OUTPUT_ENERGY).setMaxGlobalLimited(1))
@@ -770,13 +771,12 @@ public final class GeneratorMultiblock {
             .renderer(() -> new ArrayMachineRenderer(GTCEu.id("block/casings/solid/machine_casing_solid_steel"), GTCEu.id("block/multiblock/processing_array")))
             .register();
 
-    public static final MultiblockMachineDefinition ANNIHILATE_GENERATOR = multiblock("annihilate_generator", "人造恒星", ElectricMultiblockMachine::new)
+    public static final MultiblockMachineDefinition ANNIHILATE_GENERATOR = multiblock("annihilate_generator", "人造恒星", WirelessEnergyGeneratorMachine::new)
             .nonYAxisRotation()
             .langValue("Artificial Star")
             .recipeTypes(GTORecipeTypes.ANNIHILATE_GENERATOR_RECIPES)
             .generator()
             .block(GTBlocks.HIGH_POWER_CASING)
-            .recipeModifier(RecipeModifierFunction.GENERATOR_OVERCLOCKING)
             .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle(AnnihilateGeneratorB.A_1)
                     .aisle(AnnihilateGeneratorB.A_2)
@@ -898,7 +898,8 @@ public final class GeneratorMultiblock {
                     .where('H', blocks(GTOBlocks.RHENIUM_REINFORCED_ENERGY_GLASS.get()))
                     .where('P', blocks(GTOBlocks.DYSON_CONTROL_CASING.get()))
                     .where('S', blocks(GTBlocks.HIGH_POWER_CASING.get())
-                            .or(Predicates.blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTMachines.CONTROL_HATCH.getBlock()).setMaxGlobalLimited(1).setPreviewCount(0))
+                            .or(blocks(GTOMachines.WIRELESS_ENERGY_INTERFACE_HATCH.getBlock()).setMaxGlobalLimited(1))
                             .or(abilities(OUTPUT_LASER))
                             .or(abilities(IMPORT_ITEMS))
                             .or(abilities(EXPORT_ITEMS)))
