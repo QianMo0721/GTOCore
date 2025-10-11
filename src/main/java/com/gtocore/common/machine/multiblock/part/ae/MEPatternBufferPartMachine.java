@@ -42,6 +42,7 @@ import com.gregtechceu.gtceu.api.transfer.item.LockableItemStackHandler;
 import com.gregtechceu.gtceu.common.data.GTItems;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.item.IntCircuitBehaviour;
+import com.gregtechceu.gtceu.utils.TaskHandler;
 import com.gregtechceu.gtceu.utils.collection.OpenCacheHashSet;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -52,6 +53,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.TickTask;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -222,9 +224,13 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     @Override
     public void onPaintingColorChanged(int color) {
         super.onPaintingColorChanged(color);
-        var type = recipeType == GTRecipeTypes.DUMMY_RECIPES ? null : recipeType;
-        for (var i : getInternalInventory()) {
-            i.rhl.external.recipeType = type;
+        if (getLevel() instanceof ServerLevel serverLevel) {
+            TaskHandler.enqueueServerTask(serverLevel, () -> {
+                var type = recipeType == GTRecipeTypes.DUMMY_RECIPES ? null : recipeType;
+                for (var i : getInternalInventory()) {
+                    i.rhl.external.recipeType = type;
+                }
+            }, 1);
         }
     }
 
@@ -267,10 +273,9 @@ public class MEPatternBufferPartMachine extends MEPatternPartMachineKt<MEPattern
     public @Nullable IPatternDetails decodePattern(ItemStack stack, int index) {
         var pattern = super.decodePattern(stack, index);
         if (pattern == null) return null;
-        if (stack.getOrCreateTag().tags.get("recipe") instanceof StringTag stringTag) {
+        if (!caches[index] && stack.getOrCreateTag().tags.get("recipe") instanceof StringTag stringTag) {
             var recipe = RecipeBuilder.RECIPE_MAP.get(RLUtils.parse(stringTag.getAsString()));
             getInternalInventory()[index].setRecipe(recipe);
-            changeMode(recipe == null ? null : recipe.recipeType);
         }
         return pattern;
     }

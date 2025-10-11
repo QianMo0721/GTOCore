@@ -20,8 +20,10 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.DualHatchPartMachine;
+import com.gregtechceu.gtceu.utils.TaskHandler;
 
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 
 import appeng.api.crafting.IPatternDetails;
@@ -72,7 +74,9 @@ public class ProgrammableHatchPartMachine extends DualHatchPartMachine implement
     @Override
     public void onPaintingColorChanged(int color) {
         super.onPaintingColorChanged(color);
-        this.getHandlerList().external.recipeType = recipeType == GTRecipeTypes.DUMMY_RECIPES ? null : recipeType;
+        if (getLevel() instanceof ServerLevel serverLevel) {
+            TaskHandler.enqueueServerTask(serverLevel, () -> this.getHandlerList().external.recipeType = recipeType == GTRecipeTypes.DUMMY_RECIPES ? null : recipeType, 1);
+        }
     }
 
     @Override
