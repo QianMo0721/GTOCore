@@ -1,5 +1,7 @@
 package com.gtocore.mixin.eae;
 
+import com.gtolib.api.data.GTODimensions;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -37,6 +39,6 @@ public abstract class MessageUtilMixin {
                        ordinal = 1),
               remap = false)
     private static MutableComponent replaceDimensionComponent(String dimensionId, Player player, BlockPos targetPos, ResourceKey<Level> targetDimension, String translatable) {
-        return Component.translatable("gtocore.dimension." + targetDimension.location().getPath());
+        return Component.translatable(GTODimensions.getTranslationKey(targetDimension.location()));
     }
 }

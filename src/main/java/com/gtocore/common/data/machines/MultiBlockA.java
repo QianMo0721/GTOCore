@@ -500,10 +500,11 @@ public final class MultiBlockA {
                     .where(' ', any())
                     .build())
             .workableCasingRenderer(GTCEu.id("block/casings/steam/steel/side"), GTCEu.id("block/multiblock/gcym/large_maceration_tower"))
-            .afterWorking(m -> {
-                if (m.getRecipeLogic().getLastRecipe() != null && m.getRecipeLogic().getLastRecipe().data.getBoolean("isCustom")) {
+            .onWorking(m -> {
+                if (m.getProgress() == m.getMaxProgress() - 1 && m.getRecipeLogic().getLastRecipe() != null && m.getRecipeLogic().getLastRecipe().data.getBoolean("isCustom")) {
                     m.getRecipeLogic().markLastRecipeDirty();
                 }
+                return true;
             })
             .register();
 
