@@ -36,8 +36,8 @@ public abstract class MessageUtilMixin {
               at = @At(
                        value = "INVOKE",
                        target = "Lnet/minecraft/network/chat/Component;literal(Ljava/lang/String;)Lnet/minecraft/network/chat/MutableComponent;",
-                       ordinal = 1),
-              remap = false)
+                       ordinal = 1,
+                       remap = true))
     private static MutableComponent replaceDimensionComponent(String dimensionId, Player player, BlockPos targetPos, ResourceKey<Level> targetDimension, String translatable) {
         return Component.translatable(GTODimensions.getTranslationKey(targetDimension.location()));
     }
