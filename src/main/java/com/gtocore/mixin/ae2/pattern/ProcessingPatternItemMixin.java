@@ -1,6 +1,7 @@
 package com.gtocore.mixin.ae2.pattern;
 
 import com.gtolib.api.ae2.MyPatternDetailsHelper;
+import com.gtolib.utils.RLUtils;
 
 import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.NbtUtils;
@@ -60,7 +61,11 @@ public abstract class ProcessingPatternItemMixin extends EncodedPatternItem {
             }
             lines.add(Component.translatable("tooltip.item.pattern.uuid", player == null ? "Unknown" : player.getName()));
         }
-        if (tag.tags.containsKey("recipe")) lines.add(Component.translatable("tooltip.item.pattern.type"));
+        if (tag.tags.containsKey("recipe") && !tag.getString("recipe").isEmpty()) {
+            lines.add(Component.translatable("gtocore.pattern.recipe"));
+            var key = RLUtils.parse(tag.getString("recipe").split("/")[0]).toLanguageKey();
+            lines.add(Component.translatable("gtocore.pattern.type", Component.translatable(key)));
+        }
         super.appendHoverText(stack, level, lines, advancedTooltips);
     }
 }
