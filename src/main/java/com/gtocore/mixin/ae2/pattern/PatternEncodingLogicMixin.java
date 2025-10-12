@@ -22,7 +22,7 @@ public abstract class PatternEncodingLogicMixin implements IEncodingLogic {
     public abstract void saveChanges();
 
     @Unique
-    public String gtocore$recipe = "";
+    private String gtocore$recipe = "";
 
     @Inject(method = "loadProcessingPattern", at = @At("RETURN"), remap = false)
     private void loadProcessingPattern(AEProcessingPattern pattern, CallbackInfo ci) {

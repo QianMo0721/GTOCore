@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.monitor;
 
-import com.gtocore.api.gui.helper.ProgressBarColorStyle;
 import com.gtocore.mixin.ae2.menu.CraftingStatusMenuAccessor;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;

@@ -169,12 +169,12 @@ public class MonitorRenderer extends MachineRenderer {
                         int cumulatedHeight = 0;
                         int lastLineX = 0;
                         for (IDisplayComponent iDisplayComponent : info) {
-                            if(GTOConfig.INSTANCE.dev) {
+                            if (GTOConfig.INSTANCE.dev) {
                                 LevelRenderer.renderLineBox(stack, buffer.getBuffer(RenderType.lines()),
                                         0, cumulatedHeight, 0, iDisplayComponent.getVisualWidth(), cumulatedHeight + iDisplayComponent.getVisualHeight(), 0,
                                         0f, 1f, 0f, 1f);
                             }
-                            switch(iDisplayComponent.getDisplayType()) {
+                            switch (iDisplayComponent.getDisplayType()) {
                                 case STYLED_TEXT -> {
                                     FormattedCharSequence text = iDisplayComponent.getDisplayValue();
                                     font.drawInBatch(text, 0, cumulatedHeight, 0xFFFFFFFF, false, stack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0x000000, LightTexture.FULL_BRIGHT);

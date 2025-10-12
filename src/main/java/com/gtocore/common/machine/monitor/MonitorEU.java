@@ -1,7 +1,5 @@
 package com.gtocore.common.machine.monitor;
 
-import com.gtocore.api.gui.helper.ProgressBarColorStyle;
-
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.common.machine.multiblock.electric.PowerSubstationMachine;

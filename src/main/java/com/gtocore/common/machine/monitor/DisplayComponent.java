@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.monitor;
 
-import com.gtocore.api.gui.graphic.GTOToolTipComponent;
 import com.gtocore.api.gui.graphic.impl.GTOProgressClientComponent;
 import com.gtocore.api.gui.graphic.impl.GTOProgressToolTipComponent;
 import com.gtocore.api.gui.helper.GuiIn3DHelper;
@@ -82,6 +81,7 @@ public abstract class DisplayComponent implements IDisplayComponent {
     }
 
     public static class ProgressBar extends DisplayComponent {
+
         private final GTOProgressToolTipComponent toolTipComponent;
 
         private ProgressBar(ResourceLocation id) {
@@ -125,15 +125,15 @@ public abstract class DisplayComponent implements IDisplayComponent {
 
         @Override
         public void renderDisplay(
-                Manager.GridNetwork network,
-                BlockEntity blockEntity,
-                float partialTicks,
-                PoseStack stack,
-                MultiBufferSource buffer,
-                int combinedLight,
-                int combinedOverlay,
-                int lastLineX,
-                int startY) {
+                                  Manager.GridNetwork network,
+                                  BlockEntity blockEntity,
+                                  float partialTicks,
+                                  PoseStack stack,
+                                  MultiBufferSource buffer,
+                                  int combinedLight,
+                                  int combinedOverlay,
+                                  int lastLineX,
+                                  int startY) {
             GuiIn3DHelper.renderIn3D(stack, (gui, pose) -> {
                 pose.scale(1f, 1f, 0.01f);
                 new GTOProgressClientComponent(toolTipComponent).renderImage(Minecraft.getInstance().font, 0, startY, gui);

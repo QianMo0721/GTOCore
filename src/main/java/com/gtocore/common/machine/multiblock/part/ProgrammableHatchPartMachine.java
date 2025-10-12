@@ -3,13 +3,7 @@ package com.gtocore.common.machine.multiblock.part;
 import com.gtocore.api.gui.configurators.MultiMachineModeFancyConfigurator;
 import com.gtocore.common.data.GTORecipeTypes;
 
-import com.gtolib.api.ae2.IPatternProviderLogic;
-import com.gtolib.api.ae2.PatternProviderTargetCache;
-import com.gtolib.api.ae2.machine.ICustomCraftingMachine;
-import com.gtolib.api.ae2.pattern.IDetails;
 import com.gtolib.api.annotation.DataGeneratorScanned;
-import com.gtolib.utils.holder.BooleanHolder;
-import com.gtolib.utils.holder.ObjectHolder;
 
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.gregtechceu.gtceu.api.capability.recipe.IO;
@@ -22,14 +16,9 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.DualHatchPartMachine;
 import com.gregtechceu.gtceu.utils.TaskHandler;
 
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 
-import appeng.api.crafting.IPatternDetails;
-import appeng.api.networking.security.IActionSource;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.KeyCounter;
 import com.hepdd.gtmthings.api.machine.IProgrammableMachine;
 import com.hepdd.gtmthings.common.item.VirtualItemProviderBehavior;
 import com.hepdd.gtmthings.data.CustomItems;
@@ -38,12 +27,9 @@ import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 @DataGeneratorScanned
-public class ProgrammableHatchPartMachine extends DualHatchPartMachine implements IProgrammableMachine, ICustomCraftingMachine {
+public class ProgrammableHatchPartMachine extends DualHatchPartMachine implements IProgrammableMachine {
 
     @Persisted
     @DescSynced
@@ -84,11 +70,6 @@ public class ProgrammableHatchPartMachine extends DualHatchPartMachine implement
     }
 
     @Override
-    public boolean customPush() {
-        return true;
-    }
-
-    @Override
     public void onLoad() {
         super.onLoad();
         this.getHandlerList().external.recipeType = recipeType == GTORecipeTypes.HATCH_COMBINED ? null : recipeType;
@@ -112,24 +93,6 @@ public class ProgrammableHatchPartMachine extends DualHatchPartMachine implement
         super.removedFromController(controller);
         this.recipeTypes.clear();
         this.recipeTypes.addAll(MultiMachineModeFancyConfigurator.extractRecipeTypes(this.getControllers()));
-    }
-
-    @Override
-    public IPatternProviderLogic.PushResult pushPattern(IPatternProviderLogic logic, IActionSource actionSource, BooleanHolder success, Operate operate, Set<AEKey> patternInputs, IPatternDetails patternDetails, ObjectHolder<KeyCounter[]> inputHolder, Supplier<IPatternProviderLogic.PushResult> pushPatternSuccess, BooleanSupplier canPush, Direction direction, Direction adjBeSide) {
-        var target = PatternProviderTargetCache.find(holder, logic, adjBeSide, actionSource, 0);
-        if (target == null || target.containsPatternInput(patternInputs)) return IPatternProviderLogic.PushResult.NOWHERE_TO_PUSH;
-        var result = operate.pushTarget(patternDetails, inputHolder, pushPatternSuccess, canPush, direction, target, true);
-        if (result.success()) {
-            success.value = true;
-            if (patternDetails instanceof IDetails details) {
-                var recipe = details.getRecipe();
-                if (recipe != null) {
-                    changeMode(recipe.recipeType);
-                }
-            }
-        }
-        if (result.needBreak()) return result;
-        return IPatternProviderLogic.PushResult.NOWHERE_TO_PUSH;
     }
 
     @Override
