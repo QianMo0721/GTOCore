@@ -13,7 +13,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
-import net.minecraft.server.TickTask
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -48,6 +47,7 @@ import com.gregtechceu.gtceu.api.machine.feature.IInteractedMachine
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController
 import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler
+import com.gregtechceu.gtceu.utils.TaskHandler
 import com.gtolib.api.ae2.MyPatternDetailsHelper
 import com.gtolib.api.ae2.pattern.IParallelPatternDetails
 import com.gtolib.api.annotation.DataGeneratorScanned
@@ -203,11 +203,10 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
 
     override fun onMainNodeStateChanged(reason: IGridNodeListener.State) {
         super<MEPartMachine>.onMainNodeStateChanged(reason)
-        updateSubscription()
-        when (val level = getLevel()) {
-            is ServerLevel -> {
-                level.server.tell(
-                    TickTask(0) {
+        if (isOnline && detailsSlotMap.isEmpty()) {
+            when (val level = getLevel()) {
+                is ServerLevel -> {
+                    TaskHandler.enqueueServerTask(level, {
                         (0 until patternInventory.slots).forEach { i ->
                             val pattern = patternInventory.getStackInSlot(i)
                             decodePattern(pattern, i)?.let { patternDetails ->
@@ -215,8 +214,8 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
                             }
                         }
                         updatePatterns()
-                    },
-                )
+                    }, 1)
+                }
             }
         }
     }
@@ -355,17 +354,6 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
     private fun updatePatterns() {
         patterns = detailsSlotMap.keys.filterNotNull()
         needPatternSync = true
-    }
-
-    open fun convertPattern(pattern: IPatternDetails, index: Int): IPatternDetails = pattern
-
-    open fun decodePattern(stack: ItemStack, index: Int): IPatternDetails? {
-        val pattern = MyPatternDetailsHelper.decodePattern(stack, holder.self, getGrid())
-        if (pattern == null) return null
-        return IParallelPatternDetails.of(convertPattern(pattern, index), level, 1)
-    }
-
-    private fun updateSubscription() {
         when {
             getMainNode().isOnline -> {
                 updateSubs = subscribeServerTick(updateSubs, ::update)
@@ -377,10 +365,23 @@ internal abstract class MEPatternPartMachineKt<T : MEPatternPartMachineKt.Abstra
         }
     }
 
+    open fun convertPattern(pattern: IPatternDetails, index: Int): IPatternDetails = pattern
+
+    open fun decodePattern(stack: ItemStack, index: Int): IPatternDetails? {
+        val pattern = MyPatternDetailsHelper.decodePattern(stack, holder.self, getGrid())
+        if (pattern == null) return null
+        return IParallelPatternDetails.of(convertPattern(pattern, index), level, 1)
+    }
+
     private fun update() {
         if (needPatternSync) {
-            ICraftingProvider.requestUpdate(getMainNode())
-            needPatternSync = false
+            if (isOnline) {
+                ICraftingProvider.requestUpdate(getMainNode())
+                needPatternSync = false
+            }
+        } else if (updateSubs != null) {
+            updateSubs?.unsubscribe()
+            updateSubs = null
         }
     }
 
