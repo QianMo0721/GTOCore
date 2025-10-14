@@ -1,58 +1,44 @@
 package com.gtocore.mixin.gtm.machine;
 
-import com.gtocore.config.GTOConfig;
+import com.gtocore.api.machine.IGTOMufflerMachine;
 
-import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
-import com.gtolib.api.gui.GTOGuiTextures;
 import com.gtolib.api.machine.feature.IAirScrubberInteractor;
 import com.gtolib.api.machine.feature.IDroneInteractionMachine;
 import com.gtolib.api.machine.multiblock.IDroneControlCenterMachine;
-import com.gtolib.api.machine.trait.IEnhancedRecipeLogic;
 import com.gtolib.api.misc.Drone;
-import com.gtolib.api.recipe.IdleReason;
 import com.gtolib.utils.MachineUtils;
 
+import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
 import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
-import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
-import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.api.gui.GuiTextures;
+import com.gregtechceu.gtceu.api.gui.UITemplate;
 import com.gregtechceu.gtceu.api.gui.fancy.ConfiguratorPanel;
 import com.gregtechceu.gtceu.api.gui.fancy.FancyMachineUIWidget;
-import com.gregtechceu.gtceu.api.gui.fancy.IFancyConfigurator;
-import com.gregtechceu.gtceu.api.gui.widget.IntInputWidget;
+import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
 import com.gregtechceu.gtceu.api.machine.TickableSubscription;
 import com.gregtechceu.gtceu.api.machine.feature.IRecipeLogicMachine;
-import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMufflerMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IWorkableMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredPartMachine;
-import com.gregtechceu.gtceu.api.recipe.GTRecipe;
-import com.gregtechceu.gtceu.api.registry.registrate.MultiblockMachineBuilder;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
-import com.gregtechceu.gtceu.common.data.GTMaterials;
 import com.gregtechceu.gtceu.common.machine.electric.AirScrubberMachine;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.MufflerPartMachine;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.lowdragmc.lowdraglib.gui.modular.ModularUI;
-import com.lowdragmc.lowdraglib.gui.texture.IGuiTexture;
+import com.lowdragmc.lowdraglib.gui.widget.LabelWidget;
 import com.lowdragmc.lowdraglib.gui.widget.Widget;
-import com.lowdragmc.lowdraglib.gui.widget.WidgetGroup;
 import com.lowdragmc.lowdraglib.syncdata.annotation.DescSynced;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.utils.Position;
-import committee.nova.mods.avaritia.init.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -66,72 +52,52 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(MufflerPartMachine.class)
-public abstract class MufflerPartMachineMixin extends TieredPartMachine implements IMufflerMachine, IDroneInteractionMachine, IAirScrubberInteractor {
+public abstract class MufflerPartMachineMixin extends TieredPartMachine implements IGTOMufflerMachine, IDroneInteractionMachine, IAirScrubberInteractor {
 
+    @Unique
+    @Persisted
+    boolean gtocore$isWorkingEnabled;
     @Shadow(remap = false)
     @Final
     private CustomItemStackHandler inventory;
-
     @Unique
     private IDroneControlCenterMachine gtolib$cache;
-
     @Unique
     private AirScrubberMachine gtolib$airScrubberCache;
-
-    @Unique
-    private int gtolib$count;
     @Unique
     @Persisted
     @DescSynced
     private int gto$chanceOfNotProduceAsh = 100;
+    @Unique
+    private TickableSubscription gtolib$tickSubs;
+    @Unique
+    private boolean gtolib$isFrontFaceFree;
+    @Unique
+    @Persisted
+    private @Nullable ItemStack gtocore$lastAsh;
 
     protected MufflerPartMachineMixin(MetaMachineBlockEntity holder, int tier) {
         super(holder, tier);
     }
 
     @Unique
-    @SuppressWarnings("all")
     public AirScrubberMachine getAirScrubberMachineCache() {
         return gtolib$airScrubberCache;
     }
 
     @Unique
-    @SuppressWarnings("all")
     public void setAirScrubberMachineCache(AirScrubberMachine cache) {
         gtolib$airScrubberCache = cache;
     }
 
     @Unique
-    @SuppressWarnings("all")
     public IDroneControlCenterMachine getNetMachineCache() {
         return gtolib$cache;
     }
 
     @Unique
-    @SuppressWarnings("all")
     public void setNetMachineCache(IDroneControlCenterMachine cache) {
         gtolib$cache = cache;
-    }
-
-    @Unique
-    private TickableSubscription gtolib$tickSubs;
-
-    @Unique
-    private boolean gtolib$isFrontFaceFree;
-    @Unique
-    private boolean gtolib$isAshFull;
-
-    @Unique
-    private static ItemStack gtolib$ASH;
-    @Unique
-    private static ItemStack gtolib$NeutronPile;
-    @Unique
-    @Persisted
-    private @Nullable ItemStack gtocore$lastAsh;
-
-    @Unique
-    private boolean gtolib$invalid() {
-        return GTOConfig.INSTANCE.disableMufflerPart || gto$chanceOfNotProduceAsh == 100;
     }
 
     @Unique
@@ -165,7 +131,6 @@ public abstract class MufflerPartMachineMixin extends TieredPartMachine implemen
     public void onLoad() {
         super.onLoad();
         gto$chanceOfNotProduceAsh = Math.min(Math.max(gto$chanceOfNotProduceAsh, 0), getTier() * 10);
-        if (gtolib$invalid()) return;
         if (!isRemote()) {
             gtolib$tickSubs = subscribeServerTick(gtolib$tickSubs, this::gtolib$tick);
         }
@@ -183,6 +148,16 @@ public abstract class MufflerPartMachineMixin extends TieredPartMachine implemen
     }
 
     @Override
+    public boolean isWorkingEnabled() {
+        return gtocore$isWorkingEnabled;
+    }
+
+    @Override
+    public void setWorkingEnabled(boolean isWorkingAllowed) {
+        gtocore$isWorkingEnabled = isWorkingAllowed;
+    }
+
+    @Override
     public boolean isFrontFaceFree() {
         if (!beforeWorking(null)) return false;
         if (!gtolib$isFrontFaceFree || self().getOffsetTimer() % 20 == 0) {
@@ -197,99 +172,34 @@ public abstract class MufflerPartMachineMixin extends TieredPartMachine implemen
     }
 
     @Override
-    public GTRecipe modifyRecipe(GTRecipe recipe) {
-        if (gtolib$invalid()) return recipe;
-        if (!isFrontFaceFree()) {
-            for (var c : getControllers()) {
-                if (c instanceof IRecipeLogicMachine recipeLogicMachine && recipeLogicMachine.getRecipeLogic() instanceof IEnhancedRecipeLogic enhancedRecipeLogic) {
-                    enhancedRecipeLogic.gtolib$setIdleReason(IdleReason.MUFFLER_OBSTRUCTED.reason());
-                }
-            }
-            return null;
-        }
-        return recipe;
-    }
-
-    @Override
     public boolean afterWorking(IWorkableMultiController controller) {
         return true;
     }
 
-    @Override
-    public boolean onWorking(IWorkableMultiController controller) {
-        if (gtolib$invalid()) return true;
-        gtolib$count++;
-        if (gtolib$isAshFull) return false;
-        if (gtolib$count % 80 == 0) {
-            gtolib$count = 1;
-            List<LivingEntity> entities = self().getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(self().getPos().relative(this.self().getFrontFacing())));
-            entities.forEach(e -> {
-                e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 80, 2));
-                e.addEffect(new MobEffectInstance(MobEffects.POISON, 40, 1));
-            });
-            if (GTValues.RNG.nextInt(100) >= gto$chanceOfNotProduceAsh && (GTOCore.isExpert() || GTValues.RNG.nextBoolean())) {
-                gtolib$insertAsh(controller);
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean beforeWorking(IWorkableMultiController controller) {
-        if (gtolib$invalid()) return true;
-        if (gto$checkAshFull()) {
-            for (var c : getControllers()) {
-                if (c instanceof IRecipeLogicMachine recipeLogicMachine && recipeLogicMachine.getRecipeLogic() instanceof IEnhancedRecipeLogic enhancedRecipeLogic) {
-                    enhancedRecipeLogic.gtolib$setIdleReason(IdleReason.MUFFLER_OBSTRUCTED.reason());
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-
     @Unique
-    private boolean gto$checkAshFull() {
-        gtolib$isAshFull = false;
+    public boolean gtolib$checkAshFull() {
         var stack = inventory.getStackInSlot(inventory.getSlots() - 1);
-        if (stack.getCount() > 63 || (!stack.isEmpty() && gtocore$lastAsh != null && !stack.is(gtocore$lastAsh.getItem()))) {
-            gtolib$isAshFull = true;
-            return true;
-        }
-        return false;
+        return stack.getCount() > 63 || (!stack.isEmpty() && gtocore$lastAsh != null && !stack.is(gtocore$lastAsh.getItem()));
     }
 
-    @Unique
-    private void gtolib$insertAsh(IWorkableMultiController controller) {
-        if (gtolib$ASH == null) {
-            gtolib$ASH = ChemicalHelper.get(TagPrefix.dustTiny, GTMaterials.Ash);
-        }
-        ItemStack ash = gtolib$ASH;
-        GTRecipe lastRecipe = controller.getRecipeLogic().getLastRecipe();
-        if (lastRecipe != null && lastRecipe.getInputEUt() >= GTValues.V[GTValues.UV] && GTValues.RNG.nextFloat() < 1e-3f) {
-            if (gtolib$NeutronPile == null) {
-                gtolib$NeutronPile = ModItems.neutron_pile.get().getDefaultInstance();
-            }
-            ash = gtolib$NeutronPile;
-        } else {
-            MultiblockMachineBuilder.MufflerProductionGenerator supplier = controller.self().getDefinition().getRecoveryItems();
-            if (supplier != null) {
-                ash = supplier.getMuffledProduction(controller.self(), lastRecipe);
-            }
-            gtocore$lastAsh = ash;
-        }
+    @Override
+    public int gtolib$getRecoveryChance() {
+        return gto$chanceOfNotProduceAsh;
+    }
 
+    @Override
+    public void recoverItemsTable(ItemStack recoveryItems) {
         AirScrubberMachine machine = getAirScrubberMachine();
         if (machine != null && GTValues.RNG.nextInt(machine.getTier() << 1 + 1) > 1) {
-            MachineUtils.outputItem(machine, ash);
+            MachineUtils.outputItem(machine, recoveryItems);
             return;
         }
-        CustomItemStackHandler.insertItemStackedFast(inventory, ash);
+        CustomItemStackHandler.insertItemStackedFast(inventory, recoveryItems);
+        gtocore$lastAsh = recoveryItems;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     private void gtolib$init(MetaMachineBlockEntity holder, int tier, CallbackInfo ci) {
-        if (gtolib$invalid()) return;
         inventory.setOnContentsChanged(() -> {
             for (var controller : getControllers()) {
                 if (controller instanceof IRecipeLogicMachine recipeLogicMachine) {
@@ -297,12 +207,25 @@ public abstract class MufflerPartMachineMixin extends TieredPartMachine implemen
                 }
             }
         });
+        gtocore$isWorkingEnabled = true;
     }
 
     @Inject(method = "createUI", at = @At("RETURN"), remap = false, cancellable = true)
     private void gtolib$createUI(Player entityPlayer, CallbackInfoReturnable<ModularUI> cir) {
         ConfiguratorPanel configuratorPanel;
         var originUI = cir.getReturnValue();
+        if (GTCEu.isDev()) {
+            int rowSize = (int) Math.sqrt(inventory.getSlots());
+            int xOffset = rowSize == 10 ? 9 : 0;
+            var modular = new ModularUI(176 + xOffset * 2, 18 + 18 * rowSize + 94, this, entityPlayer).background(GuiTextures.BACKGROUND).widget(new LabelWidget(10, 5, getBlockState().getBlock().getDescriptionId())).widget(UITemplate.bindPlayerInventory(entityPlayer.getInventory(), GuiTextures.SLOT, 7 + xOffset, 18 + 18 * rowSize + 12, true));
+            for (int y = 0; y < rowSize; y++) {
+                for (int x = 0; x < rowSize; x++) {
+                    int index = y * rowSize + x;
+                    modular.widget(new SlotWidget(inventory, index, (88 - rowSize * 9 + x * 18) + xOffset, 18 + y * 18, true, true).setBackgroundTexture(GuiTextures.SLOT));
+                }
+            }
+            originUI = modular;
+        }
         cir.setReturnValue(originUI.widget(configuratorPanel = new ConfiguratorPanel(-(24 + 2), originUI.getHeight())));
         attachConfigurators(configuratorPanel);
         configuratorPanel.setSelfPosition(new Position(-24 - 2, originUI.getHeight() - configuratorPanel.getSize().height - 4));
@@ -314,53 +237,11 @@ public abstract class MufflerPartMachineMixin extends TieredPartMachine implemen
     }
 
     @Override
-    public void attachConfigurators(ConfiguratorPanel configuratorPanel) {
-        super.attachConfigurators(configuratorPanel);
-        configuratorPanel.attachConfigurators(new IFancyConfigurator() {
-
-            @Override
-            public Component getTitle() {
-                return Component.translatable("gtocore.machine.muffler.config");
-            }
-
-            @Override
-            public IGuiTexture getIcon() {
-                return GTOGuiTextures.PARALLEL_CONFIG;
-            }
-
-            @Override
-            public Widget createConfigurator() {
-                return gtolib$configPanelWidget();
-            }
+    public void gtolib$addMufflerEffect() {
+        List<LivingEntity> entities = self().getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(self().getPos().relative(this.self().getFrontFacing())));
+        entities.forEach(e -> {
+            e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 80, 2));
+            e.addEffect(new MobEffectInstance(MobEffects.POISON, 40, 1));
         });
-    }
-
-    @Unique
-    private Widget gtolib$configPanelWidget() {
-        WidgetGroup group = new WidgetGroup(0, 0, 100, 20);
-        var intInput = new IntInputWidget(() -> gto$chanceOfNotProduceAsh, p -> gto$chanceOfNotProduceAsh = p) {
-
-            @Override
-            public void writeInitialData(FriendlyByteBuf buffer) {
-                super.writeInitialData(buffer);
-                buffer.writeVarInt(getTier() * 10);
-                setMax(getTier() * 10);
-            }
-
-            @Override
-            @OnlyIn(Dist.CLIENT)
-            public void readInitialData(FriendlyByteBuf buffer) {
-                super.readInitialData(buffer);
-                setMax(buffer.readVarInt());
-            }
-
-            @Override
-            public List<Component> getTooltipTexts() {
-                return super.getTooltipTexts();
-            }
-        };
-        intInput.setMin(0);
-        group.addWidget(intInput.setHoverTooltips(Component.translatable("gtocore.machine.muffler.config.desc", gto$chanceOfNotProduceAsh)));
-        return group;
     }
 }

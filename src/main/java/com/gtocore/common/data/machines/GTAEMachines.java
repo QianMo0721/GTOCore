@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gtocore.utils.register.MachineRegisterUtils.machine;
 import static com.gtolib.api.registries.GTORegistration.GTM;
+import static com.gtolib.api.registries.GTORegistration.GTO;
 
 public final class GTAEMachines {
 
@@ -230,6 +231,19 @@ public final class GTAEMachines {
                     Component.translatable("gtceu.machine.me.fluid_export.tooltip"),
                     Component.translatable("gtceu.machine.me.export.tooltip"),
                     Component.translatable("gtceu.part_sharing.enabled"))
+            .register();
+
+    public static final MachineDefinition MUFFLER_HATCH_ME = GTO
+            .machine("me_muffler_hatch", MEMufflerHatchPartMachine::new)
+            .langValue("ME Muffler Hatch")
+            .genLang("ME消声仓")
+            .tier(LuV)
+            .tooltips(GTOMachineTooltips.INSTANCE.getAutoConnectMETooltips().getSupplier())
+            .allRotation()
+            .abilities(PartAbility.MUFFLER)
+            .overlayTieredHullRenderer("me_item_bus.export")
+            .tooltips(Component.translatable("gtocore.me_muffler_hatch.tooltip"),
+                    Component.translatable("gtceu.part_sharing.disabled"))
             .register();
 
     public static final MachineDefinition ME_PATTERN_BUFFER = GTM
