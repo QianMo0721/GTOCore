@@ -946,7 +946,7 @@ final class Vanilla {
                 "BBB",
                 "CCC",
                 'A', new ItemStack(Items.TINTED_GLASS.asItem()), 'B', new MaterialEntry(TagPrefix.pipeTinyFluid, GTMaterials.Steel), 'C', new MaterialEntry(TagPrefix.plateDouble, GTMaterials.Silver));
-        VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("digital_miner"), MultiBlockH.DIGITAL_MINER.asItem(),
+        VanillaRecipeHelper.addShapedRecipe(true, GTOCore.id("digital_miner"), MultiBlockA.DIGITAL_MINER.asItem(),
                 "ABA",
                 "CDC",
                 "EFE",
@@ -964,5 +964,17 @@ final class Vanilla {
                 "CDC",
                 "EFE",
                 'A', CustomTags.IV_CIRCUITS, 'B', GTItems.ELECTRIC_PUMP_EV.asItem(), 'C', new MaterialEntry(TagPrefix.wireGtDouble, GTMaterials.TungstenSteel), 'D', GTItems.FLUID_REGULATOR_EV.asItem(), 'E', GTBlocks.CASING_ALUMINIUM_FROSTPROOF.asItem(), 'F', new MaterialEntry(TagPrefix.ring, GTMaterials.TungstenSteel));
+
+        VanillaRecipeHelper.addShapedRecipe(GTOCore.id("thermo_press"), MultiBlockH.THERMO_PRESS.asStack(),
+                "ABA",
+                "CDC",
+                "EFE",
+                'A', GTItems.ELECTRIC_PISTON_IV.asStack(), 'B', CustomTags.IV_CIRCUITS, 'C', new MaterialEntry(GTOTagPrefix.pipeLargeFluid, GTMaterials.Titanium), 'D', GTItems.ELECTRIC_MOTOR_IV.asStack(), 'E', new MaterialEntry(GTOTagPrefix.ingot, GTOMaterials.StructuralSteelQ690), 'F', GTBlocks.HERMETIC_CASING_IV.asStack());
+
+        VanillaRecipeHelper.addShapedRecipe(GTOCore.id("fiber_extruder"), MultiBlockH.FIBER_EXTRUDER.asStack(),
+                "ABA",
+                "CDC",
+                "EDE",
+                'A', new MaterialEntry(GTOTagPrefix.plateDouble, GTOMaterials.StainlessSteel316), 'B', CustomTags.EV_CIRCUITS, 'C', GTItems.ELECTRIC_MOTOR_EV.asStack(), 'D', new MaterialEntry(GTOTagPrefix.plateDouble, GTOMaterials.AluminumAlloy7050), 'E', GTOItems.SPOOLS_MICRO.asStack());
     }
 }
