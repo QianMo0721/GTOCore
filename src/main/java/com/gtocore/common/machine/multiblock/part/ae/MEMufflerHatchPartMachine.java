@@ -19,6 +19,7 @@ import com.gregtechceu.gtceu.api.gui.widget.SlotWidget;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.MultiblockControllerMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
+import com.gregtechceu.gtceu.api.machine.trait.RecipeHandlerList;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.transfer.item.SingleCustomItemStackHandler;
 import com.gregtechceu.gtceu.common.data.GTMachines;
@@ -99,6 +100,11 @@ public class MEMufflerHatchPartMachine extends MEPartMachine implements IGTOMuff
         } else {
             recoveryChance = muffler_tier * 10;
         }
+    }
+
+    @Override
+    protected @NotNull RecipeHandlerList getHandlerList() {
+        return RecipeHandlerList.NO_DATA;
     }
 
     @Override

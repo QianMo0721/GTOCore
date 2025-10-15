@@ -138,6 +138,16 @@ public final class GTAEMachines {
             .renderer(() -> new OverlayTieredMachineRenderer(UHV, GTCEu.id("block/machine/part/me_pattern_buffer")))
             .register();
 
+    public static final MachineDefinition MUFFLER_HATCH_ME = machine("me_muffler_hatch", "ME消声仓", MEMufflerHatchPartMachine::new)
+            .langValue("ME Muffler Hatch")
+            .tier(LuV)
+            .tooltips(GTOMachineTooltips.INSTANCE.getAutoConnectMETooltips().getSupplier())
+            .allRotation()
+            .abilities(PartAbility.MUFFLER)
+            .renderer(() -> new OverlayTieredMachineRenderer(LuV, GTCEu.id("block/machine/part/me_item_bus.import")))
+            .notAllowSharedTooltips()
+            .register();
+
     public static final MachineDefinition ITEM_IMPORT_BUS_ME = GTM
             .machine("me_input_bus", MEInputBusPartMachine::new)
             .langValue("ME Input Bus")
@@ -230,16 +240,6 @@ public final class GTAEMachines {
                     Component.translatable("gtceu.machine.me.fluid_export.tooltip"),
                     Component.translatable("gtceu.machine.me.export.tooltip"),
                     Component.translatable("gtceu.part_sharing.enabled"))
-            .register();
-
-    public static final MachineDefinition MUFFLER_HATCH_ME = machine("me_muffler_hatch", "ME消声仓", MEMufflerHatchPartMachine::new)
-            .langValue("ME Muffler Hatch")
-            .tier(LuV)
-            .tooltips(GTOMachineTooltips.INSTANCE.getAutoConnectMETooltips().getSupplier())
-            .allRotation()
-            .abilities(PartAbility.MUFFLER)
-            .overlayTieredHullRenderer("me_item_bus.export")
-            .notAllowSharedTooltips()
             .register();
 
     public static final MachineDefinition ME_PATTERN_BUFFER = GTM
