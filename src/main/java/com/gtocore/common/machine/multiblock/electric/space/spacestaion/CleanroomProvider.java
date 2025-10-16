@@ -23,7 +23,10 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
 import static com.gtocore.common.machine.multiblock.part.maintenance.ModularHatchPartMachine.CLEANROOM_NOT_SET;
