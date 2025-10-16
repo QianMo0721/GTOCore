@@ -4,7 +4,6 @@ import com.gtocore.api.machine.IGTOMufflerMachine;
 import com.gtocore.data.CraftingComponents;
 
 import com.gtolib.GTOCore;
-import com.gtolib.api.annotation.DataGeneratorScanned;
 import com.gtolib.api.annotation.Scanned;
 import com.gtolib.api.annotation.dynamic.DynamicInitialValue;
 import com.gtolib.api.annotation.dynamic.DynamicInitialValueTypes;

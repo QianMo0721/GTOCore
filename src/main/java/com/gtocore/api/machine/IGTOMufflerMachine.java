@@ -44,8 +44,8 @@ public interface IGTOMufflerMachine extends IMufflerMachine, IControllable, ITie
     @Override
     default boolean beforeWorking(IWorkableMultiController controller) {
         if (isMufflerPulseDisabled()) return true;
-        if(controller==null){
-            controller= (IWorkableMultiController) getControllers().getFirst();
+        if (controller == null) {
+            controller = (IWorkableMultiController) getControllers().getFirst();
         }
         if (GTOCore.isExpert() && controller instanceof ITieredMachine machine && machine.getTier() > getTier() + 1) {
             if (controller.getRecipeLogic() instanceof IEnhancedRecipeLogic enhancedRecipeLogic) {
@@ -75,7 +75,6 @@ public interface IGTOMufflerMachine extends IMufflerMachine, IControllable, ITie
 
     @Override
     default boolean afterWorking(IWorkableMultiController controller) {
-        gtolib$insertAsh(controller.self(),controller.getRecipeLogic().getLastRecipe());
         return true;
     }
 
