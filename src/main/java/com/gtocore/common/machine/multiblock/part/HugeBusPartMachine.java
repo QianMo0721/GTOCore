@@ -176,7 +176,7 @@ public final class HugeBusPartMachine extends TieredIOPartMachine implements IMa
     private static final class HugeNotifiableItemStackHandler extends NotifiableItemStackHandler {
 
         private HugeNotifiableItemStackHandler(MetaMachine machine) {
-            super(machine, 1, IO.IN, IO.IN, i -> new HugeCustomItemStackHandler());
+            super(machine, 1, IO.IN, IO.BOTH, i -> new HugeCustomItemStackHandler());
         }
 
         private long getCount() {

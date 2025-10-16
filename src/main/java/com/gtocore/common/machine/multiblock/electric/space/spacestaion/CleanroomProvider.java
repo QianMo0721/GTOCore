@@ -44,8 +44,8 @@ public class CleanroomProvider extends Extension implements IDroneControlCenterM
 
     @Override
     public void onStructureFormed() {
-        super.onStructureFormed();
         droneHatchPartMachine.clear();
+        super.onStructureFormed();
         IFilterType filterType = getMultiblockState().getMatchContext().get("FilterType");
         if (filterType != null) {
             this.cleanroomType = switch (filterType.getCleanroomType().getName()) {
@@ -80,7 +80,7 @@ public class CleanroomProvider extends Extension implements IDroneControlCenterM
     public void onPartScan(@NotNull IMultiPart part) {
         super.onPartScan(part);
         if (part instanceof DroneHatchPartMachine machine) {
-            getDroneHatchPartMachine().add(machine);
+            droneHatchPartMachine.add(machine);
         }
     }
 
@@ -107,7 +107,7 @@ public class CleanroomProvider extends Extension implements IDroneControlCenterM
         super.customText(list);
         list.add(Component.translatable(CURRENT_CLEANROOM));
         list.add(getCurrentCleanroom().withStyle(ChatFormatting.GREEN));
-        IDroneControlCenterMachine.super.customText(list);
+        IDroneControlCenterMachine.super.addCustomText(list);
     }
 
     private MutableComponent getCurrentCleanroom() {
