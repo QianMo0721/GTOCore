@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.integration.ae2.slot.IConfigurableSlot;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AEConfigSlotWidget extends Widget implements IIngredientSlot {
 
@@ -60,7 +60,7 @@ public class AEConfigSlotWidget extends Widget implements IIngredientSlot {
                     }
                     hoverStringList.add(Component.translatable("gtceu.gui.config_slot.remove"));
                 }
-                graphics.renderTooltip(Minecraft.getInstance().font, hoverStringList, Optional.empty(), mouseX, mouseY);
+                setHoverTooltips(hoverStringList);
             }
         } else {
             GenericStack item = null;
@@ -70,7 +70,7 @@ public class AEConfigSlotWidget extends Widget implements IIngredientSlot {
                 item = slot.getStock();
             }
             if (item != null) {
-                graphics.renderTooltip(Minecraft.getInstance().font, GenericStack.wrapInItemStack(item), mouseX, mouseY);
+                setHoverTooltips(Screen.getTooltipFromItem(Minecraft.getInstance(), GenericStack.wrapInItemStack(item)));
             }
         }
     }
