@@ -1,5 +1,6 @@
 package com.gtocore.integration.emi;
 
+import com.gtocore.integration.Mods;
 import com.gtocore.integration.chisel.ChiselRecipe;
 import com.gtocore.integration.emi.multipage.MultiblockInfoEmiRecipe;
 import com.gtocore.integration.emi.oreprocessing.OreProcessingEmiCategory;
@@ -27,7 +28,6 @@ import com.gregtechceu.gtceu.integration.emi.recipe.GTRecipeEMICategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.p3pp3rf1y.sophisticatedbackpacks.compat.recipeviewers.emi.BackpackEmiPlugin;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.arsmeteorites.arsmeteorites.ArsMeteorites;
@@ -95,7 +95,9 @@ public final class GTEMIPlugin implements EmiPlugin {
         list.add(new EmiPluginContainer(new VanillaPlugin(), "emi"));
         if (GTCEu.isProd()) {
             list.add(new EmiPluginContainer(new EMITradesPlugin(), "emitrades"));
-            list.add(new EmiPluginContainer(new BackpackEmiPlugin(), "backpack"));
+        }
+        if (Mods.sophisticatedbackpacks()) {
+            list.add(new EmiPluginContainer(new net.p3pp3rf1y.sophisticatedbackpacks.compat.recipeviewers.emi.BackpackEmiPlugin(), "backpack"));
         }
         list.add(new EmiPluginContainer(new AvaritiaEmiPlugin(), Const.MOD_ID));
         list.add(new EmiPluginContainer(new BotaniaEmiPlugin(), BotaniaAPI.MODID));
@@ -108,7 +110,7 @@ public final class GTEMIPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        if (GTCEu.isProd()) ChiselRecipe.register(registry);
+        if (Mods.chisel()) ChiselRecipe.register(registry);
 
         registry.addCategory(MultiblockInfoEmiRecipe.CATEGORY);
         registry.addCategory(OreProcessingEmiCategory.CATEGORY);
