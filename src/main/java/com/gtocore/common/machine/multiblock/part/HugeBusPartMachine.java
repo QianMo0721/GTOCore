@@ -1,6 +1,5 @@
 package com.gtocore.common.machine.multiblock.part;
 
-import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gtolib.api.recipe.ingredient.FastSizedIngredient;
 import com.gtolib.utils.MathUtil;
 
@@ -17,12 +16,10 @@ import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.lookup.IntIngredientMap;
 import com.gregtechceu.gtceu.api.transfer.item.CustomItemStackHandler;
+import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.gregtechceu.gtceu.utils.function.ObjectLongConsumer;
 import com.gregtechceu.gtceu.utils.function.ObjectLongPredicate;
 
-import com.lowdragmc.lowdraglib.gui.editor.Icons;
-import com.lowdragmc.lowdraglib.gui.texture.ResourceBorderTexture;
-import com.lowdragmc.lowdraglib.gui.widget.*;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,9 +33,12 @@ import net.minecraft.world.level.block.Block;
 
 import com.hepdd.gtmthings.api.machine.fancyconfigurator.ButtonConfigurator;
 import com.hepdd.gtmthings.api.transfer.UnlimitItemTransferHelper;
+import com.lowdragmc.lowdraglib.gui.editor.Icons;
 import com.lowdragmc.lowdraglib.gui.texture.GuiTextureGroup;
+import com.lowdragmc.lowdraglib.gui.texture.ResourceBorderTexture;
 import com.lowdragmc.lowdraglib.gui.texture.TextTexture;
 import com.lowdragmc.lowdraglib.gui.util.ClickData;
+import com.lowdragmc.lowdraglib.gui.widget.*;
 import com.lowdragmc.lowdraglib.side.item.ItemTransferHelper;
 import com.lowdragmc.lowdraglib.syncdata.ISubscription;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
