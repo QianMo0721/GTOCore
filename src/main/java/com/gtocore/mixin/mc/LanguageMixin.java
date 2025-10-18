@@ -25,43 +25,61 @@ public class LanguageMixin {
     @Shadow
     private static Language instance;
     @Unique
-    private static Language gto$serverLanguage;
+    private static volatile Language gto$serverLanguage;
     @Unique
     private static final boolean gto$isDedicatedServer = FMLLoader.getDist().isDedicatedServer();
 
     @Inject(method = "getInstance", at = @At("HEAD"), cancellable = true)
     private static void getInstance(CallbackInfoReturnable<Language> cir) {
-        if (!gto$isDedicatedServer || GTOConfig.INSTANCE.serverLang.equals("en_us")) return;
-        if (gto$serverLanguage != null) {
-            cir.setReturnValue(gto$serverLanguage);
+        if (!gto$isDedicatedServer) return;
+
+        String serverLang = GTOConfig.INSTANCE.serverLang;
+        if (serverLang == null || serverLang.equals("en_us")) return;
+
+        Language cachedLanguage = gto$serverLanguage;
+        if (cachedLanguage != null) {
+            cir.setReturnValue(cachedLanguage);
             return;
         }
-        cir.setReturnValue(gto$serverLanguage = new Language() {
 
-            @Override
-            public @NotNull String getOrDefault(@NotNull String key) {
-                return langs.getOrDefault(key, instance.getOrDefault(key));
+        if (instance == null) return;
+
+        synchronized (LanguageMixin.class) {
+
+            if (gto$serverLanguage != null) {
+                cir.setReturnValue(gto$serverLanguage);
+                return;
             }
 
-            @Override
-            public @NotNull String getOrDefault(@NotNull String s, @NotNull String s1) {
-                return langs.getOrDefault(s, instance.getOrDefault(s, s1));
-            }
+            final Language vanillaInstance = instance;
 
-            @Override
-            public boolean has(@NotNull String s) {
-                return langs.containsKey(s) || instance.has(s);
-            }
+            cir.setReturnValue(gto$serverLanguage = new Language() {
 
-            @Override
-            public boolean isDefaultRightToLeft() {
-                return ServerLangHook.defaultRightToLeft;
-            }
+                @Override
+                public @NotNull String getOrDefault(@NotNull String key) {
+                    return langs.getOrDefault(key, vanillaInstance.getOrDefault(key));
+                }
 
-            @Override
-            public @NotNull FormattedCharSequence getVisualOrder(@NotNull FormattedText formattedText) {
-                return FormattedBidiReorder.reorder(formattedText, ServerLangHook.defaultRightToLeft);
-            }
-        });
+                @Override
+                public @NotNull String getOrDefault(@NotNull String s, @NotNull String s1) {
+                    return langs.getOrDefault(s, vanillaInstance.getOrDefault(s, s1));
+                }
+
+                @Override
+                public boolean has(@NotNull String s) {
+                    return langs.containsKey(s) || vanillaInstance.has(s);
+                }
+
+                @Override
+                public boolean isDefaultRightToLeft() {
+                    return ServerLangHook.defaultRightToLeft;
+                }
+
+                @Override
+                public @NotNull FormattedCharSequence getVisualOrder(@NotNull FormattedText formattedText) {
+                    return FormattedBidiReorder.reorder(formattedText, ServerLangHook.defaultRightToLeft);
+                }
+            });
+        }
     }
 }
