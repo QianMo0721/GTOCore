@@ -5,8 +5,6 @@ import com.gtocore.common.machine.multiblock.electric.ChiselMachine;
 import com.gtocore.common.machine.multiblock.part.ae.MESimplePatternBufferPartMachine;
 import com.gtocore.integration.Mods;
 
-import com.gtolib.GTOCore;
-
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
 import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
@@ -32,20 +30,17 @@ public final class OptionalMachine {
 
     public static void init() {}
 
-    public static final MachineDefinition ME_SIMPLE_PATTERN_BUFFER = GTCEu.isDev() || GTOCore.isEasy() ?
+    public static final MachineDefinition ME_SIMPLE_PATTERN_BUFFER = machine("me_simple_pattern_buffer", "ME简单样板总成", MESimplePatternBufferPartMachine::new)
+            .langValue("ME Simple Pattern Buffer")
+            .addTooltipsFromClass(MESimplePatternBufferPartMachine.class)
+            .tier(MV)
+            .allRotation()
+            .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)
+            .tooltipsKey("gtceu.part_sharing.enabled")
+            .renderer(() -> new OverlayTieredMachineRenderer(MV, GTCEu.id("block/machine/part/me_pattern_buffer")))
+            .register();
 
-            machine("me_simple_pattern_buffer", "ME简单样板总成", MESimplePatternBufferPartMachine::new)
-                    .langValue("ME Simple Pattern Buffer")
-                    .addTooltipsFromClass(MESimplePatternBufferPartMachine.class)
-                    .tier(MV)
-                    .allRotation()
-                    .abilities(PartAbility.IMPORT_ITEMS, PartAbility.IMPORT_FLUIDS)
-                    .tooltipsKey("gtceu.part_sharing.enabled")
-                    .renderer(() -> new OverlayTieredMachineRenderer(MV, GTCEu.id("block/machine/part/me_pattern_buffer")))
-                    .register() :
-            null;
-
-    public static final MultiblockMachineDefinition CARVING_CENTER = GTCEu.isDev() || Mods.chisel() ? multiblock("carving_center", "雕刻中心", ChiselMachine::new)
+    public static final MultiblockMachineDefinition CARVING_CENTER = Mods.chisel() ? multiblock("carving_center", "雕刻中心", ChiselMachine::new)
             .allRotation()
             .tooltips(GTOMachineTooltips.INSTANCE.getCarvingCenterTooltips().getSupplier())
             .recipeTypes(DUMMY_RECIPES)

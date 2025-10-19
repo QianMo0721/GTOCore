@@ -82,18 +82,16 @@ public final class GTOMachines {
 
         OptionalMachine.init(); // 限制模式不注册会出现多方块预览错误
 
-        if (GTCEu.isDev() || GTCEu.isDataGen()) {
-            final MachineDefinition SYNC_TESTER_MACHINE = machine("sync_tester_machine", "同步测试机", SyncTesterMachine::new)
-                    .allRotation()
-                    .tooltipsText("用于测试机器同步的工具。", "A tool for testing machine synchronization.")
-                    .tooltipsText("请勿在生产环境中使用。", "Do not use in production environment.")
-                    .register();
+        final MachineDefinition SYNC_TESTER_MACHINE = machine("sync_tester_machine", "同步测试机", SyncTesterMachine::new)
+                .allRotation()
+                .tooltipsText("用于测试机器同步的工具。", "A tool for testing machine synchronization.")
+                .tooltipsText("请勿在生产环境中使用。", "Do not use in production environment.")
+                .register();
 
-            final MachineDefinition TEST_REPORT_OUTPUT = machine("test_report_output", "测试报告输出器", TestReportOutput::new)
-                    .allRotation()
-                    .tooltipsText("打印一些测试用信息", "Print some test information")
-                    .register();
-        }
+        final MachineDefinition TEST_REPORT_OUTPUT = machine("test_report_output", "测试报告输出器", TestReportOutput::new)
+                .allRotation()
+                .tooltipsText("打印一些测试用信息", "Print some test information")
+                .register();
     }
 
     //////////////////////////////////////

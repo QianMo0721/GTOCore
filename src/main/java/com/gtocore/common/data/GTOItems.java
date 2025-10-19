@@ -65,25 +65,23 @@ public final class GTOItems {
         GTFluids.handleNonMaterialFluids(GTMaterials.Oil, ModFluids.OIL);
         GTFluids.handleNonMaterialFluids(GTMaterials.RocketFuel, () -> EIOFluids.ROCKET_FUEL.get().getSource());
 
-        if (GTCEu.isDev()) {
-            item("recipe_editor", "配方编辑器", ComponentItem::create)
-                    .properties(p -> p.stacksTo(1))
-                    .onRegister(attach(RecipeEditorBehavior.INSTANCE))
-                    .model(NonNullBiConsumer.noop())
-                    .register();
+        item("recipe_editor", "配方编辑器", ComponentItem::create)
+                .properties(p -> p.stacksTo(1))
+                .onRegister(attach(RecipeEditorBehavior.INSTANCE))
+                .model(NonNullBiConsumer.noop())
+                .register();
 
-            item("debug_structure_writer", "多方块结构导出工具", ComponentItem::create)
-                    .properties(p -> p.stacksTo(1))
-                    .onRegister(attach(StructureWriteBehavior.INSTANCE))
-                    .model(NonNullBiConsumer.noop())
-                    .register();
+        item("debug_structure_writer", "多方块结构导出工具", ComponentItem::create)
+                .properties(p -> p.stacksTo(1))
+                .onRegister(attach(StructureWriteBehavior.INSTANCE))
+                .model(NonNullBiConsumer.noop())
+                .register();
 
-            item("ui_tester", "UI测试器", ComponentItem::create)
-                    .properties(p -> p.stacksTo(1))
-                    .onRegister(attach(new TesterBehaviour()))
-                    .model(NonNullBiConsumer.noop())
-                    .register();
-        }
+        item("ui_tester", "UI测试器", ComponentItem::create)
+                .properties(p -> p.stacksTo(1))
+                .onRegister(attach(new TesterBehaviour()))
+                .model(NonNullBiConsumer.noop())
+                .register();
     }
 
     public static final ItemEntry<Item> SHAPE_EXTRUDER_ROD_LONG = GTM.item("long_rod_extruder_mold", Item::new).onRegister(materialInfo(new ItemMaterialInfo(new MaterialStack(GTMaterials.Steel, GTValues.M << 2)))).register();

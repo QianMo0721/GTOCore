@@ -35,7 +35,7 @@ public final class GTOConfig {
         int difficulty = INSTANCE.difficulty.ordinal() + 1;
         GTOCore.difficulty = difficulty;
         RecipeLogic.SEARCH_MAX_INTERVAL = GTOConfig.INSTANCE.recipeSearchMaxInterval;
-        ConfigHolder.INSTANCE.recipes.generateLowQualityGems = false;
+        ConfigHolder.INSTANCE.recipes.generateLowQualityGems = true;
         ConfigHolder.INSTANCE.recipes.disableManualCompression = difficulty > 1;
         ConfigHolder.INSTANCE.recipes.harderRods = difficulty == 3;
         ConfigHolder.INSTANCE.recipes.harderBrickRecipes = difficulty == 3;

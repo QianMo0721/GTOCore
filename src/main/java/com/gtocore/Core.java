@@ -2,6 +2,7 @@ package com.gtocore;
 
 import com.gtocore.client.ClientProxy;
 import com.gtocore.common.CommonProxy;
+import com.gtocore.config.GTOConfig;
 
 import com.gtolib.GTOCore;
 
@@ -12,6 +13,8 @@ import net.minecraftforge.fml.common.Mod;
 public final class Core {
 
     public Core() {
+        // Force-load GTOConfig early so GTCEu config overrides take effect before registrations
+        GTOConfig unused = GTOConfig.INSTANCE;
         DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
     }
 }
