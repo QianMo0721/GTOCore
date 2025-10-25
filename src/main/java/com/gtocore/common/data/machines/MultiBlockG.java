@@ -26,10 +26,13 @@ import com.gtocore.common.machine.multiblock.storage.WirelessEnergySubstationMac
 
 import com.gtolib.GTOCore;
 import com.gtolib.api.GTOValues;
-import com.gtolib.api.ae2.machine.MECPUMachine;
 import com.gtolib.api.annotation.NewDataAttributes;
 import com.gtolib.api.data.GTODimensions;
 import com.gtolib.api.lang.CNEN;
+import com.gtolib.api.machine.impl.DrillingControlCenterMachine;
+import com.gtolib.api.machine.impl.DroneControlCenterMachine;
+import com.gtolib.api.machine.impl.MECPUMachine;
+import com.gtolib.api.machine.impl.WirelessChargerMachine;
 import com.gtolib.api.machine.multiblock.*;
 import com.gtolib.api.recipe.modifier.RecipeModifierFunction;
 import com.gtolib.utils.MultiBlockFileReader;
@@ -677,7 +680,7 @@ public final class MultiBlockG {
     public static final MultiblockMachineDefinition ROCKET_ASSEMBLER = multiblock("rocket_assembler", "火箭装配机", ElectricMultiblockMachine::new)
             .nonYAxisRotation()
             .recipeTypes(GTORecipeTypes.ROCKET_ASSEMBLER_RECIPES)
-            .noRecipeModifier()
+            .overclock()
             .block(GTBlocks.CASING_STAINLESS_CLEAN)
             .pattern(definition -> FactoryBlockPattern.start(definition, RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
                     .aisle("      AAAAA      ", "       JJJ       ", "       JKJ       ", "       JJJ       ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ", "                 ")
@@ -828,7 +831,6 @@ public final class MultiBlockG {
             .langValue("ME Energy Substation")
             .allRotation()
             .recipeTypes(DUMMY_RECIPES)
-            .block(GTBlocks.CASING_STEEL_SOLID)
             .block(GTBlocks.CASING_TUNGSTENSTEEL_ROBUST)
             .pattern(definition -> FactoryBlockPattern.start(definition)
                     .aisle("AAAAA", "ABBBA", "ABCBA", "ABBBA", "AAAAA")

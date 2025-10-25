@@ -106,6 +106,11 @@ public final class GTEMIPlugin implements EmiPlugin {
         list.add(new EmiPluginContainer(new GTEMIPlugin(), GTCEu.MOD_ID));
         list.add(new EmiPluginContainer(new MeteoritesEmiPlugin(), ArsMeteorites.MOD_ID));
         list.add(new EmiPluginContainer(new AppEngEmiPlugin(), AppEng.MOD_ID));
+        try {
+            list.add(new EmiPluginContainer(new fzzyhmstrs.emi_loot.emi.EmiClientPlugin(), fzzyhmstrs.emi_loot.EMILoot.MOD_ID));
+        } catch (Throwable ignored) {
+
+        }
     }
 
     @Override

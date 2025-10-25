@@ -156,6 +156,19 @@ public final class GTOConfig {
     public boolean disableMufflerPart = false;
 
     @Configurable
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Recipe Duration Multiplier", cn = "配方时间乘数")
+    @Configurable.Comment({ "修改它可能会导致部分机器运行异常，开发人员不对此负责", "Modify it may cause some machines to malfunction, developer is not responsible for this" })
+    @Configurable.DecimalRange(min = 0.01, max = 10)
+    public double recipeDurationMultiplier = 1.0;
+
+    @Configurable
+    @Configurable.Range(min = 36, max = 144000)
+    @Configurable.Comment({ "扩展样板供应器容量(请不要调的很大，否则gui界面将非常卡顿！)", "专家模式下，此选项无效",
+            "Extended Pattern Provider Size (Please do not set it too high, otherwise the GUI interface will be very laggy!)", "In Expert mode, this option is invalid" })
+    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Extended Pattern Provider Size", cn = "扩展样板供应器容量")
+    public int exPatternSize = 36;
+
+    @Configurable
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Default Value for Rename Pattern", cn = "重命名样板的默认值")
     @Configurable.Comment({ "在装配线模式编码带有重命名物品的样板时使用的默认名字", "The default name used when encoding patterns with renamed items in assembly line mode" })
     public String renamePatternDefaultString = "";
@@ -296,10 +309,4 @@ public final class GTOConfig {
     @Configurable.Comment({ "Spark 性能分析器的启动阶段", "The startup phase of the Spark profiler" })
     @RegisterLanguage(namePrefix = "config.gtocore.option", en = "Spark Profiler Start Phase", cn = "Spark 分析器启动阶段")
     public SparkRange startSpark = SparkRange.NONE;
-
-    @Configurable
-    @Configurable.Range(min = 36, max = 144000)
-    @Configurable.Comment({ "扩展样板供应器容量(用于暴力性能测试，仅开发模式下生效)", "Extended Pattern Provider Size (Currently used for performance test, only effective in dev mode)" })
-    @RegisterLanguage(namePrefix = "config.gtocore.option", en = "[Debug] Extended Pattern Provider Size", cn = "[调试] 扩展样板供应器容量")
-    public int exPatternSize = 36;
 }

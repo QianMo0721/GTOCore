@@ -15,8 +15,6 @@ import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableItemStackHandler;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -41,13 +39,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static com.gtocore.client.forge.ForgeClientEvent.highlightRegion;
-import static com.gtocore.client.forge.ForgeClientEvent.stopHighlight;
 import static com.gtocore.common.item.CoordinateCardBehavior.getStoredCoordinates;
 import static com.gtocore.common.machine.noenergy.PlatformCreators.PlatformCreationAsync;
+import static com.gtocore.common.network.ServerMessage.highlightRegion;
+import static com.gtocore.common.network.ServerMessage.stopHighlight;
+import static com.gtolib.utils.GTOUtils.fastRemoveBlock;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -99,8 +99,10 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
     @Persisted
     private boolean presetConfirm = false;
     // 当前查看的预设组索引
+    @Persisted
     private int checkGroup = 0;
     // 显示的预设编号
+    @Persisted
     private int checkId = 0;
     // 保存的预设组编号
     @Persisted
@@ -109,8 +111,10 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
     @Persisted
     private int saveId = 0;
     // 是否显示预览
+    @Persisted
     private boolean preview = false;
     // 是否高亮
+    @Persisted
     private boolean highlight = false;
 
     // ------------------- 第二步：选择偏移 -------------------
@@ -163,6 +167,7 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
 
     // ------------------- 第四步：运行中 -------------------
     // 任务是否完成
+    @Persisted
     private boolean taskCompleted = true;
     // 跳过空气
     @Persisted
@@ -183,6 +188,7 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
     @Persisted
     private int rotation = 0;
     // 可导出
+    @Persisted
     private boolean canExport = false;
 
     private int progress = 0;
@@ -601,13 +607,13 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
 
     // 翻页与页标题
     private static Component createPageNavigation(int totalWidth, Component titleComp, String string) {
-        Font font = Minecraft.getInstance().font;
         Component leftBtn = ComponentPanelWidget.withButton(Component.literal(" [ ← ] "), "previous_" + string);
         Component rightBtn = ComponentPanelWidget.withButton(Component.literal(" [ → ] "), "next_" + string);
-        int middleSpace = totalWidth - font.width(leftBtn) - font.width(titleComp) - font.width(rightBtn);
+        int middleSpace = totalWidth - widthOfString(leftBtn) - widthOfString(titleComp) - widthOfString(rightBtn);
+        if (middleSpace <= 0) return Component.empty().append(leftBtn).append(titleComp).append(rightBtn);
         int leftSpace = middleSpace / 2;
         int rightSpace = middleSpace - leftSpace;
-        int spacePixel = font.width(" ");
+        int spacePixel = charWidth;
         Component leftPad = Component.literal(" ".repeat(spacePixel > 0 ? leftSpace / spacePixel : leftSpace));
         Component rightPad = Component.literal(" ".repeat(spacePixel > 0 ? rightSpace / spacePixel : rightSpace));
         return Component.empty().append(leftBtn).append(leftPad).append(titleComp).append(rightPad).append(rightBtn);
@@ -616,15 +622,14 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
     // 自动分栏
     private static Component createEqualColumns(int totalWidth, Component... components) {
         if (components.length == 0) return Component.empty();
-        Font font = Minecraft.getInstance().font;
         int columnCount = components.length;
         int baseColWidth = totalWidth / columnCount;
         int remainder = totalWidth % columnCount;
         MutableComponent result = Component.empty();
         for (int i = 0; i < columnCount; i++) {
             Component col = components[i];
-            int spacePixel = font.width(" ");
-            int padPixels = (baseColWidth + (i == columnCount - 1 ? remainder : 0)) - font.width(col);
+            int spacePixel = charWidth;
+            int padPixels = (baseColWidth + (i == columnCount - 1 ? remainder : 0)) - widthOfString(col);
             result = result.append(col);
             if (padPixels > 0 && spacePixel > 0) {
                 result = result.append(Component.literal(" ".repeat(padPixels / spacePixel)));
@@ -633,15 +638,20 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
         return result;
     }
 
+    private static final int charWidth = 6;
+
+    private static int widthOfString(Component component) {
+        return component.getString().length() * charWidth;
+    }
+
     // 自动居中
     private static Component centerComponent(int totalWidth, Component component) {
-        Font font = Minecraft.getInstance().font;
-        int contentWidth = font.width(component);
+        int contentWidth = charWidth;
         if (contentWidth >= totalWidth) return component;
         int leftSpace = (totalWidth - contentWidth) / 2;
         int rightSpace = totalWidth - contentWidth - leftSpace;
-        Component leftPad = Component.literal(" ".repeat(leftSpace / font.width(" ")));
-        Component rightPad = Component.literal(" ".repeat(rightSpace / font.width(" ")));
+        Component leftPad = Component.literal(" ".repeat(leftSpace / charWidth));
+        Component rightPad = Component.literal(" ".repeat(rightSpace / charWidth));
         return Component.empty().append(leftPad).append(component).append(rightPad);
     }
 
@@ -655,7 +665,13 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
         } catch (IndexOutOfBoundsException | NullPointerException e) {
             checkGroup = 0;
             saveGroup = 0;
-            return presets.get(0);
+            try {
+                return presets.getFirst();
+            } catch (IndexOutOfBoundsException | NullPointerException a) {
+                fastRemoveBlock(Objects.requireNonNull(getLevel()), getPos(), false, true);
+                GTOCore.LOGGER.error("You encountered some problems, the presets list is empty: {}", a.getMessage());
+                return presets.getFirst();
+            }
         }
     }
 
@@ -665,7 +681,7 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
         } catch (IndexOutOfBoundsException | NullPointerException e) {
             checkId = 0;
             saveId = 0;
-            return getPlatformPreset(group).structures().get(0);
+            return getPlatformPreset(group).structures().getFirst();
         }
     }
 
@@ -798,6 +814,7 @@ public class PlatformDeploymentMachine extends MetaMachine implements IFancyUIMa
     }
 
     private void highlightArea(boolean light) {
+        if (!(getLevel() instanceof ServerLevel)) return;
         ResourceKey<Level> dimension = getLevel().dimension();
         if (canExport) {
             BlockPos pos1 = null;

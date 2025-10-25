@@ -6,7 +6,6 @@ import com.gtolib.utils.holder.IntObjectHolder;
 
 import com.gregtechceu.gtceu.GTCEu;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,11 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public final class PlatformBlockType {
 
@@ -138,23 +135,33 @@ public final class PlatformBlockType {
             public PlatformBlockStructure build() {
                 if (GTCEu.isDataGen()) return null;
                 if (name == null || name.isEmpty()) {
+                    GTOCore.LOGGER.error("Platform registration error: missing name");
                     return null;
                 }
                 if (resource == null) {
+                    GTOCore.LOGGER.error("Platform registration error: missing Structural Resources: {}", name);
                     return null;
                 }
                 if (symbolMap == null) {
+                    GTOCore.LOGGER.error("Platform registration error: missing Block Mapping: {}", name);
                     return null;
                 }
 
-                int[] sizes = new int[2];
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(Minecraft.getInstance().getResourceManager().getResource(resource).get().open()))) {
-                    String line = reader.readLine().trim();
-                    if (line.startsWith(".size(") && line.endsWith(")")) {
-                        String[] parts = line.substring(6, line.length() - 1).split(",");
-                        sizes = new int[] { Integer.parseInt(parts[0].trim()), Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()) };
+                int[] sizes;
+                try {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(PlatformBlockType.class.getClassLoader()
+                            .getResourceAsStream("assets/" + resource.toString().replace(":", "/")))))) {
+
+                        String line = reader.readLine().trim();
+                        if (line.startsWith(".size(") && line.endsWith(")")) {
+                            String[] parts = line.substring(6, line.length() - 1).split(",");
+                            sizes = new int[] { Integer.parseInt(parts[0].trim()), Integer.parseInt(parts[1].trim()), Integer.parseInt(parts[2].trim()) };
+                        } else {
+                            throw new IOException("Missing .size(...) definition in: " + resource);
+                        }
                     }
                 } catch (Exception e) {
+                    GTOCore.LOGGER.error("Failed to read structure size for {}: {}", resource, e.getMessage());
                     return null;
                 }
 
@@ -238,8 +245,12 @@ public final class PlatformBlockType {
 
             public PlatformPreset build() {
                 if (GTCEu.isDataGen()) return null;
+                if (name == null || name.isEmpty()) {
+                    GTOCore.LOGGER.error("Platform registration group error: missing name");
+                    return null;
+                }
                 if (structures.isEmpty()) {
-                    GTOCore.LOGGER.error("Preset must contain at least one structure");
+                    GTOCore.LOGGER.error("Platform registration group error: preset must contain at least one structure");
                     return null;
                 }
                 return new PlatformPreset(name, displayName, description, source, structures);

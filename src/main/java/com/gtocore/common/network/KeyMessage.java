@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,7 +21,7 @@ final class KeyMessage {
         }
         switch (type) {
             case 0 -> handleFlightSpeed(player);
-            case 1 -> toggleNightVision(player);
+            // case 1 -> toggleNightVision(player); //已改为纯客户端实现
             case 2 -> upgradeToolSpeed(player);
             case 3 -> drift(player);
         }
@@ -32,18 +31,18 @@ final class KeyMessage {
         float speed = IEnhancedPlayer.of(player).getPlayerData().flySpeedAble;
         if (speed == 0F) return;
         CompoundTag data = player.getPersistentData();
-        int speedFactor = data.getInt("fly_speed");
+        int speedFactor = data.getInt("fly_speed") + 1;
         if (player.isShiftKeyDown()) {
             player.getAbilities().setFlyingSpeed(0.05F);
             player.onUpdateAbilities();
             player.displayClientMessage(Component.translatable("gtocore.fly_speed_reset"), true);
-            data.putInt("fly_speed", 1);
+            data.remove("fly_speed");
         } else {
             float currentSpeed = player.getAbilities().getFlyingSpeed();
             if (currentSpeed < speed) {
                 player.getAbilities().setFlyingSpeed(0.05F * speedFactor);
                 player.onUpdateAbilities();
-                data.putInt("fly_speed", speedFactor + 1);
+                data.putInt("fly_speed", speedFactor);
                 player.displayClientMessage(Component.translatable("gtocore.fly_speed", (speedFactor + 1)), true);
             } else {
                 player.displayClientMessage(Component.translatable("gtocore.reach_limit"), true);
@@ -51,18 +50,19 @@ final class KeyMessage {
         }
     }
 
-    private static void toggleNightVision(Player player) {
-        CompoundTag data = player.getPersistentData();
-        boolean nightVisionEnabled = data.getBoolean("night_vision");
-        data.putBoolean("night_vision", !nightVisionEnabled);
-
-        if (nightVisionEnabled) {
-            player.removeEffect(MobEffects.NIGHT_VISION);
-            player.displayClientMessage(Component.translatable("metaarmor.message.nightvision.disabled"), true);
-        } else {
-            player.displayClientMessage(Component.translatable("metaarmor.message.nightvision.enabled"), true);
-        }
-    }
+    // 已改为纯客户端实现
+    // private static void toggleNightVision(Player player) {
+    // CompoundTag data = player.getPersistentData();
+    // boolean nightVisionEnabled = data.getBoolean("night_vision");
+    // data.putBoolean("night_vision", !nightVisionEnabled);
+    //
+    // if (nightVisionEnabled) {
+    // player.removeEffect(MobEffects.NIGHT_VISION);
+    // player.displayClientMessage(Component.translatable("metaarmor.message.nightvision.disabled"), true);
+    // } else {
+    // player.displayClientMessage(Component.translatable("metaarmor.message.nightvision.enabled"), true);
+    // }
+    // }
 
     private static void upgradeToolSpeed(Player player) {
         ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);

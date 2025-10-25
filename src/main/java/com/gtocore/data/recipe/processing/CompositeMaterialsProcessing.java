@@ -650,8 +650,8 @@ public class CompositeMaterialsProcessing {
                 .save();
 
         THERMO_PRESSING_RECIPES.builder("carbon_nanotube_reinforced_aluminum_matrix_composite_rough_blank6")
-                .outputItems(GTOTagPrefix.ROUGH_BLANK, GTOMaterials.CarbonNanotubeReinforcedAluminumMatrixComposite)
-                .inputItems(GTOTagPrefix.block, GTOMaterials.CarbonNanotubeReinforcedAluminumMatrixComposite)
+                .inputItems(GTOTagPrefix.ROUGH_BLANK, GTOMaterials.CarbonNanotubeReinforcedAluminumMatrixComposite)
+                .outputItems(GTOTagPrefix.block, GTOMaterials.CarbonNanotubeReinforcedAluminumMatrixComposite)
                 .EUt(131000)
                 .duration(200)
                 .save();
@@ -738,6 +738,13 @@ public class CompositeMaterialsProcessing {
                 .inputFluids(GTMaterials.Nickel, 1440)
                 .EUt(8388608)
                 .duration(2500)
+                .save();
+        SINTERING_FURNACE_RECIPES.builder("titanium_dioxide_nanotube_reinfor3ce1d_titanium_matrix_composite_block")
+                .inputItems(GTOTagPrefix.ROUGH_BLANK, GTOMaterials.OxideDispersionStrengthenedNickelBaseSuperalloy)
+                .outputItems(GTOTagPrefix.block, GTOMaterials.OxideDispersionStrengthenedNickelBaseSuperalloy)
+                .EUt(528200)
+                .blastFurnaceTemp(14200)
+                .duration(500)
                 .save();
 
         REACTION_FURNACE_RECIPES.builder("aluminum_nitride_dust")

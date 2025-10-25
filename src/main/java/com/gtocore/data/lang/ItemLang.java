@@ -133,6 +133,7 @@ final class ItemLang {
         addCNEN("gtocore.tooltip.item.analyze_data", "§n研究数据：", "§nResearch data:");
         addCNEN("gtocore.tooltip.item.analyze_things", "- %d", "- %d");
         addCNEN("gtocore.tooltip.item.analyze_serial", "- §a研究编号：%s", "- §aResearch number: %s");
+        addCNEN("gtocore.data.empty", "空", "empty");
 
         addCNEN("gtocore.behaviour.grass_harvest.description", GOLD + "极大" + RESET + "地提升小麦种子掉落概率", GOLD + "Greatly" + RESET + " increase the probability of wheat seed dropping");
         addCNEN("gtocore.behaviour.grass_harvest.description2", "右键以收割", "Right click to harvest");
@@ -153,5 +154,16 @@ final class ItemLang {
         addCNEN("item.gtocore.globe.earth", "地球仪的球体", "Earth Globe Sphere");
 
         addCNEN("tooltip.item.pattern.uuid", "编码者：%s", "Encoded by: %s");
+
+        addCNEN("tooltip.item.reward_bag.increases", "附魔时运或效率以提升奖励与品质", "Enchant Fortune or Efficiency to increase rewards and quality");
+
+        addCNEN("item.slot_boost.name", "槽位强化器（当前：%s）", "Slot Booster (Current: %s)");
+        addCNEN("item.slot_boost.switch_hint", "已选择%s槽，当前数量：%d，需要经验%d点", "Selected %s Slot, Current Count: %d, Requires %d XP");
+        addCNEN("item.slot_boost.invalid_slot", "错误：%s槽未注册", "Error: %s Slot Not Registered");
+        addCNEN("item.slot_boost.xp_shortage", "经验不足！需要%d点，当前仅有%d点", "Insufficient XP! Requires %d, Currently Has %d");
+        addCNEN("item.slot_boost.success", "成功添加1个%s槽！当前共%d个", "Successfully Added 1 %s Slot! Now Has %d Total");
+        addCNEN("item.slot_boost.tooltip1", "右键点击：切换目标槽位", "Right Click: Switch Target Slot");
+        addCNEN("item.slot_boost.tooltip2", "Shift+右键：消耗经验扩展槽位（消耗=当前数量×2000）", "Shift+Right Click: Expand Slot with XP (Cost = Current Count × 2000)");
+        addCNEN("item.slot_boost.tooltip3", "当前目标：%s槽", "Current Target: %s Slot");
     }
 }

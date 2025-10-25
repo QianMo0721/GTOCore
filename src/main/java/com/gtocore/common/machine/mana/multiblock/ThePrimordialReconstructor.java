@@ -1,8 +1,8 @@
 package com.gtocore.common.machine.mana.multiblock;
 
 import com.gtocore.common.data.GTOItems;
-import com.gtocore.data.record.ApotheosisAffix;
-import com.gtocore.data.record.Enchantment;
+import com.gtocore.data.record.ApotheosisAffixRecord;
+import com.gtocore.data.record.EnchantmentRecord;
 
 import com.gtolib.api.machine.trait.CustomRecipeLogic;
 import com.gtolib.api.recipe.Recipe;
@@ -135,7 +135,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
         if (!inputsItems.isEmpty() || !outputsItems.isEmpty()) {
             inputsItems.forEach(disassembleRecipeBuilder::inputItems);
             outputsItems.forEach(disassembleRecipeBuilder::outputItems);
-            disassembleRecipeBuilder.duration(count.value);
+            disassembleRecipeBuilder.duration(20);
             return disassembleRecipeBuilder.buildRawRecipe();
         }
         return null;
@@ -227,9 +227,11 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             int enchantmentCount = enchantments.size();
             for (int i = 0; i < enchantmentCount; i++) {
                 CompoundTag enchantment = enchantments.getCompound(i);
-                int id = Enchantment.getSerialNumberByEnchantmentId(enchantment.getString("id"));
-                int lvl = 1 << (enchantment.getInt("lvl") - 1);
-                outputsItems.add(new ItemStack(ENCHANTMENT_ESSENCE[id], lvl));
+                if (enchantment.contains("id", 8) && enchantment.contains("lvl", 2)) {
+                    int id = EnchantmentRecord.getSerialNumberByEnchantmentId(enchantment.getString("id"));
+                    int lvl = 1 << (enchantment.getShort("lvl") - 1);
+                    outputsItems.add(new ItemStack(ENCHANTMENT_ESSENCE[id], lvl));
+                }
             }
             return true;
         }
@@ -308,7 +310,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             if (affixData.contains("affixes", TAG_COMPOUND)) {
                 CompoundTag affixes = affixData.getCompound("affixes");
                 for (String affixKey : affixes.getAllKeys()) {
-                    int id = ApotheosisAffix.getSerialNumberByApotheosisAffixId(affixKey);
+                    int id = ApotheosisAffixRecord.getSerialNumberByApotheosisAffixId(affixKey);
                     outputsItems.add(new ItemStack(AFFIX_ESSENCE[id]));
                 }
                 return true;
@@ -353,7 +355,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             int enchantmentCount = enchantments.size();
             for (int i = 0; i < enchantmentCount; i++) {
                 CompoundTag enchantment = enchantments.getCompound(i);
-                int id = Enchantment.getSerialNumberByEnchantmentId(enchantment.getString("id"));
+                int id = EnchantmentRecord.getSerialNumberByEnchantmentId(enchantment.getString("id"));
                 int lvl = 1 << (enchantment.getInt("lvl") - 1);
                 outputsItems.add(new ItemStack(ENCHANTMENT_ESSENCE[id], lvl));
             }
@@ -373,7 +375,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             int affixCount = affixes.size();
             for (int i = 0; i < affixCount; i++) {
                 CompoundTag affix = affixes.getCompound(i);
-                int id = ApotheosisAffix.getSerialNumberByApotheosisAffixId(affix.getString("id"));
+                int id = ApotheosisAffixRecord.getSerialNumberByApotheosisAffixId(affix.getString("id"));
                 outputsItems.add(new ItemStack(AFFIX_ESSENCE[id]));
             }
             return true;
@@ -415,14 +417,14 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             return false;
         });
 
-        int lvl = 64 - Long.numberOfLeadingZeros(count.value);
+        int lvl = Math.max(64 - Long.numberOfLeadingZeros(count.value), 30);
         if (essence.value != null && lvl > 0) {
-            String enchantment = Enchantment.getEnchantmentIdBySerialNumber(extractNumber(essence.value.toString()));
+            String enchantment = EnchantmentRecord.getEnchantmentIdBySerialNumber(extractNumber(essence.value.toString()));
 
             enchantmentsLoadRecipeBuilder.inputItems(Items.BOOK);
             enchantmentsLoadRecipeBuilder.inputItems(essence.value, 1 << (lvl - 1));
-            enchantmentsLoadRecipeBuilder.outputItems(Enchantment.getEnchantedBookByEnchantmentId(enchantment, (short) lvl));
-            enchantmentsLoadRecipeBuilder.duration(lvl);
+            enchantmentsLoadRecipeBuilder.outputItems(EnchantmentRecord.getEnchantedBookByEnchantmentId(enchantment, (short) lvl));
+            enchantmentsLoadRecipeBuilder.duration(20);
             enchantmentsLoadRecipeBuilder.MANAt(256);
             return enchantmentsLoadRecipeBuilder.buildRawRecipe();
         }
@@ -542,7 +544,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             mergeRecipeBuilder.inputItems(Items.BOOK, -remainingBooks);
         }
 
-        mergeRecipeBuilder.duration(totalBooks.value);
+        mergeRecipeBuilder.duration(20);
         mergeRecipeBuilder.MANAt(512);
 
         return mergeRecipeBuilder.buildRawRecipe();
@@ -567,7 +569,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
         ListTag affixList = new ListTag();
         for (Item item : uniqueItems) {
             CompoundTag affixEntry = new CompoundTag();
-            affixEntry.putString("id", ApotheosisAffix.getApotheosisAffixIdBySerialNumber(extractNumber(item.toString())));
+            affixEntry.putString("id", ApotheosisAffixRecord.getApotheosisAffixIdBySerialNumber(extractNumber(item.toString())));
             affixList.add(affixEntry);
             affixCanvasLoadRecipeBuilder.inputItems(item);
         }
@@ -576,7 +578,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
 
         affixCanvasLoadRecipeBuilder.inputItems(GTOItems.AFFIX_CANVAS);
         affixCanvasLoadRecipeBuilder.outputItems(affixCanvas);
-        affixCanvasLoadRecipeBuilder.duration(uniqueItems.size());
+        affixCanvasLoadRecipeBuilder.duration(20);
         affixCanvasLoadRecipeBuilder.MANAt(512);
 
         return affixCanvasLoadRecipeBuilder.buildRawRecipe();
@@ -643,7 +645,6 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
             if (!gemsByRarity[i].isEmpty()) break;
             if (i == 4) return null;
         }
-        int timeMultiplier = 0;
         for (int i = 0; i < 5; i++) {
             ObjectArrayList<ItemStack> gems = gemsByRarity[i];
             if (gems.isEmpty()) continue;
@@ -670,11 +671,10 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
                     CompoundTag affixData = tag.getCompound("affix_data");
                     affixData.putString("rarity", upgradedRarity);
                 }
-                timeMultiplier += count;
                 GemSynthesisRecipeBuilder.outputItems(upgradedGem, count);
             }
         }
-        GemSynthesisRecipeBuilder.duration(timeMultiplier);
+        GemSynthesisRecipeBuilder.duration(20);
         return GemSynthesisRecipeBuilder.buildRawRecipe();
     }
 
@@ -881,7 +881,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
 
         ForcedAddSocketRecipeBuilder.inputItems(Adventure.Items.SIGIL_OF_SOCKETING.get(), costSigil);
         ForcedAddSocketRecipeBuilder.outputItems(inputAddSocketItem, 1);
-        ForcedAddSocketRecipeBuilder.duration(costSigil);
+        ForcedAddSocketRecipeBuilder.duration(5);
         ForcedAddSocketRecipeBuilder.MANAt(512);
 
         return ForcedAddSocketRecipeBuilder.buildRawRecipe();
@@ -960,7 +960,7 @@ public class ThePrimordialReconstructor extends ManaMultiblockMachine {
         for (ItemStack inputGemItem : inputGemItems) ForcedMosaicGemRecipeBuilder.inputItems(inputGemItem, 1);
 
         ForcedMosaicGemRecipeBuilder.outputItems(inputAddGemItem, 1);
-        ForcedMosaicGemRecipeBuilder.duration(inputGemItems.size());
+        ForcedMosaicGemRecipeBuilder.duration(5);
         ForcedMosaicGemRecipeBuilder.MANAt(512);
 
         return ForcedMosaicGemRecipeBuilder.buildRawRecipe();
